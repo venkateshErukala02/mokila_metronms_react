@@ -1,0 +1,135 @@
+article.row {
+    --bs-gutter-x: 0rem;
+    --bs-gutter-y: 0;
+    padding: 0;
+}
+
+@font-face {
+    font-family: 'Lato-Regular';
+    src: url('./../../../fonts/Lato-Regular.eot') format('embedded-opentype');
+    src: url('./../../../fonts/Lato-Regular.ttf') format('truetype'), url('./../../../fonts/Lato-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    
+}
+
+
+/* -- FOnt Familly [start] -- */
+ .Lato-Regular {
+    font-family: 'Lato-Regular';
+    
+}
+.display-f {
+    display: flex;
+}
+.leftsidebar{
+    width: 45px;
+}
+.leftsidebardisblock{
+    display: block;
+}
+.leftsidebardisnone{
+    display: none;
+}
+
+
+@font-face {
+    font-family: 'Arial';
+    src: url('./../../../fonts/Arial.eot') format('embedded-opentype');
+    src: url('./../../../fonts/Arial.ttf') format('truetype'), url('./../../../fonts/Arial.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    
+}
+
+/* -- FOnt Familly [start] -- */
+ .Arial {
+    font-family: 'Arial';
+    
+}
+
+.border-lrr {
+    border: 1px solid #21232712;
+    border-bottom: none;
+}
+
+.border-allsd{border: 1px solid rgb(33 35 39 / 7%) !important;margin: 0px;}
+
+
+.border-allsdnew {
+    border: 1px solid #21232712;
+}
+
+.container-fluid {
+    --bs-gutter-x: 0 !important;
+    --bs-gutter-y: 0;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 100%;
+}
+
+
+
+
+
+.leftnavlist {
+    background-color: #fff0;
+    display: inline-block;
+    height: 60vh;
+    list-style-type: none;
+    padding: 0;
+}
+.leftnavlist>li {
+    padding: 10px;
+    position: relative;
+}
+
+.leftnavlist>li>a>i {
+    color: #808893;
+    font-size: 18px;
+}
+
+.leftnavlist>li>a:hover>span.tooltipcll, .leftnavlist>li>a>span.tooltipcll {
+    background-color: #000;
+    color: #fff;
+    display: inline-block;
+    font-size: 12px;
+    position: absolute;
+}
+
+.leftnavlist>li>a>span.tooltipcll {
+    left: 0;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.leftnavlist>li>a>i.activee {
+    color: #006eff;
+}
+
+.leftnavlist>li>a>i:hover {
+    cursor: pointer;
+}
+
+
+
+.leftnavlist>li:nth-child(6n+6)>a:hover>span.tooltipcll {
+    background-color: #000;
+    color: #fff;
+    display: inline-block;
+    font-size: 12px;
+    max-width: 200px;
+    min-width: 110px;
+    position: absolute;
+}
+
+.leftnavlist>li:nth-child(6n+6)>a:hover>span.tooltipcll, .leftnavlist>li>a:hover>span.tooltipcll {
+    border-radius: 4px;
+    left: 35px;
+    opacity: 1;
+    padding: 8px 5px;
+    visibility: visible;
+    z-index: 300;
+}

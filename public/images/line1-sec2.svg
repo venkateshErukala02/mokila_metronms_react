@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="600px" height="403px" viewBox="0 0 600 403" enable-background="new 0 0 600 403" xml:space="preserve">
+<path fill="none" stroke="#FFCB09" stroke-width="14" stroke-linecap="round" stroke-miterlimit="10" d="M281.857,366.648
+	c0,0,26.665,2.68,28.88-26.633c2.162-28.634,0-307.074,0-307.074"/>
+<circle id="king" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="338.349" r="3.747">
+<title>King</title>
+</circle>
+<circle id="queen" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="321.702" r="3.747">
+<title>Queen</title>
+</circle>
+<circle id="dundas" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="304.39" r="3.747">
+<title>Dundas</title>
+</circle>
+<circle id="collage" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="287.909" r="3.747">
+<title>College</title>
+</circle>
+<circle id="wellesley" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="270.43" r="3.747">
+<title>Wellesley</title>
+</circle>
+<circle id="bloor_yonge" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="243.601" r="3.747">
+<title>Bloor Yonge</title>
+</circle>
+<circle id="rosedale" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="219.627" r="3.747">
+<title>Rosedale</title>
+</circle>
+<circle id="st_clair" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="185.063" r="3.747">
+<title>St Clair</title>
+</circle>
+<circle id="davisville" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="167.958" r="3.747">
+<title>Davisville</title>
+</circle>
+<circle id="eglinton" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="151.577" r="3.747">
+<title>Eglinton</title>
+</circle>
+<circle id="lawrence" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="123.583" r="3.747">
+<title>Lawrence</title>
+</circle>
+<circle id="york_mills" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="96.004" r="3.747">
+<title>York Mills</title>
+</circle>
+<circle id="sheppard_yonge" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="74.306" r="3.747">
+<title>Sheppard Yonge</title>
+</circle>
+<circle id="north_york_centre" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="50.501" r="3.747">
+<title>North York Center</title>
+</circle>
+<circle id="finch" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="31.274" r="3.747">
+<title>Flinch</title>
+</circle>
+<circle id="summerhill" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="202.584" r="3.747">
+<title>Summerhill</title>
+</circle>
+
+	<text id="king_txt" transform="matrix(1 0 0 1 332.8887 342.0967)" font-family="'MyriadPro-Regular'" font-size="12.9847">King</text>
+	<text id="queen_txt" transform="matrix(1 0 0 1 332.8887 324.4512)" font-family="'MyriadPro-Regular'" font-size="12.9847">Queen</text>
+	<text id="dundas_txt" transform="matrix(1 0 0 1 332.8887 307.7178)" font-family="'MyriadPro-Regular'" font-size="12.9847">Dundas</text>
+	<text id="collage_txt" transform="matrix(1 0 0 1 332.8887 289.6592)" font-family="'MyriadPro-Regular'" font-size="12.9847">College</text>
+	<text id="wellesley_txt" transform="matrix(1 0 0 1 332.8887 272.1797)" font-family="'MyriadPro-Regular'" font-size="12.9847">Wellesley</text>
+	<text id="rosedale_txt" transform="matrix(1 0 0 1 332.8887 223.377)" font-family="'MyriadPro-Regular'" font-size="12.9847">Rosedale</text>
+	<text id="st_clair_txt" transform="matrix(1 0 0 1 332.8887 188.8115)" font-family="'MyriadPro-Regular'" font-size="12.9847">St. Clair</text>
+	<text id="eglinton_txt" transform="matrix(1 0 0 1 332.8887 155.3262)" font-family="'MyriadPro-Regular'" font-size="12.9847">Eglinton</text>
+	<text id="york_mills_txt" transform="matrix(1 0 0 1 334.8887 99.9502)" font-family="'MyriadPro-Regular'" font-size="12.9847">York Mills</text>
+	<text id="finch_txt" transform="matrix(1 0 0 1 334.8896 35.0234)" font-family="'MyriadPro-Regular'" font-size="12.9847">Finch</text>
+	<text id="north_york_centre_txt" transform="matrix(1 0 0 1 180.1104 54.417)" font-family="'MyriadPro-Regular'" font-size="12.9847">North York Centre</text>
+	<text id="sheppard_yonge_txt" transform="matrix(1 0 0 1 190.0654 78.8936)" font-family="'MyriadPro-Regular'" font-size="12.9847">Sheppard Yonge</text>
+<!--
+	<text transform="matrix(1 0 0 1 263.1514 94.4756)" font-family="'MyriadPro-Regular'" font-size="12.9847">Yonge</text>
+-->
+	<text id="lawrence_txt" transform="matrix(1 0 0 1 230.3623 127.332)" font-family="'MyriadPro-Regular'" font-size="12.9847">Lawrence</text>
+	<text id="davisville_txt" transform="matrix(1 0 0 1 230.1289 172.2002)" font-family="'MyriadPro-Regular'" font-size="12.9847">Davisville</text>
+	<text id="summerhill_txt" transform="matrix(1 0 0 1 220.8838 207.334)" font-family="'MyriadPro-Regular'" font-size="12.9847">Summerhill</text>
+	<text id="bloor_yonge_txt" transform="matrix(1 0 0 1 220.1377 247.873)"  font-family="'MyriadPro-Regular'" font-size="12.9847">Bloor- Yonge</text>
+
+</svg>

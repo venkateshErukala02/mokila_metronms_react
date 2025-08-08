@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/static/css/main.9c6deff6.css",
+    "main.js": "/static/js/main.05201d6f.js",
+    "static/media/Lato-Regular.ttf": "/static/media/Lato-Regular.2b7b7f6c8554ad96436b.ttf",
+    "static/media/Lato-Regular.eot": "/static/media/Lato-Regular.599e9a14b7dd9f3ff9fb.eot",
+    "static/media/Lato-Regular.woff": "/static/media/Lato-Regular.14084fef8633d2b9a861.woff",
+    "static/media/Arial.ttf": "/static/media/Arial.1c8866eab1e65d8667c3.ttf",
+    "static/media/Arial.eot": "/static/media/Arial.cb302e224d7535224879.eot",
+    "static/media/Arial.woff": "/static/media/Arial.7a920f32e27185d7daf3.woff",
+    "static/media/sample.svg": "/static/media/sample.a9b3c7ed71c81369d532.svg",
+    "static/media/sample2.svg": "/static/media/sample2.6dd94eea3b3afec5cb66.svg",
+    "index.html": "/index.html",
+    "main.9c6deff6.css.map": "/static/css/main.9c6deff6.css.map",
+    "main.05201d6f.js.map": "/static/js/main.05201d6f.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9c6deff6.css",
+    "static/js/main.05201d6f.js"
+  ]
+}

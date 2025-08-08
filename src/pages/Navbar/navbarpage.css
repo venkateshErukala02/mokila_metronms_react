@@ -1,0 +1,115 @@
+article.row {
+    --bs-gutter-x: 0rem;
+    --bs-gutter-y: 0;
+    padding: 0;
+}
+
+@font-face {
+    font-family: 'Lato-Regular';
+    src: url('./../../../fonts/Lato-Regular.eot') format('embedded-opentype');
+    src: url('./../../../fonts/Lato-Regular.ttf') format('truetype'), url('./../../../fonts/Lato-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    
+}
+
+
+/* -- FOnt Familly [start] -- */
+ .Lato-Regular {
+    font-family: 'Lato-Regular';
+    
+}
+
+
+
+@font-face {
+    font-family: 'Arial';
+    src: url('./../../../fonts/Arial.eot') format('embedded-opentype');
+    src: url('./../../../fonts/Arial.ttf') format('truetype'), url('./../../../fonts/Arial.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    
+}
+
+/* -- FOnt Familly [start] -- */
+ .Arial {
+    font-family: 'Arial';
+    
+}
+
+.display-f {
+    display: flex;
+}
+.border-lrr {
+    border: 1px solid #21232712;
+    border-bottom: none;
+}
+
+.border-allsd{border: 1px solid rgb(33 35 39 / 7%) !important;margin: 0px;}
+
+
+.border-allsdnew {
+    border: 1px solid #21232712;
+}
+
+.container-fluid {
+    --bs-gutter-x: 0 !important;
+    --bs-gutter-y: 0;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 100%;
+}
+
+
+
+.navlistone {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.navlistone>li {
+    float: left;
+    margin-right: 28px;
+}
+
+.navlistone>li>h6 {
+    color: #212327;
+    font-family: Lato-Regular;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: .5px;
+}
+
+.navlistone>li>h6>span {
+    color: #808893;
+    font-family: Lato-Regular;
+    font-size: 13px;
+    font-weight: 100;
+}
+.navlistone>li:last-child {
+    margin-right: 0;
+}
+
+.navlisttwo {
+    list-style-type: none;
+    margin-top: 15px;
+}
+
+.navlisttwo>li {
+    float: left;
+    margin-right: 20px;
+}
+
+.navlisttwo>li>h6 {
+    color: #212327;
+    font-family: Lato-Regular;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: .5px;
+}
+
+.navlisttwo>li:last-child {
+    margin-right: 0;
+}
