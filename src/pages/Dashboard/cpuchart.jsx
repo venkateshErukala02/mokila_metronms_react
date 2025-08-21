@@ -95,6 +95,21 @@ const CpuChart = ({ graphOption,graphOptionValue,currentTab}) => {
         }else{
            const formatted = formatChartData(data);
           setCpuData(formatted);
+
+           if (formatted.length === 0) {
+        const now = new Date();
+        const fallbackData = [];
+        const interval = 5 * 60 * 1000; // every 5 minutes
+        for (let i = 12; i >= 0; i--) {
+          fallbackData.push({
+            timestamp: now.getTime() - i * interval,
+            cpu: 0,
+          });
+        }
+        setCpuData(fallbackData);
+      } else {
+        setCpuData(formatted);
+      }
         }
       } else if (response.status === 304) {
         console.log("304 Not Modified – using cached data.");
@@ -121,18 +136,19 @@ const CpuChart = ({ graphOption,graphOptionValue,currentTab}) => {
         }
         defData.push(arr);
       }
-      setCpuData(defData)
-    }
-    if(graphOption ==='live'){
-    const setTime =  setInterval(() => {
+      setCpuData(defData);
+
+
+       const setTime =  setInterval(() => {
         // const url = `http://${nodeIpaddress}:8084/transcoder/api/v1/netstats`;
         const url=`http://${nodeIpaddress}:8084/${currentTab}/api/v1/cpu`;
        getServerStatusDt(url);
     }, 5000);
    
     return()=> clearInterval(setTime);
+    }else{
+      setCpuData([]);
     }
-   
    
   }, [nodeDataId,graphOption]);
 
@@ -172,7 +188,8 @@ const CpuChart = ({ graphOption,graphOptionValue,currentTab}) => {
   const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     const rawCpu = payload?.[0]?.payload?.cpu;
-const countDtt = isNaN(rawCpu) ? '0.00' : rawCpu.toFixed(2);
+    const cpuValue = Number(rawCpu);
+const countDtt = isNaN(rawCpu) ? '0.00' : cpuValue.toFixed(2);
 
     // const countDtt = payload[0].payload.cpu.toFixed(2) || 0;
     // console.log('pkpppppp',countDtt);

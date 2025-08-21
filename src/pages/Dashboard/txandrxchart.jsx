@@ -32,9 +32,9 @@ const TxRxDiffchart = ({ graphOption, graphOptionValue,currentTab }) => {
         return timestamps.map((timestamp, index) => {
             return {
                 timestamp: timestamp,
-                [labels[0]]: parseFloat(columns[0].values[index]),
-                [labels[1]]: parseFloat(columns[1].values[index]),
-                totalbytes: parseFloat(columns[0].values[index]) + parseFloat(columns[1].values[index]),
+                [labels[0]]: parseFloat(columns[0].values[index])/1024,
+                [labels[1]]: parseFloat(columns[1].values[index])/1024,
+                totalbytes: parseFloat(columns[0].values[index])/1024 + parseFloat(columns[1].values[index])/1024,
                 // [labels[2]]: parseFloat(columns[2].values[index]),
                 traincab: 102
                 
@@ -89,6 +89,11 @@ const TxRxDiffchart = ({ graphOption, graphOptionValue,currentTab }) => {
 
                     lastTx = parseInt(data.tx_bytes);
                     lastRx = parseInt(data.rx_bytes);
+
+                    tx_bytes = tx_bytes < 0 ? 0 : tx_bytes/1024;
+                    rx_bytes = rx_bytes < 0 ? 0 : rx_bytes/1024;
+
+
                     totalbytes = tx_bytes + rx_bytes;
                     let dataNew = {
                         totalbytes,
@@ -291,7 +296,8 @@ return (
                         fontFamily="Lato-Regular"
                         letterSpacing="0.2px"
                     />
-                    <YAxis ticks={[0, 0.1, 0.2, 0.3, 0.4, 0.5]} />
+                    {/* <YAxis ticks={[0, 0.1, 0.2, 0.3, 0.4, 0.5]} /> */}
+                    <YAxis domain={differenceData.length === 0 ? [0, 5] : ['auto', 'auto']} />
                     <Tooltip content={<CustomTooltip />} cursor={{ fill: "transparent" }} />
                     {/* <Legend /> */}
                     <Legend content={<CustomLegend />} />

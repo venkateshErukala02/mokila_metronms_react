@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import TxRxDiffchart from "./txandrxchart";
 import TxErrorChart from "./txerrorchart";
 import CpuChart from "./cpuchart";
+import TemperatureChart from "./temperaturechart";
 
 
 const TranscoderDashboard = ({currentTab}) => {
@@ -117,8 +118,12 @@ const handleCpuchart=()=>{
           <article className="row">
             <article className="col-md-12 graphbord1">
               <article className="latencyfullwidthcl">
-              {/* <LatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue} /> */}
                 <TxRxDiffchart currentTab='transcoder' graphOption={graphOption} graphOptionValue={graphOptionValue}/>
+              </article>
+            </article>
+             <article className="col-md-12 graphbord1" style={{marginTop:'20px'}}>
+              <article className="latencyfullwidthcl">
+                <TemperatureChart currentTab='transcoder' graphOption={graphOption} graphOptionValue={graphOptionValue}/>
               </article>
             </article>
             <article className="col-md-12 graphbord2" style={{ marginTop: '20px' }}>
@@ -130,31 +135,13 @@ const handleCpuchart=()=>{
                   </article> 
               <article className="latencyfullwidthcl">
                  {cpuChartStatus ? (<CpuChart currentTab='transcoder' graphOption={graphOption} graphOptionValue={graphOptionValue}/>) : (<TxErrorChart currentTab='transcoder'  graphOption={graphOption} graphOptionValue={graphOptionValue}/>)}      
-                       
-
                 </article>
                 </article>
-                {/* <article className="col-md-1">
-                  <article className="latency-togglebtn">
-                    <i class={`fa-solid fa-toggle-on ${cpuChartStatus === true ? 'fa-rotate-180' : ''} `} onClick={handleCpuchart}></i>
-                  </article>
-                </article> */}
                 </article>
-                 
              </article>
             </article>
           </article>
         </article>
-        {/* <article className="container-fluid">
-          <article className="row">
-            <article className="col-md-12 graphbord1">
-                 <article className="">
-
-            </article>
-            </article>
-            <article className="col-md-6 graphbord1"></article>
-          </article>
-        </article> */}
       </article>
     </>
   );

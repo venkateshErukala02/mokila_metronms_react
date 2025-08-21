@@ -34,6 +34,7 @@ const TcSummaryTab = ({ transcoderData }) => {
     const [isEditMode,setIsEditMode] =useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [tempData,setTempData] = useState('');
 
 
       useEffect(() => {
@@ -70,6 +71,40 @@ const TcSummaryTab = ({ transcoderData }) => {
 
 
                 setUpTimeData(data);
+                console.log("Fetched server status:", data);
+                setIsError({ status: false, msg: "" });
+            } else {
+                throw new Error("Data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message });
+            console.error("Fetch error:", error);
+        }
+    };
+
+      const getTemperatureDt = async (url) => {
+        setIsLoading(true);
+        setIsError({ status: false, msg: "" });
+        try {
+            const username = "admin";
+            const password = "admin";
+            const token = btoa(`${username}:${password}`);
+            const options = {
+                method: "GET",
+                headers: {
+                    "Authorization": `Basic ${token}`,
+                    "Content-Type": "application/json",
+                },
+            };
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (response.ok) {
+                setIsLoading(false);
+
+
+                setTempData(data);
                 console.log("Fetched server status:", data);
                 setIsError({ status: false, msg: "" });
             } else {
@@ -138,6 +173,15 @@ const TcSummaryTab = ({ transcoderData }) => {
     }, []);
 
 
+    useEffect(()=> {
+         const fetchData = async () => {
+            let url = `http://${nodeIpaddress}:8084/transcoder/api/v1/temp`;
+            await getTemperatureDt(url);
+        };
+        fetchData();
+    },[])
+
+
     const handleEditBit=()=>{
         setIsEditMode(true);
     }
@@ -166,6 +210,7 @@ const TcSummaryTab = ({ transcoderData }) => {
                                             <label class="summarymode"> {transcoderData?.System?.ser}</label>
                                             <label class="summarymode" style={{ display: 'block' }}> {nodeLocation} ({transcoderData?.System?.sysname})</label>
                                             <label class="summarysytem"><i class="fas fa-arrow-up fa-1x ng-scope "></i>{upTimeData}</label>
+                                            <label class="summarymode" style={{ display: 'block',marginTop:'7px' }}>Temperature:{tempData.temp}</label>
                                         </article>
                                         <article style={{ margin: "auto" }}>
                                             <article>
