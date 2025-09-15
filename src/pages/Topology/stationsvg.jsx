@@ -96,10 +96,13 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
         const svgRoot = svgContainerRef.current;
 
         stationStatus.forEach((item) => {
-            const el = svgRoot.querySelector(`#${item.position}`);
+            const safeId = CSS.escape(item.position);
+            const el = svgRoot.querySelector(`#${safeId}`);
             const title = svgRoot.querySelector(`#ts-${item.position}`);
             if (item.type !== 'sta') {
+                if (title && item.ipAddress) {
                 title.textContent = item.ipAddress;
+                }
                 if (el && item.status === "down") {
                     el.setAttribute("fill", "red");
                 } else if (el && item.status === "up") {

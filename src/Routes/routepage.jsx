@@ -14,7 +14,7 @@ import StationNodeDetails from '../pages/Dashboard/stationnodeview';
 import TranscoderView from '../pages/Dashboard/transcoderview';
 import TrainNodeView from '../pages/Dashboard/trainnodeview';
 import ObcNodeView from '../pages/Dashboard/obcnodeview';
-
+import Wayside from '../pages/Topology/wayside';
 
 const RoutesPage = () => {
    return (
@@ -28,6 +28,7 @@ const RoutesPage = () => {
             <Route path="/obc-view" element={<ObcNodeView />} />
             <Route exact path="/Discovery" element={<DiscovPag />} />
             <Route  exact path="/Topology" element={<TopoPg />} />
+            <Route  exact path="/Wayside" element={<Wayside />} />
             <Route  exact path="/TestTopo" element={<NewTopology />} />
             <Route  exact path="/Event" element={<EventPg />} />
             <Route exact path="/Inventory" element={<InventRpt />} />

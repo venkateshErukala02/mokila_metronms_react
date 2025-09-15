@@ -19,11 +19,12 @@ const LeftNavList = () => {
             "/": 0,
             "/Discovery": 1,
             "/Topology": 2,
-            "/Configuration": 3,
-            "/Event": 4,
-            "/Inventory": 5,
-            "/TestTopo": 6,
-            "/Setting": 7
+            "/Wayside": 3,
+            "/Configuration": 4,
+            "/Event": 5,
+            "/Inventory": 6,
+            "/TestTopo": 7,
+            "/Setting": 8
         };
         return pathToIndex[path] ?? null;
     };
@@ -45,6 +46,10 @@ const LeftNavList = () => {
                     <li onClick={() => handleClick('/Topology')}>
                     <a>  <i className={`fas fa-lg fa-sitemap ${activeIndex === 2 ? 'activee' : ''}`}></i>
                         <span className="tooltipcll">Topology</span></a>
+                    </li>
+                    <li onClick={() => handleClick('/Wayside')}>
+                    <a><i class={`fa-solid fa-tower-cell ${activeIndex === 3 ? 'activee' : ''}`}></i>
+                        <span className="tooltipcll">Wayside</span></a>
                     </li>
                     {/* <li onClick={() => handleClick('/TestTopo')}>
                     <a>  <i className={`fas fa-lg fa-sitemap ${activeIndex === 6 ? 'activee' : ''}`}></i>
