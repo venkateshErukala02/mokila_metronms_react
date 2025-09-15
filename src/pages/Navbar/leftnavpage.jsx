@@ -20,11 +20,10 @@ const LeftNavList = () => {
             "/Discovery": 1,
             "/Topology": 2,
             "/Wayside": 3,
-            "/Configuration": 4,
-            "/Event": 5,
-            "/Inventory": 6,
+            "/Event": 4,
+            "/Inventory": 5,
             "/TestTopo": 7,
-            "/Setting": 8
+            "/Setting": 6
         };
         return pathToIndex[path] ?? null;
     };
@@ -64,7 +63,7 @@ const LeftNavList = () => {
                         <span className="tooltipcll">Inventory Reports</span></a>
                     </li>
                     <li onClick={() => handleClick("/Setting")}>
-                    <a>   <i className={`fas fa-lg fa-cog ${activeIndex === 7 ? 'activee' : ''}`}></i>
+                    <a>   <i className={`fas fa-lg fa-cog ${activeIndex === 6 ? 'activee' : ''}`}></i>
                         <span className="tooltipcll">Settings</span></a>
                     </li>
                 </ul>

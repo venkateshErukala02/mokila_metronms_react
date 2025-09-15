@@ -99,7 +99,7 @@ const WaySvgViewer = ({ textName }) => {
 
   return (
     <>
-      <article className="border-allsd" style={{ textAlign: 'center', paddingTop: '20px', paddingBottom: '20px' }}>
+      <article className="border-allsd" style={{ textAlign: 'center', paddingTop: '20px', paddingBottom: '20px', height : textName === 'Line21' ? '867.5px': 'auto'}}>
         <div ref={svgContainerRef} dangerouslySetInnerHTML={{ __html: svgContent }} />
       </article>
     </>
