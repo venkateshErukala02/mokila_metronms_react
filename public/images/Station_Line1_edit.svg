@@ -1,0 +1,833 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   version="1.1"
+   id="Layer_1"
+   x="0px"
+   y="0px"
+   width="1186px"
+   height="219px"
+   viewBox="0 0 1186 219"
+   enable-background="new 0 0 1186 219"
+   xml:space="preserve"
+   sodipodi:docname="Station_Line1_edit.svg"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs218" /><sodipodi:namedview
+   id="namedview216"
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1.0"
+   inkscape:pageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   showgrid="false"
+   inkscape:zoom="1.1281619"
+   inkscape:cx="587.23842"
+   inkscape:cy="109.4701"
+   inkscape:window-width="1850"
+   inkscape:window-height="1016"
+   inkscape:window-x="70"
+   inkscape:window-y="27"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="layer2" />
+<path
+   fill="#C6C4C4"
+   stroke="#606060"
+   stroke-miterlimit="10"
+   d="M878.999,137.766c0,5.824-4.723,10.549-10.549,10.549H477.91  c-5.826,0-10.549-4.725-10.549-10.549V86.192c0-5.826,4.723-10.549,10.549-10.549h390.54c5.826,0,10.549,4.723,10.549,10.549  V137.766z"
+   id="path2" />
+<g
+   id="Layer_1_1_">
+</g>
+<circle
+   id="circle6"
+   fill="#FFFFFF"
+   stroke="#373836"
+   stroke-miterlimit="10"
+   cx="852.656"
+   cy="93.55"
+   r="11.75">
+<title
+   id="SB-R2" />
+</circle>
+<circle
+   id="circle9"
+   fill="#FFFFFF"
+   stroke="#373836"
+   stroke-miterlimit="10"
+   cx="852.865"
+   cy="128.533"
+   r="11.75">
+<title
+   id="NB-R2" />
+</circle>
+<circle
+   id="circle12"
+   fill="#FFFFFF"
+   stroke="#373836"
+   stroke-miterlimit="10"
+   cx="630.514"
+   cy="93.637"
+   r="10.75">
+<title
+   id="C1" />
+</circle>
+<circle
+   id="circle15"
+   fill="#FFFFFF"
+   stroke="#373836"
+   stroke-miterlimit="10"
+   cx="660.174"
+   cy="93.637"
+   r="10.75">
+<title
+   id="C2" />
+</circle>
+<circle
+   id="circle18"
+   fill="#FFFFFF"
+   stroke="#373836"
+   stroke-miterlimit="10"
+   cx="691.181"
+   cy="93.637"
+   r="10.75">
+<title
+   id="C3" />
+</circle>
+<circle
+   id="circle21"
+   fill="#FFFFFF"
+   stroke="#373836"
+   stroke-miterlimit="10"
+   cx="720.841"
+   cy="93.637"
+   r="10.75">
+<title
+   id="C4" />
+</circle>
+<circle
+   id="circle24"
+   fill="#FFFFFF"
+   stroke="#373836"
+   stroke-miterlimit="10"
+   cx="630.514"
+   cy="129.534"
+   r="10.75">
+<title
+   id="C5" />
+</circle>
+<circle
+   id="circle27"
+   fill="#FFFFFF"
+   stroke="#373836"
+   stroke-miterlimit="10"
+   cx="660.174"
+   cy="129.534"
+   r="10.75">
+<title
+   id="C6" />
+</circle>
+<circle
+   id="circle30"
+   fill="#FFFFFF"
+   stroke="#373836"
+   stroke-miterlimit="10"
+   cx="691.181"
+   cy="129.534"
+   r="10.75">
+<title
+   id="C7" />
+</circle>
+<circle
+   id="circle33"
+   fill="#FFFFFF"
+   stroke="#373836"
+   stroke-miterlimit="10"
+   cx="720.841"
+   cy="129.534"
+   r="10.75">
+<title
+   id="C8" />
+</circle>
+<circle
+   id="circle36"
+   fill="#FFFFFF"
+   stroke="#373836"
+   stroke-miterlimit="10"
+   cx="497.156"
+   cy="93.637"
+   r="11.75">
+<title
+   id="SB-R1" />
+</circle>
+<circle
+   id="circle39"
+   fill="#FFFFFF"
+   stroke="#373836"
+   stroke-miterlimit="10"
+   cx="497.365"
+   cy="128.621"
+   r="11.75">
+<title
+   id="NB-R1" />
+</circle>
+<circle
+   id="circle42"
+   fill="#FFFFFF"
+   stroke="#373836"
+   stroke-miterlimit="10"
+   cx="563.555"
+   cy="94.608"
+   r="10.75">
+<title
+   id="TC1" />
+</circle>
+
+<circle
+   id="circle47"
+   fill="#FFFFFF"
+   stroke="#373836"
+   stroke-miterlimit="10"
+   cx="783.245"
+   cy="129.639"
+   r="10.75">
+<title
+   id="TC2" />
+</circle>
+
+
+<circle
+   fill="#66CC33"
+   stroke="#373836"
+   stroke-miterlimit="10"
+   cx="44.425"
+   cy="152.636"
+   r="11.75"
+   id="circle53" />
+<g
+   id="track">
+	
+		<linearGradient
+   id="SVGID_1_"
+   gradientUnits="userSpaceOnUse"
+   x1="-245.05859"
+   y1="-465.9541"
+   x2="735.60742"
+   y2="-465.9541"
+   gradientTransform="matrix(1,0,0,-1,433.7197,-399.5801)">
+		<stop
+   offset="0.0269"
+   style="stop-color:#FFFFFF"
+   id="stop55" />
+		<stop
+   offset="0.1129"
+   style="stop-color:#000000"
+   id="stop57" />
+		<stop
+   offset="0.8226"
+   style="stop-color:#000000"
+   id="stop59" />
+		<stop
+   offset="0.9462"
+   style="stop-color:#FFFFFF"
+   id="stop61" />
+	</linearGradient>
+	<path
+   fill="none"
+   stroke="url(#SVGID_1_)"
+   stroke-miterlimit="10"
+   d="M 1169.327,74.121 H 936.245 c -10.75,0.25 -39.25,-7 -49.25,-9.25 -10,-2.25 -29,-6.25 -29,-6.25 h -64.75 c 0,0 -293,0 -298.5,0 -5.5,0 -71,14 -71,14 l -52.5,1.5 H 188.661"
+   id="path64"
+   sodipodi:insensitive="true" />
+	
+		<linearGradient
+   id="SVGID_2_"
+   gradientUnits="userSpaceOnUse"
+   x1="-245.05859"
+   y1="-450.44821"
+   x2="735.60742"
+   y2="-450.44821"
+   gradientTransform="matrix(1,0,0,-1,433.7197,-399.5801)">
+		<stop
+   offset="0.0269"
+   style="stop-color:#FFFFFF"
+   id="stop66" />
+		<stop
+   offset="0.1129"
+   style="stop-color:#000000"
+   id="stop68" />
+		<stop
+   offset="0.8226"
+   style="stop-color:#000000"
+   id="stop70" />
+		<stop
+   offset="0.9462"
+   style="stop-color:#FFFFFF"
+   id="stop72" />
+	</linearGradient>
+	<path
+   fill="none"
+   stroke="url(#SVGID_2_)"
+   stroke-miterlimit="10"
+   d="M 1169.327,58.615 H 936.245 c -10.75,0.25 -39.25,-7 -49.25,-9.25 -10,-2.25 -29,-6.25 -29,-6.25 h -64.75 c 0,0 -293,0 -298.5,0 -5.5,0 -71,14 -71,14 l -52.5,1.5 H 188.661"
+   id="path75"
+   sodipodi:insensitive="true" />
+	
+		<linearGradient
+   id="SVGID_3_"
+   gradientUnits="userSpaceOnUse"
+   x1="-245.05859"
+   y1="-555.74902"
+   x2="735.60742"
+   y2="-555.74902"
+   gradientTransform="matrix(1,0,0,-1,433.7197,-399.5801)">
+		<stop
+   offset="0.0269"
+   style="stop-color:#FFFFFF"
+   id="stop77" />
+		<stop
+   offset="0.1129"
+   style="stop-color:#000000"
+   id="stop79" />
+		<stop
+   offset="0.8226"
+   style="stop-color:#000000"
+   id="stop81" />
+		<stop
+   offset="0.9462"
+   style="stop-color:#FFFFFF"
+   id="stop83" />
+	</linearGradient>
+	<path
+   fill="none"
+   stroke="url(#SVGID_3_)"
+   stroke-miterlimit="10"
+   d="M 1169.327,150.169 H 934.245 c -8,-0.25 -25.25,1.25 -44,6 -18.75,4.75 -44.5,8 -44.5,8 h -305.5 c 0,0 -53.75,-0.25 -59.75,-1.5 -6,-1.25 -49.75,-10.75 -49.75,-10.75 l -59.5,-3.75 H 188.661"
+   id="path86"
+   sodipodi:insensitive="true" />
+	
+		<linearGradient
+   id="SVGID_4_"
+   gradientUnits="userSpaceOnUse"
+   x1="-245.05859"
+   y1="-570.33398"
+   x2="737.6084"
+   y2="-570.33398"
+   gradientTransform="matrix(1,0,0,-1,433.7197,-399.5801)">
+		<stop
+   offset="0.0269"
+   style="stop-color:#FFFFFF"
+   id="stop88" />
+		<stop
+   offset="0.1129"
+   style="stop-color:#000000"
+   id="stop90" />
+		<stop
+   offset="0.8226"
+   style="stop-color:#000000"
+   id="stop92" />
+		<stop
+   offset="0.9462"
+   style="stop-color:#FFFFFF"
+   id="stop94" />
+	</linearGradient>
+	<path
+   fill="none"
+   stroke="url(#SVGID_4_)"
+   stroke-miterlimit="10"
+   d="M 1171.328,164.754 H 1034.662 932.245 c -8,-0.25 -25.25,1.25 -44,6 -18.75,4.75 -44.5,8 -44.5,8 h -305.5 c 0,0 -53.75,-0.25 -59.75,-1.5 -6,-1.25 -49.75,-10.75 -49.75,-10.75 l -59.5,-3.75 H 188.661"
+   id="path97"
+   sodipodi:insensitive="true" />
+</g>
+<g
+   id="top_train_layer"
+   sodipodi:insensitive="true">
+	<path
+   id="path101"
+   fill="#1cd4c6"
+   stroke="#000000"
+   stroke-miterlimit="10"
+   d="M 748.552,63.244 H 676.15 658.169 585.767 c -6.05,0 -10.953,-4.75 -10.953,-10.607 V 49.1 c 0,-5.859 4.903,-10.608 10.953,-10.608 h 72.402 17.981 72.399 c 6.049,0 10.955,4.75 10.955,10.608 v 3.537 c 0.003,5.857 -4.903,10.607 -10.952,10.607 z">
+<title
+   id="toptrainclick" />
+	</path>
+	<path
+   id="path104"
+   display="none"
+   fill="#07493f"
+   d="m 591.019,38.491 v 25.177 c 0,0 -8.936,1.779 -15.654,-6.048 0,0 -5.025,-12.249 6.841,-18.685 z">
+<title
+   id="toptrainclick2" />
+	</path>
+
+	<path
+   id="toptrainclick3"
+   display="none"
+   fill="#07493f"
+   d="M 744.87,63.613 V 40.056 c 0,0 8.357,-1.664 14.646,5.657 0,0 4.702,11.46 -6.396,17.479 l -8.25,-0.579 z">
+
+	</path>
+	
+		<text
+   id="toptrainclicktext"
+   transform="translate(631.04,55.4463)"
+   display="none"
+   enable-background="new"
+   font-family="MyriadPro-Regular"
+   font-size="16px">Train: 5451<title
+   id="toptrainclicktexttitle">abc</title></text>
+</g>
+<g
+   id="bottom_train_layer"
+   sodipodi:insensitive="true">
+	<path
+   id="path111"
+   display="none"
+   fill="#1cd4c6"
+   stroke="#000000"
+   stroke-miterlimit="10"
+   d="M 748.552,183.13 H 676.15 658.17 585.767 c -6.05,0 -10.953,-4.75 -10.953,-10.608 v -3.535 c 0,-5.858 4.903,-10.607 10.953,-10.607 h 72.403 17.98 72.399 c 6.049,0 10.955,4.75 10.955,10.607 v 3.535 c 0.003,5.858 -4.903,10.608 -10.952,10.608 z">
+<title
+   id="bottomtrainclick" />
+	</path>
+	<path
+   id="path114"
+   display="none"
+   fill="#07493f"
+   d="m 744.87,182.613 v -23.557 c 0,0 8.357,-1.664 14.646,5.657 0,0 4.702,11.46 -6.396,17.479 z">
+
+<title
+   id="bottomtrainclick2" />
+	</path>
+	<path
+   id="bottomtrainclick3"
+   display="none"
+   fill="#07493f"
+   d="m 591.019,159.491 v 25.177 c 0,0 -11.936,1.779 -15.654,-6.048 0,0 -5.025,-14.249 6.841,-18.685 z">
+	</path>
+		<text
+   id="bottomtrainclicktext"
+   transform="translate(629.6641,176.9473)"
+   display="none"
+   enable-background="new"
+   font-family="MyriadPro-Regular"
+   font-size="16px"> Train: 6041<title
+   id="bottomtrainclicktexttitle">abc</title></text>
+</g>
+
+
+
+
+
+
+
+
+<text
+   transform="translate(844.2773,98.6416)"
+   enable-background="new    "
+   font-family="MyriadPro-Semibold"
+   font-size="13px"
+   id="text137"
+   sodipodi:insensitive="true">SN<title
+   id="ts-SB-R2" /></text>
+<text
+   id="NB-R1_1_"
+   transform="translate(844.2773,133.6436)"
+   enable-background="new    "
+   font-family="MyriadPro-Semibold"
+   font-size="13px"
+   sodipodi:insensitive="true">SN<title
+   id="ts-NB-R2" /></text>
+<g
+   id="g144"
+   sodipodi:insensitive="true">
+	
+		<text
+   transform="translate(626.1357,98.73)"
+   enable-background="new    "
+   font-family="MyriadPro-Semibold"
+   font-size="13.7001px"
+   id="text142">C<title
+   id="ts-C1" /></text>
+</g>
+<g
+   id="g149"
+   sodipodi:insensitive="true">
+	
+		<text
+   transform="translate(655.7959,98.73)"
+   enable-background="new    "
+   font-family="MyriadPro-Semibold"
+   font-size="13.7001px"
+   id="text147">C<title
+   id="ts-C2" /></text>
+</g>
+<g
+   id="g154"
+   sodipodi:insensitive="true">
+	
+		<text
+   transform="translate(686.8027,98.73)"
+   enable-background="new    "
+   font-family="MyriadPro-Semibold"
+   font-size="13.7001px"
+   id="text152">C<title
+   id="ts-C3" /></text>
+</g>
+<g
+   id="g159"
+   sodipodi:insensitive="true">
+	
+		<text
+   transform="translate(716.4629,98.73)"
+   enable-background="new    "
+   font-family="MyriadPro-Semibold"
+   font-size="13.7001px"
+   id="text157">C<title
+   id="ts-C4" /></text>
+</g>
+<g
+   id="g164"
+   sodipodi:insensitive="true">
+	
+		<text
+   transform="translate(626.1357,134.625)"
+   enable-background="new    "
+   font-family="MyriadPro-Semibold"
+   font-size="13.7001px"
+   id="text162">C<title
+   id="ts-C5" /></text>
+</g>
+<g
+   id="g169"
+   sodipodi:insensitive="true">
+	
+		<text
+   transform="translate(655.7959,134.625)"
+   enable-background="new    "
+   font-family="MyriadPro-Semibold"
+   font-size="13.7001px"
+   id="text167">C<title
+   id="ts-C6" /></text>
+</g>
+<g
+   id="g174"
+   sodipodi:insensitive="true">
+	
+		<text
+   transform="translate(686.8027,134.625)"
+   enable-background="new    "
+   font-family="MyriadPro-Semibold"
+   font-size="13.7001px"
+   id="text172">C<title
+   id="ts-C7" /></text>
+</g>
+<g
+   id="g179"
+   sodipodi:insensitive="true">
+	
+		<text
+   transform="translate(716.4629,134.625)"
+   enable-background="new    "
+   font-family="MyriadPro-Semibold"
+   font-size="13.7001px"
+   id="text177">C<title
+   id="ts-C8" /></text>
+</g>
+<text
+   transform="translate(488.7764,98.73)"
+   enable-background="new    "
+   font-family="MyriadPro-Semibold"
+   font-size="13px"
+   id="text182"
+   sodipodi:insensitive="true">SN<title
+   id="ts-SB-R1" /></text>
+<text
+   transform="translate(488.7764,133.7314)"
+   enable-background="new    "
+   font-family="MyriadPro-Semibold"
+   font-size="13px"
+   id="text185"
+   sodipodi:insensitive="true">SN<title
+   id="ts-NB-R1" /></text>
+<g
+   id="g189"
+   sodipodi:insensitive="true">
+	
+		<text
+   id="tc2text"
+   transform="translate(779.1807,134.7451)"
+   enable-background="new    "
+   font-family="MyriadPro-Semibold"
+   font-size="13.7001px">E<title
+   id="ts-TC2" /></text>
+</g>
+<g
+   id="g193"
+   sodipodi:insensitive="true">
+	
+		<text
+   id="tc1text"
+   transform="translate(559.6816,99.7173)"
+   enable-background="new    "
+   font-family="MyriadPro-Semibold"
+   font-size="13.7001px">T<title
+   id="ts-TC1" /></text>
+</g>
+<g
+   id="station_name"
+   sodipodi:insensitive="true">
+	<text
+   id="section_station_name"
+   transform="translate(628.168,34.3882)"
+   font-family="MyriadPro-Regular"
+   font-size="16px">Highway 407</text>
+</g>
+<text
+   transform="translate(261.6816,46.8379)"
+   font-family="MyriadPro-Regular"
+   font-size="16px"
+   id="text197"
+   sodipodi:insensitive="true">Southbound Track</text>
+<text
+   transform="translate(954.3223,182.1055)"
+   font-family="MyriadPro-Regular"
+   font-size="16px"
+   id="text199"
+   sodipodi:insensitive="true">Northbound Track</text>
+<text
+   transform="translate(500.7451,34.1846)"
+   font-family="MyriadPro-Regular"
+   font-size="16px"
+   id="text201"
+   sodipodi:insensitive="true">SBSE</text>
+<text
+   transform="translate(500.7451,197.1816)"
+   font-family="MyriadPro-Regular"
+   font-size="16px"
+   id="text203"
+   sodipodi:insensitive="true">NBSE</text>
+<text
+   transform="translate(844.2773,34.1846)"
+   font-family="MyriadPro-Regular"
+   font-size="16px"
+   id="text205"
+   sodipodi:insensitive="true">SBNE</text>
+<text
+   transform="translate(842.2754,197.1816)"
+   font-family="MyriadPro-Regular"
+   font-size="16px"
+   id="text207"
+   sodipodi:insensitive="true">NBNE</text>
+<path
+   fill="#333333"
+   d="m 238.311,33.607 -6.992,6.968 c 0,0 -1.438,1.121 -0.293,2.875 l 7.285,7.26 c 0,0 1.461,1.072 2.898,-0.341 0,0 0.975,-0.999 0.171,-2.534 l -3.411,-3.557 13.863,0.049 c 0,0 2.338,-0.097 2.387,-2.168 0,0 -0.195,-2.071 -1.998,-2.169 l -14.275,0.049 3.191,-3.313 c 0,0 1.51,-1.583 -0.463,-3.239 0,-0.001 -1.17,-0.757 -2.363,0.12 z"
+   id="path209"
+   sodipodi:insensitive="true" />
+<path
+   fill="#333333"
+   d="m 1100.132,168.877 6.992,6.968 c 0,0 1.438,1.121 0.293,2.875 l -7.285,7.261 c 0,0 -1.461,1.071 -2.897,-0.342 0,0 -0.976,-0.998 -0.172,-2.533 l 3.411,-3.558 -13.862,0.05 c 0,0 -2.339,-0.098 -2.388,-2.168 0,0 0.195,-2.072 1.998,-2.17 l 14.275,0.049 -3.191,-3.313 c 0,0 -1.51,-1.583 0.463,-3.239 10e-4,-0.001 1.169,-0.757 2.363,0.12 z"
+   id="path211"
+   sodipodi:insensitive="true" />
+<line
+   fill="none"
+   stroke="#373836"
+   stroke-width="0.75"
+   stroke-miterlimit="10"
+   x1="531"
+   y1="110.251"
+   x2="818.5"
+   y2="110.251"
+   id="line213"
+   sodipodi:insensitive="true" />
+<g
+   inkscape:groupmode="layer"
+   id="layer1"
+   inkscape:label="Old_Layer"
+   style="display:inline"
+   sodipodi:insensitive="true"><circle
+     fill="#66cc33"
+     stroke="#373836"
+     stroke-miterlimit="10"
+     cx="44.424999"
+     cy="96.901001"
+     r="11.75"
+     id="circle49" /><circle
+     fill="#66cc33"
+     stroke="#373836"
+     stroke-miterlimit="10"
+     cx="44.424999"
+     cy="124.403"
+     r="11.75"
+     id="circle51" /><text
+     transform="translate(36.498,70.5)"
+     font-family="MyriadPro-Regular"
+     font-size="9px"
+     id="text120">SN</text><text
+     transform="translate(59.7969,71.0508)"
+     font-family="MyriadPro-Regular"
+     style="font-size:14px"
+     id="text122">Station Node</text><text
+     transform="translate(40.5,101)"
+     font-family="MyriadPro-Regular"
+     font-size="9px"
+     id="text124">T</text><text
+     transform="translate(59.8052,101.5791)"
+     font-family="MyriadPro-Regular"
+     style="font-size:14px"
+     id="text126">Transcoder</text><text
+     transform="translate(39.9419,128.0811)"
+     font-family="MyriadPro-Regular"
+     font-size="9px"
+     id="text128">C</text><text
+     transform="translate(59.7969,129.0811)"
+     font-family="MyriadPro-Regular"
+     style="font-size:14px"
+     id="text130">IP Camera</text><text
+     transform="translate(40.3184,157.3135)"
+     font-family="MyriadPro-Regular"
+     font-size="9px"
+     id="text132">E</text><text
+     transform="translate(59.7969,157.3135)"
+     font-family="MyriadPro-Regular"
+     style="font-size:14px"
+     id="text134">Video Encoder</text><circle
+     fill="#66cc33"
+     stroke="#373836"
+     stroke-miterlimit="10"
+     cx="44.424999"
+     cy="66.458"
+     r="11.75"
+     id="circle44"
+     style="display:inline" /></g><g
+   inkscape:groupmode="layer"
+   id="layer2"
+   inkscape:label="New_Layer"><ellipse
+     style="fill:#241f1c"
+     id="path832"
+     cx="259.3439"
+     cy="138.05124"
+     rx="13.186355"
+     ry="10.500381" /><ellipse
+     style="fill:#241f1c"
+     id="path832-2"
+     cx="299.25357"
+     cy="137.13281"
+     rx="13.186355"
+     ry="10.500381" /><ellipse
+     style="fill:#241f1c"
+     id="path832-7"
+     cx="338.18188"
+     cy="137.63264"
+     rx="13.186355"
+     ry="10.500381" /><ellipse
+     style="fill:#241f1c"
+     id="path832-0"
+     cx="373.77469"
+     cy="139.06435"
+     rx="13.186355"
+     ry="10.500381" /><ellipse
+     style="fill:#241f1c"
+     id="path832-9"
+     cx="410.53394"
+     cy="141.52356"
+     rx="13.186355"
+     ry="10.500381" /><ellipse
+     style="fill:#241f1c"
+     id="path832-3"
+     cx="909.72711"
+     cy="140.98308"
+     rx="13.186355"
+     ry="10.500381" /><ellipse
+     style="fill:#241f1c"
+     id="path832-2-6"
+     cx="949.49097"
+     cy="138.55511"
+     rx="13.186355"
+     ry="10.500381" /><ellipse
+     style="fill:#241f1c"
+     id="path832-7-0"
+     cx="987.52496"
+     cy="139.27696"
+     rx="13.186355"
+     ry="10.500381" /><ellipse
+     style="fill:#241f1c"
+     id="path832-0-6"
+     cx="1023.5662"
+     cy="139.41133"
+     rx="13.186355"
+     ry="10.500381" /><ellipse
+     style="fill:#241f1c"
+     id="path832-9-2"
+     cx="1059.1486"
+     cy="139.82762"
+     rx="13.186355"
+     ry="10.500381" /></g><g
+   inkscape:groupmode="layer"
+   id="layer3"
+   inkscape:label="New_Layer2"><ellipse
+     style="fill:#241f1c"
+     id="path832-6"
+     cx="258.57639"
+     cy="84.856018"
+     rx="13.186355"
+     ry="10.500381" /><ellipse
+     style="fill:#241f1c"
+     id="path832-2-1"
+     cx="300.06339"
+     cy="85.420563"
+     rx="13.186355"
+     ry="10.500381" /><ellipse
+     style="fill:#241f1c"
+     id="path832-7-8"
+     cx="339.77429"
+     cy="85.571129"
+     rx="13.186355"
+     ry="10.500381" /><ellipse
+     style="fill:#241f1c"
+     id="path832-0-7"
+     cx="373.10532"
+     cy="85.634544"
+     rx="13.186355"
+     ry="10.500381" /><ellipse
+     style="fill:#241f1c"
+     id="path832-9-9"
+     cx="407.91272"
+     cy="83.893707"
+     rx="13.186355"
+     ry="10.500381" /><ellipse
+     style="fill:#241f1c"
+     id="path832-20"
+     cx="913.02136"
+     cy="81.763405"
+     rx="13.186355"
+     ry="10.500381" /><ellipse
+     style="fill:#241f1c"
+     id="path832-2-2"
+     cx="952.09155"
+     cy="84.76683"
+     rx="13.186355"
+     ry="10.500381" /><ellipse
+     style="fill:#241f1c"
+     id="path832-7-3"
+     cx="986.86713"
+     cy="83.985504"
+     rx="13.186355"
+     ry="10.500381" /><ellipse
+     style="fill:#241f1c"
+     id="path832-0-75"
+     cx="1025.2454"
+     cy="84.281509"
+     rx="13.186355"
+     ry="10.500381" /><ellipse
+     style="fill:#241f1c"
+     id="path832-9-92"
+     cx="1060.8839"
+     cy="83.260529"
+     rx="13.186355"
+     ry="10.500381" /></g></svg>

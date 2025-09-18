@@ -2785,6 +2785,43 @@ svg *:focus {
 .card {
     border: none !important;
 }
+
+.popupStyle {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.popupBoxStyle {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 280px;
+  height: 400px;
+}
+
+.special-svg circle:hover {
+    transform: scale(2);
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+    cursor: pointer;
+}
+
+.special-svg polyline:hover {
+    cursor: pointer;
+}
+
+.special-svg path:hover {
+    cursor: pointer;
+}
+
  /* width={700} height={240} */
 
 /*  */

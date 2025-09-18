@@ -5,12 +5,24 @@ import TopoSvgViewer from "./toposvg";
 import TopoSectionTable from "./toposectiontable";
 import WestSvgViewer from "./waysvg";
 import WaySvgViewer from "./waysvg";
+import WaysideTable from "./waysidetable";
+import WaysidePopupTable from "./waysidepopuptable";
+import StationTagSvg from "./stationtagsvg";
+import LineTagSvg from "./linetagsvg";
 
 
 const Wayside = () => {
     const isVisible = useSelector(state => state.visibility.isVisible);
     const [westSideViewLabel, setWestSideViewLabel] = useState('Line21')
     const [westSideView, setWestSideView] = useState('Line1');
+    const [circleId, setCircleId] = useState('');
+    const [lineId,setLineId] =useState('');
+    const [showPopup, setShowPopup] = useState(false);
+    const [currentTagid,setCurrentTagid]= useState('');
+    const [stationTagview,setStationTagview]=useState(false);
+    const [stationCount,setStationCount]=useState(false);
+    const [lineTagview,setLineTagview]=useState(false);
+    const [lineCount,setLineCount]=useState(false);
 
     const handleWestside = (e) => {
         const selectElement = e.target;
@@ -20,30 +32,71 @@ const Wayside = () => {
 
     }
 
+    const getCircleId = (id) => {
+        setCircleId(id);
+        setStationTagview(true);
+        setStationCount(prev=> !prev);
+    }
+    const getLineId=(id)=>{
+        setLineId(id);
+        setLineTagview(true);
+        setLineCount(prev=> !prev)
+    }
+
 
     const renderSectComponent = (textName) => {
         switch (textName) {
             case 'Line21':
-                return <>   <WaySvgViewer textName={textName} />
+                return <>   <WaySvgViewer textName={textName} getCircleId={getCircleId} />
                 </>
                 break;
             case 'line1-sec1':
-                return <>   <WaySvgViewer textName={textName} />
+                return <>   <WaySvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId} />
                 </>
                 break;
             case 'line1-sec2':
-                return <>   <WaySvgViewer textName={textName} />
+                return <>   <WaySvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId} />
                 </>
                 break;
             case 'line4-sec1':
-                return <>   <WaySvgViewer textName={textName} />
+                return <>   <WaySvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId} />
                 </>
                 break;
             default:
-                return <>   <WaySvgViewer textName='Line21' /> </>
+                return <>   <WaySvgViewer textName='Line21' getCircleId={getCircleId} getLineId={getLineId} /> </>
                 break;
         }
     }
+
+    const handleTagsPopup=(value,id)=>{
+        setShowPopup(value);
+        setCurrentTagid(id);
+    }
+
+    const getTabLabel = (westSideView) => {
+         const mode = westSideView
+      
+        if (mode === "Line21" ) {
+          return "Link View - Tags Map";
+        }else {
+          return "Link View"; 
+        }
+      };
+
+      const renderTagView=(stationTagview,lineTagview)=>{
+        if(stationTagview){
+            return <><StationTagSvg/> </>
+        }else if (lineTagview){
+            return <><LineTagSvg/></>;
+        }else {
+            return null;
+        }
+      }
+
+      const handleStationTabview=()=>{
+        setStationTagview(false);
+        setLineTagview(false);
+      }
 
     return (
         <>
@@ -51,61 +104,49 @@ const Wayside = () => {
                 <article className={isVisible ? 'leftsidebardisblock' : 'leftsidebardisnone'}>
                     <LeftNavList className='leftsidebar' />
                 </article>
-                <article className="container-fluid">
+                <article className="container-fluid" style={{ position: 'relative' }}>
                     <article className="row">
-                        <article className="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2">
-                            <article className="border-allsd" style={{ height: '90vh', margin: '5px 5px 0 5px' }}>
-                                <article className="row">
-                                    <article className="col-12">
-                                        <h1 className="topoheading">Wayside Tag Configuration</h1>
-                                    </article>
-                                    {/* <article className="col-4" style={{ float: 'right' }}>
-                                        <article style={{ float: 'right' }}>
-                                            <button className="createbtn">Refresh</button>
-                                        </article>
-                                    </article> */}
-                                    {/* <article className="row">
-                                        <article className="col-12">
-                                            <span className="radioSelct">Radio Mode:</span>
-                                            <select className="form-controlfirm" value="select" style={{ width: "auto" }} aria-invalid="false">
-                                                <option value="0" label="All">All</option>
-                                                <option value="1" selected="selected" label="AP">AP</option>
-                                                <option value="2" label="SU">SU</option>
-                                            </select>
-                                        </article>
-                                    </article> */}
+                        <article className="col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
+                            <article className="border-allsd"  style={{ height: '867px'}}>
+                            <h1 className="topoheading">Wayside Tags</h1>
+                            <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Select :</label>
+                            <select name="name" id="name" value={westSideView} onChange={handleWestside} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
+                                {/* <option value="" label="Select">Select</option> */}
+                                <option value="Line21" label="Line1">Line1</option>
+                                <option value="line1-sec1" label="Line1-sec1">Line1-sec1</option>
+                                <option value="line1-sec2" label="Line1-sec2">Line1-sec2</option>
+                                <option value="line4-sec1" label="Line4-sec1">Line4-sec1</option>
+                            </select>
+                            <WaysideTable westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount}/>
+                            </article>
+                        </article>
+                        <article className="col-sm-9 col-md-9 col-lg-9 col-xl-9 col-xxl-9">
+                            <article className="border-allsd">
+                                 <ul className="clearfix linklist border-b">
+                                    <li><button onClick=''>{getTabLabel(westSideView)}</button></li>
+
+                                {stationTagview === true ?  <li><a onClick=''>Station Tags</a><button onClick={handleStationTabview}>x</button></li> : '' }
+                                 {lineTagview === true ?  <li><a onClick=''>Line Tags</a><button onClick={handleStationTabview}>x</button></li> : '' }
+                                </ul>
+                                <article style={{ margin: '5px 0px 0 0px' }}>
+                                {stationTagview || lineTagview ===true ? <> {renderTagView(stationTagview,lineTagview)}</> : renderSectComponent(westSideView)}
                                 </article>
-                                {/* <article className="systemcont">
-                                    <article className="row">
-                                        <article className="col-6">
-                                            <input type="text" className="clearfix form-controltopo" placeholder="IP Address" />
-                                        </article>
-                                        <article className="col-6">
-                                            <article style={{ float: 'right' }}>
-                                                <button className="createbtn">Search</button>
-                                            </article>
-                                        </article>
-                                    </article>
-                                </article> */}
-                                <hr className="hrll" style={{ marginBottom: '0px' }} />
-                                <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Select :</label>
-                                <select name="name" id="name" value={westSideView} onChange={handleWestside} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
-                                    {/* <option value="" label="Select">Select</option> */}
-                                    <option value="Line21" label="Line1">Line1</option>
-                                    <option value="line1-sec1" label="Line1-sec1">Line1-sec1</option>
-                                    <option value="line1-sec2" label="Line1-sec2">Line1-sec2</option>
-                                    <option value="line4-sec1" label="Line4-sec1">Line4-sec1</option>
-                                </select>
-
                             </article>
                         </article>
-                        <article className="col-sm-10 col-md-10 col-lg-10 col-xl-10 col-xxl-10">
-                            <article className="border-allsd" style={{ margin: '5px 0px 0 0px' }}>
-                                {renderSectComponent(westSideView)}
-                            </article>
-                        </article>
+                        {/* <article className="row" style={{ margin: '5px 0px 5px 5px' }}>
+                            <article className="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12 border-allsdnew" style={{ height: '0vh' }} > */}
+                                {/* <WaysideTable westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup}/> */}
+                            {/* </article> */}
+                        {/* </article> */}
                     </article>
-
+                    {showPopup && (
+                        <div className="popupStyle">
+                            <div className="popupBoxStyle">
+                                <WaysidePopupTable currentTagid={currentTagid}/>
+                                <button onClick={() => setShowPopup(false)} className="clearfix createbtn" style={{marginTop:'20px',float:"right"}}>Close</button>
+                            </div>
+                        </div>
+                    )}
                 </article>
             </article>
         </>

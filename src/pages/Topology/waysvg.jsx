@@ -3,7 +3,7 @@ import '../ornms.css';
 import '../Dashboard/dashboard.css';
 import { useLayoutEffect } from 'react';
 
-const WaySvgViewer = ({ textName }) => {
+const WaySvgViewer = ({ textName,getCircleId,getLineId }) => {
   const [svgContent, setSvgContent] = useState("");
   const [error, setError] = useState("");
   const svgContainerRef = useRef(null);
@@ -78,28 +78,107 @@ const WaySvgViewer = ({ textName }) => {
     }
 
     if (textName !== '') {
-      fetch(`api/v2/dashboard/linestatus/${call}`, options)
+      fetch('api/v2/wayside/stationstatus?time=600', options)
         .then((res) => res.json())
         .then((response) => {
-          const data = response.data;
+          const linesData = response.lines;
+          const stationsData = response.stations;
           const svgRoot = svgContainerRef.current;
 
           if (!svgRoot) return;
 
-          data.forEach(({ station, status }) => {
-            const el = svgRoot.querySelector(`#${station}`);
+          stationsData.forEach(( stationObj ) => {
+             const stationId = Object.keys(stationObj)[0];   
+            const stationStatus = stationObj[stationId];
+            const el = svgRoot.querySelector(`#${stationId}`);
             if (el) {
-              el.setAttribute("fill", status === "down" ? "red" : "green");
+              el.setAttribute("fill", stationStatus === "down" ? "red" : "green");
             }
           });
+
+          linesData.forEach(( lineObj ) => {
+            console.log(lineObj)
+            const lineId = Object.keys(lineObj)[0];     
+            const lineStatus = lineObj[lineId];
+            const el = svgRoot.querySelector(`[id='${lineId}']`);
+            if (el) {
+              el.setAttribute("stroke", lineStatus === "down" ? "red" : "#ffcb09");
+            }
+          });
+
         });
     }
   }, [svgContent]);
 
+  const getCurrentId=(id)=>{
+        getCircleId(id)
+      }
+
+      const getCurrentElementId=(id)=>{
+        getLineId(id)
+      }
+
+
+
+
+  useEffect(() => {
+  if (!svgContent) return;
+
+  const svgRoot = svgContainerRef.current;
+  if (!svgRoot) return;
+
+  const clickElements = svgRoot.querySelectorAll("polyline[id], path[id]");
+  svgRoot.classList.add("special-svg");
+  const handleClick = (event) => {
+    const clickElement = event.currentTarget;
+    const clickElementId = clickElement.getAttribute('id');
+    if (clickElementId){
+    getCurrentElementId(clickElementId);
+      }  
+  };
+
+  clickElements.forEach((clickElement) => {
+    clickElement.addEventListener("click", handleClick);
+  });
+
+  return () => {
+    clickElements.forEach((clickElement) => {
+      clickElement.removeEventListener("click", handleClick);
+    });
+  };
+}, [svgContent]);
+
+
+ useEffect(() => {
+  if (!svgContent) return;
+
+  const svgRoot = svgContainerRef.current;
+  if (!svgRoot) return;
+  svgRoot.classList.add("special-svg");
+  const circles = svgRoot.querySelectorAll("circle[id]");
+
+  const handleClick = (event) => {
+    const circle = event.currentTarget;
+    const circleId = circle.getAttribute('id');
+    if (circleId){
+    getCurrentId(circleId);
+      }  
+  };
+
+  circles.forEach((circle) => {
+    circle.addEventListener("click", handleClick);
+  });
+
+  return () => {
+    circles.forEach((circle) => {
+      circle.removeEventListener("click", handleClick);
+    });
+  };
+}, [svgContent]);
 
   return (
     <>
-      <article className="border-allsd" style={{ textAlign: 'center', paddingTop: '20px', paddingBottom: '20px', height : textName === 'Line21' ? '867.5px': 'auto'}}>
+      <article className="" style={{ textAlign: 'center', paddingTop: '0px', marginTop: 'opx',paddingBottom: '0px',height : textName === 'Line21' ? '867px':'auto'}}>
         <div ref={svgContainerRef} dangerouslySetInnerHTML={{ __html: svgContent }} />
       </article>
     </>
@@ -108,3 +187,6 @@ const WaySvgViewer = ({ textName }) => {
 
 
 export default WaySvgViewer;
+
+
+
