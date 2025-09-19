@@ -110,8 +110,8 @@ const WaySvgViewer = ({ textName,getCircleId,getLineId }) => {
     }
   }, [svgContent]);
 
-  const getCurrentId=(id)=>{
-        getCircleId(id)
+  const getCurrentId=(id,stationName)=>{
+        getCircleId(id,stationName)
       }
 
       const getCurrentElementId=(id)=>{
@@ -149,20 +149,29 @@ const WaySvgViewer = ({ textName,getCircleId,getLineId }) => {
 }, [svgContent]);
 
 
+
  useEffect(() => {
   if (!svgContent) return;
 
   const svgRoot = svgContainerRef.current;
   if (!svgRoot) return;
   svgRoot.classList.add("special-svg");
-  const circles = svgRoot.querySelectorAll("circle[id]");
+  const circles = svgRoot.querySelectorAll("circle[id],ellipse[id]");
+  const texts = svgRoot.querySelectorAll("text[id]");
 
   const handleClick = (event) => {
     const circle = event.currentTarget;
     const circleId = circle.getAttribute('id');
-    if (circleId){
-    getCurrentId(circleId);
-      }  
+    texts.forEach((text) => {
+     let s = text.id.replace("_txt", "");
+      if(s === circleId){
+        const stationName = text.textContent;
+         getCurrentId(circleId,stationName);
+      }
+    })
+    // if (circleId){
+    // getCurrentId(circleId);
+    //   }  
   };
 
   circles.forEach((circle) => {

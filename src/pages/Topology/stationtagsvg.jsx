@@ -4,7 +4,7 @@ import { useLayoutEffect } from 'react';
 import '../ornms.css'
 
 
-const StationTagSvg = ({}) => {
+const StationTagSvg = ({stationName}) => {
     // const [trainData, setTrainData] = useState('')
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [isLoading, setIsLoading] = useState(false);
@@ -21,30 +21,34 @@ const StationTagSvg = ({}) => {
         //     if (textName.data.mode == 'facility') {
               let  svg = 'Station_Line1_edit.svg';
         //     }
-        // }
-        //  else {
-        //     svg = textName.data.display + '.svg';
-        // }
+       
 
         let url = 'images/' + svg;
         setSvgContent('');
-        // Call fetchSvg with signal
         fetch(url, controller.signal)
             .then((res) => res.text())
             .then((data) => {
                 setSvgContent(data);
             });
-
-
-        // Cleanup on unmount or textName change
         return () => controller.abort();
     }, []);
 
 
+    useEffect(() => {
+    if (!svgContent) return;
+
+    const svgRoot = svgContainerRef.current;
+    const el = svgRoot.querySelector('#section_station_name');
+
+    if (el) {
+      el.textContent = `${stationName}`; 
+    }
+  }, [svgContent]); // 
+
 
     return (
         <>
-            <article className="" style={{ textAlign: 'center', paddingTop: '20px', paddingBottom: '20px' }}>
+            <article className="" style={{ textAlign: 'center', paddingTop: '200px', paddingBottom: '200px' }}>
                 <div ref={svgContainerRef} dangerouslySetInnerHTML={{ __html: svgContent }} />
             </article>
         </>

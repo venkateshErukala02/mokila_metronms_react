@@ -44,7 +44,7 @@ const LineTagSvg = ({}) => {
 
     return (
         <>
-            <article className="" style={{ textAlign: 'center', paddingTop: '20px', paddingBottom: '20px' }}>
+            <article className="" style={{ textAlign: 'center', paddingTop: '200px', paddingBottom: '200px' }}>
                 <div ref={svgContainerRef} dangerouslySetInnerHTML={{ __html: svgContent }} />
             </article>
         </>

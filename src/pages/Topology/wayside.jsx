@@ -23,6 +23,7 @@ const Wayside = () => {
     const [stationCount,setStationCount]=useState(false);
     const [lineTagview,setLineTagview]=useState(false);
     const [lineCount,setLineCount]=useState(false);
+    const [stationName,setStationName]= useState('');
 
     const handleWestside = (e) => {
         const selectElement = e.target;
@@ -32,9 +33,10 @@ const Wayside = () => {
 
     }
 
-    const getCircleId = (id) => {
+    const getCircleId = (id,name) => {
         setCircleId(id);
         setStationTagview(true);
+        setStationName(name);
         setStationCount(prev=> !prev);
     }
     const getLineId=(id)=>{
@@ -83,9 +85,9 @@ const Wayside = () => {
         }
       };
 
-      const renderTagView=(stationTagview,lineTagview)=>{
+      const renderTagView=(stationTagview,lineTagview,stationName)=>{
         if(stationTagview){
-            return <><StationTagSvg/> </>
+            return <><StationTagSvg stationName={stationName}/> </>
         }else if (lineTagview){
             return <><LineTagSvg/></>;
         }else {
@@ -129,7 +131,7 @@ const Wayside = () => {
                                  {lineTagview === true ?  <li><a onClick=''>Line Tags</a><button onClick={handleStationTabview}>x</button></li> : '' }
                                 </ul>
                                 <article style={{ margin: '5px 0px 0 0px' }}>
-                                {stationTagview || lineTagview ===true ? <> {renderTagView(stationTagview,lineTagview)}</> : renderSectComponent(westSideView)}
+                                {stationTagview || lineTagview ===true ? <> {renderTagView(stationTagview,lineTagview,stationName)}</> : renderSectComponent(westSideView)}
                                 </article>
                             </article>
                         </article>

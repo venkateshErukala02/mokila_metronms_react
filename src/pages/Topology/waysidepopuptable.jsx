@@ -144,13 +144,16 @@ const WaysidePopupTable = ({ currentTagid }) => {
         <>
             <article className="row">
                 <article style={{ height: "306px" }}>
+                    {/* <h1>hello</h1> */}
+                    <h1 className="topoheading"> {rdData[0]?.tag }</h1>
                     <table className="col-12 border-allsd table-fixed" style={{ height: '0vh' }}>
 
                         <thead className="tbtwo">
                              {rdData && rdData.length > 0 ? (
                                 rdData.map((node, index) => (
                                     <tr>
-                                <th className="col-6" style={{ width: '100px' }}>{node.tag}</th>
+                                <th className="col-6" style={{ width: '100px' }}>Cab Number</th>
+                                <th className="col-6" style={{ width: '100px' }}>Time</th>
                             </tr>
                                 ))): ''}
                             
@@ -181,19 +184,27 @@ const WaysidePopupTable = ({ currentTagid }) => {
                                 </tr>
                             )}
 
-                            {rdData && rdData.length > 0 ? (
-                                rdData.map((node, index) => (
-                                    <tr key={index}>
-                                        <td>
-                                              {node.times && node.times.length > 0 ? (
-          
-                                                node.times) : (
-                                                "No Data"
-                                                )}
-                                        </td>
+                           {rdData && rdData.length > 0 ? (
+                                rdData.map((rowNode, rowIndex) => (
+                                    rowNode.times && rowNode.times.length > 0 ? (
+                                    rowNode.times.map((timeNode, timeIndex) => (
+                                        <tr key={`${rowIndex}-${timeIndex}`}>
+                                        <td><a href={`http://localhost:8980/metronms/api/v2/wayside/tagfile/${timeNode.cab}?file=${timeNode.file}`} target="_blank">{timeNode.cab}</a></td>
+                                        <td>{timeNode.time}</td>
+                                        </tr>
+                                    ))
+                                    ) : (
+                                    <tr key={`empty-${rowIndex}`}>
+                                        <td colSpan="2">No Data available</td>
                                     </tr>
+                                    )
                                 ))
-                            ) : null}
+                                ) : (
+                                <tr>
+                                    <td colSpan="2">No data found</td>
+                                </tr>
+                                )}
+
                         </tbody>
                     </table>
                 </article>
