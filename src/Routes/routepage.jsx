@@ -14,7 +14,7 @@ import StationNodeDetails from '../pages/Dashboard/stationnodeview';
 import TranscoderView from '../pages/Dashboard/transcoderview';
 import TrainNodeView from '../pages/Dashboard/trainnodeview';
 import ObcNodeView from '../pages/Dashboard/obcnodeview';
-import Wayside from '../pages/Topology/wayside';
+import Wayside from '../pages/Wayside/wayside';
 
 const RoutesPage = () => {
    return (

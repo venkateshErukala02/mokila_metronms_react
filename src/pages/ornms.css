@@ -2822,6 +2822,34 @@ svg *:focus {
     cursor: pointer;
 }
 
+.linklist>li>button>span>button{
+    background-color: #fff;
+    border: none;
+    color: #212327;
+    font-family: Lato-Regular;
+    font-size: 15px;
+    letter-spacing: .5px;
+    padding-left:10px;
+} 
+
+.custom-context-menu {
+  font-family: sans-serif;
+  border-radius: 4px;
+  min-width: 120px;
+  height: 172px;
+  cursor: default;
+}
+.custom-context-menu button {
+  background: #f5f5f5;
+  border: none;
+  padding: 5px 10px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+.custom-context-menu button:hover {
+  background: #e0e0e0;
+}
+
  /* width={700} height={240} */
 
 /*  */

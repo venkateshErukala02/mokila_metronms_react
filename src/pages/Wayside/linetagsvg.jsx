@@ -5,7 +5,6 @@ import '../ornms.css'
 
 
 const LineTagSvg = ({}) => {
-    // const [trainData, setTrainData] = useState('')
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [isLoading, setIsLoading] = useState(false);
     const [stationStatus, setStationStatus] = useState([]);
@@ -15,20 +14,10 @@ const LineTagSvg = ({}) => {
  useEffect(() => {
         const controller = new AbortController();
 
-        // let svg = 'TTC_SubwayMap.svg';
-
-        // if (textName === '') {
-        //     if (textName.data.mode == 'facility') {
               let  svg = 'line_section.svg';
-        //     }
-        // }
-        //  else {
-        //     svg = textName.data.display + '.svg';
-        // }
 
         let url = 'images/' + svg;
         setSvgContent('');
-        // Call fetchSvg with signal
         fetch(url, controller.signal)
             .then((res) => res.text())
             .then((data) => {
@@ -36,7 +25,6 @@ const LineTagSvg = ({}) => {
             });
 
 
-        // Cleanup on unmount or textName change
         return () => controller.abort();
     }, []);
 
@@ -44,7 +32,7 @@ const LineTagSvg = ({}) => {
 
     return (
         <>
-            <article className="" style={{ textAlign: 'center', paddingTop: '200px', paddingBottom: '200px' }}>
+            <article className="" style={{ textAlign: 'center', paddingTop: '20px', paddingBottom: '20px' }}>
                 <div ref={svgContainerRef} dangerouslySetInnerHTML={{ __html: svgContent }} />
             </article>
         </>

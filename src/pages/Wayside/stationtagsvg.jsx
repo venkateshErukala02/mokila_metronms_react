@@ -5,7 +5,6 @@ import '../ornms.css'
 
 
 const StationTagSvg = ({stationName}) => {
-    // const [trainData, setTrainData] = useState('')
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [isLoading, setIsLoading] = useState(false);
     const [stationStatus, setStationStatus] = useState([]);
@@ -14,14 +13,7 @@ const StationTagSvg = ({stationName}) => {
 
  useEffect(() => {
         const controller = new AbortController();
-
-        // let svg = 'TTC_SubwayMap.svg';
-
-        // if (textName === '') {
-        //     if (textName.data.mode == 'facility') {
               let  svg = 'Station_Line1_edit.svg';
-        //     }
-       
 
         let url = 'images/' + svg;
         setSvgContent('');
@@ -48,7 +40,7 @@ const StationTagSvg = ({stationName}) => {
 
     return (
         <>
-            <article className="" style={{ textAlign: 'center', paddingTop: '200px', paddingBottom: '200px' }}>
+            <article className="" style={{ textAlign: 'center', paddingTop: '20px', paddingBottom: '20px' }}>
                 <div ref={svgContainerRef} dangerouslySetInnerHTML={{ __html: svgContent }} />
             </article>
         </>

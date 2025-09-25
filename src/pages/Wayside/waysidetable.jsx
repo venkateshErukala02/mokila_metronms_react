@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import  { useState, useEffect } from "react";
 import '../ornms.css'
 import '../Dashboard/dashboard.css';
-import { handleNodeData } from "../Action/action";
 
 
 
-const WaysideTable = ({ westSideView, circleId, setShowPopup, showPopup,lineId,handleTagsPopup,stationCount,lineCount }) => {
+const WaysideTable = ({ westSideView, circleId, setShowPopup, showPopup,lineId,handleTagsPopup,stationCount,lineCount ,allTagfailCount}) => {
     const [rdData, setRdData] = useState('');
     const [searchBtn, setSearchBtn] = useState(false);
     const [radialipText, setRadialipText] = useState('');
@@ -84,28 +81,17 @@ useEffect(() => {
     if (url) fetchDataRadial(url);
 }, []);
 
-
-
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    // const count = useSelector(state => state.count);
-
-    const handleRowClick = (node) => {
-        if (`${node.productCode}` === 'AP') {
-            navigate('/SN-view')
-            dispatch(handleNodeData(node))
-        } else {
-            navigate(`${node.productCode}-view`, { state: { node } });
-            dispatch(handleNodeData(node))
-        }
-
-    };
+useEffect(() => {
+    let url = '';
+    if (textName === 'Line1') {
+        url = 'api/v2/wayside/fetch?time=3600'
+    }
+    if (url) fetchDataRadial(url);
+}, [allTagfailCount]);
 
     const handlePopup=(value,id)=>{
         handleTagsPopup(value,id)
     }
-
-
 
     return (
         <>
@@ -159,9 +145,7 @@ useEffect(() => {
                                 !isError.status &&
                                 rdData.length > 0 &&
                                 rdData.map((node, index) => {
-                                    //  const key = Object.keys(node)[index]
                                     const key = node        
-                                    //     const value = node[key] 
                                         return(
                                     <tr key={node}>
                                         <td onClick={() => handlePopup(true,`${key.tag}`)} style={{cursor:'pointer',color:'#006eff'}}>{key.tag}</td>

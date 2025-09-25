@@ -1,14 +1,15 @@
 import { useSelector } from "react-redux";
 import LeftNavList from "../Navbar/leftnavpage";
 import { useState } from "react";
-import TopoSvgViewer from "./toposvg";
-import TopoSectionTable from "./toposectiontable";
-import WestSvgViewer from "./waysvg";
-import WaySvgViewer from "./waysvg";
+import TopoSvgViewer from "../Topology/toposvg";
+import TopoSectionTable from "../Topology/toposectiontable";
+import WestSvgViewer from "./waysidesvg";
+import WaySvgViewer from "./waysidesvg";
 import WaysideTable from "./waysidetable";
-import WaysidePopupTable from "./waysidepopuptable";
+import WaysidePopupTable from "../Topology/waysidepopuptable";
 import StationTagSvg from "./stationtagsvg";
 import LineTagSvg from "./linetagsvg";
+import StationTagsTable from "./stationtagstable";
 
 
 const Wayside = () => {
@@ -21,9 +22,10 @@ const Wayside = () => {
     const [currentTagid,setCurrentTagid]= useState('');
     const [stationTagview,setStationTagview]=useState(false);
     const [stationCount,setStationCount]=useState(false);
-    const [lineTagview,setLineTagview]=useState(false);
+    const [lineTagview,setLineTagview]=useState(false);   
     const [lineCount,setLineCount]=useState(false);
     const [stationName,setStationName]= useState('');
+    const [allTagfailCount,setAllTagfailCount]=useState(false);
 
     const handleWestside = (e) => {
         const selectElement = e.target;
@@ -87,9 +89,15 @@ const Wayside = () => {
 
       const renderTagView=(stationTagview,lineTagview,stationName)=>{
         if(stationTagview){
-            return <><StationTagSvg stationName={stationName}/> </>
+            return <>
+                    <StationTagSvg stationName={stationName}/>
+                    <StationTagsTable circleId={circleId}/>
+                     </>
         }else if (lineTagview){
-            return <><LineTagSvg/></>;
+            return <>
+                    <LineTagSvg/>
+                       <StationTagsTable circleId={circleId}/>
+                        </>;
         }else {
             return null;
         }
@@ -98,6 +106,7 @@ const Wayside = () => {
       const handleStationTabview=()=>{
         setStationTagview(false);
         setLineTagview(false);
+        setAllTagfailCount(prev =>!prev);
       }
 
     return (
@@ -113,33 +122,26 @@ const Wayside = () => {
                             <h1 className="topoheading">Wayside Tags</h1>
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Select :</label>
                             <select name="name" id="name" value={westSideView} onChange={handleWestside} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
-                                {/* <option value="" label="Select">Select</option> */}
                                 <option value="Line21" label="Line1">Line1</option>
                                 <option value="line1-sec1" label="Line1-sec1">Line1-sec1</option>
                                 <option value="line1-sec2" label="Line1-sec2">Line1-sec2</option>
                                 <option value="line4-sec1" label="Line4-sec1">Line4-sec1</option>
                             </select>
-                            <WaysideTable westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount}/>
+                            <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount}/>
                             </article>
                         </article>
                         <article className="col-sm-9 col-md-9 col-lg-9 col-xl-9 col-xxl-9">
                             <article className="border-allsd">
                                  <ul className="clearfix linklist border-b">
-                                    <li><button onClick=''>{getTabLabel(westSideView)}</button></li>
-
-                                {stationTagview === true ?  <li><a onClick=''>Station Tags</a><button onClick={handleStationTabview}>x</button></li> : '' }
-                                 {lineTagview === true ?  <li><a onClick=''>Line Tags</a><button onClick={handleStationTabview}>x</button></li> : '' }
+                                    <li><button onClick=''>{getTabLabel(westSideView)}{stationTagview && (<span> - Station Tags<button onClick={handleStationTabview}>x</button></span>) }
+                                         {lineTagview && (<span> - Line Tags<button onClick={handleStationTabview}>x</button></span>) }
+                                        </button></li>
                                 </ul>
                                 <article style={{ margin: '5px 0px 0 0px' }}>
                                 {stationTagview || lineTagview ===true ? <> {renderTagView(stationTagview,lineTagview,stationName)}</> : renderSectComponent(westSideView)}
                                 </article>
                             </article>
                         </article>
-                        {/* <article className="row" style={{ margin: '5px 0px 5px 5px' }}>
-                            <article className="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12 border-allsdnew" style={{ height: '0vh' }} > */}
-                                {/* <WaysideTable westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup}/> */}
-                            {/* </article> */}
-                        {/* </article> */}
                     </article>
                     {showPopup && (
                         <div className="popupStyle">
