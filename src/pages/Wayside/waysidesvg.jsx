@@ -13,6 +13,11 @@ const WaySvgViewer = ({ textName,getCircleId,getLineId }) => {
   const [trainData, setTrainData] = useState('')
     const [selectedFile, setSelectedFile] = useState(null);
     const [success, setSuccess] = useState('');
+    const [circleId,setCircleId] = useState(null);
+    const [lineId,setLineId] = useState(null);
+    const lineIdRef = useRef(null);
+const circleIdRef = useRef(null);  
+const selectedFileRef = useRef(null);
 
   const fetchSvg = async (url, signal) => {
     try {
@@ -113,6 +118,7 @@ const WaySvgViewer = ({ textName,getCircleId,getLineId }) => {
   }, [svgContent]);
 
   const getCurrentId=(id,stationName)=>{
+        // setCircleId(id)
         getCircleId(id,stationName)
       }
 
@@ -131,21 +137,116 @@ const WaySvgViewer = ({ textName,getCircleId,getLineId }) => {
 
   const clickElements = svgRoot.querySelectorAll("polyline[id], path[id]");
   svgRoot.classList.add("special-svg");
+  
   const handleClick = (event) => {
+    if(event.type === 'click' && event.button === 0){
     const clickElement = event.currentTarget;
     const clickElementId = clickElement.getAttribute('id');
     if (clickElementId){
     getCurrentElementId(clickElementId);
       }
+    }else if (event.type === 'contextmenu' && event.button === 2) { 
+      event.preventDefault(); 
+      console.log("Right-click detected");
+
+       const clickElement = event.currentTarget;
+    const id = clickElement.getAttribute('id');
+      setLineId(id);
+      lineIdRef.current = id;
+      const existingMenu = document.querySelector(".custom-context-menu");
+      if (existingMenu) {
+        console.log("Removing existing menu");
+        existingMenu.remove();
+      }
+
+      const textElement = event.currentTarget;
+      const stationName = 'hello'; 
+      console.log("Station name:", stationName);
+
+      const menu = document.createElement("div");
+      menu.className = "custom-context-menu";
+      menu.style.position = "absolute";
+      menu.style.left = `${event.pageX + 5}px`; 
+      menu.style.top = `${event.pageY + 5}px`;
+      menu.style.backgroundColor = "white";
+      menu.style.border = "1px solid #ccc";
+      menu.style.padding = "10px";
+      menu.style.boxShadow = "0px 4px 6px rgba(0, 0, 0, 0.1)";
+      menu.style.zIndex = "9999999";
+
+      menu.innerHTML = `
+        <h1 class='taguploadtitle'>Upload Tag Layout (.png)</h1>
+           <article class="regioncont">
+                            <label htmlFor="" class="disfilelabel" style={{ marginBottom: '1px' }}>Select your file</label>
+                            <div class="filename-display-wayside" id='filename-display'>
+                            No file selected
+                            </div>
+                            <input
+                                class="dislineinputcl"
+                                type="file"
+                                onChange={handleFileChange}
+                                id="hiddenFileInput"
+                                style='width: 200px;display:none'
+                            />
+                            <button onClick='document.getElementById("hiddenFileInput").click()' class="attachcl">
+                                <i class="fa-solid fa-paperclip"></i></button>
+                            <button id ='uploadBtn' class="uploadcl"><i class="fa-solid fa-upload"></i></button>
+                            
+                        </article>
+         <button class='tagupload-closebtn' id="context-close-btn">Close</button>
+      `;
+
+      document.body.appendChild(menu);
+      document.getElementById('uploadBtn').addEventListener("click",(e)=> {handleUpload(e)});
+      document.getElementById('hiddenFileInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+              setSelectedFile(file);
+              selectedFileRef.current = file;
+               const display = document.getElementById('filename-display');
+              display.textContent = file.name;
+            } else {
+              setSelectedFile(null);
+              selectedFileRef.current = null;
+               const display = document.getElementById('filename-display');
+               display.textContent = 'No file selected';
+            }
+          });
+       document.getElementById('hiddenFileInput').classList.add('dislineinputcl');
+      
+     
+
+      const closeBtn = document.getElementById("context-close-btn");
+      if (closeBtn) {
+        closeBtn.addEventListener("click", (e) => {
+          e.stopPropagation(); 
+          menu.remove(); 
+        });
+      }
+
+      menu.addEventListener("mousedown", (e) => {
+        e.stopPropagation(); 
+      });
+
+      const closeMenu = (e) => {
+        if (!menu.contains(e.target)) {
+        menu.remove();
+        document.removeEventListener("mousedown", closeMenu);
+        }
+      };
+      document.addEventListener("mousedown", closeMenu);
+    }
   };
 
   clickElements.forEach((clickElement) => {
     clickElement.addEventListener("click", handleClick);
+    clickElement.addEventListener("contextmenu", handleClick);
   });
 
   return () => {
     clickElements.forEach((clickElement) => {
-      clickElement.removeEventListener("click", handleClick);
+    clickElement.removeEventListener("click", handleClick);
+      clickElement.removeEventListener("contextmenu", handleClick);
     });
   };
 }, [svgContent]);
@@ -159,28 +260,36 @@ const WaySvgViewer = ({ textName,getCircleId,getLineId }) => {
 
     const handleUpload = async (e) => {
         e.preventDefault();
-        // if (!selectedFile) {
-        //     alert("Please select a file first.");
-        //     return;
-        // }
-    
+        if (!selectedFileRef.current) {
+            alert("Please select a file first.");
+            return;
+        }
+
+        const idToUse = circleIdRef.current || lineIdRef.current;  
+
+          if (!idToUse) {
+            alert("No station selected!");
+            return;
+          }
+                    
         setIsLoading(true);
         setError('');
         setSuccess('');
+        
     
         const formData = new FormData();
-        formData.append('upfile', selectedFile); // your API should accept a field named "file"
+        formData.append('upfile', selectedFile); 
     
         try {
             const username = 'admin';
             const password = 'admin';
             const token = btoa(`${username}:${password}`)
-            const response = await fetch("api/v2/discovery/", {
+            const response = await fetch(`api/v2/wayside/uploadstaionimg/${idToUse}`, {
                 method: "POST",
                 headers: {
                     'Authorization': `Basic ${token}`
                 },
-                body: formData, // Don't set Content-Type manually!
+                body: formData, 
             });
     
             if (response.ok) {
@@ -214,7 +323,7 @@ useEffect(() => {
   const texts = svgRoot.querySelectorAll("text[id]");
 
   const handleCircleClick = (event) => {
-    if (event.button === 0) { // Left-click
+    if (event.type ==='click' &&  event.button === 0) { // Left-click
       const circle = event.currentTarget;
       const circleId = circle.getAttribute("id");
 
@@ -225,9 +334,14 @@ useEffect(() => {
           getCurrentId(circleId, stationName);
         }
       });
-    } else if (event.button === 2) { 
+    } else if (event.type === 'contextmenu' && event.button === 2) { 
       event.preventDefault(); 
       console.log("Right-click detected");
+
+       const circle = event.currentTarget;
+      const id = circle.getAttribute("id");
+      setCircleId(id);
+      circleIdRef.current = id;
 
       const existingMenu = document.querySelector(".custom-context-menu");
       if (existingMenu) {
@@ -251,14 +365,14 @@ useEffect(() => {
       menu.style.zIndex = "9999999";
 
       menu.innerHTML = `
-        <p>Upload Tag Image</p>
-           <article className="regioncont">
-                            <label htmlFor="" className="disfilelabel" style={{ marginBottom: '1px' }}>Select your file</label>
-                            <div className="filename-display" id='filename-display'>
-                            No File Slected
+        <h1 class='taguploadtitle'>Upload Tag Layout (.png)</h1>
+           <article class="regioncont">
+                            <label htmlFor="" class="disfilelabel" style={{ marginBottom: '1px' }}>Select your file</label>
+                            <div class="filename-display-wayside" id='filename-display'>
+                            No file selected
                             </div>
                             <input
-                                className="dislineinputcl"
+                                class="dislineinputcl"
                                 type="file"
                                 onChange={handleFileChange}
                                 id="hiddenFileInput"
@@ -269,15 +383,27 @@ useEffect(() => {
                             <button id ='uploadBtn' class="uploadcl"><i class="fa-solid fa-upload"></i></button>
                             
                         </article>
-        <button id="context-option-btn">Option 1</button>
-         <button id="context-close-btn">Close Menu</button>
+         <button class='tagupload-closebtn' id="context-close-btn">Close</button>
       `;
 
       document.body.appendChild(menu);
-      document.getElementById('uploadBtn').addEventListener("click",handleUpload);
-      document.getElementById('hiddenFileInput').addEventListener('click',handleFileChange)
+      document.getElementById('uploadBtn').addEventListener("click",(e)=> {handleUpload(e)});
+      document.getElementById('hiddenFileInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+              setSelectedFile(file);
+              selectedFileRef.current = file;
+               const display = document.getElementById('filename-display');
+              display.textContent = file.name;
+            } else {
+              setSelectedFile(null);
+              selectedFileRef.current = null;
+               const display = document.getElementById('filename-display');
+               display.textContent = 'No file selected';
+            }
+          });
        document.getElementById('hiddenFileInput').classList.add('dislineinputcl');
-       document.getElementById('filename-display').textContent = selectedFile ? selectedFile.name : 'No file selected'
+      
      
 
       const closeBtn = document.getElementById("context-close-btn");
@@ -294,8 +420,8 @@ useEffect(() => {
 
       const closeMenu = (e) => {
         if (!menu.contains(e.target)) {
-          // menu.remove();
-          // document.removeEventListener("mousedown", closeMenu);
+          menu.remove();
+          document.removeEventListener("mousedown", closeMenu);
         }
       };
       document.addEventListener("mousedown", closeMenu);
@@ -303,24 +429,21 @@ useEffect(() => {
   };
 
   circles.forEach((circle) => {
-    circle.addEventListener("mousedown", handleCircleClick);
+    circle.addEventListener("click", handleCircleClick);
+    circle.addEventListener("contextmenu", handleCircleClick);
   });
 
-  const preventDefaultContextMenu = (e) => {
-    e.preventDefault(); 
-  };
-
-  document.addEventListener("contextmenu", preventDefaultContextMenu);
 
 
   return () => {
     circles.forEach((circle) => {
-      circle.removeEventListener("mousedown", handleCircleClick);
+      circle.removeEventListener("click", handleCircleClick);
+      circle.removeEventListener("contextmenu", handleCircleClick);
     });
 
     const existingMenu = document.querySelector(".custom-context-menu");
     if (existingMenu) existingMenu.remove();
-    document.removeEventListener("contextmenu", preventDefaultContextMenu);
+    
   };
 }, [svgContent]);
 

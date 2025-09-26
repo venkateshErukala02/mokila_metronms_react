@@ -53,7 +53,7 @@ const StationTagsTable = ({ circleId}) => {
 useEffect(() => {
     let url = '';
         if (circleId) {
-            url = `api/v2/wayside/stationdetails?station=${circleId}`;
+            url = `api/v2/wayside/tagdetails?station=${circleId}`;
         } 
        if (url) fetchDataRadial(url);
 }, [circleId]);
