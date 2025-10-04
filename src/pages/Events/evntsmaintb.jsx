@@ -272,6 +272,51 @@ const EventMainTB = () => {
     }
 
 
+      const handleRadialIP = async (url) => {
+        if (!eventipText) {
+            alert("Please enter a search term");
+            return;
+        }
+
+        setSearchBtn(true);
+        setIsLoading(true);
+        setIsError({ status: false, msg: "" });
+
+        try {
+            const response = await fetch(url,
+                // `api/v2/nodes/search?_s=assetRecord.serialNumber==${radialipText},sysName==${radialipText},label==${radialipText}&limit=${limitValueSelLabel}&offset=0&order=asc`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            if (response.status === 204) {
+                setIsLoading(false);
+                setEventmainData([]);
+                return;
+            }
+
+            const data = await response.json(); // Only parse once
+
+            if (response.ok) {
+                setIsLoading(false);
+
+            setEventmainData(data.nodes);
+
+                setIsError({ status: false, msg: '' });
+            } else {
+                throw new Error("Data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message || "Something went wrong" });
+        }
+    };
+
+
     return (
         <>
             <article className="row border-tlr custom-row">
@@ -286,7 +331,9 @@ const EventMainTB = () => {
                         <span className="eventgolcl" onClick={toggleDropdown} >Golbal <span class="fa fa-chevron-down highlightText v-align-tt iconsy"></span></span>
 
                         <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="IP Address " id="" className="form-controlevents" />
-                        <button className="clearfix createbtn" >Search</button>
+                        <button className="clearfix createbtn" onClick={() => {
+                                    const url = `api/v2/nodes/search?_s=assetRecord.serialNumber==${eventipText},sysName==${eventipText},label==${eventipText}&limit=${eventmainLimitLabelSel}&offset=0&order=asc`;
+                                    handleRadialIP(url);}} >Search</button>
                         <button className="clearfix createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
 
 

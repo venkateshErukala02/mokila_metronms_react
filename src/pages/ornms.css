@@ -700,7 +700,7 @@ tbody.tncodereventstbdtb>tr{width: 100%;font-size: 12px;}
 .searchbar::-ms-placeholder{font-family: 'Lato-Regular';color: #90949c;font-size: 12px;}
 .searchbar::-webkit-input-placeholder{color:#90949c;font-size: 12px;font-family: "Lato-Regular";}
 
-.ipaddlistone{list-style-type: none;max-width: 430px;margin: auto;}
+.ipaddlistone{list-style-type: none;max-width: 430px;margin: auto;padding-left: 10px;}
 .ipaddlistone>li{float: left;margin-right: 10px;}
 .ipaddlistone>li>button{border: none;
     font-family: 'Lato-Regular';
@@ -2883,8 +2883,28 @@ svg *:focus {
     justify-content: end;
     margin: auto;
     align-items: center;
-    min-height: 350px;
-    max-height: 600px;
+    position: absolute;
+    left: 30px;
+    bottom: 25px;
+}
+.tagsubmit-button{
+    background-color: #006fff;
+    border: #006fff;
+    border-radius: 5px;
+    color: #fff;
+    font-family: Lato-Regular;
+    font-size: 13px;
+    font-weight: 500;
+    height: 26px;
+    letter-spacing: .5px;
+    line-height: 0px;
+    margin-top: 2px;
+    padding: 14px;
+    margin-right: 8px;
+}
+.regioncontw{
+    min-height: 57px;
+    max-height: 57px;
 }
 
 

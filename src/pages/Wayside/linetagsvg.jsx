@@ -4,12 +4,14 @@ import { useLayoutEffect } from 'react';
 import '../ornms.css'
 
 
-const LineTagSvg = ({}) => {
+const LineTagSvg = ({rdDataRef}) => {
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [isLoading, setIsLoading] = useState(false);
     const [stationStatus, setStationStatus] = useState([]);
     const [svgContent, setSvgContent] = useState("");
     const svgContainerRef = useRef(null);
+    const rdData = rdDataRef.current === null ? [] : [rdDataRef.current[0]] ;
+
 
  useEffect(() => {
         const controller = new AbortController();
@@ -28,7 +30,47 @@ const LineTagSvg = ({}) => {
         return () => controller.abort();
     }, []);
 
-
+    useEffect(() => {
+        const svgRoot = svgContainerRef.current;
+    
+        if (!svgRoot) return;
+    
+        const resetSVGElements = () => {
+            const sbElements = svgRoot.querySelectorAll('[id^="SB"]');
+            const nbElements = svgRoot.querySelectorAll('[id^="NB"]');
+    
+            sbElements.forEach((el) => (el.style.fill = '#cccccc'));
+            nbElements.forEach((el) => (el.style.fill = '#cccccc'));
+        };
+    
+        if (!svgContent || !rdData || rdData.length === 0 || !Object.keys(rdData[0] || {}).length) {
+            resetSVGElements();
+            return;
+        }
+    
+        rdData.forEach((sb, index) => {
+            const position = sb.position?.trim().toUpperCase();
+            const status = sb.status?.trim().toUpperCase();
+    
+            const color = status === "DOWN" ? "red" : "rgb(102, 204, 51)";
+            const titleElement = svgRoot.querySelector('#section_station_name');
+            if(titleElement){
+              titleElement.textContent =  `${rdData[0].location}`;    
+            }
+            if (position === 'SB') {
+                const id = `SB${index + 1}`;
+                const el = svgRoot.querySelector(`#${id}`);
+                if (el) el.style.fill = color;
+    
+            } else if (position === 'NB') {
+                const id = `NB${index + 1}`;
+                const el = svgRoot.querySelector(`#${id}`);
+                if (el) el.style.fill = color;
+    
+            }
+        });
+    }, [rdData, svgContent]);
+    
 
     return (
         <>

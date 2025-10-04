@@ -31,12 +31,10 @@ const WaysideTable = ({ westSideView, circleId, setShowPopup, showPopup,lineId,h
             };
             const response = await fetch(url, options);
             const data = await response.json();
-            //   console.log('llol',response)
             if (response.ok) {
                 setIsLoading(false);
                 setRdData(data.tags || []);
 
-                // console.log('lpll',data)
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("data not found");

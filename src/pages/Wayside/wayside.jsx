@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import LeftNavList from "../Navbar/leftnavpage";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import TopoSvgViewer from "../Topology/toposvg";
 import TopoSectionTable from "../Topology/toposectiontable";
 import WestSvgViewer from "./waysidesvg";
@@ -32,7 +32,10 @@ const Wayside = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-
+    const [activeCont, setActiveCont] = useState('Address');
+    const [discAddValue, setDiscAddValue] = useState('');
+    const [rdData, setRdData] = useState('');
+    const rdDataRef =useRef(null);
 
     const handleWestside = (e) => {
         const selectElement = e.target;
@@ -96,16 +99,58 @@ const Wayside = () => {
         }
     };
 
+       const fetchDataRadial = async (url) => {
+        setIsLoading(true);
+        setError({ status: false, msg: "" });
+        try {
+            const username = 'admin';
+            const password = 'admin';
+            const token = btoa(`${username}:${password}`)
+            const options = {
+                method: "GET",
+                headers: {
+                    'Authorization': `Basic ${token}`
+                }
+
+            };
+            const response = await fetch(url, options);
+            const data = await response.json();
+            if (response.ok) {
+                setIsLoading(false);
+                if(Object.keys(data).length === 0){
+                   setRdData([]) 
+                }
+                setRdData(Array.isArray(data) ? data : [data]);
+                rdDataRef.current = Array.isArray(data) ? data : [data]
+                
+                setError({ status: false, msg: "" });
+            } else {
+                throw new Error("data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setError({ status: true, msg: error.message });
+        }
+    };
+
+useEffect(() => {
+    let url = '';
+        if (circleId || lineId) {
+            url = `api/v2/wayside/tagdetails?station=${circleId || lineId}`;
+        } 
+       if (url) fetchDataRadial(url);
+}, [circleId,lineId]);
+
     const renderTagView = (stationTagview, lineTagview,stationName) => {
         if (stationTagview) {
             return <>
-                <StationTagSvg stationName={stationName} />
-                <StationTagsTable circleId={circleId} />
+                <StationTagSvg stationName={stationName} rdDataRef={rdDataRef} />
+                <StationTagsTable rdDataRef={rdDataRef} />
             </>
         } else if (lineTagview) {
             return <>
-                <LineTagSvg />
-                <StationTagsTable circleId={circleId} />
+                <LineTagSvg rdDataRef={rdDataRef}/>
+                <StationTagsTable rdDataRef={rdDataRef} />
             </>;
         } else {
             return null;
@@ -161,6 +206,16 @@ const Wayside = () => {
         }
     };
 
+    const handleActiveCont = (value) => {
+        setActiveCont(value);
+    }
+
+    const handleAddReset = () => {
+        setDiscAddValue('');
+        setError('');
+        setSuccess('');
+    };
+
 
     return (
         <>
@@ -170,8 +225,8 @@ const Wayside = () => {
                 </article>
                 <article className="container-fluid" style={{ position: 'relative' }}>
                     <article className="row">
-                        <article className="col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
-                            <article className="border-allsd" style={{ height: '867px' }}>
+                        <article className="col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3" style={{position:'relative'}}>
+                            <article className="border-allsd" style={{ height: '907px' }}>
                                 <h1 className="topoheading">Wayside Tags</h1>
                                 <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Select :</label>
                                 <select name="name" id="name" value={westSideView} onChange={handleWestside} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
@@ -182,8 +237,44 @@ const Wayside = () => {
                                 </select>
                                 <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} />
                                   <article className="tagupload-container">
-                                        <h1 className="tagupload-heading">Tag Upload</h1>
-                                        <article className="regioncont">
+                                        <ul className="clearfix discovlist" style={{paddingBottom:'40px'}}>
+                        <li><button className={activeCont === 'Address' ? 'active' : ''} onClick={() => handleActiveCont('Address')}> Add Tag</button></li>
+                        <li><button className={activeCont === 'Upload' ? 'active' : ''} onClick={() => handleActiveCont('Upload')}>Tag Upload</button></li>
+                    </ul>
+                    {activeCont === 'Address' && ( 
+                        <article className="regioncontw">
+                                            <ul className="clearfix ipaddlistone">
+                            <li>
+                                <input
+                                    type="text"
+                                    className="clearfix form-controldis searchbar"
+                                    placeholder="Specific Tag"
+                                    value={discAddValue}
+                                    onChange={(e) => setDiscAddValue(e.target.value)}
+                                />
+                            </li>
+                             <li>
+                                <input
+                                    type="text"
+                                    className="clearfix form-controldis searchbar"
+                                    placeholder="Specific Tag Position"
+                                    value={discAddValue}
+                                    onChange={(e) => setDiscAddValue(e.target.value)} 
+                                />
+                            </li>
+                        </ul>
+                        <article style={{justifyContent:'center',display:'flex',marginTop:"10px"}}>
+                                <button className="clearfix tagsubmit-button" onClick={handleUpload} disabled={isLoading}>
+                                    {isLoading ? 'Submiting...' : 'Submit'}
+                                </button>
+                                <button className="clearfix resetbtn" onClick={handleAddReset}>
+                                    Reset
+                                </button>
+
+                        </article>
+                                            
+                                        </article>)}
+                                       {activeCont === 'Upload' && ( <article className="regioncontw" style={{paddingLeft:"20px"}}>
                                             <label htmlFor="" className="disfilelabel" style={{ marginBottom: '1px' }}>Select your file</label>
                                             <div className="filename-display">
                                                 {selectedFile ? selectedFile.name : 'No file selected'}
@@ -200,7 +291,7 @@ const Wayside = () => {
                                             <button onClick={handleUpload} class="uploadcl"><i class="fa-solid fa-upload"></i></button>
                                             
 
-                                        </article>
+                                        </article>)}
                                     </article>
                             </article>
                         </article>
@@ -212,7 +303,7 @@ const Wayside = () => {
                                             {lineTagview && (<span> - Line Tags<button onClick={handleStationTabview}>x</button></span>)}
                                         </button></li>
                                     </ul>
-                                        <article style={{ margin: '5px 0px 0 0px',paddingRight:'200px' }}>
+                                        <article style={{ margin: '5px 0px 0 0px' }}>
                                             {stationTagview || lineTagview === true ? <> {renderTagView(stationTagview, lineTagview, stationName)}</> : renderSectComponent(westSideView)}
                                         </article>
                                 </article>

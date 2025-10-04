@@ -71,26 +71,26 @@ const SnEventTab=()=>{
         },
         };
 
-        if (typevalueSel === 'syslogd') {
-            const now = Date.now();
-            const duration = selectedDuration;
-            const start = now-duration;
-                options = {
-            method: "POST",
-            headers: {
-                'Authorization': `Basic ${token}`,
-                "Content-Type": "application/json",
-            },
-        body:JSON.stringify({
-            filterSource: `${nodeIpaddress}`, // wrap IP in quotes
-            start: `${selectedDuration}`,
-            end: "now",
-            from: `${fromValue}`,
-            size: `${eventmainLimitLabelSel}`
-        })
-        };
+        // if (typevalueSel === 'syslogd') {
+        //     const now = Date.now();
+        //     const duration = selectedDuration;
+        //     const start = now-duration;
+        //         options = {
+        //     method: "POST",
+        //     headers: {
+        //         'Authorization': `Basic ${token}`,
+        //         "Content-Type": "application/json",
+        //     },
+        // body:JSON.stringify({
+        //     filterSource: `${nodeIpaddress}`, // wrap IP in quotes
+        //     start: `${selectedDuration}`,
+        //     end: "now",
+        //     from: `${fromValue}`,
+        //     size: `${eventmainLimitLabelSel}`
+        // })
+        // };
         
-        }
+        // }
 
             const response = await fetch(url, options);
 
@@ -175,7 +175,8 @@ const SnEventTab=()=>{
 
             case 'syslogd':
                 console.log('Fetching data...ff');
-                url='api/v2/essearch/search';
+                // url='api/v2/essearch/search';
+                url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource%3D%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&limit=50&offset=0`;
                 getDataEvntMain(url);
 
                 break;
