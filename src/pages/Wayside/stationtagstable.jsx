@@ -13,7 +13,7 @@ const StationTagsTable = ({ rdDataRef}) =>{
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [pageSize, setPageSize] = useState(1);
     const [fromValue, setFromValue] = useState('0');
-    const rdData = rdDataRef.current === null ? [] : [rdDataRef.current[0]] ;
+    const rdData = rdDataRef.current === null ? [] : [rdDataRef.current[0].tags] ;
 
  
 
@@ -30,17 +30,16 @@ const StationTagsTable = ({ rdDataRef}) =>{
                 <hr className="dashbdhr" />
             </article>
             <article className="row">
-                <article style={{ height: "43vh", overflowY: 'auto', overflowX: 'clip' }}>
+                <article style={{ height: "55vh", overflowY: 'auto', overflowX: 'clip' }}>
                     <table className="col-12 border-allsd table-fixed" style={{ height: '0vh' }}>
 
                         <thead className="tbtwo">
                             <tr>
+                                <th>TagId</th>
                                 <th>Location</th>
                                 <th>Position</th>
-                                <th>Status</th>
-                                <th>Type</th>
-                                <th>TagId</th>
-                                <th>Next Tag</th>
+                                <th>(Work <i class="fa-solid fa-arrow-up" style={{color:""}}></i> ,Def <i class="fa-solid fa-arrow-down" style={{color:""}}></i>)</th>
+                                <th>Delete</th>                               
                             </tr>
                         </thead>
 
@@ -77,14 +76,13 @@ const StationTagsTable = ({ rdDataRef}) =>{
                                     </td>
                                 </tr>
                                 ) :(
-                                    rdData.map((node, index) => (
-                                    <tr key={index}>
-                                        <td>{node.location}</td>
-                                        <td className="highlightText">{node.position}</td>
-                                        <td>{node.status}</td>
-                                        <td>{node.type}</td>
-                                        <td>{node.tagId}</td>
-                                        <td>{node.nextTag}</td>
+                                    rdData.length !== 0 && rdData[0].map((value, index) => (
+                                     <tr key={index}>
+                                        <td style={{padding:"4px 6px"}}>{value.tagId}</td>
+                                        <td style={{padding:"4px 6px"}}>{value.location}</td>
+                                        <td style={{padding:"4px 6px"}} className="">{value.position}</td>
+                                        <td style={{padding:"4px 48px"}}>{value.status === 'down' ? (<i class="fa-solid fa-arrow-down" style={{color:"red"}}></i> ): (<i class="fa-solid fa-arrow-up" style={{color:"green"}}></i>)}</td>
+                                        <td><i class="fa fa-trash"></i></td>
                                     </tr>
                                 ))                                     
                                 )}

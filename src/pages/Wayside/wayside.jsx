@@ -18,6 +18,8 @@ const Wayside = () => {
     const isVisible = useSelector(state => state.visibility.isVisible);
     const [westSideViewLabel, setWestSideViewLabel] = useState('Line21')
     const [westSideView, setWestSideView] = useState('Line1');
+    const [tagTypeValue, setTagTypeValue] = useState('all');
+    const [tagTypeLabel,setTagTypeLabel] = useState('All');
     const [circleId, setCircleId] = useState('');
     const [lineId, setLineId] = useState('');
     const [showPopup, setShowPopup] = useState(false);
@@ -26,7 +28,6 @@ const Wayside = () => {
     const [stationCount, setStationCount] = useState(false);
     const [lineTagview, setLineTagview] = useState(false);
     const [lineCount, setLineCount] = useState(false);
-    const [stationName, setStationName] = useState('');
     const [allTagfailCount, setAllTagfailCount] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [error, setError] = useState('');
@@ -36,6 +37,8 @@ const Wayside = () => {
     const [discAddValue, setDiscAddValue] = useState('');
     const [rdData, setRdData] = useState('');
     const rdDataRef =useRef(null);
+    const [stationNamesData,setStationNamesData] = useState('');
+    const prevIdRef = useRef(null);
 
     const handleWestside = (e) => {
         const selectElement = e.target;
@@ -44,14 +47,21 @@ const Wayside = () => {
         setWestSideViewLabel(label);
 
     }
+
+     const handleTagType = (e) => {
+        const selectElement = e.target;
+        const label = selectElement.options[selectElement.selectedIndex].label;
+        setTagTypeValue(selectElement.value);
+        setTagTypeLabel(label);
+
+    }
     const handleFileChange = (event) => {
         setSelectedFile(event.target.files[0]);
     };
 
-    const getCircleId = (id, name) => {
+    const getCircleId = (id) => {
         setCircleId(id);
         setStationTagview(true);
-        setStationName(name);
         setStationCount(prev => !prev);
     }
     const getLineId = (id) => {
@@ -122,7 +132,8 @@ const Wayside = () => {
                 }
                 setRdData(Array.isArray(data) ? data : [data]);
                 rdDataRef.current = Array.isArray(data) ? data : [data]
-                
+                setCircleId('');
+                setLineId('');
                 setError({ status: false, msg: "" });
             } else {
                 throw new Error("data not found");
@@ -133,18 +144,41 @@ const Wayside = () => {
         }
     };
 
-useEffect(() => {
-    let url = '';
-        if (circleId || lineId) {
-            url = `api/v2/wayside/tagdetails?station=${circleId || lineId}`;
-        } 
-       if (url) fetchDataRadial(url);
-}, [circleId,lineId]);
+        // useEffect(() => {
+        //     let url = '';
+        //         if (circleId) {
+        //             url = `api/v2/wayside/tagdetails?station=${circleId}`;
+        //         } 
+        //     if (url) fetchDataRadial(url);
+        // }, [circleId]);
 
-    const renderTagView = (stationTagview, lineTagview,stationName) => {
+        // useEffect(() => {
+        //     let url = '';
+        //         if (lineId) {
+        //             url = `api/v2/wayside/tagdetails?station=${lineId}`;
+        //         } 
+        //     if (url) fetchDataRadial(url);
+        // }, [lineId]);
+
+        useEffect(() => {
+    let url = '';
+    if (circleId) {
+        url = `api/v2/wayside/tagdetails?station=${circleId}`;
+    } else if (lineId) {
+        url = `api/v2/wayside/tagdetails?station=${lineId}`;
+    }
+
+    if (url) {
+        console.log("Fetching with URL:", url);
+        fetchDataRadial(url);
+    }
+}, [circleId, lineId]);
+
+
+    const renderTagView = (stationTagview, lineTagview) => {
         if (stationTagview) {
             return <>
-                <StationTagSvg stationName={stationName} rdDataRef={rdDataRef} />
+                <StationTagSvg rdDataRef={rdDataRef} />
                 <StationTagsTable rdDataRef={rdDataRef} />
             </>
         } else if (lineTagview) {
@@ -190,8 +224,8 @@ useEffect(() => {
             });
 
             if (response.ok) {
-                setSuccess('Discovery started successfully');
-                alert('Discovery started successfully')
+                setSuccess('File upload has started.');
+                alert('File upload has started.')
 
                 setSelectedFile(null);
             } else {
@@ -217,6 +251,48 @@ useEffect(() => {
     };
 
 
+      const fetchStationData = async (url) => {
+        setIsLoading(true);
+        setError({ status: false, msg: "" });
+        try {
+            const username = 'admin';
+            const password = 'admin';
+            const token = btoa(`${username}:${password}`)
+            const options = {
+                method: "GET",
+                headers: {
+                    'Authorization': `Basic ${token}`
+                }
+
+            };
+            const response = await fetch(url, options);
+            const data = await response.json();
+            if (response.ok) {
+                setIsLoading(false);
+                if(Object.keys(data).length === 0){
+                   setStationNamesData([]) 
+                }
+                setStationNamesData(Array.isArray(data) ? data.codes : [data.codes]);
+                console.log('plpplplp',stationNamesData)
+                setError({ status: false, msg: "" });
+            } else {
+                throw new Error("data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setError({ status: true, msg: error.message });
+        }
+    };
+
+
+useEffect(() => {
+    let url = '';
+            url = 'api/v2/wayside/codes'; 
+       if (url) fetchStationData(url);
+}, []);
+
+
+
     return (
         <>
             <article className="display-f">
@@ -235,7 +311,13 @@ useEffect(() => {
                                     <option value="line1-sec2" label="Line1-sec2">Line1-sec2</option>
                                     <option value="line4-sec1" label="Line4-sec1">Line4-sec1</option>
                                 </select>
-                                <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} />
+                                <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Tag type :</label>
+                                <select name="name" id="name" value={tagTypeValue} onChange={handleTagType} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
+                                    <option value="all" label="All">All</option>
+                                   <option value="TDM" label="Tdm">Tdm</option>
+                                   <option value="NTDM" label="Ntdm">Ntdm</option>
+                                </select>
+                                <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} tagTypeValue={tagTypeValue} />
                                   <article className="tagupload-container">
                                         <ul className="clearfix discovlist" style={{paddingBottom:'40px'}}>
                         <li><button className={activeCont === 'Address' ? 'active' : ''} onClick={() => handleActiveCont('Address')}> Add Tag</button></li>
@@ -254,13 +336,15 @@ useEffect(() => {
                                 />
                             </li>
                              <li>
-                                <input
-                                    type="text"
-                                    className="clearfix form-controldis searchbar"
-                                    placeholder="Specific Tag Position"
-                                    value={discAddValue}
-                                    onChange={(e) => setDiscAddValue(e.target.value)} 
-                                />
+                               <select name="name" id="name" value={westSideView} onChange={handleWestside} className="clearfix form-controldis searchbar">
+                                    {stationNamesData.length !== 0 && stationNamesData[0].map((station,index) => {
+                                        const dataNw = Object.keys(station);
+                                        const staionNametitle = dataNw[0];
+                                        return(
+                                    <option key={index} value={staionNametitle} label={staionNametitle}>{staionNametitle}</option>
+                                        )
+                                    })}                                    
+                                </select>
                             </li>
                         </ul>
                         <article style={{justifyContent:'center',display:'flex',marginTop:"10px"}}>
@@ -304,7 +388,7 @@ useEffect(() => {
                                         </button></li>
                                     </ul>
                                         <article style={{ margin: '5px 0px 0 0px' }}>
-                                            {stationTagview || lineTagview === true ? <> {renderTagView(stationTagview, lineTagview, stationName)}</> : renderSectComponent(westSideView)}
+                                            {stationTagview || lineTagview === true ? <> {renderTagView(stationTagview, lineTagview)}</> : renderSectComponent(westSideView)}
                                         </article>
                                 </article>
                         </article>

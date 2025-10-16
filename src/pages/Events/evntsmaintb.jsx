@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import '../ornms.css'
 import './../Events/events.css';
 
@@ -6,12 +6,13 @@ import './../Events/events.css';
 const EventMainTB = () => {
 
     const [eventmainData, setEventmainData] = useState([]);
+    const [auditmainData,setAuditmainData] = useState([]);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [typevalueSel, setTypevalueSel] = useState('events');
     const [typelabelSel, setTypelabelSel] = useState('Events');
     const [selectedDuration, setSelectedDuration] = useState(86400000); // keep as raw value
     const [eventtimeSel, setEventtimeSel] = useState(Date.now() - 86400000);
-    const [eventmainSeverityValueSel, setEventmainSeverityValueSel] = useState('-1');
+    const [eventmainSeverityValueSel, setEventmainSeverityValueSel] = useState('');
     const [eventmainSeverityLabelSel, setEventmainSeverityLabelSel] = useState('All');
     const [eventmainLimitValueSel, setEventmainLimitValueSel] = useState('1');
     const [eventmainLimitLabelSel, setEventmainLimitLabelSel] = useState('50');
@@ -22,8 +23,11 @@ const EventMainTB = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [pageSize, setPageSize] = useState(1);
+    const [nodeIdData,setNodeIdData] = useState('');
+    const nodeIdRef = useRef(null);
 
     const getDataEvntMain = async (url) => {
+       if(eventipText === ''){
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
@@ -57,16 +61,18 @@ const EventMainTB = () => {
 
             if (url.includes('/audit/') && typevalueSel==='auditlog') {
                 normalized = data.audits || [];
+                setAuditmainData(normalized || []);
             } else if (data?.event && typevalueSel==='events' || typevalueSel==='syslogd' ) {
                 normalized = data.event;
-            }
+                setEventmainData(normalized || []);
 
-            setEventmainData(normalized);
+            }
             setIsLoading(false);
         } catch (error) {
             setIsLoading(false);
             setIsError({ status: true, msg: error.message });
         }
+    }
     };
 
     // useEffect(() => {
@@ -76,10 +82,10 @@ const EventMainTB = () => {
 
 
 
-    // useEffect(() => {
-    //     const newTimestamp = Date.now() - selectedDuration;
-    //     setEventtimeSel(newTimestamp);
-    // }, [selectedDuration]);
+    useEffect(() => {
+        const newTimestamp = Date.now() - selectedDuration;
+        setEventtimeSel(newTimestamp);
+    }, [selectedDuration]);
 
     // useEffect(() => {
     //     const baseFilter = `eventDisplay==Y;eventSource!=syslogd`;
@@ -101,23 +107,32 @@ const EventMainTB = () => {
     useEffect(() => {
         let url = '';
 
+        let filterParts = [
+            "eventDisplay==Y",
+            typevalueSel === 'events' ? "eventSource!=syslogd" : 'eventSource==syslogd'
+            ];
+
+            if (eventmainSeverityValueSel) {
+            filterParts.push(`eventSeverity==${eventmainSeverityValueSel}`);
+            }
+
+        const filterString = filterParts.join(";");
         switch (typevalueSel) {
             case 'events':
                 console.log('Fetching data...eer');
-                url = `api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D1747558597559&ar=glob&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`
+                url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`
                 getDataEvntMain(url);
                 break;
 
             case 'syslogd':
                 console.log('Fetching data...ff');
-                // url = 'api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource%3D%3Dsyslogd;eventCreateTime%3Dgt%3D1744612448962&ar=glob&limit=50&offset=0&order=desc&orderBy=id';
-                url = `api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource%3D%3Dsyslogd;eventCreateTime%3Dgt%3D1749363005262&ar=glob&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`;
+                url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`;
                 getDataEvntMain(url);
 
                 break;
             case 'auditlog':
                 console.log('Fetching data...lkkl');
-                url = `api/v2/audit/list?_s=&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`;
+                url= `api/v2/audit/list?_s=datentime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`
                 getDataEvntMain(url);
                 break;
 
@@ -126,54 +141,48 @@ const EventMainTB = () => {
 
                 break;
         }
-    }, [typevalueSel, pageSize, eventmainLimitLabelSel]);
-
-//   useEffect(() => {
-//   if (typevalueSel === 'auditlog') {
-//     const url = `api/v2/audit/list?_s=&limit=${eventauditLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`;
-//     getDataEvntMain(url);
-//   }
-// }, [eventauditLimitLabelSel, typevalueSel, pageSize]);
+    }, [typevalueSel, pageSize, eventmainLimitLabelSel,selectedDuration,eventmainSeverityValueSel]);
 
 
-    // const handleEventIP = async () => {
+    const handleNodeIp = async (eventipText) => {
 
 
-    //     if (!eventipTextipText) {
-    //       alert("Please enter a search term");
+        // if (!eventipTextipText) {
+        //   alert("Please enter a search term");
 
-    //     } else {
-    //       setSearchBtn(true)
+        // } else {
+        //   setSearchBtn(true)
 
 
-    //       try {
-    //         const response = await fetch(`api/v2/nodes/search?_s=sysName==${firmipText}*,label==${firmipText},assetRecord.serialNumber==${firmipText}&limit=100&offset=0&order=asc`, {
-    //           method: "GET",
-    //           headers: {
-    //             "Content-Type": "application/json",
-    //           },
-    //         });
-    //         const data = await response.json();
+          try {
+            const response = await fetch(`api/v2/nodes?_s=label==${eventipText.trim()}`, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+            const data = await response.json();
 
-    //         if (response.ok) {
-    //           setIsLoading(false);
-    //           setFirmData(data.nodes || []);
-    //           setFirmipText('')
-    //           setIsError({ status: false, msg: "" });
-    //           console.log("okkoo", data);
-    //           console.log("gdgd", response);
-    //           setIsError({ status: false, msg: "" });
-    //         } else {
-    //           throw new Error("data not found");
-    //         }
+            if (response.ok) {
+                 const nodeId = data.node[0]?.id;
 
-    //       } catch (error) {
-    //         setIsLoading(false);
-    //         setIsError({ status: true, msg: error.message });
-    //       }
-    //     }
+            if (!nodeId) throw new Error("Node ID not found");
+                nodeIdRef.current = nodeId;
+              setIsLoading(false);
+              setNodeIdData(data.node[0]);
+            //   nodeIdRef.current = Array.isArray(data.node[0]) ? data.node[0] : [data.node[0]];
 
-    //   }  //
+              setIsError({ status: false, msg: "" });
+              return nodeId;
+            } else {
+              throw new Error("data not found");
+            }
+
+          } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message });
+          }
+        } 
 
 
 
@@ -271,8 +280,56 @@ const EventMainTB = () => {
         }
     }
 
+     const handleRadialIP = async () => {
+        if (!eventipText) {
+            alert("Please enter a search term");
+            return;
+        }else{
+            let url =''
+            let start = '';
+            let filter = '';
+            // let filter = "eventSource!%3Dsyslogd" + ';';
+            if (typevalueSel ==='auditlog') {
+                // start  = `api/v2/audit/list?_s=`
+                url = `api/v2/audit/list?_s=logDesc==*${eventipText}*;datentime%3Dgt%3D1760080111575&limit=100&offset=0&order=desc&orderBy=id`
+                 handleRadialIPa(url);
+            } else {
+                start = `api/v2/events?_s=`
+                const regex = /^192\.168\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+                if (regex.test(eventipText)) {
+                    const id = await handleNodeIp(eventipText);
+                         if (id) {
+                        // filter  =  filter +'node.id%3D%3D' + `${id}` + ';';
+                        // console.log("okookoo",id);
+                        url = `api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;node.id%3D%3D${id};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=0&order=desc&orderBy=id`
+                        handleRadialIPa(url);
+                         }
+                }  else {
+                    filter  =  filter + `eventLogMsg%3D%3D` +`*${eventipText}*`;
+                     if (eventmainLimitLabelSel != 'all') {
+                    filter  =  filter +'&limit=' + `${eventmainLimitLabelSel}`;
+                    }
+                    url = start + filter + '&offset=0&order=desc&orderBy=id';
+                     handleRadialIPa(url);
+                    console.log('apppoooiii',url)
+                }
+                // if (eventmainSeverityValueSel) {
+                //     filter  =  filter +'eventSeverity%3D%3D' + `${eventmainSeverityValueSel}` + ';';
+                // }
+                //  if (eventtimeSel) {
+                //     filter  =  filter +'eventCreateTime%3Dgt%3D' + `${eventtimeSel}`;
+                // }
+                // if (cat slected) {
+                //     filter  =  filter +'logDesc%D%D' + `*${eventipText}*;
+                // }
+               
+            }
+        }
 
-      const handleRadialIP = async (url) => {
+    }
+
+
+      const handleRadialIPa = async (url) => {
         if (!eventipText) {
             alert("Please enter a search term");
             return;
@@ -281,10 +338,9 @@ const EventMainTB = () => {
         setSearchBtn(true);
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
-
+        
         try {
             const response = await fetch(url,
-                // `api/v2/nodes/search?_s=assetRecord.serialNumber==${radialipText},sysName==${radialipText},label==${radialipText}&limit=${limitValueSelLabel}&offset=0&order=asc`,
                 {
                     method: "GET",
                     headers: {
@@ -304,7 +360,17 @@ const EventMainTB = () => {
             if (response.ok) {
                 setIsLoading(false);
 
-            setEventmainData(data.nodes);
+                let normalized = [];
+
+            if (url.includes('/audit/') && typevalueSel==='auditlog') {
+                normalized = data.audits || [];
+                setAuditmainData(normalized || []);
+            } else if (data?.event && typevalueSel==='events' || typevalueSel==='syslogd' ) {
+                normalized = data.event;
+                setEventmainData(normalized || []);
+
+            }
+            setIsLoading(false);
 
                 setIsError({ status: false, msg: '' });
             } else {
@@ -315,6 +381,7 @@ const EventMainTB = () => {
             setIsError({ status: true, msg: error.message || "Something went wrong" });
         }
     };
+
 
 
     return (
@@ -331,9 +398,7 @@ const EventMainTB = () => {
                         <span className="eventgolcl" onClick={toggleDropdown} >Golbal <span class="fa fa-chevron-down highlightText v-align-tt iconsy"></span></span>
 
                         <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="IP Address " id="" className="form-controlevents" />
-                        <button className="clearfix createbtn" onClick={() => {
-                                    const url = `api/v2/nodes/search?_s=assetRecord.serialNumber==${eventipText},sysName==${eventipText},label==${eventipText}&limit=${eventmainLimitLabelSel}&offset=0&order=asc`;
-                                    handleRadialIP(url);}} >Search</button>
+                        <button className="clearfix createbtn" onClick={() => { handleRadialIP();}} >Search</button>
                         <button className="clearfix createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
 
 
@@ -345,8 +410,9 @@ const EventMainTB = () => {
                         <button className="clearfix numcl"><span>{pageSize}</span></button>
                         <button className="clearfix arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
 
-                        <input type="text" style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="IP Address " id="" className="form-controlevents" />
-                        <button className="clearfix createbtn">Search</button>
+                         <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="IP Address " id="" className="form-controlevents" />
+                        <button className="clearfix createbtn" onClick={() => { handleRadialIP();}} >Search</button>
+                        <button className="clearfix createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
                     </article>
 
                 </article>
@@ -363,7 +429,7 @@ const EventMainTB = () => {
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Severity :</label>
 
                             <select name="name" id="name" value={eventmainSeverityValueSel} onChange={handleSeverityMode} className="form-controll1" style={{ maxWidth: '116px', minWidth: '116px' }}>
-                                <option value="-1" selected="selected" label="All">All</option>
+                                <option value="" selected="selected" label="All">All</option>
                                 <option value="7" label="Critical">Critical</option>
                                 <option value="6" label="Major">Major</option>
                                 <option value="5" label="Minor">Minor</option>
@@ -377,12 +443,12 @@ const EventMainTB = () => {
 
                             <select name="name" id="name" className="form-controll1" style={{ maxWidth: '124px', minWidth: '124px' }}>
                                 <option value="All">All</option>
-                                <option value="saab">Disable</option>
+                               <option value="uei.opennms.org/nodes/nodeUp" label="Up">Up</option>
+                               <option value="uei.opennms.org/nodes/nodeDown" label="Down">Down</option>
+                               <option value="uei.opennms.org/traps/KEYWEST-MIB/associatedTrap" label="Associated">Associated</option>
+                               <option value="uei.opennms.org/traps/KEYWEST-MIB/disassociatedTrap" label="Dissociated">Dissociated</option>
                             </select>
-
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
-
-
                             <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
                                 <option value="3600000" label="Last hour">Last hour</option>
                                 <option value="28800000" label="8 hours">8 hours</option>
@@ -406,9 +472,11 @@ const EventMainTB = () => {
                                 <option value="auditlog" label="Audit Log">Audit Log</option>
                             </select>
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
-                            <select name="name" id="name" className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
-                                <option value="24 hours">24 hours</option>
-                                <option value="saab">Disable</option>
+                            <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
+                                <option value="3600000" label="Last hour">Last hour</option>
+                                <option value="28800000" label="8 hours">8 hours</option>
+                                <option value="86400000" label="24 hours">24 hours</option>
+                                <option value="172800000" label="48 hours">48 hours</option>
                             </select>
 
                             <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
@@ -475,8 +543,8 @@ const EventMainTB = () => {
                                 </tr>
                             </thead>
                             <tbody className="eventstbdtb">
-                                {Array.isArray(eventmainData) && eventmainData?.length > 0 ? (
-                                    eventmainData.map((event) => (
+                                {Array.isArray(auditmainData) && auditmainData?.length > 0 ? (
+                                    auditmainData.map((event) => (
                                         <tr key={event.id}>
                                             <td>{event.date}</td>
                                             <td>{event.type}</td>
@@ -486,7 +554,7 @@ const EventMainTB = () => {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="4" className="datacl centered-text">No Data</td>
+                                        <td colSpan="4" className="datacl centered-text">No Data Available</td>
                                     </tr>
                                 )}
                             </tbody>

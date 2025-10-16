@@ -4,7 +4,7 @@ import '../Dashboard/dashboard.css';
 
 
 
-const WaysideTable = ({ westSideView, circleId, setShowPopup, showPopup,lineId,handleTagsPopup,stationCount,lineCount ,allTagfailCount}) => {
+const WaysideTable = ({ westSideView, circleId, setShowPopup, showPopup,lineId,handleTagsPopup,stationCount,lineCount ,allTagfailCount,tagTypeValue}) => {
     const [rdData, setRdData] = useState('');
     const [searchBtn, setSearchBtn] = useState(false);
     const [radialipText, setRadialipText] = useState('');
@@ -74,7 +74,15 @@ useEffect(() => {
 useEffect(() => {
     let url = '';
     if (textName === 'Line1') {
-        url = 'api/v2/wayside/fetch?time=3600'
+        url = `api/v2/wayside/fetch?show=${tagTypeValue}&time=3600`
+    }
+    if (url) fetchDataRadial(url);
+}, [tagTypeValue]);
+
+useEffect(() => {
+    let url = '';
+    if (textName === 'Line1') {
+        url = `api/v2/wayside/fetch?show=${tagTypeValue}&time=3600`
     }
     if (url) fetchDataRadial(url);
 }, []);
@@ -82,7 +90,7 @@ useEffect(() => {
 useEffect(() => {
     let url = '';
     if (textName === 'Line1') {
-        url = 'api/v2/wayside/fetch?time=3600'
+        url = `api/v2/wayside/fetch?show=${tagTypeValue}&time=3600`
     }
     if (url) fetchDataRadial(url);
 }, [allTagfailCount]);

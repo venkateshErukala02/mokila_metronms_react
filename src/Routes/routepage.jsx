@@ -15,6 +15,8 @@ import TranscoderView from '../pages/Dashboard/transcoderview';
 import TrainNodeView from '../pages/Dashboard/trainnodeview';
 import ObcNodeView from '../pages/Dashboard/obcnodeview';
 import Wayside from '../pages/Wayside/wayside';
+import ConfigPage from '../pages/Config/configpage';
+
 
 const RoutesPage = () => {
    return (
@@ -30,6 +32,7 @@ const RoutesPage = () => {
             <Route  exact path="/Topology" element={<TopoPg />} />
             <Route  exact path="/Wayside" element={<Wayside />} />
             <Route  exact path="/TestTopo" element={<NewTopology />} />
+            <Route  exact path="/Config" element={<ConfigPage />} />
             <Route  exact path="/Event" element={<EventPg />} />
             <Route exact path="/Inventory" element={<InventRpt />} />
             <Route exact path="/Setting" element={<SettPage />} />

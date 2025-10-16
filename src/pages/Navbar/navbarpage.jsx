@@ -172,7 +172,9 @@ const Navbar = () => {
                         <h6>admin</h6>
                     </li>
                     <li onClick={handleLogout}>
+                        <a href="login.jsp">
                     <i className="fa fa-sign-out fa-2x accentColor"></i>
+                    </a>
                     </li>
                 </ul>
               

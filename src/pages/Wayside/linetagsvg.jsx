@@ -10,7 +10,7 @@ const LineTagSvg = ({rdDataRef}) => {
     const [stationStatus, setStationStatus] = useState([]);
     const [svgContent, setSvgContent] = useState("");
     const svgContainerRef = useRef(null);
-    const rdData = rdDataRef.current === null ? [] : [rdDataRef.current[0]] ;
+    const rdData = rdDataRef.current === null ? [] : [rdDataRef.current[0].tags] ;
 
 
  useEffect(() => {
@@ -30,10 +30,29 @@ const LineTagSvg = ({rdDataRef}) => {
         return () => controller.abort();
     }, []);
 
+
     useEffect(() => {
         const svgRoot = svgContainerRef.current;
     
         if (!svgRoot) return;
+
+         const sbElements = svgRoot.querySelectorAll('[id^="SB"],[id^="NB"]');
+                sbElements.forEach((el) => {
+                const id = el.getAttribute('id');
+                const validTags = ["SB1", "SB2", "SB3", "SB4", "SB5", "SB6", "SB7", "SB8","NB1", "NB2", "NB3", "NB4", "NB5", "NB6", "NB7", "NB8"];
+                if (validTags.includes(id)) {
+                el.style.fill = '#cccccc';
+
+                // Remove old <title> if any
+                const oldTitle = el.querySelector('title');
+                if (oldTitle) oldTitle.remove();
+                }
+                const titleElement = svgRoot.querySelector('#section_station_name');
+                if(titleElement){
+                    titleElement.textContent = 'N/A';
+                }
+            });
+
     
         const resetSVGElements = () => {
             const sbElements = svgRoot.querySelectorAll('[id^="SB"]');
@@ -41,32 +60,50 @@ const LineTagSvg = ({rdDataRef}) => {
     
             sbElements.forEach((el) => (el.style.fill = '#cccccc'));
             nbElements.forEach((el) => (el.style.fill = '#cccccc'));
+            const titleElement = svgRoot.querySelector('#section_station_name');
+            if(titleElement){
+                titleElement.textContent = 'N/A';
+                }
         };
     
-        if (!svgContent || !rdData || rdData.length === 0 || !Object.keys(rdData[0] || {}).length) {
+        if (!svgContent || !rdData || rdData.length === 0) {
             resetSVGElements();
             return;
         }
+
+        const titleElement = svgRoot.querySelector('#section_station_name');
+            if(titleElement){
+              titleElement.textContent =  `${rdDataRef.current[0].station}`;    
+            }else{
+                  titleElement.textContent = 'N/A'
+            }
     
-        rdData.forEach((sb, index) => {
+        rdData[0]?.forEach((sb, index) => {
             const position = sb.position?.trim().toUpperCase();
             const status = sb.status?.trim().toUpperCase();
-    
+            const linePos = position + (index + 1)
             const color = status === "DOWN" ? "red" : "rgb(102, 204, 51)";
             const titleElement = svgRoot.querySelector('#section_station_name');
             if(titleElement){
-              titleElement.textContent =  `${rdData[0].location}`;    
+              titleElement.textContent =  `${rdDataRef.current[0].station}`;    
+            }else{
+                  titleElement.textContent = 'N/Adfvv'
             }
-            if (position === 'SB') {
-                const id = `SB${index + 1}`;
-                const el = svgRoot.querySelector(`#${id}`);
-                if (el) el.style.fill = color;
-    
-            } else if (position === 'NB') {
-                const id = `NB${index + 1}`;
-                const el = svgRoot.querySelector(`#${id}`);
-                if (el) el.style.fill = color;
-    
+            let obj = svgRoot.querySelector(`#${position}`);
+            let lie = svgRoot.querySelector(`#${linePos}`);
+            let el = undefined;
+            if (obj) {
+                el = obj;
+                
+            } else if (lie){
+                el = lie;
+            }
+
+            if (el) {
+                el.style.fill = color;
+                const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+                title.textContent = `${sb.tagId}`;
+                el.appendChild(title);
             }
         });
     }, [rdData, svgContent]);
@@ -74,7 +111,7 @@ const LineTagSvg = ({rdDataRef}) => {
 
     return (
         <>
-            <article className="" style={{ textAlign: 'center', paddingTop: '20px', paddingBottom: '20px' }}>
+            <article className="" style={{ textAlign: 'center', paddingTop: '60px', paddingBottom: '60px' }}>
                 <div ref={svgContainerRef} dangerouslySetInnerHTML={{ __html: svgContent }} />
             </article>
         </>

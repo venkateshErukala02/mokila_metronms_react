@@ -85,7 +85,7 @@ const selectedFileRef = useRef(null);
     }
 
     if (textName !== '') {
-      fetch('api/v2/wayside/stationstatus?time=600', options)
+      fetch('api/v2/wayside/stationstatus?time=3600', options)
         .then((res) => res.json())
         .then((response) => {
           const linesData = response.lines;
@@ -117,9 +117,9 @@ const selectedFileRef = useRef(null);
     }
   }, [svgContent]);
 
-  const getCurrentId=(id,stationName)=>{
+  const getCurrentId=(id)=>{
         // setCircleId(id)
-        getCircleId(id,stationName)
+        getCircleId(id)
       }
 
       const getCurrentElementId=(id)=>{
@@ -330,8 +330,7 @@ useEffect(() => {
       texts.forEach((text) => {
         const s = text.id.replace("_txt", "");
         if (s === circleId) {
-          const stationName = text.textContent;
-          getCurrentId(circleId, stationName);
+          getCurrentId(circleId);
         }
       });
     } else if (event.type === 'contextmenu' && event.button === 2) { 

@@ -188,6 +188,8 @@ tbody.settingbdtb>tr{width: 100%;font-size: 12px;}
         border: 1px solid #DDD;
         border-radius: 5px;
         width: 100%;
+        min-width: 148px;
+        max-width: 150px;
   }
   .trapsel{
     background-color: #eae7e7;
@@ -195,6 +197,8 @@ tbody.settingbdtb>tr{width: 100%;font-size: 12px;}
     border: 1px solid #DDD;
     border-radius: 5px;
     font-size: 13px;
+    min-width: 148px;
+    max-width: 150px;
 
   }
   .b-t{
