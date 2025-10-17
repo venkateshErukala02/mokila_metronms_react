@@ -137,7 +137,7 @@ const TreeList = ({ getElementAtEvent }) => {
 
   return (
     <>
-      <div className="" style={{ marginLeft: '0px',height:'70vh',overflowX:'clip',overflowY:'auto' }}>
+      <div className="" style={{ marginLeft: '0px',height:'30vh',overflowX:'clip',overflowY:'auto' }}>
         <div className="col text-center" style={{ marginLeft: '0px' }}>
           <p className="mt-0" style={{ padding: '0', margin: '0' }}>
             <div className="row mt d-flex">

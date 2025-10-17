@@ -128,8 +128,8 @@ const TopoSectionTable=({textName})=>{
                             <tr>
                                 <th>System Name</th>
                                 <th>Primary IP</th>
-                                <th>Firmware</th>
-                                <th>Status</th>
+                                {/* <th>Firmware</th>
+                                <th>Status</th> */}
                                 <th>Up Time</th>
                                 <th>Device Type</th>
                                 <th>Position</th>
@@ -170,8 +170,8 @@ const TopoSectionTable=({textName})=>{
                                         <td>{node.ipAddress}</td>
                                         <td>{node.firmware}</td>
                                         <td>{node.status}</td>
-                                        <td>{node.sysUptime}</td>
-                                        <td>{node.productCode}</td>
+                                        {/* <td>{node.sysUptime}</td>
+                                        <td>{node.productCode}</td> */}
                                         <td>{node.radioMode}</td>
                                     </tr>
                                 ))}

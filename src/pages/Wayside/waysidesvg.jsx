@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import '../ornms.css';
 import '../Dashboard/dashboard.css';
-import { useLayoutEffect } from 'react';
+import { useLayoutEffect } from 'react'; 
 
 const WaySvgViewer = ({ textName,getCircleId,getLineId }) => {
   const [svgContent, setSvgContent] = useState("");

@@ -4,9 +4,10 @@ import '../ornms.css';
 import '../Topology/topology.css';
 import SouthBoundTb from "./southboundtb";
 import NorthBoundTb from "./northboundtb";
+import StationTagsTable from "../Wayside/stationtagstable";
 
 
-const StationNodeTableView=({textName})=>{
+const StationNodeTableView=({textName , rdDataRef})=>{
     // const lineName= textName.text
     const [sectionTbData,setSectionTbData] = useState('');
     const [limitValueSel, setLimitValueSel] = useState('');
@@ -22,14 +23,15 @@ const StationNodeTableView=({textName})=>{
         <>
         <article className="piechtcont">
                 <article className="row border-lrr">
-                    <article className="col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xxl-7">
+                    <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
                        <TopoSectionTable textName={textName}/>
                     </article>
-                    <article className="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xxl-5">
-                        <article className={textName.data.mode !== 'facility' ? 'dis-none' : 'dis-blck'}>
+                    <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
+                        {/* <article className={textName.data.mode !== 'facility' ? 'dis-none' : 'dis-blck'}>
                         <SouthBoundTb textName={textName}/>
                         <NorthBoundTb textName={textName}/>
-                        </article>
+                        </article> */}
+                        <StationTagsTable rdDataRef={rdDataRef} />
                 </article>  
             </article>
           </article>

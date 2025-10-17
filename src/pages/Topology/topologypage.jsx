@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect, useRef } from "react";
 import TreeList from "../Topology/treelist";
 import MapLat from "../Topology/mapcomp";
 import TransmitTab from '../Topology/topologygraph';
@@ -19,6 +19,8 @@ import YardTbtwo from "./yardtwotb";
 import TrainLineView from "./trainlineview";
 import TrainLogs from "./trainlogs";
 import StationSvg from "./stationsvg";
+import WaysideTable from "../Wayside/waysidetable";
+import WaysidePopupTable from "./waysidepopuptable";
 
 
 
@@ -27,6 +29,20 @@ import StationSvg from "./stationsvg";
 const TopoPg = () => {
 
     const [textName, setTextName] = useState('');
+    const [lineId, setLineId] = useState('');
+    const [circleId, setCircleId] = useState('');
+    const [stationCount, setStationCount] = useState(false);
+    const [lineCount, setLineCount] = useState(false);
+    const [lineTagview, setLineTagview] = useState(false);
+    const [stationTagview, setStationTagview] = useState(false);
+    const [rdData, setRdData] = useState('');
+    const [showPopup, setShowPopup] = useState(false);
+    const [currentTagid, setCurrentTagid] = useState('');
+    const rdDataRef =useRef(null);
+    const [tagTypeValue, setTagTypeValue] = useState('all');
+    const [allTagfailCount, setAllTagfailCount] = useState(false);
+    const [tagTypeLabel,setTagTypeLabel] = useState('All');
+    const [westSideView, setWestSideView] = useState('Line1');
 
     const isVisible = useSelector(state => state.visibility.isVisible);
 
@@ -90,24 +106,24 @@ useEffect(() => {
     const renderSectComponent=(textName)=>{
         switch (textName.text) {
             case 'line1-sec1':
-              return   <>   <TopoSvgViewer textName={textName}/>
+              return   <>   <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId}/>
                 <TopoSectionTable  textName={textName}/> </>
                 break;
             case 'line1-sec2':
-                return  <>   <TopoSvgViewer textName={textName}/>
+                return  <>   <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId}/>
                          <TopoSectionTable  textName={textName}/> </>
                     break;
             case 'line4-sec1':
-                return  <>   <TopoSvgViewer textName={textName}/>
+                return  <>   <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId}/>
                             <TopoSectionTable  textName={textName}/> </>
                     break;
             case 'line4-sec1':
-                return  <>   <TopoSvgViewer textName={textName}/>
+                return  <>   <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId}/>
                             <TopoSectionTable  textName={textName}/> </>
                     break;
     
             default:
-                return <TopoSvgViewer textName={textName}/>
+                return <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId}/>
                 break;
         }
     }
@@ -120,8 +136,8 @@ useEffect(() => {
             //                </> 
             //     break;
             case 'facility':
-              return  <> <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId}/>
-              <StationNodeTableView  textName={textName}/>
+              return  <> <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} />
+              <StationNodeTableView  textName={textName} rdDataRef={rdDataRef} />
                            </> 
                 break;
             case 'Trains':
@@ -142,6 +158,24 @@ useEffect(() => {
                 break;
         }
     }
+
+
+     const renderTagView = (stationTagview, lineTagview) => {
+        if (stationTagview) {
+            return <>
+                <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} />
+              <StationNodeTableView  textName={textName} rdDataRef={rdDataRef} />
+            </>
+        } else if (lineTagview) {
+            return <>
+               <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} />
+              <StationNodeTableView  textName={textName} rdDataRef={rdDataRef} />
+            </>;
+        } else {
+            return null;
+        }
+    }
+
 
      const getNodeLabel = (node) => {
     const mode = node.data?.mode;
@@ -209,6 +243,102 @@ useEffect(() => {
         setStationView(false);
     }
 
+    const getCircleId = (id) => {
+        setCircleId(id);
+        setStationTagview(true);
+        setStationCount(prev => !prev);
+        setStationView(false);
+
+    }
+    const getLineId = (id) => {
+        setLineId(id);
+        setLineTagview(true);
+        setLineCount(prev => !prev)
+        setStationView(false);
+
+    }
+
+
+       const fetchDataRadial = async (url) => {
+        setIsLoading(true);
+        setIsError({ status: false, msg: "" });
+        try {
+            const username = 'admin';
+            const password = 'admin';
+            const token = btoa(`${username}:${password}`)
+            const options = {
+                method: "GET",
+                headers: {
+                    'Authorization': `Basic ${token}`
+                }
+
+            };
+            const response = await fetch(url, options);
+            const data = await response.json();
+            if (response.ok) {
+                setIsLoading(false);
+                if(Object.keys(data).length === 0){
+                   setRdData([]) 
+                }
+                setRdData(Array.isArray(data) ? data : [data]);
+                rdDataRef.current = Array.isArray(data) ? data : [data]
+                setCircleId('');
+                setLineId('');
+                setIsError({ status: false, msg: "" });
+            } else {
+                throw new Error("data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message });
+        }
+    };
+
+        // useEffect(() => {
+        //     let url = '';
+        //         if (circleId) {
+        //             url = `api/v2/wayside/tagdetails?station=${circleId}`;
+        //         } 
+        //     if (url) fetchDataRadial(url);
+        // }, [circleId]);
+
+        // useEffect(() => {
+        //     let url = '';
+        //         if (lineId) {
+        //             url = `api/v2/wayside/tagdetails?station=${lineId}`;
+        //         } 
+        //     if (url) fetchDataRadial(url);
+        // }, [lineId]);
+
+        useEffect(() => {
+    let url = '';
+    if (circleId) {
+        url = `api/v2/wayside/tagdetails?station=${circleId}`;
+    } else if (lineId) {
+        url = `api/v2/wayside/tagdetails?station=${lineId}`;
+    }else if(textName?.data?.mode === 'facility'){
+        url = `api/v2/wayside/tagdetails?station=${textName.data.display}`;
+    }
+
+    if (url) {
+        console.log("Fetching with URL:", url);
+        fetchDataRadial(url);
+    }
+}, [circleId, lineId,textName]);
+
+ const handleTagsPopup = (value, id) => {
+        setShowPopup(value);
+        setCurrentTagid(id);
+    }
+
+     const handleTagType = (e) => {
+        const selectElement = e.target;
+        const label = selectElement.options[selectElement.selectedIndex].label;
+        setTagTypeValue(selectElement.value);
+        setTagTypeLabel(label);
+
+    }
+
 
     return (
         <article className="display-f">
@@ -268,8 +398,18 @@ useEffect(() => {
                             </article>
                         </article>
                         <hr  className="hrll" style={{marginBottom:'0px'}}/>
+                        <article>
                         <TreeList getElementAtEvent={handleNodeClick} />
-                       
+                            </article>
+                            <article>
+                                 <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Tag type :</label>
+                                <select name="name" id="name" value={tagTypeValue} onChange={handleTagType} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
+                                    <option value="all" label="All">All</option>
+                                   <option value="TDM" label="Tdm">Tdm</option>
+                                   <option value="NTDM" label="Ntdm">Ntdm</option>
+                                </select>
+                                <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} tagTypeValue={tagTypeValue} />
+                            </article>
 
                     </article>
                 </article>
@@ -312,10 +452,20 @@ useEffect(() => {
                                         textName.data.mode === "yard")
                                         ? renderSectFacility(textName)
                                         : renderSectComponent(textName)
-                                    ) :''}
+                                    ) :( (stationTagview || lineTagview) && renderTagView(stationTagview, lineTagview))}
 
                                {trainView === true ?  renderSectTrainView(trainView) :''}
-      
+                           
+                                    {showPopup && (
+                        <div className="popupStyle">
+                            <div className="popupBoxStyle">
+                                <WaysidePopupTable currentTagid={currentTagid} />
+                                <button onClick={() => setShowPopup(false)} className="clearfix createbtn" style={{ marginTop: '20px', float: "right" }}>Close</button>
+                            </div>
+                        </div>
+                    )}
+                
+
                 </article>
                 </article>
 
