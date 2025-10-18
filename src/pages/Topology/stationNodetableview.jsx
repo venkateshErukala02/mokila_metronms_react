@@ -23,10 +23,10 @@ const StationNodeTableView=({textName , rdDataRef})=>{
         <>
         <article className="piechtcont">
                 <article className="row border-lrr">
-                    <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
+                    <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6" style={{padding:'5px'}}>
                        <TopoSectionTable textName={textName}/>
                     </article>
-                    <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
+                    <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6" style={{padding:'5px'}}>
                         {/* <article className={textName.data.mode !== 'facility' ? 'dis-none' : 'dis-blck'}>
                         <SouthBoundTb textName={textName}/>
                         <NorthBoundTb textName={textName}/>

@@ -158,7 +158,7 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
         let svg = '';
 
         if (textName != "") {
-            if (textName.data.mode == 'facility') {
+            if (textName.data.mode == 'facility' && setStationStatus==='false') {
                 svg = 'Station_Line1.svg';
             }else{
                 svg = 'Station_Line1.svg'; 
@@ -352,7 +352,7 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
 
     return (
         <>
-            <article className="border-allsd" style={{ textAlign: 'center', paddingTop: '20px', paddingBottom: '20px' }}>
+            <article className="border-allsd" style={{ textAlign: 'center', paddingTop: '56px', paddingBottom: '56px' }}>
                 <div ref={svgContainerRef} dangerouslySetInnerHTML={{ __html: svgContent }} />
             </article>
         </>

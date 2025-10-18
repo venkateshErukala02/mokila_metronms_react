@@ -111,7 +111,7 @@ const LineTagSvg = ({rdDataRef}) => {
 
     return (
         <>
-            <article className="" style={{ textAlign: 'center', paddingTop: '60px', paddingBottom: '60px' }}>
+            <article className="" style={{ textAlign: 'center', paddingTop: '56px', paddingBottom: '56px' }}>
                 <div ref={svgContainerRef} dangerouslySetInnerHTML={{ __html: svgContent }} />
             </article>
         </>

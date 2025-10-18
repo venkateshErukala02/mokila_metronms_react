@@ -21,6 +21,7 @@ import TrainLogs from "./trainlogs";
 import StationSvg from "./stationsvg";
 import WaysideTable from "../Wayside/waysidetable";
 import WaysidePopupTable from "./waysidepopuptable";
+import LineTagSvg from "../Wayside/linetagsvg";
 
 
 
@@ -43,7 +44,6 @@ const TopoPg = () => {
     const [allTagfailCount, setAllTagfailCount] = useState(false);
     const [tagTypeLabel,setTagTypeLabel] = useState('All');
     const [westSideView, setWestSideView] = useState('Line1');
-
     const isVisible = useSelector(state => state.visibility.isVisible);
 
     const handleNodeClick = (value) => {
@@ -136,9 +136,9 @@ useEffect(() => {
             //                </> 
             //     break;
             case 'facility':
-              return  <> <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} />
+              return  <> <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}/>
               <StationNodeTableView  textName={textName} rdDataRef={rdDataRef} />
-                           </> 
+                </> 
                 break;
             case 'Trains':
                 return  <TrainView textName={textName}/>
@@ -163,12 +163,12 @@ useEffect(() => {
      const renderTagView = (stationTagview, lineTagview) => {
         if (stationTagview) {
             return <>
-                <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} />
+                <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}/>
               <StationNodeTableView  textName={textName} rdDataRef={rdDataRef} />
             </>
         } else if (lineTagview) {
             return <>
-               <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} />
+               <LineTagSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef}  setStationTagview={setStationTagview} setLineTagview={setLineTagview}/>
               <StationNodeTableView  textName={textName} rdDataRef={rdDataRef} />
             </>;
         } else {
@@ -192,12 +192,33 @@ useEffect(() => {
    const getTabLabel = (textName) => {
      const mode = textName.data?.mode;
   
-    if (mode === "region" || mode === "location") {
-      return `Link View - ${textName.data.display}`;
+    if ((mode === "region" || mode === "location") && stationTagview === false  && lineTagview === false) {
+      return (
+      <span>
+        Link View - {textName.data.display}
+        {/* <span onClick={(e)=>{ 
+            e.stopPropagation();
+            handleStationTabview();}} style={{ marginLeft: '8px', cursor: 'pointer' }}>x</span> */}
+      </span>
+    );
     }else if(mode === "location"){
-        return 'Link View - Line-1';
+        // return 'Link View - Line-1';
+        return (
+      <span>
+            Link View - {textName.data.display}
+        <span onClick={(e)=>{ 
+            e.stopPropagation();
+            handleStationTabview();}} style={{ marginLeft: '8px', cursor: 'pointer' }}>x</span>
+      </span>
+    );
     } else if(mode === "facility"){
-        return 'Station View';
+         return (
+      <span>
+        Link View - Station View
+        {/* <span onClick={(e)=>{ 
+            e.stopPropagation();
+            handleStationTabview();}} style={{ marginLeft: '8px', cursor: 'pointer' }}>x</span> */}
+      </span>)
     } 
     else if (
       mode === "AP" || 
@@ -212,7 +233,25 @@ useEffect(() => {
       return textName.data?.display || "Unnamed Yard";
     }else if (mode === 'global') {
       return "Link View"; 
-    }else {
+    }else if (stationTagview === true){
+         return (
+      <span>
+        Link View - Station Tag
+        <span onClick={(e)=>{ 
+            e.stopPropagation();
+            handleStationTabview();}} style={{ marginLeft: '8px', cursor: 'pointer' }}>x</span>
+      </span>
+   ) }
+   else if (lineTagview === true){
+         return (
+      <span>
+        Link View - Line Tag
+        <span onClick={(e)=>{ 
+            e.stopPropagation();
+            handleStationTabview();}} style={{ marginLeft: '8px', cursor: 'pointer' }}>x</span>
+      </span>
+   ) } 
+   else {
       return "Link View"; 
     }
   };
@@ -338,6 +377,19 @@ useEffect(() => {
         setTagTypeLabel(label);
 
     }
+     const handleStationTabview = () => {
+        if(stationTagview === true){
+            setStationTagview(false);
+        }
+        if(lineTagview === true){
+            setLineTagview(false);
+        }
+        setStationView(true);
+        setAllTagfailCount(prev => !prev);
+        if(textName?.data?.mode === 'facility'){
+
+        }
+    }
 
 
     return (
@@ -417,7 +469,18 @@ useEffect(() => {
                     <article className="border-allsd" style={{ margin: '5px 0px 0 0px' }}>
 
                         <ul className="clearfix linklist border-b">
-                            <li><button onClick={handleStationVwVisible}>{getTabLabel(textName)}</button></li>
+                            {/* <li><button onClick={handleStationVwVisible}>{getTabLabel(textName)}</button> <button onClick={handleStationTabview}>x</button></li> */}
+                            <li>
+                            <button onClick={handleStationVwVisible}>
+                                    {getTabLabel(textName)}
+                                </button>
+
+                                {/** Conditionally render this second button */}
+                                {/* {showCloseBtn && (
+                                    <button onClick={handleStationTabview}>x</button>
+                                 )} */}
+                            </li>
+
                            {trainLabelDiply ?  <li><a onClick={handleTrainVwTab}>{trainId}</a><button onClick={handleTrainVwVisible}>x</button></li> : '' }
                         </ul>
                      {textName?.data?.mode === 'facility' || textName?.data?.mode === 'location' || textName?.data?.mode === 'region' ? ( <article className="row">

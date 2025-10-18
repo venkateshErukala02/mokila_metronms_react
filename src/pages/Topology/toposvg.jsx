@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import {handleStationCircleId} from '../Action/action'
 
 
-const TopoSvgViewer = ({textName,yardfaclData,setTrainView,setStationView,setTrainLabelDiply,setTrainId,getCircleId,getLineId}) => {
+const TopoSvgViewer = ({textName,yardfaclData,setTrainView,setStationView,setTrainLabelDiply,setTrainId,getCircleId,getLineId,setStationTagview,setLineTagview}) => {
  const [svgContent, setSvgContent] = useState("");
   const [error, setError] = useState("");
   const svgContainerRef = useRef(null);
@@ -586,6 +586,7 @@ useEffect(() => {
       const clickElementId = clickElement.getAttribute('id');
       if (clickElementId){
       getCurrentElementId(clickElementId);
+        setLineTagview(true)
         }
       }else if (event.type === 'contextmenu' && event.button === 2) { 
         event.preventDefault(); 
@@ -714,6 +715,7 @@ useEffect(() => {
           const s = text.id.replace("_txt", "");
           if (s === circleId) {
             getCurrentId(circleId);
+            setStationTagview(true)
           }
         });
       } else if (event.type === 'contextmenu' && event.button === 2) { 

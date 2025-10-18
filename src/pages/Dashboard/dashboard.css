@@ -72,7 +72,9 @@ article.row {
 thead.tbtwo>tr{border-bottom: 2px solid rgb(33 35 39 / 7%);}
 thead.tbtwo>tr>th{font-size: 12.5px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #212327;letter-spacing: 0.6px;}
 
-tbody.tbbdtwo>tr>td{font-size: 13px;font-family: "Lato-Regular";padding: 6px;color: #50565e;letter-spacing: 0.2px;}
+tbody.tbbdtwo>tr>td{font-size: 13px;font-family: "Lato-Regular";padding: 6px;color: #50565e;letter-spacing: 0.2px; white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;}
 tbody.tbbdtwo>tr:nth-child(odd){        background-color: white;
 }
 .tbbdtwo{border-bottom: 1px solid rgb(33 35 39 / 7%);}

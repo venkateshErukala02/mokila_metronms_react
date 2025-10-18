@@ -21,6 +21,34 @@ const StationTagsTable = ({ rdDataRef}) =>{
     return (
         <>
             <article className="">
+                 <article className="row border-lrr piechtcont">
+                    <article className="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2">
+                        <button className="clearfix arrowlf">
+                            <i className="fa-solid fa-arrow-left"></i>
+                        </button>
+                        <button className="clearfix numcl"><span>1</span></button>
+                        <button className="clearfix arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+
+
+                    </article>
+                    <article className="col-sm-10 col-md-10 col-lg-10 col-xl-10 col-xxl-10">
+                        {/* <ul className="searchdashlist">
+                            <li>
+                                <input name="" value={lineipText} onChange={(e) => setLineipText(e.target.value)} placeholder="IP Address / System Name / Serial Number" id="" className="form-control1 searchbar1" />
+                                <button className="clearfix createbtn" 
+                                    style={{ marginLeft: '7px' }}>Search</button>
+                                <button className="clearfix createbtn" onClick={handleClearSerch} style={{ marginLeft: '7px', display: searchBtn ? 'inline-block' : 'none' }}> Clear Search</button>
+
+                            </li>
+                            <li>
+                                <label htmlFor="" className="addcloum">Add Columns  <span className="glyphicon glyphicon-tasks"></span></label>
+
+                                
+                            </li>
+                        </ul> */}
+
+                    </article>
+                </article>  
                 <article className="row">
                     <article className="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2">
                     </article>
