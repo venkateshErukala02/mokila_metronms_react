@@ -333,22 +333,6 @@ useEffect(() => {
         }
     };
 
-        // useEffect(() => {
-        //     let url = '';
-        //         if (circleId) {
-        //             url = `api/v2/wayside/tagdetails?station=${circleId}`;
-        //         } 
-        //     if (url) fetchDataRadial(url);
-        // }, [circleId]);
-
-        // useEffect(() => {
-        //     let url = '';
-        //         if (lineId) {
-        //             url = `api/v2/wayside/tagdetails?station=${lineId}`;
-        //         } 
-        //     if (url) fetchDataRadial(url);
-        // }, [lineId]);
-
         useEffect(() => {
     let url = '';
     if (circleId) {
@@ -362,6 +346,12 @@ useEffect(() => {
     if (url) {
         console.log("Fetching with URL:", url);
         fetchDataRadial(url);
+
+        const intervalId = setInterval(()=>{
+            fetchDataRadial(url);
+        },30000)
+
+        return()=> clearInterval(intervalId);
     }
 }, [circleId, lineId,textName]);
 

@@ -71,29 +71,30 @@ useEffect(() => {
 }, [textName, circleId,stationCount, pageSize, limitValueSelLabel]);
 
 
-useEffect(() => {
-    let url = '';
-    if (textName === 'Line1') {
-        url = `api/v2/wayside/fetch?show=${tagTypeValue}&time=3600`
-    }
-    if (url) fetchDataRadial(url);
-}, [tagTypeValue]);
+
 
 useEffect(() => {
-    let url = '';
-    if (textName === 'Line1') {
-        url = `api/v2/wayside/fetch?show=${tagTypeValue}&time=3600`
-    }
-    if (url) fetchDataRadial(url);
-}, []);
+    
+        let url = '';
+        if (textName === 'Line1') {
+            url = `api/v2/wayside/fetch?show=${tagTypeValue}&time=1800`;
+        }
+        if (url) fetchDataRadial(url);
+
+}, []); 
 
 useEffect(() => {
-    let url = '';
-    if (textName === 'Line1') {
-        url = `api/v2/wayside/fetch?show=${tagTypeValue}&time=3600`
-    }
-    if (url) fetchDataRadial(url);
-}, [allTagfailCount]);
+    const intervalId = setInterval(() => {
+        let url = '';
+        if (textName === 'Line1') {
+            url = `api/v2/wayside/fetch?show=${tagTypeValue}&time=1800`;
+        }
+        if (url) fetchDataRadial(url);
+    }, 30000); 
+
+    return () => clearInterval(intervalId);
+}, [textName, tagTypeValue, allTagfailCount]); 
+
 
     const handlePopup=(value,id)=>{
         handleTagsPopup(value,id)
@@ -116,9 +117,10 @@ useEffect(() => {
 
                         <thead className="tbtwo">
                             <tr>
-                                <th className="col-6" style={{width:'50px'}}>Tags</th>
-                                <th className="col-6" style={{width:'100px'}}>Time</th>
-                                 <th className="col-6" style={{width:'130px'}}>Position</th>
+                                <th className="col-6" style={{width:'82px'}}>Tags</th>
+                                <th className="col-6" style={{width:'130px'}}>Time</th>
+                                <th className="col-6" style={{width:'108px'}}>Station Name</th>
+                                 <th className="col-6" style={{width:'74px'}}>Position</th>
                             </tr>
                         </thead>
 
@@ -156,6 +158,7 @@ useEffect(() => {
                                     <tr key={node}>
                                         <td onClick={() => handlePopup(true,`${key.tag}`)} style={{cursor:'pointer',color:'#006eff'}}>{key.tag}</td>
                                         <td>{key.time}</td>
+                                         <td>{key.stationName}</td>
                                          <td>{key.position}</td>
                                     </tr>
                                 )})}

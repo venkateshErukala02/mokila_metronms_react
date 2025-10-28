@@ -91,25 +91,25 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
 
 
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (!svgContent || !stationStatus.length) return;
 
         const svgRoot = svgContainerRef.current;
 
-        stationStatus.forEach((item) => {
+         stationStatus.forEach((item) => { 
+         const el = svgRoot.querySelector(`#${item.position}`);
             const title = svgRoot.querySelector(`#ts-${item.position}`);
-            const el = title?.parentNode;
-            if (item.type !== 'sta') {
-                if (title && item.ipAddress) {
+                if (item.type !== 'sta' && title !== null) {
                 title.textContent = item.ipAddress;
+                if (el) {
+                   if (item.status === "down") {
+                    el.style.fill = "red";
+                } else if (item.status === "up") {
+                    el.style.fill = "rgb(102, 204, 51)";
+                    }
+                    }
                 }
-                if (el && item.status === "down") {
-                    el.setAttribute("fill", "red");
-                } else if (el && item.status === "up") {
-                    el.setAttribute("fill", "rgb(102, 204, 51)");
-                }
-            }
-
+                
         });
     }, [stationStatus, svgContent]);
 
@@ -164,9 +164,9 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
                 svg = 'Station_Line1.svg'; 
             }
         }
-        //  else {
-        //     svg = textName.data.display + '.svg';
-        // }
+         else {
+            svg = 'Station_Line1.svg';
+        }
 
         let url = 'images/' + svg;
         setSvgContent('');
@@ -294,7 +294,7 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
         const sbElements = svgRoot.querySelectorAll('[id^="SB"],[id^="NB"]');
         sbElements.forEach((el) => {
         const id = el.getAttribute('id');
-        const validTags = ["SB1", "SB2", "SB3", "SB4", "SB5", "SB6", "SB7", "SB8","NB1", "NB2", "NB3", "NB4", "NB5", "NB6", "NB7", "NB8"];
+        const validTags = ["SBNE1", "SBNE2", "SBNE3", "SBNE4", "SBSE5", "SBSE6", "SBSE7", "SBSE8","NBSE1", "NBSE2", "NBSE3", "NBSE4", "NBNE5", "NBNE6", "NBNE7", "NBNE8"];
         if (validTags.includes(id)) {
           el.style.fill = '#cccccc';
     
@@ -333,14 +333,17 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
                       titleElement.textContent = 'N/A'
                 }
     
-        rdData[0]?.forEach((sb, index) => {
+        rdData[0]?.forEach((sb) => {
             const position = sb.position?.trim().toUpperCase();
+            const index = String(sb.index);
+            const targetId = `${position}${index}`;
             const status = sb.status?.trim().toUpperCase();
     
             const color = status === "DOWN" ? "red" : "rgb(102, 204, 51)";
-            const el = svgRoot.querySelector(`#${position}`);
+            const el = svgRoot.querySelector(`#${targetId}`);
             if (el) {
                 el.style.fill = color;
+                el.querySelector("title")?.remove();
                 const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
                 title.textContent = `${sb.tagId}`;
                 el.appendChild(title);

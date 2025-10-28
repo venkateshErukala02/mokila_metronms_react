@@ -249,7 +249,6 @@ useEffect(() => {
   
 // }, [svgContent]);
 
-
 useLayoutEffect(() => {
   if (!svgContent) return;
 
@@ -263,35 +262,49 @@ useLayoutEffect(() => {
     }
   };
 
-  let call = "";
-  if (!textName || Object.keys(textName).length === 0) {
-    call = "all";
-    textName = { data: { mode: "global" } };
-  } else {
-    call = textName.text === "Global" ? "all" : textName.text;
-  }
+  const fetchStationStatus = () => {
+    let call = "";
+    let currentTextName = textName;
 
-  if (textName.data.mode !== 'facility' && textName.data.type !== 'facility') {
-    fetch(`api/v2/dashboard/linestatus/${call}`, options)
-      .then((res) => res.json())
-      .then((response) => {
-        const data = response.data;
-        const svgRoot = svgContainerRef.current;
+    if (!currentTextName || Object.keys(currentTextName).length === 0) {
+      call = "all";
+      currentTextName = { data: { mode: "global" } };
+    } else {
+      call = currentTextName.text === "Global" ? "all" : currentTextName.text;
+    }
 
-        if (!svgRoot) return;
+    if (
+      currentTextName.data.mode !== 'facility' &&
+      currentTextName.data.type !== 'facility'
+    ) {
+      fetch('api/v2/wayside/stationstatus?time=1800', options)
+        .then((res) => res.json())
+        .then((response) => {
+          const data = response.stations;
+          const svgRoot = svgContainerRef.current;
+          if (!svgRoot) return;
 
-        data.forEach(({ station, status }) => {
-          const el = svgRoot.querySelector(`#${station}`);
-          if (el) {
-            el.setAttribute("fill", status === "down" ? "red" : "green");
-          }
-        });
-      });
-  } else if (textName.data.mode === 'facility') {
-    getStationStatusDt();
-    getTrainData();
-  }
+          data.forEach(({ station, status }) => {
+            const el = svgRoot.querySelector(`#${station}`);
+            if (el) {
+              el.setAttribute("fill", status === "down" ? "red" : "green");
+            }
+          });
+        })
+        .catch(console.error);
+    } else if (currentTextName.data.mode === 'facility') {
+      // getStationStatusDt();
+      // getTrainData();
+    }
+  };
+
+  fetchStationStatus();
+
+  const interval = setInterval(fetchStationStatus, 30000);
+
+  return () => clearInterval(interval);
 }, [svgContent]);
+
 
 const handleTrainClick = (event) => {
   // const tainId = trainData.at
@@ -341,7 +354,8 @@ useEffect(() => {
                       const circleId  = circle.getAttribute('id');
                        const title = circle.querySelector("title")?.textContent || "No Name";
 
-                     dispatch(handleStationCircleId(circleId)); 
+                    dispatch(handleStationCircleId(circleId)); 
+                    getCurrentId(circleId);
 
         })
       })
@@ -539,7 +553,7 @@ useEffect(() => {
       }
     };
 
-      fetch('api/v2/wayside/stationstatus?time=3600', options)
+      fetch('api/v2/wayside/stationstatus?time=1800', options)
         .then((res) => res.json())
         .then((response) => {
           const linesData = response.lines;
@@ -714,7 +728,7 @@ useEffect(() => {
         texts.forEach((text) => {
           const s = text.id.replace("_txt", "");
           if (s === circleId) {
-            getCurrentId(circleId);
+            // getCurrentId(circleId);
             setStationTagview(true)
           }
         });

@@ -45,18 +45,22 @@ const SouthBoundTb=({textName})=>{
 
     useEffect(()=>{
         const fetchData= async()=>{
-           const url =`api/v2/events/sb/station?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D1748520284118&fac=${textName.data.id}&limit=5&offset=0&order=desc&orderBy=id`;
+            const facId = textName?.data?.id ?? 1;
+           const url =`api/v2/events/sb/station?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D1748520284118&fac=${facId}&limit=5&offset=0&order=desc&orderBy=id`;
              
             await getSouthBoundTbData(url);
         }
        
         fetchData();
+        const intervalId = setInterval(fetchData,60000);
+
+        return()=> clearInterval(intervalId);
     },[textName])
 
     return(
         <>
-          <article style={{paddingLeft:"10px"}}>
-                        <article className="bound-card" style={{height:'25vh',overflowY:'auto'}}>
+          <article>
+                        <article className="bound-card" style={{height:'25vh',overflowY:'auto',marginTop:"10px"}}>
                         <article className="sbcard-header">
                             Alarms
                         </article>

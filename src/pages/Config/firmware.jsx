@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
+import './../Inventory/inventory.css';
 import FirmwareContainerSub from "./firmwaresub";
 
 const FirmwareContainer = () => {
     const [profileStatusCont, setProfileStatusCont] = useState(true);
-    const [userData, setUserData] = useState([]);
+    const [firmwareData, setFirmwareData] = useState([]);
     const [userLimitValueSel, setUserLimitValueSel] = useState('50');
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [mode, setMode] = useState(null);
     const [editUser, setEditUser] = useState(null);
+    const [selected, setSelected] = useState(4);
+    const [showList, setShowList] = useState(false);
 
-    const getUserData = async (url) => {
+    const getFimwareData = async (url) => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
@@ -33,7 +36,7 @@ const FirmwareContainer = () => {
 
             if (response.ok) {
                 setIsLoading(false);
-                setUserData([]);
+                setFirmwareData(data);
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("data not found");
@@ -47,10 +50,17 @@ const FirmwareContainer = () => {
 
     useEffect(() => {
 
-        const url = 'rest/users/list?limit=10&offset=0&sort=asc'
-        getUserData(url);
+        const url = `api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=25`;
+        getFimwareData(url);
 
-    }, [userLimitValueSel]);
+    }, []);
+
+    useEffect(() => {
+
+        const url = `api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=25`;
+        getFimwareData(url);
+
+    }, [selected]);
 
     const handleUserLimitValue = (event) => {
         setUserLimitValueSel(event.target.value);
@@ -73,6 +83,19 @@ const FirmwareContainer = () => {
         setEditUser(user);
     }
 
+
+
+  const statuses = [
+    { label: "All", value: 4 },
+    { label: "Pending", value: 0 },
+    { label: "Running", value: 1 },
+    { label: "Successful", value: 2 },
+    { label: "Failed", value: 3 },
+  ];
+
+const handleChange = (value) => {
+    setSelected(value); // only one selected at a time
+  };
     return (
         <>
             <article className="row">
@@ -112,17 +135,34 @@ const FirmwareContainer = () => {
 
                         <article className="row border-allsd" style={{ height: '50vh' }}>
                             <table className="col-12" style={{ height: '0vh' }}>
-                                <thead className="settingthtb">
+                                <thead className="settingthtb" style={{position:'relative'}}>
                                     <tr>
                                         <th><input className="incl2" type="checkbox"/></th>
                                         <th>Task ID</th>
                                         <th>Task Name</th>
                                         <th>Scheduled Time</th>
-                                        <th>Status</th>
+                                        <th>Status <button class="glyphicon glyphicon-tasks" style={{backgroundColor:"#f2f2f2",paddingTop:'4px',position:'relative',border:'none',fontSize:'12px'}}  onClick={() => {setShowList(!showList);setSelected(4)}}></button>
+                                        {showList && (  <ul className="statuslist">
+                                        {statuses.map(({ label, value }) => (
+                                            <li key={value}>
+                                            <label>
+                                                <input
+                                                type="checkbox"
+                                                className="incl"
+                                                checked={selected === value}
+                                                onChange={() => handleChange(value)}
+                                                />
+                                                {label}
+                                            </label>
+                                            </li>
+                                        ))}
+                                        </ul>)}
+                                        </th>
+                                        {/* <th>Apply</th> */}
                                         <th>Cancel</th>
                                     </tr>
-
                                 </thead>
+
                                 <tbody className="settingbdtb">
                                     {isLoading && (
                                         <tr>
@@ -140,21 +180,23 @@ const FirmwareContainer = () => {
                                         </tr>
                                     )}
 
-                                    {!isLoading && !isError.status && (!userData || userData.length === 0) && (
+                                    {!isLoading && !isError.status && (!firmwareData || firmwareData.length === 0) && (
                                         <tr>
                                             <td colSpan="12" style={{ textAlign: "center" }}>
                                                 No Data Available
                                             </td>
                                         </tr>
                                     )}
-                                    {userData && userData.map((item) => (
+                                    {firmwareData && firmwareData.map((item) => (
                                         <tr key={item.id}>
-                                            <td>{item["user-id"]}</td>
-                                            <td>{item["full-name"]}</td>
-                                            <td>{item.email}</td>
-                                            <td>{item.role}</td>
-                                            <td>{item["region-name"]}</td>
-                                            <td ><i className="fas fa-edit" onClick={() => handleEditUserDt(item)}></i></td>
+                                            <td><input type="checkbox" className="incl"
+                                                    checked='' onChange=''
+                                                /></td>
+                                            <td>{item.taskId}</td>
+                                            <td>{item.task}</td>
+                                            <td>{item.dateNTime}</td>
+                                            <td>{item.status}</td>
+                                            {/* <td ><i className="fas fa-edit" onClick={() => handleEditUserDt(item)}></i></td> */}
                                             <td><i className="fa fa-trash"></i></td>
                                         </tr>
                                     ))}

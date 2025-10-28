@@ -93,7 +93,7 @@
    style="display:inline">
 </g>
 <circle
-   id="circle1"
+   id="SB-R2"
    fill="#ffffff"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -105,7 +105,7 @@
    id="SB-R2" />
 </circle>
 <circle
-   id="circle2"
+   id="NB-R2"
    fill="#FFFFFF"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -116,7 +116,7 @@
    id="NB-R2" />
 </circle>
 <circle
-   id="circle3"
+   id="C1"
    fill="#FFFFFF"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -127,7 +127,7 @@
    id="C1" />
 </circle>
 <circle
-   id="circle4"
+   id="C2"
    fill="#ffffff"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -139,7 +139,7 @@
    id="C2" />
 </circle>
 <circle
-   id="circle5"
+   id="C3"
    fill="#FFFFFF"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -150,7 +150,7 @@
    id="C3" />
 </circle>
 <circle
-   id="circle6"
+   id="C4"
    fill="#FFFFFF"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -161,7 +161,7 @@
    id="C4" />
 </circle>
 <circle
-   id="circle7"
+   id="C5"
    fill="#FFFFFF"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -172,7 +172,7 @@
    id="C5" />
 </circle>
 <circle
-   id="circle8"
+   id="C6"
    fill="#FFFFFF"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -183,7 +183,7 @@
    id="C6" />
 </circle>
 <circle
-   id="circle9"
+   id="C7"
    fill="#FFFFFF"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -194,7 +194,7 @@
    id="C7" />
 </circle>
 <circle
-   id="circle10"
+   id="C8"
    fill="#FFFFFF"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -205,7 +205,7 @@
    id="C8" />
 </circle>
 <circle
-   id="circle11"
+   id="SB-R1"
    fill="#FFFFFF"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -216,7 +216,7 @@
    id="SB-R1" />
 </circle>
 <circle
-   id="circle12"
+   id="NB-R1"
    fill="#ffffff"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -228,7 +228,7 @@
    id="NB-R1" />
 </circle>
 <circle
-   id="circle13"
+   id="TC1"
    fill="#ffffff"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -249,7 +249,7 @@
    id="circle14"
    style="display:inline" />
 <circle
-   id="circle15"
+   id="TC2"
    fill="#ffffff"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -498,7 +498,6 @@
    sodipodi:insensitive="true">SN<title
    id="ts-SB-R2" /></text>
 <text
-   id="NB-R1_1_"
    transform="translate(844.2773,133.6436)"
    enable-background="new    "
    font-family="MyriadPro-Semibold"
@@ -742,40 +741,40 @@
      y="66.425461"
      inkscape:label="SBS1" /><rect
      style="display:inline;fill:#cccccc;stroke-width:1.24617"
-     id="SB5"
+     id="SBSE1"
      width="20.257763"
      height="16.574533"
      x="401.0419"
      y="66.425461"
-     inkscape:label="SB5" /><rect
+     inkscape:label="SBSE1" /><rect
      style="display:inline;fill:#cccccc;stroke-width:1.24617"
-     id="SB8"
+     id="SBSE4"
      width="20.257763"
      height="16.574533"
      x="293.04309"
      y="66.425461"
-     inkscape:label="SB8" /><rect
+     inkscape:label="SBSE4" /><rect
      style="display:inline;fill:#cccccc;stroke-width:1.24617"
-     id="SB7"
+     id="SBSE3"
      width="20.257763"
      height="16.574533"
      x="329.04269"
      y="66.425461"
-     inkscape:label="SB7" /><rect
+     inkscape:label="SBSE3" /><rect
      style="display:inline;fill:#cccccc;stroke-width:1.24617"
-     id="SB6"
+     id="SBSE2"
      width="20.257763"
      height="16.574533"
      x="365.0423"
      y="66.425461"
-     inkscape:label="SB6" /><rect
+     inkscape:label="SBSE2" /><rect
      style="display:inline;fill:#cccccc;stroke-width:1.24617"
-     id="SB4"
+     id="SBNE4"
      width="20.257763"
      height="16.574533"
      x="912"
      y="67"
-     inkscape:label="SB4" /><rect
+     inkscape:label="SBNE4" /><rect
      style="display:none;fill:#cccccc;stroke-width:1.24617"
      id="SBN5"
      width="20.257763"
@@ -784,26 +783,26 @@
      y="67"
      inkscape:label="SBN5" /><rect
      style="display:inline;fill:#cccccc;stroke-width:1.24617"
-     id="SB3"
+     id="SBNE3"
      width="20.257763"
      height="16.574533"
      x="947.99963"
      y="67"
-     inkscape:label="SB3" /><rect
+     inkscape:label="SBNE3" /><rect
      style="display:inline;fill:#cccccc;stroke-width:1.24617"
-     id="SB2"
+     id="SBNE2"
      width="20.257763"
      height="16.574533"
      x="983.99927"
      y="67"
-     inkscape:label="SB2" /><rect
+     inkscape:label="SBNE2" /><rect
      style="display:inline;fill:#cccccc;stroke-width:1.24617"
-     id="SB1"
+     id="SBNE1"
      width="20.257763"
      height="16.574533"
      x="1019.9988"
      y="67"
-     inkscape:label="SB1" /><rect
+     inkscape:label="SBNE1" /><rect
      style="display:none;fill:#cccccc;stroke-width:1.24617"
      id="NBS1"
      width="20.257763"
@@ -812,40 +811,40 @@
      y="141"
      inkscape:label="NBS1" /><rect
      style="display:inline;fill:#cccccc;stroke-width:1.24617"
-     id="NB4"
+     id="NBSE4"
      width="20.257763"
      height="16.574533"
      x="402.99841"
      y="141"
-     inkscape:label="NB4" /><rect
+     inkscape:label="NBSE4" /><rect
      style="display:inline;fill:#cccccc;stroke-width:1.24617"
-     id="NB1"
+     id="NBSE1"
      width="20.257763"
      height="16.574533"
      x="294.99957"
      y="141"
-     inkscape:label="NB1" /><rect
+     inkscape:label="NBSE1" /><rect
      style="display:inline;fill:#cccccc;stroke-width:1.24617"
-     id="NB2"
+     id="NBSE2"
      width="20.257763"
      height="16.574533"
      x="330.99918"
      y="141"
-     inkscape:label="NB2" /><rect
+     inkscape:label="NBSE2" /><rect
      style="display:inline;fill:#cccccc;stroke-width:1.24617"
-     id="NB3"
+     id="NBSE3"
      width="20.257763"
      height="16.574533"
      x="366.99881"
      y="141"
-     inkscape:label="NB3" /><rect
+     inkscape:label="NBSE3" /><rect
      style="display:inline;fill:#cccccc;stroke-width:1.24617"
-     id="NB5"
+     id="NBNE1"
      width="20.257763"
      height="16.574533"
      x="913.95648"
      y="141.57454"
-     inkscape:label="NB5" /><rect
+     inkscape:label="NBNE1" /><rect
      style="display:none;fill:#cccccc;stroke-width:1.24617"
      id="NBN5"
      width="20.257763"
@@ -854,44 +853,49 @@
      y="141.57454"
      inkscape:label="NBN5" /><rect
      style="display:inline;fill:#cccccc;stroke-width:1.24617"
-     id="NB6"
+     id="NBNE2"
      width="20.257763"
      height="16.574533"
      x="949.95618"
      y="141.57454"
-     inkscape:label="NB6" /><rect
+     inkscape:label="NBNE2" /><rect
      style="display:inline;fill:#cccccc;stroke-width:1.24617"
-     id="NB7"
+     id="NBNE3"
      width="20.257763"
      height="16.574533"
      x="985.95581"
      y="141.57454"
-     inkscape:label="NB7" /><rect
+     inkscape:label="NBNE3" /><rect
      style="display:inline;fill:#cccccc;stroke-width:1.24617"
-     id="NB8"
+     id="NBNE4"
      width="20.257763"
      height="16.574533"
      x="1021.9553"
      y="141.57454"
-     inkscape:label="NB8" /><g
+     inkscape:label="NBNE4" />
+     <g
      id="top_train_layer"
      style="display:inline"
      transform="translate(13.61989,2.5908732)"
-     sodipodi:insensitive="true"><path
-       id="path1877"
+     sodipodi:insensitive="true">
+     <path
+       id="toptrainclick"
        fill="#1cd4c6"
+       display="none"
        stroke="#000000"
        stroke-miterlimit="10"
        d="M 748.552,63.244 H 676.15 658.169 585.767 c -6.05,0 -10.953,-4.75 -10.953,-10.607 V 49.1 c 0,-5.859 4.903,-10.608 10.953,-10.608 h 72.402 17.981 72.399 c 6.049,0 10.955,4.75 10.955,10.608 v 3.537 c 0.003,5.857 -4.903,10.607 -10.952,10.607 z"
        style="display:inline"><title
-         id="toptrainclick" /></path><path
-       id="path1880"
-       display="none"
+         id="toptrainclick" /></path>
+         <path
+       id="toptrainclick2"
+       display="block"
        fill="#07493f"
        d="m 591.019,38.491 v 25.177 c 0,0 -8.936,1.779 -15.654,-6.048 0,0 -5.025,-12.249 6.841,-18.685 z"><title
-         id="toptrainclick2" /></path><path
+         id="toptrainclick2" /></path>
+         <path
        id="toptrainclick3"
-       display="none"
+       display="block"
        fill="#07493f"
        d="M 744.87,63.613 V 40.056 c 0,0 8.357,-1.664 14.646,5.657 0,0 4.702,11.46 -6.396,17.479 l -8.25,-0.579 z" /><text
        id="toptrainclicktext"
@@ -900,29 +904,30 @@
        enable-background="new"
        font-family="MyriadPro-Regular"
        font-size="16px">Train: 5451<title
-   id="toptrainclicktexttitle">abc</title></text></g><g
+   id="toptrainclicktexttitle">abc</title></text></g>
+   <g
      id="bottom_train_layer"
      transform="translate(10.802165,-1.9349313)"
      sodipodi:insensitive="true"><path
-       id="path1887"
-       display="none"
+       id="bottomtrainclick"
+       display="block"
        fill="#1cd4c6"
        stroke="#000000"
        stroke-miterlimit="10"
        d="M 748.552,183.13 H 676.15 658.17 585.767 c -6.05,0 -10.953,-4.75 -10.953,-10.608 v -3.535 c 0,-5.858 4.903,-10.607 10.953,-10.607 h 72.403 17.98 72.399 c 6.049,0 10.955,4.75 10.955,10.607 v 3.535 c 0.003,5.858 -4.903,10.608 -10.952,10.608 z"><title
          id="bottomtrainclick" /></path><path
-       id="path1890"
-       display="none"
+       id="bottomtrainclick2"
+       display="block"
        fill="#07493f"
        d="m 744.87,182.613 v -23.557 c 0,0 8.357,-1.664 14.646,5.657 0,0 4.702,11.46 -6.396,17.479 z"><title
          id="bottomtrainclick2" /></path><path
        id="bottomtrainclick3"
-       display="none"
+       display="block"
        fill="#07493f"
        d="m 591.019,159.491 v 25.177 c 0,0 -11.936,1.779 -15.654,-6.048 0,0 -5.025,-14.249 6.841,-18.685 z" /><text
        id="bottomtrainclicktext"
        transform="translate(629.6641,176.9473)"
-       display="none"
+       display="block"
        enable-background="new"
        font-family="MyriadPro-Regular"
        font-size="16px">Train: 6041<title

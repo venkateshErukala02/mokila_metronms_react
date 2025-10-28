@@ -13,7 +13,7 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
     const [error, setError] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
     const [success, setSuccess] = useState('');
-    const [selectedDate, setSelectedDate] = useState('');
+    const [selectedDate, setSelectedDate] = useState(null);
     const [setInvenData, invenData] = useState('');
     const [role, setRole] = useState("fileupload");
     const [isImmediate, setIsImmediate] = useState(true);
@@ -26,6 +26,8 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
     const [searchBtn, setSearchBtn] = useState(false);
     const [searchTrigger, setSearchTrigger] = useState(0);
     const dropdownRef = useRef(null);
+    const [deviceType,setDeviceType] = useState('')
+    const [timestamp,setTimestamp] = useState('');
 
 
     const handleProfileContclose = () => {
@@ -270,12 +272,61 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
             }
     
         }, []);
+
+        const handleDateChange=(date)=>{
+        setSelectedDate(date);
+        const time = date.getTime();
+        setTimestamp(time);
+
+    }
     
          const handleClearSerch = () => {
             setSearchBtn(false);
             setSearchValue('');
           }
-    
+
+
+            const handleApplyFirmware = async () => {
+                const numbNodes = addedItems.map(item => Number(item));
+                const requestBody = {
+                    nodes :numbNodes,
+                    time : timestamp,
+                    schedule: isImmediate === true ? 'im' :'sch',
+                    firmware:  versionTitle,
+                    type: deviceType,
+            }
+
+            let url= `api/v2/bulk/applyFirmware`;
+            try {
+                const username = 'admin';
+                const password = 'admin';
+                const token = btoa(`${username}:${password}`)
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        // 'Authorization': `Basic ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(requestBody),
+                });
+                if (response.ok) {
+                    // setSuccess('Discovery started successfully');
+                    alert('Discovery started successfully')
+                    handleProfileContclose();
+                
+                } else {
+                    setError('Error starting discovery');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                setError('An error occurred while contacting the server.');
+            } finally {
+                setLoading(false); // Turn off loading state
+            }
+
+        }
+
+            
 
 
     return (
@@ -294,6 +345,16 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                     <article >
                         <form action="" style={{ margin: '7px 10px 0 10px' }}>
                             <article style={{ paddingTop: '4px' }}>
+                                <label className="settinglabelsub">Device Type</label>
+                            <select className="vlaninput" value={deviceType} onChange={(e)=> setDeviceType(e.target.value)}>
+                                <option value="" disabled>Select</option>
+                                {/* <option value="sta">Train Radio</option> */}
+                                <option value="encoder">Encoder</option>
+                                {/* <option value="transcoder">Transcoder</option> */}
+                                <option value="AP">Station Nodes</option>
+                                <option value="obc">OBC</option>
+                                {/* <option value="CAM">Cameras</option> */}
+                            </select>
                                 <label className="vlanlabel">Firmware</label>
                                 <article style={{ padding: '12px 0' }}>
                                     <select className="vlaninput" value={versionTitle} onChange={(e)=> setVersionTitle(e.target.value)}>
@@ -320,7 +381,7 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                                             selected={selectedDate}
                                             showTimeSelect
                                             dateFormat="yyyy-MM-dd HH:mm"
-                                            onChange={(date) => setSelectedDate(date)}
+                                             onChange={handleDateChange}
                                             className="myDatepickercl" />
                                     </article>
                                 </article>
@@ -449,8 +510,8 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                             </article>
 
                             <center style={{ marginTop: '16px', marginBottom: '16px' }}>
-                                <button className="cancelbtn">Cancel</button>
-                                <button className="creatsetingbtn">Apply</button>
+                                <button type="button" className="cancelbtn">Cancel</button>
+                                <button type="button" className="creatsetingbtn" onClick={handleApplyFirmware}>Apply</button>
                             </center>
                                 </article>}
                         </form>

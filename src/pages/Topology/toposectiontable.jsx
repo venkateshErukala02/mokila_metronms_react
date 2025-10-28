@@ -46,6 +46,10 @@ const TopoSectionTable=({textName})=>{
     };
 
     useEffect(()=>{
+          if (!textName || !textName.data || !textName.data.mode) {
+        return; 
+    }
+
         let url ='';
         switch (textName.data.mode) {
             case 'location':
@@ -58,7 +62,15 @@ const TopoSectionTable=({textName})=>{
             default:
                 return;
         }
-        fetchSectionTbData(url);
+        if(url){
+            fetchSectionTbData(url);
+            const intervalId = setInterval(()=>{
+                fetchSectionTbData(url);
+            },30000);
+
+            return()=> clearInterval(intervalId);
+        }
+
          
     },[textName]);
 
@@ -121,7 +133,7 @@ const TopoSectionTable=({textName})=>{
                 <hr className="dashbdhr" />
             </article>
             <article className="row">
-                <article style={{overflowY:'auto',height:'30vh'}}>
+                <article style={{overflowY:'auto',height:'22.5vh'}}>
                     <table className="col-12 border-allsd" style={{ height: '0vh' }}>
 
                         <thead className="tbtwo">

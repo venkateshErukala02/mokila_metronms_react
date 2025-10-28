@@ -85,7 +85,7 @@ const selectedFileRef = useRef(null);
     }
 
     if (textName !== '') {
-      fetch('api/v2/wayside/stationstatus?time=3600', options)
+      fetch('api/v2/wayside/stationstatus?time=1800', options)
         .then((res) => res.json())
         .then((response) => {
           const linesData = response.lines;

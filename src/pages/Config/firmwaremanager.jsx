@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
+import './../Inventory/inventory.css';
 import FirmwareMngSubCont from "./firmwaremngsub";
 import FirmwareManagerApply from "./firmwaremanagerapply";
 
@@ -13,6 +14,8 @@ const FirmwareMng = () => {
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [editVersion, setEditVersion] = useState(null);
     const [mode, setMode] = useState(null);
+    const [selected, setSelected] = useState('all');
+    const [showList, setShowList] = useState(false);
 
     const getVersionData = async (url) => {
         setIsLoading(true);
@@ -89,6 +92,22 @@ const FirmwareMng = () => {
         };
 
 
+         const statuses = [
+            { label: "All", value: "all" },
+            { label: "Encoder", value: "encoder" },
+            { label: "Station Node", value: "AP" },
+            // { label: "transcoder", value: "transcoder" },
+            // { label: "train radio", value: "train radio" },
+            { label: "OBC", value: "obc" },
+        ];
+
+        const handleChange = (value) => {
+            setSelected(value); // only one selected at a time
+        };
+
+       const filteredData = versionData.filter(
+        (item) => selected === "all" || item.deviceType === selected
+        ) || [];
 
     return (
         <>
@@ -132,7 +151,23 @@ const FirmwareMng = () => {
                                         <th>File Name</th>
                                         <th>Firmware Version</th>
                                         <th>Created Time  </th>
-                                        <th>Device Type</th>
+                                        <th>Device Type <button class="glyphicon glyphicon-tasks" style={{backgroundColor:"#f2f2f2",paddingTop:'4px',position:'relative',border:'none',fontSize:'12px'}}  onClick={() => {setShowList(!showList);setSelected('all')}}></button>
+                                        {showList && (  <ul className="statuslist" style={{ transform :  'translate3d(1040px,65px,0)'}}>
+                                        {statuses.map(({ label, value }) => (
+                                            <li key={value}>
+                                            <label>
+                                                <input
+                                                type="checkbox"
+                                                className="incl"
+                                                checked={selected === value}
+                                                onChange={() => handleChange(value)}
+                                                />
+                                                {label}
+                                            </label>
+                                            </li>
+                                        ))}
+                                        </ul>)}
+                                        </th>
                                         <th>Apply</th>
                                         <th>Delete </th>
                                     </tr>
@@ -155,19 +190,19 @@ const FirmwareMng = () => {
                                         </tr>
                                     )}
 
-                                    {!isLoading && !isError.status && (!versionData || versionData.length === 0) && (
+                                    {!isLoading && !isError.status && (!filteredData || filteredData.length === 0) && (
                                         <tr>
                                             <td colSpan="12" style={{ textAlign: "center" }}>
                                                 No Data Available
                                             </td>
                                         </tr>
                                     )}
-                                    {versionData && versionData?.map((item) => (
+                                    {filteredData && filteredData?.map((item) => (
                                         <tr key={item.id}>
                                             <td>{item.fileName}</td>
                                             <td>{item.version}</td>
                                             <td>{formatDate(item.createdTime)}</td>
-                                            <td>{}</td>
+                                            <td>{item.deviceType}</td>
                                             <td><i className="fas fa-edit" onClick={() => handleEditLineDt(item)}></i></td>
                                             <td><i className="fa fa-trash"></i></td>
                                         </tr>

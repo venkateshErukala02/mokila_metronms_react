@@ -47,16 +47,16 @@ const LeftNavList = () => {
                     <a>  <i className={`fas fa-lg fa-sitemap ${activeIndex === 2 ? 'activee' : ''}`}></i>
                         <span className="tooltipcll">Topology</span></a>
                     </li>
-                    <li onClick={() => handleClick('/Wayside')}>
+                    {/* <li onClick={() => handleClick('/Wayside')}>
                     <a><i class={`fa-solid fa-tower-cell ${activeIndex === 3 ? 'activee' : ''}`}></i>
                         <span className="tooltipcll">Wayside</span></a>
-                    </li>
+                    </li> */}
                     {/* <li onClick={() => handleClick('/TestTopo')}>
                     <a>  <i className={`fas fa-lg fa-sitemap ${activeIndex === 6 ? 'activee' : ''}`}></i>
                         <span className="tooltipcll">TestTopo</span></a>
                     </li> */}
                     <li onClick={() => handleClick("/Config")}>
-                    <a>  <i className={`fa-solid fa-tag ${activeIndex === 7 ? 'activee' : ''}`}></i>
+                    <a>  <i className={`fas fa-lg fa-cogs ${activeIndex === 7 ? 'activee' : ''}`}></i>
                         <span className="tooltipcll">Configuration</span></a>
                     </li>
                     <li onClick={() => handleClick("/Event")}>

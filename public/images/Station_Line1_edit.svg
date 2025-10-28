@@ -91,7 +91,7 @@
    id="Layer_1_1_">
 </g>
 <circle
-   id="circle1"
+   id="SB-R2"
    fill="#ffffff"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -103,7 +103,7 @@
    id="SB-R2" />
 </circle>
 <circle
-   id="circle2"
+   id="NB-R2"
    fill="#FFFFFF"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -114,7 +114,7 @@
    id="NB-R2" />
 </circle>
 <circle
-   id="circle3"
+   id="C1"
    fill="#FFFFFF"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -125,7 +125,7 @@
    id="C1" />
 </circle>
 <circle
-   id="circle4"
+   id="C2"
    fill="#ffffff"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -137,7 +137,7 @@
    id="C2" />
 </circle>
 <circle
-   id="circle5"
+   id="C3"
    fill="#FFFFFF"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -148,7 +148,7 @@
    id="C3" />
 </circle>
 <circle
-   id="circle6"
+   id="C4"
    fill="#FFFFFF"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -159,7 +159,7 @@
    id="C4" />
 </circle>
 <circle
-   id="circle7"
+   id="C5"
    fill="#FFFFFF"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -170,7 +170,7 @@
    id="C5" />
 </circle>
 <circle
-   id="circle8"
+   id="C6"
    fill="#FFFFFF"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -181,7 +181,7 @@
    id="C6" />
 </circle>
 <circle
-   id="circle9"
+   id="C7"
    fill="#FFFFFF"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -192,7 +192,7 @@
    id="C7" />
 </circle>
 <circle
-   id="circle10"
+   id="C8"
    fill="#FFFFFF"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -203,7 +203,7 @@
    id="C8" />
 </circle>
 <circle
-   id="circle11"
+   id="SB-R1"
    fill="#FFFFFF"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -214,7 +214,7 @@
    id="SB-R1" />
 </circle>
 <circle
-   id="circle12"
+   id="NB-R1"
    fill="#ffffff"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -226,7 +226,7 @@
    id="NB-R1" />
 </circle>
 <circle
-   id="circle13"
+   id="TC1"
    fill="#ffffff"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -247,7 +247,7 @@
    id="circle14"
    style="display:inline" />
 <circle
-   id="circle15"
+   id="TC2"
    fill="#ffffff"
    stroke="#373836"
    stroke-miterlimit="10"
