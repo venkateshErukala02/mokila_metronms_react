@@ -449,6 +449,7 @@ useEffect(() => {
                                     <option value="all" label="All">All</option>
                                    <option value="TDM" label="Tdm">Tdm</option>
                                    <option value="NTDM" label="Ntdm">Ntdm</option>
+                                   <option value="ATC" label="Atc">Atc</option>
                                 </select>
                                 <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} tagTypeValue={tagTypeValue} />
                             </article>

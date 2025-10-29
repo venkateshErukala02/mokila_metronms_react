@@ -86,14 +86,29 @@ useEffect(() => {
 useEffect(() => {
     const intervalId = setInterval(() => {
         let url = '';
-        if (textName === 'Line1') {
+        // if (textName === 'Line1') {
             url = `api/v2/wayside/fetch?show=${tagTypeValue}&time=1800`;
-        }
+        // }
         if (url) fetchDataRadial(url);
     }, 30000); 
 
     return () => clearInterval(intervalId);
 }, [textName, tagTypeValue, allTagfailCount]); 
+
+useEffect(() => {
+     if (!tagTypeValue) return;
+
+    const intervalId = setInterval(() => {
+        if (tagTypeValue !==  "") {
+            const url = `api/v2/wayside/fetch?show=${tagTypeValue}&time=1800`;
+            fetchDataRadial(url);
+        }
+    }, 30000); 
+
+    fetchDataRadial(`api/v2/wayside/fetch?show=${tagTypeValue}&time=1800`);
+
+    return () => clearInterval(intervalId);
+}, [ tagTypeValue]); 
 
 
     const handlePopup=(value,id)=>{
