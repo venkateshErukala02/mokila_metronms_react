@@ -10,7 +10,9 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
     const [stationStatus, setStationStatus] = useState([]);
     const [svgContent, setSvgContent] = useState("");
     const svgContainerRef = useRef(null);
+    const stationStatusRef = useRef(null);
     const rdData = rdDataRef.current === null ? [] : [rdDataRef.current[0].tags] ;
+    const rdDataTitle = rdDataRef.current === null ? [] : [rdDataRef.current[0].station] ;
 
 
 
@@ -67,6 +69,7 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
             if (response.ok) {
                 setIsLoading(false);
                 setStationStatus(data);
+                stationStatusRef.current=data;       
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("Data not found");
@@ -96,7 +99,28 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
 
         const svgRoot = svgContainerRef.current;
 
-         stationStatus.forEach((item) => { 
+        const allElements = svgRoot.querySelectorAll('[id^="SB-R"], [id^="NB-R"],[id^="TC"],[id^="C"]');
+
+            allElements.forEach(el => {
+                el.style.fill = "#FFFFFF";
+            });
+
+           const resetSVGNodeElements = () => {
+            const allElements = svgRoot.querySelectorAll('[id^="SB-R"], [id^="NB-R"]');
+    
+             allElements.forEach(el => {
+                el.style.fill = stationStatus.length === 0 ? '#ffffff' : '';
+            });
+            const titleElement = svgRoot.querySelector('#section_station_name');
+                if(titleElement){
+                    titleElement.textContent = rdDataTitle;
+                }
+        };
+
+        if(stationStatus.length === 0){
+            resetSVGNodeElements();
+        }else{
+         stationStatusRef?.current?.forEach((item) => { 
          const el = svgRoot.querySelector(`#${item.position}`);
             const title = svgRoot.querySelector(`#ts-${item.position}`);
                 if (item.type !== 'sta' && title !== null) {
@@ -107,10 +131,13 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
                 } else if (item.status === "up") {
                     el.style.fill = "rgb(102, 204, 51)";
                     }
+                    }else{
+                        el.style.fill = "#FFFFFF";
                     }
                 }
                 
         });
+    }
     }, [stationStatus, svgContent]);
 
 
@@ -304,35 +331,52 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
         }
          const titleElement = svgRoot.querySelector('#section_station_name');
          if(titleElement){
-            titleElement.textContent = 'N/A';
+            titleElement.textContent = rdDataTitle;
          }
       });
     
     
-        const resetSVGElements = () => {
-            const sbElements = svgRoot.querySelectorAll('[id^="SB"]');
-            const nbElements = svgRoot.querySelectorAll('[id^="NB"]');
-    
+        const resetSVGTagElements = () => {
+            const sbElements = svgRoot.querySelectorAll('[id^="SBSE"],[id^="SBNE"]');
+            const nbElements = svgRoot.querySelectorAll('[id^="NBSE"],[id^="NBNE"]');
+        
             sbElements.forEach((el) => (el.style.fill = '#cccccc'));
             nbElements.forEach((el) => (el.style.fill = '#cccccc'));
             const titleElement = svgRoot.querySelector('#section_station_name');
                 if(titleElement){
-                    titleElement.textContent = 'N/A';
+                    titleElement.textContent = rdDataTitle
+
+                }
+        };
+
+         const resetSVGNodeElements = () => {
+             const allElements = svgRoot.querySelectorAll('[id^="SB-R"], [id^="NB-R"]');
+    
+             allElements.forEach(el => {
+                el.style.fill = stationStatus.length === 0 ? '#ffffff' : '';
+            });
+            const titleElement = svgRoot.querySelector('#section_station_name');
+                if(titleElement){
+                    titleElement.textContent = rdDataTitle;
                 }
         };
     
         if (!svgContent || !rdData || rdData.length === 0) {
-            resetSVGElements();
+            resetSVGTagElements();
             return;
         }
     
         const titleElement = svgRoot.querySelector('#section_station_name');
                 if(titleElement){
-                  titleElement.textContent =  `${rdDataRef.current[0].station}`;    
-                }else{
-                      titleElement.textContent = 'N/A'
+                  titleElement.textContent = rdDataTitle;    
                 }
-    
+        if (rdData[0]?.length === 0) {
+          if(stationStatus.length === 0){
+            resetSVGNodeElements();
+              }
+            resetSVGTagElements();
+
+        }else {
         rdData[0]?.forEach((sb) => {
             const position = sb.position?.trim().toUpperCase();
             const index = String(sb.index);
@@ -349,7 +393,8 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
                 el.appendChild(title);
             } 
         });
-    }, [rdData, svgContent]);
+      }
+    }, [rdData, svgContent,stationStatus]);
     
 
 

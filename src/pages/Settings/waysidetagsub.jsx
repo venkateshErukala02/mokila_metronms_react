@@ -114,7 +114,7 @@ const WaysideTagSubCont = ({ handleSubContainer, refreshLineData, mode, user }) 
             const username = 'admin';
             const password = 'admin';
             const token = btoa(`${username}:${password}`)
-            const response = await fetch(`http://192.168.66.166:8980/metronms/api/v2/wayside/editTags?tdmTag=${user.tag}`, {
+            const response = await fetch(`api/v2/wayside/editTags?tdmTag=${user.tag}`, {
                 method,
                 headers: {
                     'Authorization': `Basic ${token}`,

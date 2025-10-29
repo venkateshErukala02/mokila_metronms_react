@@ -112,7 +112,7 @@ useEffect(() => {
                 <hr className="dashbdhr" />
             </article>
             <article className="row">
-                <article style={{ height: "43vh"}}>
+                <article style={{ height: "43vh",overflow:'auto'}}>
                     <table className="col-12 border-allsd table-fixed" style={{ height: '0vh' }}>
 
                         <thead className="tbtwo">

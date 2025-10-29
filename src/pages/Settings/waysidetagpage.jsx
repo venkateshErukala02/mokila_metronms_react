@@ -56,14 +56,14 @@ const WaysideTagContainer=()=>{
 
      useEffect(() => {
 
-            const url=`http://192.168.66.166:8980/metronms/api/v2/wayside/waySideTags?page=${userLimitValueSel.trim()}`;
+            const url=`api/v2/wayside/waySideTags?page=${userLimitValueSel.trim()}`;
             getUserData(url);
     
         }, [userLimitValueSel]);
 
          useEffect(() => {
 
-            const url='http://192.168.66.166:8980/metronms/api/v2/wayside/waySideTags?page=1'
+            const url='api/v2/wayside/waySideTags?page=1'
             getUserData(url);
     
         }, []);
