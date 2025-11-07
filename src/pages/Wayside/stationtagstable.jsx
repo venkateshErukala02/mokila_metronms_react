@@ -51,6 +51,7 @@ const StationTagsTable = ({ rdDataRef}) =>{
 
     return (
         <>
+        <h1 className="discoveryheading">Tags</h1>
         <article style={{border:'1px solid #21232712'}}>
             <article className="">
                  <article className="row border-lrr piechtcont">
@@ -90,8 +91,8 @@ const StationTagsTable = ({ rdDataRef}) =>{
                 <hr className="dashbdhr" />
             </article>
             <article className="row">
-                <article style={{ height: "22.5vh", overflowY: 'auto', overflowX: 'clip'}}>
-                    <table className="col-12 border-allsd table-fixed" style={{ height: '0vh' }}>
+                <article style={{ height: "33.5vh", overflowY: 'auto', overflowX: 'clip',position:'relative'}}>
+                    <table className="col-12 table-fixed" style={{ height: '0vh' }}>
 
                         <thead className="statustagthtb">
                             <tr>

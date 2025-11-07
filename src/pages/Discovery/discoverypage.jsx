@@ -48,7 +48,7 @@ const getCloseProviCont=()=>{
           </article>
           <article className="col-sm-4 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
             <article className="clearfix summarycont" style={{ margin: '5px 0px 0 5px' }}>
-              <h1 className="dicoveryheading">Provision</h1>
+              <h1 className="discoveryheading">Provision</h1>
               <article className="clearfix provscont">
                 <ProvisionFileUp />
               </article>

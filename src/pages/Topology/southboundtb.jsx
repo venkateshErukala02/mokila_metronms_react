@@ -60,7 +60,7 @@ const SouthBoundTb=({textName})=>{
     return(
         <>
           <article>
-                        <article className="bound-card" style={{height:'25vh',overflowY:'auto',marginTop:"10px"}}>
+                        <article className="bound-card" style={{height:'25vh',overflowY:'auto'}}>
                         <article className="sbcard-header">
                             Alarms
                         </article>

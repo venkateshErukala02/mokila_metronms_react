@@ -3,7 +3,7 @@ import { useLayoutEffect } from 'react';
 import '../ornms.css'
  
 
-const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply, setTrainId ,rdDataRef}) => {
+const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply, setTrainId ,rdDataRef,trainView,trainId}) => {
     const [trainData, setTrainData] = useState('')
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [isLoading, setIsLoading] = useState(false);
@@ -395,11 +395,29 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
         });
       }
     }, [rdData, svgContent,stationStatus]);
+
+        const getNodeLabel = (node) => {
+        const mode = node.data?.mode;
+      
+        if (mode === "region" || mode === "location") {
+        //   return node.data?.display || node.text || "Unknown";
+        } else if (mode === "facility" || node.data?.parent === "yard_1") {
+          return `Station- ${node.text}` || "Unnamed Facility";
+        } else {
+        //   return node.data?.display || node.text || "Unknown";
+        }
+      };
+    
     
 
 
     return (
         <>
+        {/* {textName?.data?.mode === 'facility' || textName?.data?.mode === 'location' || textName?.data?.mode === 'region' ? ( <article className="row">
+                            <article className="col-3">
+                              {trainView === true ?(<h1 className="mapheading">Train View : {trainId}</h1>) : (<h1 className="mapheading">{getNodeLabel(textName)}</h1>)}  
+                            </article>
+                                </article>) : ''}    */}
             <article className="border-allsd" style={{ textAlign: 'center', paddingTop: '56px', paddingBottom: '56px' }}>
                 <div ref={svgContainerRef} dangerouslySetInnerHTML={{ __html: svgContent }} />
             </article>

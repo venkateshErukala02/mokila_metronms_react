@@ -22,6 +22,7 @@ import StationSvg from "./stationsvg";
 import WaysideTable from "../Wayside/waysidetable";
 import WaysidePopupTable from "./waysidepopuptable";
 import LineTagSvg from "../Wayside/linetagsvg";
+import StationTagsTable from "../Wayside/stationtagstable";
 
 
 
@@ -44,10 +45,13 @@ const TopoPg = () => {
     const [allTagfailCount, setAllTagfailCount] = useState(false);
     const [tagTypeLabel,setTagTypeLabel] = useState('All');
     const [westSideView, setWestSideView] = useState('Line1');
+    const [tagTableView,setTagTableView] = useState(false);
+    const [selectedTab,setSelectedTab] = useState('linkview')
     const isVisible = useSelector(state => state.visibility.isVisible);
+    const [timeLeft, setTimeLeft] = useState(30);
 
     const handleNodeClick = (value) => {
-         console.log('lplplp',value);
+        console.log('lplplp',value);
         setTextName(value);
     }
 
@@ -60,6 +64,18 @@ const [stationView,setStationView]= useState(true);
 const [trainLabelDiply,setTrainLabelDiply] = useState(false);
 const [trainId,setTrainId] = useState('');
 
+useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prevTime) => {
+        if (prevTime <= 1) {
+          return 30; 
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
 const getYardfaclData = async (url) => {
     setIsLoading(true);
@@ -136,7 +152,7 @@ useEffect(() => {
             //                </> 
             //     break;
             case 'facility':
-              return  <> <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}/>
+              return  <> <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}/>
               <StationNodeTableView  textName={textName} rdDataRef={rdDataRef} />
                 </> 
                 break;
@@ -355,7 +371,7 @@ useEffect(() => {
     }
 }, [circleId, lineId,textName]);
 
- const handleTagsPopup = (value, id) => {
+    const handleTagsPopup = (value, id) => {
         setShowPopup(value);
         setCurrentTagid(id);
     }
@@ -380,6 +396,19 @@ useEffect(() => {
 
         }
     }
+
+    const handleTagTableView=()=>{
+        setTagTableView(true);
+        setSelectedTab('tagtable')
+    }
+
+    const handleLinkView=()=>{
+        setTagTableView(false);
+        setSelectedTab('linkview');
+    }
+
+
+
 
 
     return (
@@ -414,20 +443,6 @@ useEffect(() => {
                         </article>
                         <hr className="hrll" />
                         <article className="systemcont">
-                            {/* <article className="row" style={{ paddingBottom: '25px' }}>
-                                <article className="col-5">
-                                    <label htmlFor="">
-                                        <input type="radio" />
-                                    </label>
-                                    <span className="radioSelct">System Name</span>
-                                </article>
-                                <article className="col-5">
-                                    <label htmlFor="">
-                                        <input type="radio" />
-                                    </label>
-                                    <span className="radioSelct">IP address</span>
-                                </article>
-                            </article> */}
                             <article className="row">
                                 <article className="col-6">
                                     <input type="text" className="clearfix form-controltopo" placeholder="IP Address" />
@@ -444,82 +459,123 @@ useEffect(() => {
                         <TreeList getElementAtEvent={handleNodeClick} />
                             </article>
                             <article>
-                                 <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Tag type :</label>
+                                 {/* <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Tag type :</label>
+                                <select name="name" id="name" value={tagTypeValue} onChange={handleTagType} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
+                                    <option value="all" label="All">All</option>
+                                   <option value="TDM" label="Tdm">Tdm</option>
+                                   <option value="NTDM" label="Ntdm">Ntdm</option>
+                                   <option value="ATC" label="Atc">Atc</option>
+                                </select> */}
+                                {/* <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} tagTypeValue={tagTypeValue} /> */}
+                            </article>
+
+                    </article>
+                </article>
+                <article className="col-sm-9 col-md-9 col-lg-9 col-xl-9 col-xxl-9 border-allsd" style={{ margin: '5px 0px 0 0px' }}>
+                    <article className="">
+                                    <article className="row border-b" style={{position:'relative'}}>
+                                        <article className="col-6">
+                        <ul className="clearfix linklist">
+                            <li>
+                            <button onClick={()=>{ handleStationVwVisible(); handleLinkView();}}  className={selectedTab === 'linkview' ? 'active' : ''}>
+                                    {getTabLabel(textName)}
+                                </button>
+                            </li>
+
+                           {trainLabelDiply ?  <li><a onClick={handleTrainVwTab}>{trainId}</a><button onClick={handleTrainVwVisible}>x</button></li> : '' }
+                           <li>
+                            <button onClick={handleTagTableView}  className={selectedTab === 'tagtable' ? 'active' : ''}>
+                                    Tag Table
+                                </button>
+                           </li>
+                        </ul>
+                        </article>
+                        <article className="col-6">
+                          <h1 className="refreshtitle">Refreshing In :  <span style={{minWidth:'30px',maxWidth:'35px',display:"inline-block"}}> {timeLeft} </span> sec </h1>
+                        </article>
+                        </article>
+                <>
+                {tagTableView === true ? (
+                    <>
+                     {/* <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Tag type :</label>
                                 <select name="name" id="name" value={tagTypeValue} onChange={handleTagType} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
                                     <option value="all" label="All">All</option>
                                    <option value="TDM" label="Tdm">Tdm</option>
                                    <option value="NTDM" label="Ntdm">Ntdm</option>
                                    <option value="ATC" label="Atc">Atc</option>
                                 </select>
-                                <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} tagTypeValue={tagTypeValue} />
-                            </article>
+                                 <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Select Station :</label>
+                                <select name="name" id="name" value={tagTypeValue} onChange={handleTagType} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
 
+                                    <option value="all" label="All">All</option>
+                                </select> */}
+                                <article style={{margin:'5px'}}>
+                    <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} textName={textName}/>
                     </article>
-                </article>
-                <article className="col-sm-9 col-md-9 col-lg-9 col-xl-9 col-xxl-9">
-                    <article className="border-allsd" style={{ margin: '5px 0px 0 0px' }}>
-
-                        <ul className="clearfix linklist border-b">
-                            {/* <li><button onClick={handleStationVwVisible}>{getTabLabel(textName)}</button> <button onClick={handleStationTabview}>x</button></li> */}
-                            <li>
-                            <button onClick={handleStationVwVisible}>
-                                    {getTabLabel(textName)}
-                                </button>
-
-                                {/** Conditionally render this second button */}
-                                {/* {showCloseBtn && (
-                                    <button onClick={handleStationTabview}>x</button>
-                                 )} */}
-                            </li>
-
-                           {trainLabelDiply ?  <li><a onClick={handleTrainVwTab}>{trainId}</a><button onClick={handleTrainVwVisible}>x</button></li> : '' }
-                        </ul>
-                     {textName?.data?.mode === 'facility' || textName?.data?.mode === 'location' || textName?.data?.mode === 'region' ? ( <article className="row">
-                            <article className="col-3">
-                              {trainView === true ?(<h1 className="mapheading">Train View : {trainId}</h1>) : (<h1 className="mapheading">{getNodeLabel(textName)}</h1>)}  
-                            </article>
-                            {/* <article className="col-9">
-                                <article style={{ float: 'right' }}>
-                                    <span className="systmtopo" style={{ marginRight: '10px' }}> Region</span>
-                                    <label className="float-right systmtopo">
-                                        <input type="checkbox" className="inptcheck" id="checksysname" aria-checked="true" aria-invalid="false" />System Name
-                                        <span className="" style={{ marginTop: '0', top: '10px' }}></span>
-                                    </label>
-                                </article>
-                            </article> */}
-
-
-                        </article>) : ''}   
-                    
-                        <hr className="topohr" />
-
-
-             
-                    </article>
-
-                        {stationView === true
-                                ? (
-                                    textName && textName.data &&
-                                    (textName.data.mode === "facility" ||
-                                        textName.data.mode === "Trains" ||
-                                        textName.data.mode === "mainline" ||
-                                        textName.data.mode === "yard")
-                                        ? renderSectFacility(textName)
-                                        : renderSectComponent(textName)
-                                    ) :( (stationTagview || lineTagview) && renderTagView(stationTagview, lineTagview))}
-
-                               {trainView === true ?  renderSectTrainView(trainView) :''}
-                           
-                                    {showPopup && (
+                    {textName && textName?.data?.mode === 'facility' ? (<article style={{margin:'5px',marginTop:'15px'}}>
+                    <StationTagsTable rdDataRef={rdDataRef} />
+                    </article>) : ('')}
+                    {showPopup && (
                         <div className="popupStyle">
-                            <div className="popupBoxStyle">
-                                <WaysidePopupTable currentTagid={currentTagid} />
-                                <button onClick={() => setShowPopup(false)} className="clearfix createbtn" style={{ marginTop: '20px', float: "right" }}>Close</button>
-                            </div>
+                        <div className="popupBoxStyle">
+                            <WaysidePopupTable currentTagid={currentTagid} />
+                            <button
+                            onClick={() => setShowPopup(false)}
+                            className="clearfix createbtn"
+                            style={{ marginTop: '20px', float: 'right' }}
+                            >
+                            Close
+                            </button>
+                        </div>
                         </div>
                     )}
-                
+                    </>
+                ) : (
+                    <>
+                    {['facility', 'location', 'region'].includes(textName?.data?.mode) && (
+                        <article className="row">
+                        <article className="col-3">
+                            {trainView === true ? (
+                            <h1 className="mapheading">Train View : {trainId}</h1>
+                            ) : (
+                            <h1 className="mapheading">{getNodeLabel(textName)}</h1>
+                            )}
+                        </article>
+                        </article>
+                    )}
+                    <hr className="topohr" />
 
+                    {stationView === true ? (
+                        textName?.data &&
+                        ['facility', 'Trains', 'mainline', 'yard'].includes(textName.data.mode) ? (
+                        renderSectFacility(textName)
+                        ) : (
+                        renderSectComponent(textName)
+                        )
+                    ) : (
+                        (stationTagview || lineTagview) && renderTagView(stationTagview, lineTagview)
+                    )}
+
+                    {trainView === true && renderSectTrainView(trainView)}
+
+                    {/* {showPopup && (
+                        <div className="popupStyle">
+                        <div className="popupBoxStyle">
+                            <WaysidePopupTable currentTagid={currentTagid} />
+                            <button
+                            onClick={() => setShowPopup(false)}
+                            className="clearfix createbtn"
+                            style={{ marginTop: '20px', float: 'right' }}
+                            >
+                            Close
+                            </button>
+                        </div>
+                        </div>
+                    )} */}
+                    </>
+                )}
+                </>
+                </article>
                 </article>
                 </article>
 

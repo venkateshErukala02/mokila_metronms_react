@@ -103,7 +103,7 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
                 const handleSearchData = async (searchValue) => {
         
                         try {
-                            const response = await fetch(`api/v2/nodes?_s=assetRecord.serialNumber==${searchValue},label==${searchValue},sysName==${searchValue}&limit=25&offset=0&order=asc&orderBy=id`, {
+                            const response = await fetch(`api/v2/nodes?_s=assetRecord.serialNumber==${searchValue},label==${searchValue},sysName==${searchValue}&ar=${deviceType}&limit=25&offset=0&order=asc&orderBy=id`, {
                                 method: "GET",
                                 headers: {
                                     "Content-Type": "application/json",

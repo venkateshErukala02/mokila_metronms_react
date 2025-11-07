@@ -26,7 +26,7 @@ const StationNodeTableView=({textName , rdDataRef})=>{
                     <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6" style={{padding:'5px'}}>
                        <TopoSectionTable textName={textName}/>
                        <article>
-                        <SouthBoundTb textName={textName}/>
+                        {/* <SouthBoundTb textName={textName}/> */}
                        </article>
                     </article>
                     <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6" style={{padding:'5px'}}>
@@ -34,7 +34,8 @@ const StationNodeTableView=({textName , rdDataRef})=>{
                         <SouthBoundTb textName={textName}/>
                         <NorthBoundTb textName={textName}/>
                         </article> */}
-                        <StationTagsTable rdDataRef={rdDataRef} />
+                        {/* <StationTagsTable rdDataRef={rdDataRef} /> */}
+                          <SouthBoundTb textName={textName}/>
                         <article>
                              <NorthBoundTb textName={textName}/>
                         </article>

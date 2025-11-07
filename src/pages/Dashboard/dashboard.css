@@ -89,6 +89,89 @@ tbody.tbbdtwo>tr{border-bottom: 1px solid rgb(33 35 39 / 7%);}
 /* ---------------------------------------------------------------------- */
 
 
+
+thead.firmpopuptbtwo>tr{border-bottom: 2px solid rgb(33 35 39 / 7%);}
+thead.firmpopuptbtwo>tr>th{font-size: 12.5px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #212327;letter-spacing: 0.6px;}
+
+tbody.firmpopuptbbdtwo>tr>td{font-size: 13px;font-family: "Lato-Regular";padding: 6px;color: #50565e;letter-spacing: 0.2px; white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;}
+tbody.firmpopuptbbdtwo>tr:nth-child(odd){        background-color: white;
+}
+.firmpopuptbbdtwo{border-bottom: 1px solid rgb(33 35 39 / 7%);}
+tbody.firmpopuptbbdtwo>tr:nth-child(even){        background-color:white;
+}
+tbody.firmpopuptbbdtwo>tr{border-bottom: 1px solid rgb(33 35 39 / 7%);}
+
+
+.firmpopuptbbdtwo>tr:last-child{border-bottom: none;}
+
+
+
+
+/* ---------------------------------------------------------------------- */
+
+.failtagtbl {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+thead.failtagthtb {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 2;
+}
+
+thead.failtagthtb > tr {
+  border-bottom: 1px solid rgb(33 35 39 / 7%);
+}
+
+thead.failtagthtb > tr > th {
+  font-size: 12.5px;
+  font-family: "Lato-Regular";
+  font-weight: 900;
+  padding: 7px;
+  color: #212327;
+  letter-spacing: 0.6px;
+  text-align: left;
+}
+
+article[style*="43vh"] {
+  overflow-y: auto;
+}
+
+tbody.failtagtbbd > tr > td {
+  font-size: 13px;
+  font-family: "Lato-Regular";
+  padding: 6px;
+  color: #50565e;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+tbody.failtagtbbd > tr:nth-child(odd) {
+  background-color: white;
+}
+
+tbody.failtagtbbd > tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+tbody.failtagtbbd > tr {
+  border-bottom: 1px solid rgb(33 35 39 / 7%);
+}
+
+tbody.failtagtbbd > tr:last-child {
+  border-bottom: none;
+}
+
+/* ----------------------------------------------------------------------- */
+
+
 .selectlist{list-style: none;margin: 0;}
 .selectlist>li{float: left;margin-right: 10px;}
 .selectlist>li:last-child{margin-right: 0;}

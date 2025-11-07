@@ -226,7 +226,7 @@ const DiscovContai = () => {
     return (
         <>
             <article className="dicovercont">
-                <h1 className="dicoveryheading">Discovery</h1>
+                <h1 className="discoveryheading">Discovery</h1>
                 <article className="clearfix ipaddcont">
                     <ul className="clearfix discovlist">
                         <li><button className={activeCont === 'Address' ? 'active' : ''} onClick={() => handleActiveCont('Address')}>IP Address</button></li>

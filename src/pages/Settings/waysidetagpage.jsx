@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect, useRef} from "react";
 import '../ornms.css'
 import UserSubCont from "./usersubpage";
 import './../Settings/settings.css';
@@ -7,7 +7,7 @@ import WaysideTagSubCont from "./waysidetagsub";
 const WaysideTagContainer=()=>{
         const [profileStatusCont, setProfileStatusCont] = useState(false);
         const [userData, setUserData] = useState([]);
-        const [userLimitValueSel, setUserLimitValueSel] = useState('25');
+        const [userLimitValueSel, setUserLimitValueSel] = useState('1');
         const [isLoading, setIsLoading] = useState(false);
         const [isError, setIsError] = useState({ status: false, msg: "" });
         const [mode, setMode] = useState(null); 
@@ -19,6 +19,8 @@ const WaysideTagContainer=()=>{
         const [mailChecked,setMailChecked] = useState();
         const [priorityChecked, setPriorityChecked] = useState();
         const [reportChecked,setReportChecked] = useState();
+        const [pageCount,setPageCount] = useState(1);
+        const userDataRef = useRef('');
 
         const value = priorityChecked ? "highpriority" : "none";
         const getUserData = async (url) => {
@@ -42,7 +44,7 @@ const WaysideTagContainer=()=>{
     
                 if (response.ok) {
                     setIsLoading(false);
-                    setUserData(data.tags);
+                    setUserData(data);
                     setIsError({ status: false, msg: "" });
                 } else {
                     throw new Error("data not found");
@@ -56,24 +58,38 @@ const WaysideTagContainer=()=>{
 
      useEffect(() => {
 
-            const url=`api/v2/wayside/waySideTags?page=${userLimitValueSel.trim()}`;
+            const url=`api/v2/wayside/waySideTags?page=${pageCount}`;
             getUserData(url);
     
-        }, [userLimitValueSel]);
+        }, [pageCount]);
 
-         useEffect(() => {
+        //  useEffect(() => {
 
-            const url='api/v2/wayside/waySideTags?page=1'
-            getUserData(url);
+        //     const url='api/v2/wayside/waySideTags?page=1'
+        //     getUserData(url);
     
-        }, []);
+        // }, []);
 
         const handleUserLimitValue = (event) => {
             setUserLimitValueSel(event.target.value);
-    
         }
 
+        const handleDecrement=()=>{
+            if(pageCount === 1){
+            setPageCount(1);
+            }else{
+                setPageCount(prev => prev -1);
+            }
+        }
+        const handleIncrement =()=>{
+            if(userData.totalPages === pageCount){
+            setPageCount(prev => prev);
+            }else{
+                 setPageCount(prev => (prev+1));
+            }
+        }
 
+            
     const handleProfileContopen = () => {
         setProfileStatusCont(true);
         setEditUser(null);  
@@ -165,7 +181,7 @@ const WaysideTagContainer=()=>{
                         <article className="" style={{ height: '90vh' }}>
                                <article style={{display:'flex',justifyContent:'left',padding:'4px 0px 4px 12px'}} className="border-allsd col-12">
                                     <div className="filename-display-wayside-setting">
-                                        {selectedFile ? selectedFile.name : 'Upload tagdb file'}
+                                        {selectedFile ? selectedFile.name : 'Upload Tagdb File'}
                                     </div>
                                     <input
                                         className="dislineinputcl"
@@ -180,27 +196,28 @@ const WaysideTagContainer=()=>{
                                        </article>
                             <article className="row custom-row border-tlr">
                                 <article className="col-8">
-                                    <button className="clearfix arrowlf">
+                                    <button className="clearfix arrowlf" onClick={handleDecrement}>
                                         <i className="fa-solid fa-arrow-left"></i>
                                     </button>
-                                    <button className="clearfix numcl"><span>1</span></button>
-                                    <button className="clearfix arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                                    <button className="clearfix numcl"><span>{pageCount}</span></button>
+                                    <button className="clearfix arrowlf" onClick={handleIncrement}><i className="fa-solid fa-arrow-right"></i></button>
                                 </article>
                                 <article className="col-4">
                                     <article style={{ float: 'right'}}>
                                         <ul className="setttinglist">
-                                            {/* <li>
-                                                <button className="clearfix createbtn" onClick={handleProfileContopen}>Upload</button>
+                                            <li>
+                                                 <input type="text" style={{ marginRight: '10px' }} name="" placeholder="Tag Number" id="" className="form-controlinventory" />
+                                <button className="clearfix createbtn">Search</button>
 
-                                            </li> */}
+                                            </li>
 
                                             <li>
-                                                <select className="form-controlfirm" value={userLimitValueSel} onChange={handleUserLimitValue} style={{ width: '50px', marginTop: '4px' }} aria-invalid="false">
+                                                {/* <select className="form-controlfirm" value={userLimitValueSel} onChange={handleUserLimitValue} style={{ width: '50px', marginTop: '4px' }} aria-invalid="false">
                                                     <option value="1" label="25">25</option>
                                                     <option value="2" label="50">50</option>
                                                     <option value="3" label="75">75</option>
                                                     <option value="4" label="100">100</option>
-                                                </select>
+                                                </select> */}
                                             </li>
                                         </ul>
                                       
@@ -245,14 +262,14 @@ const WaysideTagContainer=()=>{
                                         </tr>
                                     )}
 
-                                    {!isLoading && !isError.status && (!userData || userData.length === 0) && (
+                                    {!isLoading && !isError.status && (!userData?.tags || userData?.tags?.length === 0) && (
                                         <tr>
                                             <td colSpan="12" style={{ textAlign: "center" }}>
                                                 No Data Available
                                             </td>
                                         </tr>
                                     )}
-                                    {userData && userData.map((item) => (
+                                    {userData?.tags && userData?.tags?.map((item) => (
                                         <tr key={item.id}>
                                             <td><input type="checkbox" className="incl"
                                                     checked=''

@@ -632,17 +632,26 @@ tbody.configbdtb>tr{border-bottom: 1px solid rgb(33 35 39 / 7%);}
 
 /* -------------------------------------------------------------------------------- */
 
+.statustagtbl{
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
 
-
-
-thead.statustagthtb>tr{border-bottom: 2px solid rgb(33 35 39 / 7%);}
+thead.statustagthtb {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 2;
+}
+thead.statustagthtb>tr{border-bottom: 1px solid rgb(33 35 39 / 7%);}
 thead.statustagthtb>tr>th{font-size: 12.5px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #212327;letter-spacing: 0.6px;}
 
-tbody.statustagtbbd>tr>td{font-size: 12px;font-family: "Lato-Regular";padding: 6px;color: #50565e;letter-spacing: 0.2px;text-align: left;}
+tbody.statustagtbbd>tr>td{font-size: 13px;font-family: "Lato-Regular";padding: 6px;color: #50565e;letter-spacing: 0.2px;text-align: left;}
 tbody.statustagtbbd>tr:nth-child(odd){        background-color: white;
 }
 .statustagtbbd{border-bottom: 1px solid rgb(33 35 39 / 7%);}
-tbody.statustagtbbd>tr:nth-child(even){        background-color:white;
+tbody.statustagtbbd>tr:nth-child(even){       background-color: #fafafa;
 }
 tbody.statustagtbbd>tr{border-bottom: 1px solid rgb(33 35 39 / 7%);}
 
@@ -726,7 +735,7 @@ tbody.statustagtbbd>tr>td>a{
     padding: 88px 82px;
 }
 
-.dicoveryheading{background-color: #ffffff !important;
+.discoveryheading{background-color: #ffffff !important;
     padding: 7px;
     font-size: 17px;
     border-bottom: 1px solid rgb(33 35 39 / 7%);
@@ -2859,6 +2868,29 @@ svg *:focus {
   border-radius: 8px;
   width: 420px;
   height: 400px;
+}
+
+
+
+.firmwarepopupStyle {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.firmwarepopupBoxStyle {
+  background: white;
+  padding: 5px 10px;
+  border-radius: 8px;
+  width: 820px;
+  height: 168px;
 }
 
 .special-svg circle:hover {

@@ -3,6 +3,8 @@ import '../ornms.css'
 import './../Settings/settings.css';
 import './../Inventory/inventory.css';
 import FirmwareContainerSub from "./firmwaresub";
+import { faL, fas } from "@fortawesome/free-solid-svg-icons";
+import FirmwarePopupTable from "./firmwarepopuptable";
 
 const FirmwareContainer = () => {
     const [profileStatusCont, setProfileStatusCont] = useState(true);
@@ -14,6 +16,8 @@ const FirmwareContainer = () => {
     const [editUser, setEditUser] = useState(null);
     const [selected, setSelected] = useState(4);
     const [showList, setShowList] = useState(false);
+    const [showPopup,setShowPopup] = useState(false);
+    const [firmpopupData,setFirmpopupData] = useState([]);
 
     const getFimwareData = async (url) => {
         setIsLoading(true);
@@ -96,10 +100,16 @@ const FirmwareContainer = () => {
 const handleChange = (value) => {
     setSelected(value); // only one selected at a time
   };
+
+  const handleFirmwarePopup=(data)=>{
+    setShowPopup(true);
+    setFirmpopupData(data);
+  }
+
     return (
         <>
             <article className="row">
-                <article className={profileStatusCont ? 'col-8' : 'col-12'}>
+                <article className={profileStatusCont ? 'col-8' : 'col-12'} style={{position:'relative'}}>
                     <article className="" style={{ height: '90vh' }}>
                         <article className="row custom-row border-tlr">
                             <article className="col-8">
@@ -188,7 +198,7 @@ const handleChange = (value) => {
                                         </tr>
                                     )}
                                     {firmwareData && firmwareData.map((item) => (
-                                        <tr key={item.id}>
+                                        <tr key={item.id} onClick={()=>handleFirmwarePopup(item)}>
                                             <td><input type="checkbox" className="incl"
                                                     checked='' onChange=''
                                                 /></td>
@@ -205,10 +215,38 @@ const handleChange = (value) => {
                             </table>
                         </article>
                     </article>
+
+                     {showPopup && (
+                        <div className="firmwarepopupStyle">
+                        <div className="firmwarepopupBoxStyle">
+                            <article>
+                                <i class="fa fa-close noticlose" role="button" tabindex="0" onClick={() => setShowPopup(false)} style={{ marginBottom: '5px', float: 'right',transform:'translateY(-8px)',fontSize:'15px',paddingRight:'12px' }}></i>
+                            {/* <button
+                            onClick={() => setShowPopup(false)}
+                            className="clearfix createbtn"
+                            style={{ marginBottom: '5px', float: 'right' }}
+                            >
+                            Close
+                            </button> */}
+                            </article>
+                            <article style={{display:'inline-block'}}>
+                            <FirmwarePopupTable firmpopupData={firmpopupData} />
+                            </article>
+                            {/* <button
+                            onClick={() => setShowPopup(false)}
+                            className="clearfix createbtn"
+                            style={{ marginTop: '20px', float: 'right' }}
+                            >
+                            Close
+                            </button> */}
+                        </div>
+                        </div>
+                    )}
                 </article>
 
                 <article className={profileStatusCont ? 'col-4' : 'collapsed'} >
-                    <FirmwareContainerSub />
+                    <FirmwareContainerSub    refreshLineData={()=>getFimwareData(`api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=25`)
+                                    }/>
                 </article>
             </article>
         </>

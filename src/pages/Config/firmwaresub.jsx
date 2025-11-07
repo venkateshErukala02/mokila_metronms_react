@@ -28,6 +28,7 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
     const dropdownRef = useRef(null);
     const [deviceType,setDeviceType] = useState('')
     const [timestamp,setTimestamp] = useState('');
+    const [deviceTypeRequired,setDeviceTypeRequired] = useState(true);
 
 
     const handleProfileContclose = () => {
@@ -202,9 +203,12 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
 
 
         const handleSearchClick = (e) => {
+            if(deviceType === ''){
+                setDeviceTypeRequired(false);
+            }
             e.preventDefault();
             if (!searchValue.trim()) {
-                alert("Please enter a search term");
+                 alert("Please enter a search term");
     
             } else {
                 setSearchBtn(true);
@@ -217,7 +221,7 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
             const handleSearchData = async (searchValue) => {
     
                     try {
-                        const response = await fetch(`api/v2/nodes?_s=assetRecord.serialNumber==${searchValue},label==${searchValue},sysName==${searchValue}&limit=25&offset=0&order=asc&orderBy=id`, {
+                        const response = await fetch(`api/v2/nodes?_s=assetRecord.serialNumber==${searchValue},label==${searchValue},sysName==${searchValue}&ar=${deviceType}&limit=25&offset=0&order=asc&orderBy=id`, {
                             method: "GET",
                             headers: {
                                 "Content-Type": "application/json",
@@ -348,18 +352,21 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                                 <label className="settinglabelsub">Device Type</label>
                             <select className="vlaninput" value={deviceType} onChange={(e)=> setDeviceType(e.target.value)}>
                                 <option value="" disabled>Select</option>
-                                {/* <option value="sta">Train Radio</option> */}
+                                <option value="sta">Train Radio</option>
                                 <option value="encoder">Encoder</option>
-                                {/* <option value="transcoder">Transcoder</option> */}
+                                <option value="transcoder">Transcoder</option>
                                 <option value="AP">Station Nodes</option>
                                 <option value="obc">OBC</option>
-                                {/* <option value="CAM">Cameras</option> */}
+                                <option value="CAM">Cameras</option>
                             </select>
-                                <label className="vlanlabel">Firmware</label>
+                           {deviceTypeRequired && <p className="requiretitle">* Required Device Type</p> }
+                                <label className="vlanlabel" style={{marginTop:'0'}}>Firmware</label>
                                 <article style={{ padding: '12px 0' }}>
                                     <select className="vlaninput" value={versionTitle} onChange={(e)=> setVersionTitle(e.target.value)}>
                                         <option key='0' value='Select'>Select</option>
-                                        {versionData && versionData.map((value, index) => (
+                                        {versionData && versionData
+                                        .filter((value) => value.deviceType === `${deviceType}`)
+                                        .map((value,index) =>(
                                             <option key={index} value={value.fileName}>{value.fileName}</option>
                                         ))}
                                     </select>
@@ -446,14 +453,14 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                                                 onChange={(e) => setSearchValue(e.target.value)}
                                                 className="searchIpinput"
                                             />
-                                            <button type="button" className="createbtn" onClick={handleSearchClick}>Search</button>
+                                            <button type="button" className="searchfirmbtn" onClick={handleSearchClick} disabled={deviceType !== '' ? false : true}>Search</button>
                                             <button className="clearfix createbtn" type="button" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
 
                                         </article>
                                     </li>
                                 </ul>
                                 {searchBtn && searchData.length === 0 && <article ref={dropdownRef} style={{ maxHeight: '5vh', overflow: 'auto', position: 'absolute', backgroundColor: 'white', zIndex: '99999', width: '236px', left: "0" }} className="scheduletitle">No Data</article>}
-                                {searchData.length > 0 && <article ref={dropdownRef} style={{ maxHeight: '20vh', overflow: 'auto', position: 'absolute', backgroundColor: 'white', zIndex: '99999', width: '236px', left: "0" }}>
+                                {searchData.length > 0 && <article ref={dropdownRef} style={{ maxHeight: '42vh', overflow: 'auto', position: 'absolute', backgroundColor: 'white', zIndex: '99999', width: '236px', left: "0" }}>
                                     <ul className="searchlist">
                                         {searchData && searchData.map((event) => {
                                             const isAdded = addedItems.includes(event.id);
@@ -511,7 +518,7 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
 
                             <center style={{ marginTop: '16px', marginBottom: '16px' }}>
                                 <button type="button" className="cancelbtn">Cancel</button>
-                                <button type="button" className="creatsetingbtn" onClick={handleApplyFirmware}>Apply</button>
+                                <button type="button" className="uploadsetingbtn" onClick={handleApplyFirmware} disabled={selectedItems.length === 0}>Apply</button>
                             </center>
                                 </article>}
                         </form>
