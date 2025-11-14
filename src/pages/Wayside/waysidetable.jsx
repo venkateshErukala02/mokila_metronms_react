@@ -131,6 +131,7 @@ useEffect(() => {
   if (!tagTypeValue || !textName) return; 
 
   const fetchIntervalData = () => {
+     if (!tagTypeValue || !textName) return; 
     let url = `api/v2/wayside/fetch?show=${tagTypeValue}`;
 
     if (textName?.data?.mode === 'facility') {
@@ -139,10 +140,10 @@ useEffect(() => {
       url += '&station=all';
     }
 
-    if (textName?.data?.mode === 'location') {
-      url += `&time=1800&region=${textName.text}`;
+    if (textName?.data?.mode === 'facility' || textName?.text ==='Global' ) {
+        url += '&time=1800&region=all';     
     } else {
-      url += '&time=1800&region=all';
+     url += `&time=1800&region=${textName.text}`;
     }
 
     fetchDataRadial(url, true);
@@ -154,6 +155,16 @@ useEffect(() => {
 
   return () => clearInterval(intervalId);
 }, [tagTypeValue, textName,allTagfailCount]); 
+
+// useEffect(() => {
+
+//     let url = 'api/v2/wayside/fetch?show=all&station=all&time=1800&region=all';
+//     if(url){
+//         fetchDataRadial(url, true);
+
+//     }
+// }, []); 
+
 
 // useEffect(() => {
 //      if (!tagTypeValue) return;

@@ -13,7 +13,7 @@ import {
 import { useSelector } from "react-redux";
 
 
-const LatencyChart = ({ graphOption, graphOptionValue }) => {
+const LatencyChart = ({ graphOption, graphOptionValue ,labelName }) => {
   const [gpItemDt, setGpItemDt] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState({ status: false, msg: "" });
@@ -245,7 +245,7 @@ const LatencyChart = ({ graphOption, graphOptionValue }) => {
             onMouseLeave={() => console.log("Leave:", entry.value)}
             style={{ color: 'black', cursor: 'pointer' }}
           >
-            <span style={{ marginRight: 10, color: '#4fc9e7' }}>●</span> {entry.value} (in ms)
+            <span style={{ marginRight: 10, color: '#4fc9e7' }}>●</span> {labelName} {entry.value} (in ms)
           </li>
         ))}
       </ul>

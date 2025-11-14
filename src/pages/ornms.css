@@ -2393,6 +2393,12 @@ text-decoration: none;
     left: 75px;
 
 }
+.trainsel{
+    position: absolute;
+    right: 0px;
+    top: 0;
+
+}
 .southtxt{
     font-size: 14px;
     color: black;
@@ -2738,6 +2744,15 @@ svg *:focus {
     width: 1300px;
     height: 240px;
 }
+
+.obcsubtabwidthcl{
+   height: 240px;
+    /* width: 714px; */
+    margin: 15px;
+    padding: 0 21px;
+}
+
+
 
 .latency-togglebtn i{
     font-size: 23px;
@@ -3100,6 +3115,41 @@ svg *:focus {
 .statuslist>li>label>input{
     margin-right: 10px;
 }
+
+
+.obcsublist{
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .obcsublist>li.active{
+    border-bottom: 5px solid #006cfc;
+    padding-top: 6px;
+    background-color: #dcd5d542;
+    padding-bottom: 3px;
+  } 
+  .obcsublist>li{
+    font-size: 16px;
+    float: left;
+    padding: 5px 25px;
+    padding: 5px 0px 5px 25px;
+    border-right: 1px solid;
+  }
+   .obcsublist>li:first-child{
+    border-left: 1px solid;
+   }
+  .obcsublist>li>a{
+    text-decoration: none;
+    color: #639;
+    /* border-right: 1px solid; */
+    display: inline-block;
+    padding-right: 25px;
+  }
+
+  .obcsublist>li>a>i{margin-right: 5px;}
+  .obcsublist>li.active>a>i {color: #006cfc;}
+
+
  /* width={700} height={240} */
 
 /*  */

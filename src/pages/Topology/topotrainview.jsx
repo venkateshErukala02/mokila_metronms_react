@@ -2,10 +2,11 @@ import React,{useState,useEffect,useRef} from "react";
 import southboundtr from '../../assets/img/Train_southbound_new.svg'
 import northboundtr from '../../assets/img/Train_northbound_new.svg'
 import { Prev } from "react-bootstrap/esm/PageItem";
+// import TreeList from "./treelist";
 
 const TrainView=({textName})=>{
 
-    const [trainData,setTrainData] = useState([]);
+    // const [trainData,setTrainData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [svgContent, setSvgContent] = useState("");
@@ -13,8 +14,25 @@ const TrainView=({textName})=>{
     const svgContainerRef = useRef(null);
     const [limitValueSel,setLimitValueSel] =  useState('2');
     const [limitLabelSel,setLimitLabelSel] = useState('45');
+     const [trainValueSel,setTrainValueSel] =  useState('2');
+    const [trainLabelSel,setTrainLabelSel] = useState('Global');
     const [offsetValueDisplay,setOffsetValueDisplay] = useState(1);
     const [offsetValue,setOffsetValue] = useState(0);
+    //   const [tableNodeSt, setTableNodeSt] = useState([]);
+
+      const [trainData, setTrainData] = useState([]);
+       const [results, setResults] = useState([]);
+const [tableNodeSt, setTableNodeSt] = useState([]);
+const [isLoadingTableNode, setIsLoadingTableNode] = useState(true);
+
+// Populate table1, table2, table3
+const [table1, setTable1] = useState([]);
+const [table2, setTable2] = useState([]);
+const [table3, setTable3] = useState([]);
+
+//   const [isLoading, setIsLoading] = useState(false);
+//   const [isError, setIsError] = useState({ status: false, msg: '' });
+
 
     useEffect(() => {
         const controller = new AbortController();
@@ -23,10 +41,10 @@ const TrainView=({textName})=>{
         let url = '';
         switch (textName.data.mode) {
             case 'Trains':
-                url = `api/v2/treeview/alltrains/2?_s=&limit=${limitLabelSel}&offset=${offsetValue}`;
+                url = `api/v2/treeview/alltrains/${trainValueSel}?_s=&limit=${limitLabelSel}&offset=${offsetValue}`;
                 break;
             case 'mainline':
-                url = `api/v2/treeview/alltrains/${textName.data.id}?_s=&limit=45&offset=0`;
+                url = `api/v2/treeview/alltrains/${trainValueSel}?_s=&limit=45&offset=0`;
                 break;
             default:
                 return; // Exit early if mode is not recognized
@@ -69,7 +87,7 @@ const TrainView=({textName})=>{
         fetchData();
     
         return () => controller.abort(); // Cleanup on unmount or textName change
-    }, [textName, limitLabelSel, offsetValue]);
+    }, [textName, limitLabelSel, offsetValue,trainValueSel]);
     
       
     //   useEffect(() => {
@@ -88,8 +106,8 @@ useEffect(() => {
     let svg = 'TTC_SubwayMap.svg';
 
     if (textName !== "") {
-        if (textName && textName.data && textName.data.mode=== 'Trains') {
-          svg = 'Train_southbound_new .svg';
+        if (textName && textName.data && textName.data.mode=== 'Trains' || textName.data.mode === 'mainline') {
+          svg = 'Train_southbound_new.svg';
           if (textName.text == 'line1') {
             svg = 'Line1.svg';
           } else if (textName.text == 'line4') {
@@ -149,19 +167,57 @@ useEffect(() => {
         }
         return svgDoc.documentElement.outerHTML;
       };
-      const table1 = [];
-      const table2 = [];
-      const table3 = [];
+    //   const table1 = [];
+    //   const table2 = [];
+    //   const table3 = [];
      
-      trainData.forEach((item, index) => {
-        if (index % 3 === 0) {
-          table1.push(item);
-        } else if (index % 3 === 1) {
-          table2.push(item);
-        } else {
-          table3.push(item);
-        }
-      });
+    //   trainData.forEach((item, index) => {
+    //     if (index % 3 === 0) {
+    //       table1.push(item);
+    //     } else if (index % 3 === 1) {
+    //       table2.push(item);
+    //     } else {
+    //       table3.push(item);
+    //     }
+    //   });
+    
+
+
+
+// Split into 3 tables
+const splitIntoThreeTables = (data) => {
+    const t1 = [], t2 = [], t3 = [];
+    data.forEach((item, index) => {
+        if (index % 3 === 0) t1.push(item);
+        else if (index % 3 === 1) t2.push(item);
+        else t3.push(item);
+    });
+    return [t1, t2, t3];
+};
+
+// When trainData or tableNodeSt updates
+// useEffect(() => {
+//     if (trainData.length > 0 || results.length > 0) {
+//         // Merge trainData and tableNodeSt with links
+//         // const enrichedData = trainData.map(item => createLinks(item, results));
+
+//         // Split into tables
+//         const [t1, t2, t3] = splitIntoThreeTables(trainData);
+//         setTable1(t1);
+//         setTable2(t2);
+//         setTable3(t3);
+//         setIsLoadingTableNode(false);
+//     }
+// }, [trainData, results]);
+useEffect(() => {
+    if (trainData.length > 0) {
+        const [t1, t2, t3] = splitIntoThreeTables(trainData);
+        setTable1(t1);
+        setTable2(t2);
+        setTable3(t3);
+    }
+}, [trainData]);
+
 
       const handleOffsetValueIncmt = () => {
         if(trainData.length >= Number(limitLabelSel)){
@@ -199,6 +255,57 @@ useEffect(() => {
         setLimitLabelSel(label)
     }
 
+      const handleTrains=(event)=>{
+        let selectedIndex = event.target.selectedIndex;
+        let value = event.target.options[selectedIndex].value;
+        setTrainValueSel(value)
+        let label = event.target.options[selectedIndex].label;
+        setTrainLabelSel(label)
+    }
+
+
+
+
+const handleWorkerResponse = (event) => {
+    const { nodeId, data, status, message } = event.data;
+
+    if (status === 'success') {
+      console.log(`Worker for nodeId ${nodeId} completed successfully`, data);
+      setResults((prevResults) => [...prevResults, { nodeId, data }]);
+    } else {
+      console.error(`Worker for nodeId ${nodeId} failed: ${message}`);
+    }
+  };
+
+  // Function to create workers for each nodeId and call API B
+  const callApiBForEachNode = (apiB) => {
+    // For each object in dataA, spawn a new worker
+    trainData.forEach((item) => {
+      const worker = new Worker(new URL('./worker.jsx', import.meta.url), { type: 'module' });
+      
+      // Set up the worker's response handler
+      worker.onmessage = handleWorkerResponse;
+
+      // Post the message to the worker with the data for API B
+      worker.postMessage({
+        nodeId: (item.nodeid ?? 0),  // Use item id as nodeId
+        apiB: apiB  // URL for API B
+      });
+    });
+};
+
+useEffect(() => {
+    if (trainData.length > 0) {
+    //   setIsLoading(true);
+      const apiB = 'http://localhost:8980/metronms/api/v2/nodelinks/ping?nodeId=';  // Example API B
+
+      // Start the workers
+      callApiBForEachNode(apiB);
+    }
+  }, [trainData]);
+
+
+
     return(
         <>
         <article className="">
@@ -217,11 +324,19 @@ useEffect(() => {
                                     <option value="1" label="30">30</option>
                                     <option value="2" label="45">45</option>
                                 </select>
+
+                                
                            
                             <article className="boundimg" >
                                 <img src={northboundtr} alt="northtr" />
                                 <img src={southboundtr} alt="southtr" style={{float:'right'}} />
                             </article>
+
+                <select className="form-controll1 trainsel" value={trainValueSel} onChange={handleTrains} style={{ width: "auto", display: 'inline-block' }} aria-invalid="false">
+                                    <option value="2" label="Global">Global</option>
+                                    <option value="11" label="Mainline">Mainline</option>
+                                    <option value="12" label="Yard">Yard</option>
+                                </select>
                             <article className="boundimg">
                                 <span className="southtxt">South Bound</span>
                                 <span className="northtxt">North Bound</span>
@@ -268,6 +383,15 @@ useEffect(() => {
                                         __html: injectTextToSvg(svgContent, event.trainId || `Train-${index}`),
                                         }}
                                     />
+                                    <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
+                                    <h6 style={{margin:'0px'}}>Major : {event.major}</h6>
+                                    <h6 style={{margin:'0px'}}>Warning : {event.warning}</h6>
+                                     {/* <h6 style={{ margin: '0px' }}>
+                                    {event.links && event.links.length > 0 
+                                        ? event.links.map(link => link.type).join(', ') 
+                                        : 'Loading...'}
+                                    </h6> */}
+
                                     </td>
                                     <td className="col-6" style={{width:'400px'}}><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
                                     <i class="fas fa-file-export trainexpor" role="button" tabindex="0">
@@ -275,6 +399,13 @@ useEffect(() => {
                                     </td>
                                 </tr>
                                 ))}
+
+                                 {isLoadingTableNode && trainData.length > 0 && (
+        <tr>
+            <td colSpan="12" style={{ textAlign: 'center' }}>
+                Loading additional data...
+            </td>
+        </tr>)}
 
 
                     </tbody>
@@ -318,6 +449,15 @@ useEffect(() => {
                                         __html: injectTextToSvg(svgContent, event.trainId || `Train-${index}`),
                                         }}
                                     />
+                                   <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
+                                    <h6 style={{margin:'0px'}}>Major : {event.major}</h6>
+                                    <h6 style={{margin:'0px'}}>Warning : {event.warning}</h6>
+                                    {/* <h6 style={{ margin: '0px' }}>
+                                    {event.links && event.links.length > 0 
+                                        ? event.links.map(link => link.type).join(', ') 
+                                        : 'Loading...'}
+                                    </h6> */}
+
                                     </td>
                                     <td className="col-5"><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
                                     <i class="fas fa-file-export trainexpor" role="button" tabindex="0">
@@ -368,6 +508,15 @@ useEffect(() => {
                                         __html: injectTextToSvg(svgContent, event.trainId || `Train-${index}`),
                                         }}
                                     />
+                                    <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
+                                    <h6 style={{margin:'0px'}}>Major : {event.major}</h6>
+                                    <h6 style={{margin:'0px'}}>Warning : {event.warning}</h6>
+                                    <h6 style={{ margin: '0px' }}>
+                                    {/* {event.links && event.links.length > 0 
+                                        ? event.links.map(link => link.name).join(', ') 
+                                        : 'Loading...'} */}
+                                    </h6>
+
                                     </td>
                                     <td className="col-5"><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
                                     <i class="fas fa-file-export trainexpor" role="button" tabindex="0">

@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 
-import LatencyChart from "./latencychart";
+// import LatencyChart from "./latencychart";
+import LatencyChart from "../latencychart";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import LocalSnr from "./localsnr";
-import TxChart from "./localtxr";
+import LocalSnr from "../localsnr";
+import TxChart from "../localtxr";
 import { useSelector } from "react-redux";
-import TxRxDiffchart from "./txandrxchart";
-import TxErrorChart from "./txerrorchart";
-import CpuChart from "./cpuchart";
+import TxRxDiffchart from "../txandrxchart";
+import TxErrorChart from "../txerrorchart";
+import CpuChart from "../cpuchart";
+import '../../ornms.css';
 
 
-const ObcGraphs = () => {
+const TranscoderObcSubview = () => {
   const [gpItemDt, setGpItemDt] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState({ status: false, msg: "" });
@@ -115,19 +117,43 @@ const handleCpuchart=()=>{
       <article>
         <article className="container-fluid">
           <article className="row">
-            <article className="col-md-12 graphbord2">
-              <article className="latencyfullwidthcl">
-                <TxRxDiffchart currentTab='obc' graphOption={graphOption} graphOptionValue={graphOptionValue}/>
+            <article className="col-md-6 graphbord1">
+              <article className="obcsubtabwidthcl">
+                <LatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue} labelName='Cam1'/>
               </article>
             </article>
-              <article className="col-md-12" style={{marginTop:'20px'}}>
-                 <article className="latencyfullwidthcl graphbord2">
-                 <TxErrorChart currentTab='obc' graphOption={graphOption} graphOptionValue={graphOptionValue}/>     
+                <article className="col-md-6 graphbord1">
+              <article className="obcsubtabwidthcl">
+                <LatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue} labelName='Cam2'/>
+              </article>
+            </article>
+            </article>
+            <article className="row">
+              <article className="col-md-6 graphbord1" style={{marginTop:'20px'}}>
+                 <article className="obcsubtabwidthcl">
+                 <LatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue} labelName='Cam3'/>    
+                 </article>
+                </article>
+                    <article className="col-md-6 graphbord1" style={{marginTop:'20px'}}>
+                 <article className="obcsubtabwidthcl">
+                <LatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue} labelName='Cam4'/>
                  </article>
                 </article>
              </article>
+              <article className="row">
+            <article className="col-md-6 graphbord1">
+              <article className="obcsubtabwidthcl">
+                <TxRxDiffchart currentTab='obc' graphOption={graphOption} graphOptionValue={graphOptionValue}/>
+              </article>
             </article>
-                 <article className="col-md-12" style={{marginTop:'20px',padding:'0px'}}>
+                <article className="col-md-6 graphbord1">
+              <article className="obcsubtabwidthcl">
+                {/* <TxRxDiffchart currentTab='obc' graphOption={graphOption} graphOptionValue={graphOptionValue}/> */}
+              </article>
+            </article>
+            </article>
+            </article>
+                 {/* <article className="col-md-12" style={{marginTop:'20px'}}>
               <article className="latencyfullwidthcl">
                 <article className="latency-togglebtn cpuart-highlight" style={{textAlign:'center'}}>
                    <span className={`${cpuChartStatus === true ? 'cpu-higlight': ''}`}>CPU </span><i class={`fa-solid fa-toggle-on ${cpuChartStatus === true ? 'fa-rotate-180' : ''} `} onClick={handleCpuchart}></i> <span className={`${cpuChartStatus === true ? '': 'cpu-higlight'}`}>Latency</span>
@@ -136,10 +162,10 @@ const handleCpuchart=()=>{
                  {cpuChartStatus ? (<CpuChart currentTab='obc' graphOption={graphOption} graphOptionValue={graphOptionValue}/>) : (<LatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue}/>)}      
                        </article>
                        </article>
-                </article>
+                </article> */}
                 </article>
     </>
   );
 };
 
-export default ObcGraphs;
+export default TranscoderObcSubview;
