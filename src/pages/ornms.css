@@ -545,9 +545,12 @@ tbody.passwordbdtwo>tr{width: 100%;text-align: center;font-size: 12px;}
 /* ---------------------------------------------------------- */
 .traintbone{border: 1px solid black;}
 .traintbone>tr{margin: 0px 0;display: inline-table;}
-.traintbone>tr>td{font-size: 12px;font-family: "Lato-Regular";color: #50565e;padding: 8px;margin: 5px;letter-spacing: 0.1px;}
+.traintbone>tr>td{font-size: 12px;font-family: "Lato-Regular";color: #50565e;padding: 8px;margin: 5px;letter-spacing: 0.1px;border-right:1px solid #ddd}
 .traintbone>tr{border: 1px solid rgb(33 35 39 / 7%);background-color: rgb(229 241 255 / 50%);}
 .traintbone>tr>td:first-child{border-right:1px solid #ddd}
+.traintbone>tr>td:last-child{
+    border-right: 0;
+}
 
 /* thead.tbtwo>tr{border-bottom: 2px solid rgb(33 35 39 / 7%);}
 thead.tbtwo>tr>th{font-size: 12.5px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #212327;letter-spacing: 0.6px;}

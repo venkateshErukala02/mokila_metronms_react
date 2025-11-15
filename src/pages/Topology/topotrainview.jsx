@@ -18,20 +18,17 @@ const TrainView=({textName})=>{
     const [trainLabelSel,setTrainLabelSel] = useState('Global');
     const [offsetValueDisplay,setOffsetValueDisplay] = useState(1);
     const [offsetValue,setOffsetValue] = useState(0);
-    //   const [tableNodeSt, setTableNodeSt] = useState([]);
+    const workersRef = useRef([]);
+    const requestIdRef = useRef(0);
 
       const [trainData, setTrainData] = useState([]);
        const [results, setResults] = useState([]);
 const [tableNodeSt, setTableNodeSt] = useState([]);
-const [isLoadingTableNode, setIsLoadingTableNode] = useState(true);
 
-// Populate table1, table2, table3
 const [table1, setTable1] = useState([]);
 const [table2, setTable2] = useState([]);
 const [table3, setTable3] = useState([]);
 
-//   const [isLoading, setIsLoading] = useState(false);
-//   const [isError, setIsError] = useState({ status: false, msg: '' });
 
 
     useEffect(() => {
@@ -47,13 +44,13 @@ const [table3, setTable3] = useState([]);
                 url = `api/v2/treeview/alltrains/${trainValueSel}?_s=&limit=45&offset=0`;
                 break;
             default:
-                return; // Exit early if mode is not recognized
+                return; 
         }
     
         const fetchData = async () => {
             setIsLoading(true);
             setIsError({ status: false, msg: "" });
-            setTrainData([]); // Clear previous data
+            setTrainData([]); 
     
             try {
                 const username = 'admin';
@@ -86,19 +83,9 @@ const [table3, setTable3] = useState([]);
     
         fetchData();
     
-        return () => controller.abort(); // Cleanup on unmount or textName change
+        return () => controller.abort(); 
     }, [textName, limitLabelSel, offsetValue,trainValueSel]);
     
-      
-    //   useEffect(() => {
-    //     if (!textName || !textName.data) return;
-    //     if (textName.data.mode !== 'Trains') return;
-      
-    //     const url = `api/v2/treeview/alltrains/2?_s=&limit=${limitLabelSel}&offset=${offsetValue}`;
-    //     fetchData(url);
-    //   }, [limitLabelSel, offsetValue]);
-      
-
 
 useEffect(() => {
     const controller = new AbortController();
@@ -126,7 +113,6 @@ useEffect(() => {
 
     let url = 'images/' + svg;
     
-    // Call fetchSvg with signal
     fetch(url)
       .then((res) => res.text())
       .then((data) => {
@@ -134,7 +120,6 @@ useEffect(() => {
       });
   
   
-    // Cleanup on unmount or textName change
     return () => controller.abort();
   }, [textName,trainData]);
 
@@ -147,7 +132,7 @@ useEffect(() => {
         trainData.forEach((item) => {
           const title = svgRoot.querySelector('#northboundtext');
           if (title) {
-            title.textContent = item.trainId; // or item.ipAddress or whatever data you want
+            title.textContent = item.trainId; 
           }
         });
       }, [trainData, svgContent]);
@@ -167,24 +152,11 @@ useEffect(() => {
         }
         return svgDoc.documentElement.outerHTML;
       };
-    //   const table1 = [];
-    //   const table2 = [];
-    //   const table3 = [];
-     
-    //   trainData.forEach((item, index) => {
-    //     if (index % 3 === 0) {
-    //       table1.push(item);
-    //     } else if (index % 3 === 1) {
-    //       table2.push(item);
-    //     } else {
-    //       table3.push(item);
-    //     }
-    //   });
+    
     
 
 
 
-// Split into 3 tables
 const splitIntoThreeTables = (data) => {
     const t1 = [], t2 = [], t3 = [];
     data.forEach((item, index) => {
@@ -195,28 +167,39 @@ const splitIntoThreeTables = (data) => {
     return [t1, t2, t3];
 };
 
-// When trainData or tableNodeSt updates
-// useEffect(() => {
-//     if (trainData.length > 0 || results.length > 0) {
-//         // Merge trainData and tableNodeSt with links
-//         // const enrichedData = trainData.map(item => createLinks(item, results));
+const createLinks = (item, results) => {
+//   const matchedNodes = tableNodeSt.filter(node => node.nodeid === item.nodeid);
+  const matchedNodes = results.filter((node, index) => 
+    node?.nodeId === (item?.nodeid ?? 0)
+);
 
-//         // Split into tables
-//         const [t1, t2, t3] = splitIntoThreeTables(trainData);
-//         setTable1(t1);
-//         setTable2(t2);
-//         setTable3(t3);
-//         setIsLoadingTableNode(false);
-//     }
-// }, [trainData, results]);
+
+
+  if (matchedNodes.length === 0) {
+    return { ...item, links: [] };
+  }
+
+  const links = matchedNodes.map(node => ({
+    nodeId: node.nodeId,
+    rtt: node.data.rtt,
+    type: node.type || "station"
+  }));
+
+  return { ...item, links };
+};
+
 useEffect(() => {
-    if (trainData.length > 0) {
-        const [t1, t2, t3] = splitIntoThreeTables(trainData);
+         if (trainData.length === 0) return;
+    // if (results.length > 0) return;
+        const enrichedData = trainData.map(item => createLinks(item, results));
+
+        const [t1, t2, t3] = splitIntoThreeTables(enrichedData);
         setTable1(t1);
         setTable2(t2);
         setTable3(t3);
-    }
-}, [trainData]);
+        // setIsLoadingTableNode(false);
+}, [trainData, results]);
+
 
 
       const handleOffsetValueIncmt = () => {
@@ -243,6 +226,22 @@ useEffect(() => {
         }
     }
       };
+
+
+      useEffect(() => {
+    if (trainData.length === 0) return;
+    const reqId = ++requestIdRef.current;
+
+    workersRef.current.forEach(w => w.terminate());
+    workersRef.current = [];
+
+    setResults([]);
+
+    const apiB = 'http://localhost:8980/metronms/api/v2/nodelinks/ping?nodeId=';
+    callApiBForEachNode(apiB,reqId);
+
+}, [trainData]);
+
       
 
    
@@ -268,41 +267,51 @@ useEffect(() => {
 
 const handleWorkerResponse = (event) => {
     const { nodeId, data, status, message } = event.data;
+    
+    // if (reqId !== requestIdRef.current) return;
 
     if (status === 'success') {
       console.log(`Worker for nodeId ${nodeId} completed successfully`, data);
-      setResults((prevResults) => [...prevResults, { nodeId, data }]);
+      setResults(prev => [...prev, { nodeId, data }]);
     } else {
       console.error(`Worker for nodeId ${nodeId} failed: ${message}`);
     }
   };
 
-  // Function to create workers for each nodeId and call API B
-  const callApiBForEachNode = (apiB) => {
-    // For each object in dataA, spawn a new worker
+  const callApiBForEachNode = (apiB,reqId) => {
+
     trainData.forEach((item) => {
       const worker = new Worker(new URL('./worker.jsx', import.meta.url), { type: 'module' });
+
+      workersRef.current.push(worker); 
       
-      // Set up the worker's response handler
-      worker.onmessage = handleWorkerResponse;
+      worker.onmessage = (event) => {
+              if (reqId !== requestIdRef.current) return;
 
-      // Post the message to the worker with the data for API B
+            handleWorkerResponse(event);  
+            worker.terminate();           
+            };
+
+             worker.onerror = (err) => {
+        console.error("Worker error:", err);
+        worker.terminate();
+        workersRef.current = workersRef.current.filter(w => w !== worker);
+        };
+
       worker.postMessage({
-        nodeId: (item.nodeid ?? 0),  // Use item id as nodeId
-        apiB: apiB  // URL for API B
+        nodeId: (item.nodeid ?? 0),  
+        apiB: apiB  
       });
+
     });
+   setTimeout(() => {
+    workersRef.current.forEach((w) => w.terminate());
+    console.log('All workers terminated');
+    workersRef.current = [];
+  }, 5000); 
 };
+ 
 
-useEffect(() => {
-    if (trainData.length > 0) {
-    //   setIsLoading(true);
-      const apiB = 'http://localhost:8980/metronms/api/v2/nodelinks/ping?nodeId=';  // Example API B
-
-      // Start the workers
-      callApiBForEachNode(apiB);
-    }
-  }, [trainData]);
 
 
 
@@ -377,7 +386,7 @@ useEffect(() => {
                                     )}
                                  {table1 && table1.map((event, index) => (
                                 <tr key={index} className="col-12" style={{padding:'5px',position:'relative'}}>
-                                    <td className="col-6">
+                                    <td className="col-4">
                                     <div
                                         dangerouslySetInnerHTML={{
                                         __html: injectTextToSvg(svgContent, event.trainId || `Train-${index}`),
@@ -386,27 +395,32 @@ useEffect(() => {
                                     <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
                                     <h6 style={{margin:'0px'}}>Major : {event.major}</h6>
                                     <h6 style={{margin:'0px'}}>Warning : {event.warning}</h6>
-                                     {/* <h6 style={{ margin: '0px' }}>
+                                     <h6 style={{ margin: '0px' }}>
                                     {event.links && event.links.length > 0 
-                                        ? event.links.map(link => link.type).join(', ') 
+                                        ? event.links.map(link => (link.rtt)) 
                                         : 'Loading...'}
-                                    </h6> */}
+                                    </h6>
 
                                     </td>
-                                    <td className="col-6" style={{width:'400px'}}><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
+                                    <td  className="col-4">
+                                      <h6 style={{ margin: '0px' }}>
+                                    {/* {event.links && event.links.length > 0 
+                                        ? event.links.map(link => 
+                                            // link.rtt && link.rtt !== '' ? link.rtt : 'No data') 
+                                            (link.rtt !== null && link.rtt !== undefined && link.rtt !== '' 
+                                            ? link.rtt 
+                                            : 'No data'))
+                                        : 'no data...'} */}
+                                    </h6>  
+                                    
+
+                                    </td>
+                                    <td className="col-4" style={{width:'400px'}}><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
                                     <i class="fas fa-file-export trainexpor" role="button" tabindex="0">
                                         </i>
                                     </td>
                                 </tr>
                                 ))}
-
-                                 {isLoadingTableNode && trainData.length > 0 && (
-        <tr>
-            <td colSpan="12" style={{ textAlign: 'center' }}>
-                Loading additional data...
-            </td>
-        </tr>)}
-
 
                     </tbody>
                 </table>}
@@ -452,11 +466,11 @@ useEffect(() => {
                                    <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
                                     <h6 style={{margin:'0px'}}>Major : {event.major}</h6>
                                     <h6 style={{margin:'0px'}}>Warning : {event.warning}</h6>
-                                    {/* <h6 style={{ margin: '0px' }}>
+                                   <h6 style={{ margin: '0px' }}>
                                     {event.links && event.links.length > 0 
-                                        ? event.links.map(link => link.type).join(', ') 
+                                        ? event.links.map(link => (link.rtt)) 
                                         : 'Loading...'}
-                                    </h6> */}
+                                    </h6>
 
                                     </td>
                                     <td className="col-5"><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
@@ -511,10 +525,10 @@ useEffect(() => {
                                     <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
                                     <h6 style={{margin:'0px'}}>Major : {event.major}</h6>
                                     <h6 style={{margin:'0px'}}>Warning : {event.warning}</h6>
-                                    <h6 style={{ margin: '0px' }}>
-                                    {/* {event.links && event.links.length > 0 
-                                        ? event.links.map(link => link.name).join(', ') 
-                                        : 'Loading...'} */}
+                                  <h6 style={{ margin: '0px' }}>
+                                    {event.links && event.links.length > 0 
+                                        ? event.links.map(link => (link.rtt )) 
+                                        : 'Loading...'}
                                     </h6>
 
                                     </td>
