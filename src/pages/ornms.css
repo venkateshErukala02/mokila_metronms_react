@@ -545,7 +545,7 @@ tbody.passwordbdtwo>tr{width: 100%;text-align: center;font-size: 12px;}
 /* ---------------------------------------------------------- */
 .traintbone{border: 1px solid black;}
 .traintbone>tr{margin: 0px 0;display: inline-table;}
-.traintbone>tr>td{font-size: 12px;font-family: "Lato-Regular";color: #50565e;padding: 8px;margin: 5px;letter-spacing: 0.1px;border-right:1px solid #ddd}
+.traintbone>tr>td{font-size: 10px;font-family: "Lato-Regular";color: #50565e;padding: 3px;margin: 5px;border-right:1px solid #ddd}
 .traintbone>tr{border: 1px solid rgb(33 35 39 / 7%);background-color: rgb(229 241 255 / 50%);}
 .traintbone>tr>td:first-child{border-right:1px solid #ddd}
 .traintbone>tr>td:last-child{
@@ -2414,7 +2414,7 @@ text-decoration: none;
 
 .fa-file-export.trainexpor {
     position: absolute;
-    right: 15px;
+    right: 3px;
     font-size: 16px;
     cursor: pointer;
     margin-top: -7px;

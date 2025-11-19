@@ -131,9 +131,15 @@ useEffect(() => {
       
         trainData.forEach((item) => {
           const title = svgRoot.querySelector('#northboundtext');
+         const secondPath = svgRoot.querySelectorAll('path.pointer')[1];
+
           if (title) {
             title.textContent = item.trainId; 
           }
+           if (secondPath) {
+          secondPath.setAttribute('fill', 'red'); // green
+
+        }
         });
       }, [trainData, svgContent]);
       
@@ -142,18 +148,90 @@ useEffect(() => {
    
 
 
-    const injectTextToSvg = (svgString, trainId) => {
+    const injectTextToSvg = (svgString, trainId,event,digit) => {
         if (!svgString || !trainId ) return null
         const parser = new DOMParser();
         const svgDoc = parser.parseFromString(svgString, "image/svg+xml");
         const titleElement = svgDoc.querySelector('#northboundtext');
+        const paths = svgDoc.querySelectorAll('path.pointer');
+    //       const firstNodeId = Array.isArray(event.links) && event.links.length > 0
+    // ? event.links[0].nodeId
+    // : null;
+    // const secondNode = Array.isArray(event.links) && event.links.length > 0 && 
+    //  event.links[0].rtt === '' || undefined;
+    console.log('lppll',event.links)
+    // const secondNode =
+    // Array.isArray(event.links) &&
+    // event.links.length > 0 &&
+    // event.links[0].rtt !== null;
+
+    // const condition2 = 
+
+// const condition = (firstNodeId === event.cabNode1 || firstNodeId === event.cabNode6) || secondNode;
+// const condition = secondNode;
+
+
+const firstNodeId = event.links?.[0]?.nodeId;
+
+const validRtt = event.links?.[0]?.rtt;
+const secondNode =
+    validRtt != null &&
+    validRtt !== "" &&
+    !isNaN(validRtt);
+
+const condition =
+    (
+        firstNodeId &&
+        (firstNodeId === event.cabNode1 || firstNodeId === event.cabNode6)
+    ) ||
+    secondNode;
+
         if (titleElement) {
-          titleElement.textContent = trainId;
+             titleElement.textContent = trainId + (digit === 1 ? digit : '6');
         }
+        if (paths.length > 0) {
+            const titleText = titleElement?.textContent || "";
+            const firstNodeId = event.links?.[0]?.nodeId;
+            const secondNodeId = event.links?.[1]?.nodeId;
+            console.log(firstNodeId); // 1210  
+            paths.forEach(path => {
+                let shouldBeGreen = false;
+                if(condition){
+                // if (firstNodeId === event.cabNode1 && titleText.endsWith("1")) {
+                //     shouldBeGreen = true; 
+                // }
+                //  if (secondNodeId === event.cabNode6 && titleText.endsWith("6")) {
+                //     shouldBeGreen = true; 
+                // } 
+                // if (firstNodeId === 'nodata' && titleText.endsWith("1")) {
+                //     shouldBeGreen = false; 
+                // }
+                //  if (secondNodeId === 'nodata' && titleText.endsWith("6")) {
+                //     shouldBeGreen = false; 
+                // } 
+                
+                 const isCab1Match = (firstNodeId === event.cabNode1 && titleText.endsWith("1"));
+    const isCab6Match = (secondNodeId === event.cabNode6 && titleText.endsWith("6"));
+
+    const isNoDataCab1 = ((firstNodeId === 'nodata' || firstNodeId === 'undefined') && titleText.endsWith("1"));
+    const isNoDataCab6 = ((secondNodeId === 'nodata' || secondNodeId === 'undefined') && titleText.endsWith("6"));
+
+    // GREEN only if match exists 
+    if (isCab1Match || isCab6Match) {   
+        shouldBeGreen = true;
+    }
+    // RED only if NO match and we hit nodata
+    else if (isNoDataCab1 || isNoDataCab6) {
+        shouldBeGreen = false;
+    }
+            }
+          path.setAttribute('fill',  shouldBeGreen ? "green" : "#e4837a"); // green
+            });
+        }  
         return svgDoc.documentElement.outerHTML;
       };
     
-    
+     
 
 
 
@@ -169,14 +247,17 @@ const splitIntoThreeTables = (data) => {
 
 const createLinks = (item, results) => {
 //   const matchedNodes = tableNodeSt.filter(node => node.nodeid === item.nodeid);
-  const matchedNodes = results.filter((node, index) => 
-    node?.nodeId === (item?.nodeid ?? 0)
-);
+const matchedNodes = results.filter(r =>
+    r.nodeId === item.cabNode1 || r.nodeId === item.cabNode6
+  );
+//   const matchedNodes = results.filter((node, index) => 
+//     node?.nodeId === (item?.nodeid ?? 0)
+// );
 
 
 
   if (matchedNodes.length === 0) {
-    return { ...item, links: [] };
+    return { ...item, links: [{nodeId : 'nodata'},{nodeId : 'nodata'}] };
   }
 
   const links = matchedNodes.map(node => ({
@@ -228,23 +309,60 @@ useEffect(() => {
       };
 
 
-      useEffect(() => {
+//       useEffect(() => {
+//     if (trainData.length === 0) return;
+    
+//     workersRef.current.forEach(w => w.terminate());
+//     workersRef.current = [];
+    
+
+//     setResults([]);
+//     const reqId = ++requestIdRef.current;
+//     const apiB = 'http://localhost:8980/metronms/api/v2/nodelinks/ping?nodeId=';
+//     callApiBForEachNode(apiB,reqId);
+
+// }, [trainData]);
+
+      
+// useEffect(() => {
+//     // Terminate all running workers immediately
+//     workersRef.current.forEach(w => w.terminate());
+//     workersRef.current = [];
+// }, [trainValueSel,textName.data.mode]);
+   
+
+useEffect(() => {
     if (trainData.length === 0) return;
+    
+    // 🔥 Clean previous workers BEFORE starting new ones
+    workersRef.current.forEach(w => {
+        try { w.terminate(); } catch {}
+    });
+    workersRef.current.length = 0;
+
+    setResults([]);  
     const reqId = ++requestIdRef.current;
-
-    workersRef.current.forEach(w => w.terminate());
-    workersRef.current = [];
-
-    setResults([]);
-
     const apiB = 'http://localhost:8980/metronms/api/v2/nodelinks/ping?nodeId=';
-    callApiBForEachNode(apiB,reqId);
+    callApiBForEachNode(apiB, reqId);
+
+    return () => {
+        // 🔥 Clean workers on unmount or before next effect run
+        workersRef.current.forEach(w => {
+            try { w.terminate(); } catch {}
+        });
+        workersRef.current.length = 0;
+    };
 
 }, [trainData]);
 
-      
 
-   
+useEffect(() => {
+    workersRef.current.forEach(w => {
+        try { w.terminate(); } catch {}
+    });
+    workersRef.current.length = 0;
+     setResults([]);   
+}, [trainValueSel, textName.data.mode]);
 
 
     const handleLimitValue=(event)=>{
@@ -267,48 +385,70 @@ useEffect(() => {
 
 const handleWorkerResponse = (event) => {
     const { nodeId, data, status, message } = event.data;
-    
+     if (status === 'done') return;
+
     // if (reqId !== requestIdRef.current) return;
 
     if (status === 'success') {
       console.log(`Worker for nodeId ${nodeId} completed successfully`, data);
       setResults(prev => [...prev, { nodeId, data }]);
-    } else {
+      return;
+    } 
+    
+    if (status === 'error') {
       console.error(`Worker for nodeId ${nodeId} failed: ${message}`);
+       setResults(prev => [...prev, { nodeId : 'nodata', data }]);
+      return
     }
   };
 
   const callApiBForEachNode = (apiB,reqId) => {
 
     trainData.forEach((item) => {
-      const worker = new Worker(new URL('./worker.jsx', import.meta.url), { type: 'module' });
+
+
+      const worker = new Worker(new URL('./worker.js', import.meta.url), { type: 'module' });
 
       workersRef.current.push(worker); 
       
-      worker.onmessage = (event) => {
-              if (reqId !== requestIdRef.current) return;
+    //   worker.onmessage = (event) => {
+    //           if (reqId !== requestIdRef.current) return;
 
-            handleWorkerResponse(event);  
-            worker.terminate();           
-            };
+    //         handleWorkerResponse(event);  
+    //         // worker.terminate();           
+    //         };
 
-             worker.onerror = (err) => {
-        console.error("Worker error:", err);
+    worker.onmessage = (event) => {
+    if (reqId !== requestIdRef.current) return;
+
+    if (event.data.done) {
+        // All nodeIds completed for this worker
         worker.terminate();
         workersRef.current = workersRef.current.filter(w => w !== worker);
-        };
+        return;
+    }
+
+    // Normal API response
+    handleWorkerResponse(event);
+};
+
+             worker.onerror = (err) => {
+            console.error("Worker error:", err);
+            worker.terminate();
+            workersRef.current = workersRef.current.filter(w => w !== worker);
+            };
 
       worker.postMessage({
-        nodeId: (item.nodeid ?? 0),  
+        nodeIds: [item.cabNode1, item.cabNode6],  
         apiB: apiB  
       });
 
     });
-   setTimeout(() => {
-    workersRef.current.forEach((w) => w.terminate());
-    console.log('All workers terminated');
-    workersRef.current = [];
-  }, 5000); 
+//    setTimeout(() => {
+//     workersRef.current.forEach((w) => w.terminate());
+//     console.log('All workers terminated');
+//     workersRef.current = [];
+//   }, 5000); 
 };
  
 
@@ -385,23 +525,25 @@ const handleWorkerResponse = (event) => {
                                         </tr>
                                     )}
                                  {table1 && table1.map((event, index) => (
+                                    <>
                                 <tr key={index} className="col-12" style={{padding:'5px',position:'relative'}}>
                                     <td className="col-4">
                                     <div
                                         dangerouslySetInnerHTML={{
-                                        __html: injectTextToSvg(svgContent, event.trainId || `Train-${index}`),
+                                        __html: injectTextToSvg(svgContent, event.trainId || `Train-${index}`,event,1),
                                         }}
                                     />
-                                    <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
+                                    {/* <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
                                     <h6 style={{margin:'0px'}}>Major : {event.major}</h6>
-                                    <h6 style={{margin:'0px'}}>Warning : {event.warning}</h6>
-                                     <h6 style={{ margin: '0px' }}>
+                                    <h6 style={{margin:'0px'}}>Warning : {event.warning}</h6> */}
+                                     {/* <h6 style={{ margin: '0px' }}>
                                     {event.links && event.links.length > 0 
                                         ? event.links.map(link => (link.rtt)) 
                                         : 'Loading...'}
-                                    </h6>
-
+                                    </h6> */}
                                     </td>
+                                    
+                                     
                                     <td  className="col-4">
                                       <h6 style={{ margin: '0px' }}>
                                     {/* {event.links && event.links.length > 0 
@@ -411,15 +553,56 @@ const handleWorkerResponse = (event) => {
                                             ? link.rtt 
                                             : 'No data'))
                                         : 'no data...'} */}
+                                         {event.links?.[0]?.rtt ?? "No Data"}
                                     </h6>  
                                     
 
                                     </td>
+
                                     <td className="col-4" style={{width:'400px'}}><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
                                     <i class="fas fa-file-export trainexpor" role="button" tabindex="0">
-                                        </i>
+                                        </i> 
                                     </td>
                                 </tr>
+                                <tr key={index} className="col-12" style={{padding:'5px',position:'relative',borderBottom:'1px solid #212327d1'}}>
+                                    <td className="col-4">
+                                    <div
+                                        dangerouslySetInnerHTML={{
+                                        __html: injectTextToSvg(svgContent, event.trainId || `Train-${index}`,event),
+                                        }}
+                                    />
+                                    {/* <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
+                                    <h6 style={{margin:'0px'}}>Major : {event.major}</h6>
+                                    <h6 style={{margin:'0px'}}>Warning : {event.warning}</h6> */}
+                                     <h6 style={{ margin: '0px' }}>
+                                    {/* {event.links && event.links.length > 0 
+                                        ? event.links.map(link => (link.rtt)) 
+                                        : 'Loading...'} */}
+                                    </h6>
+                                    </td>
+                                    
+                                     
+                                    <td  className="col-4">
+                                      <h6 style={{ margin: '0px' }}>
+                                    {/* {event.links && event.links.length > 0 
+                                        ? event.links.map(link => 
+                                            // link.rtt && link.rtt !== '' ? link.rtt : 'No data') 
+                                            (link.rtt !== null && link.rtt !== undefined && link.rtt !== '' 
+                                            ? link.rtt 
+                                            : 'No data'))
+                                        : 'no data...'} */}
+                                         {event.links?.[1]?.rtt ?? "No Data"}
+                                    </h6>  
+                                    
+
+                                    </td>
+
+                                    <td className="col-4" style={{width:'400px'}}><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
+                                    <i class="fas fa-file-export trainexpor" role="button" tabindex="0">
+                                        </i> 
+                                    </td>
+                                </tr>
+                                </>
                                 ))}
 
                     </tbody>
@@ -456,21 +639,36 @@ const handleWorkerResponse = (event) => {
                                         </tr>
                                     )}
                                  {table2 && table2.map((event, index) => (
+                                    <>
                                 <tr key={index} className="col-12" style={{padding:'5px',position:'relative'}}>
                                     <td className="col-3">
                                     <div
                                         dangerouslySetInnerHTML={{
-                                        __html: injectTextToSvg(svgContent, event.trainId || `Train-${index}`),
+                                        __html: injectTextToSvg(svgContent, event.trainId || `Train-${index}`,event,1),
                                         }}
                                     />
-                                   <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
+                                   {/* <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
                                     <h6 style={{margin:'0px'}}>Major : {event.major}</h6>
-                                    <h6 style={{margin:'0px'}}>Warning : {event.warning}</h6>
+                                    <h6 style={{margin:'0px'}}>Warning : {event.warning}</h6> */}
                                    <h6 style={{ margin: '0px' }}>
-                                    {event.links && event.links.length > 0 
+                                    {/* {event.links && event.links.length > 0 
                                         ? event.links.map(link => (link.rtt)) 
-                                        : 'Loading...'}
+                                        : 'Loading...'} */}
                                     </h6>
+
+                                    </td>
+                                     <td  className="col-4">
+                                      <h6 style={{ margin: '0px' }}>
+                                    {/* {event.links && event.links.length > 0 
+                                        ? event.links.map(link => 
+                                            // link.rtt && link.rtt !== '' ? link.rtt : 'No data') 
+                                            (link.rtt !== null && link.rtt !== undefined && link.rtt !== '' 
+                                            ? link.rtt 
+                                            : 'No data'))
+                                        : 'no data...'} */}
+                                         {event.links?.[0]?.rtt ?? "No Data"}
+                                    </h6>  
+                                    
 
                                     </td>
                                     <td className="col-5"><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
@@ -478,6 +676,43 @@ const handleWorkerResponse = (event) => {
                                         </i>
                                     </td>
                                 </tr>
+                                 <tr key={index} className="col-12" style={{padding:'5px',position:'relative',borderBottom:'1px solid #212327d1'}}>
+                                    <td className="col-3">
+                                    <div
+                                        dangerouslySetInnerHTML={{
+                                        __html: injectTextToSvg(svgContent, event.trainId || `Train-${index}`,event),
+                                        }}
+                                    />
+                                   {/* <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
+                                    <h6 style={{margin:'0px'}}>Major : {event.major}</h6>
+                                    <h6 style={{margin:'0px'}}>Warning : {event.warning}</h6> */}
+                                   <h6 style={{ margin: '0px' }}>
+                                    {/* {event.links && event.links.length > 0 
+                                        ? event.links.map(link => (link.rtt)) 
+                                        : 'Loading...'} */}
+                                    </h6>
+
+                                    </td>
+                                     <td  className="col-4">
+                                      <h6 style={{ margin: '0px' }}>
+                                    {/* {event.links && event.links.length > 0 
+                                        ? event.links.map(link => 
+                                            // link.rtt && link.rtt !== '' ? link.rtt : 'No data') 
+                                            (link.rtt !== null && link.rtt !== undefined && link.rtt !== '' 
+                                            ? link.rtt 
+                                            : 'No data'))
+                                        : 'no data...'} */}
+                                         {event.links?.[1]?.rtt ?? "No Data"}
+                                    </h6>  
+                                    
+
+                                    </td>
+                                    <td className="col-5"><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
+                                    <i class="fas fa-file-export trainexpor" role="button" tabindex="0">
+                                        </i>
+                                    </td>
+                                </tr>
+                                </>
                                 ))}
 
 
@@ -515,21 +750,37 @@ const handleWorkerResponse = (event) => {
                                         </tr>
                                     )}
                                  {table3 && table3.map((event, index) => (
+                                    <>
                                 <tr key={index} className="col-12" style={{padding:'5px',position:'relative'}}>
                                     <td className="col-5">
                                     <div
                                         dangerouslySetInnerHTML={{
-                                        __html: injectTextToSvg(svgContent, event.trainId || `Train-${index}`),
+                                        __html: injectTextToSvg(svgContent, event.trainId || `Train-${index}`,event,1),
                                         }}
                                     />
-                                    <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
+                                    {/* <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
                                     <h6 style={{margin:'0px'}}>Major : {event.major}</h6>
-                                    <h6 style={{margin:'0px'}}>Warning : {event.warning}</h6>
+                                    <h6 style={{margin:'0px'}}>Warning : {event.warning}</h6> */}
                                   <h6 style={{ margin: '0px' }}>
-                                    {event.links && event.links.length > 0 
-                                        ? event.links.map(link => (link.rtt )) 
-                                        : 'Loading...'}
+                                    
+                                      {/* {event.links?.[0]?.rtt ?? "No Data"} */}
                                     </h6>
+{/* {event.links && event.links.length > 0 
+                                        ? event.links.map(link => (link.rtt )) 
+                                        : 'Loading...'} */}
+                                    </td>
+                                     <td  className="col-4">
+                                      <h6 style={{ margin: '0px' }}>
+                                    {/* {event.links && event.links.length > 0 
+                                        ? event.links.map(link => 
+                                            // link.rtt && link.rtt !== '' ? link.rtt : 'No data') 
+                                            (link.rtt !== null && link.rtt !== undefined && link.rtt !== '' 
+                                            ? link.rtt 
+                                            : 'No data'))
+                                        : 'no data...'} */}
+                                         {event.links?.[0]?.rtt ?? "No Data"}
+                                    </h6>  
+                                    
 
                                     </td>
                                     <td className="col-5"><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
@@ -537,16 +788,50 @@ const handleWorkerResponse = (event) => {
                                         </i>
                                     </td>
                                 </tr>
+                                 <tr key={index} className="col-12" style={{padding:'5px',position:'relative',borderBottom:'1px solid #212327d1'}}>
+                                    <td className="col-5">
+                                    <div
+                                        dangerouslySetInnerHTML={{
+                                        __html: injectTextToSvg(svgContent, event.trainId || `Train-${index}`,event),
+                                        }}
+                                    />
+                                    {/* <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
+                                    <h6 style={{margin:'0px'}}>Major : {event.major}</h6>
+                                    <h6 style={{margin:'0px'}}>Warning : {event.warning}</h6> */}
+                                  <h6 style={{ margin: '0px' }}>
+                                    {/* {event.links && event.links.length > 0 
+                                        ? event.links.map(link => (link.rtt )) 
+                                        : 'Loading...'} */}
+                                      {/* {event.links?.[1]?.rtt ?? "No Data"} */}
+
+                                    </h6>
+
+                                    </td>
+                                     <td  className="col-4">
+                                      <h6 style={{ margin: '0px' }}>
+                                    {/* {event.links && event.links.length > 0 
+                                        ? event.links.map(link => 
+                                            // link.rtt && link.rtt !== '' ? link.rtt : 'No data') 
+                                            (link.rtt !== null && link.rtt !== undefined && link.rtt !== '' 
+                                            ? link.rtt 
+                                            : 'No data'))
+                                        : 'no data...'} */}
+                                         {event.links?.[1]?.rtt ?? "No Data"}
+                                    </h6>  
+                                    
+
+                                    </td>
+                                    <td className="col-5"><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
+                                    <i class="fas fa-file-export trainexpor" role="button" tabindex="0">
+                                        </i>
+                                    </td>
+                                </tr>
+                                </>
                                 ))}
 
 
                     </tbody>
                 </table>}
-
-
-
-                                
-
                             </article>
                             
             </article>
