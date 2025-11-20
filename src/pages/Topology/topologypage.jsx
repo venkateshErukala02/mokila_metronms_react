@@ -151,10 +151,21 @@ useEffect(() => {
             //   <StationNodeTableView  textName={textName}/>
             //                </> 
             //     break;
-            case 'facility':
-              return  <> <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}/>
+            case 'facility':{
+                if(textName.text === 'Davisville' || textName.text ==='Wilson'){
+                    return(
+                    <>
+                      <TopoSvgViewer yardfaclData={yardfaclData} textName={textName}/>
+                <YardTbone yardfaclData={yardfaclData} textName={textName} />
+            <YardTbtwo textName={textName}/>
+                    </>
+                    );
+                }else{
+                    return ( <> <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}/>
               <StationNodeTableView  textName={textName} rdDataRef={rdDataRef} />
-                </> 
+                      </> );
+                }
+            }
                 break;
             case 'Trains':
                 return  <TrainView textName={textName}/>
@@ -198,7 +209,9 @@ useEffect(() => {
   
     if (mode === "region" || mode === "location") {
       return node.data?.display || node.text || "Unknown";
-    } else if (mode === "facility" || node.data?.parent === "yard_1") {
+    }else if (mode === "facility" && (node.text === "Davisville" || node.text === "Wilson")) {
+      return `Yard- ${node.text}` || "Unnamed Facility";
+    }else if (mode === "facility" || node.data?.parent === "yard_1") {
       return `Station- ${node.text}` || "Unnamed Facility";
     } else {
       return node.data?.display || node.text || "Unknown";

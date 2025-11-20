@@ -1,4 +1,4 @@
-import React,{useState,useEffect,useRef} from "react";
+import React,{useState,useEffect,useRef, useCallback} from "react";
 import southboundtr from '../../assets/img/Train_southbound_new.svg'
 import northboundtr from '../../assets/img/Train_northbound_new.svg'
 import { Prev } from "react-bootstrap/esm/PageItem";
@@ -20,10 +20,10 @@ const TrainView=({textName})=>{
     const [offsetValue,setOffsetValue] = useState(0);
     const workersRef = useRef([]);
     const requestIdRef = useRef(0);
-
       const [trainData, setTrainData] = useState([]);
+      const [processedTrains, setProcessedTrains] = useState([]);
        const [results, setResults] = useState([]);
-const [tableNodeSt, setTableNodeSt] = useState([]);
+    const [tableNodeSt, setTableNodeSt] = useState([]);
 
 const [table1, setTable1] = useState([]);
 const [table2, setTable2] = useState([]);
@@ -123,32 +123,45 @@ useEffect(() => {
     return () => controller.abort();
   }, [textName,trainData]);
 
-      useEffect(() => {
-        if (!svgContent || !trainData.length) return;
+    //   useEffect(() => {
+    //     if (!svgContent || !trainData.length) return; 
       
-        const svgRoot = svgContainerRef.current;
-        if (!svgRoot) return;
+    //     const svgRoot = svgContainerRef.current;
+    //     if (!svgRoot) return;
       
-        trainData.forEach((item) => {
-          const title = svgRoot.querySelector('#northboundtext');
-         const secondPath = svgRoot.querySelectorAll('path.pointer')[1];
+    //     trainData.forEach((item) => {
+    //       const title = svgRoot.querySelector('#northboundtext');
+    //      const secondPath = svgRoot.querySelectorAll('path.pointer')[1];
 
-          if (title) {
-            title.textContent = item.trainId; 
-          }
-           if (secondPath) {
-          secondPath.setAttribute('fill', 'red'); // green
+    //       if (title) {
+    //         title.textContent = item.trainId; 
+    //       }
+    //        if (secondPath) {
+    //       secondPath.setAttribute('fill', 'red'); // green
 
-        }
-        });
-      }, [trainData, svgContent]);
+    //     }
+    //     });
+    //   }, [trainData, svgContent]);
+
+
+//       useEffect(() => {
+//     if (!svgContent || trainData.length === 0) return;
+
+//     const modified = trainData.map(event => ({
+//         ...event,
+//         svgUp: injectTextToSvg(svgContent, event.trainId, event, 1),
+//         svgDown: injectTextToSvg(svgContent, event.trainId, event, 6)
+//     }));
+
+//     setProcessedTrains(modified);
+// }, [svgContent, trainData,results]);  
       
 
 
    
 
 
-    const injectTextToSvg = (svgString, trainId,event,digit) => {
+    const injectTextToSvg = useCallback((svgString, trainId,event,digit) => {
         if (!svgString || !trainId ) return null
         const parser = new DOMParser();
         const svgDoc = parser.parseFromString(svgString, "image/svg+xml");
@@ -194,42 +207,68 @@ const condition =
             const firstNodeId = event.links?.[0]?.nodeId;
             const secondNodeId = event.links?.[1]?.nodeId;
             console.log(firstNodeId); // 1210  
-            paths.forEach(path => {
-                let shouldBeGreen = false;
-                if(condition){
-                // if (firstNodeId === event.cabNode1 && titleText.endsWith("1")) {
-                //     shouldBeGreen = true; 
-                // }
-                //  if (secondNodeId === event.cabNode6 && titleText.endsWith("6")) {
-                //     shouldBeGreen = true; 
-                // } 
-                // if (firstNodeId === 'nodata' && titleText.endsWith("1")) {
-                //     shouldBeGreen = false; 
-                // }
-                //  if (secondNodeId === 'nodata' && titleText.endsWith("6")) {
-                //     shouldBeGreen = false; 
-                // } 
-                
-                 const isCab1Match = (firstNodeId === event.cabNode1 && titleText.endsWith("1"));
-    const isCab6Match = (secondNodeId === event.cabNode6 && titleText.endsWith("6"));
+    //         paths.forEach(path => {
+    //             let shouldBeGreen = false;
+    //             if(condition){
+    //              const isCab1Match = ((firstNodeId === event.cabNode1));
+    // const isCab6Match = ((secondNodeId === event.cabNode6));
+ 
+    // const isNoDataCab1 = ((firstNodeId === 'nodata' || firstNodeId === 'undefined') && titleText.endsWith("1"));
+    // const isNoDataCab6 = ((secondNodeId === 'nodata' || secondNodeId === 'undefined') && titleText.endsWith("6"));
 
-    const isNoDataCab1 = ((firstNodeId === 'nodata' || firstNodeId === 'undefined') && titleText.endsWith("1"));
-    const isNoDataCab6 = ((secondNodeId === 'nodata' || secondNodeId === 'undefined') && titleText.endsWith("6"));
+    // // GREEN only if match exists 
+    // if (isCab1Match ) {  
+    //     console.log('pllkkkkkkk',isCab1Match) 
+    //     shouldBeGreen = true;
+    // }
+    //   if (isCab6Match) {   
+    //             console.log('jjojoojjooo',isCab1Match) 
 
-    // GREEN only if match exists 
-    if (isCab1Match || isCab6Match) {   
+    //     shouldBeGreen = true;
+    // }
+    // // RED only if NO match and we hit nodata
+    // else if (isNoDataCab1 || isNoDataCab6) {
+    //     shouldBeGreen = false;
+    // }
+    //         }
+    //       path.setAttribute('fill',  shouldBeGreen ? "green" : "#e4837a"); // green
+    //         });
+       
+
+    paths.forEach(path => {
+    let shouldBeGreen = false;
+
+    const firstNodeId = event.links?.[0]?.nodeId;
+    const secondNodeId = event.links?.[1]?.nodeId;
+    const titleText = titleElement?.textContent || "";
+
+    // Check cab1
+    const isCab1Match = firstNodeId === event.cabNode1 && titleText.endsWith("1");
+    const isNoDataCab1 = firstNodeId === 'nodata' && titleText.endsWith("1");
+
+    // Check cab6
+    const isCab6Match = secondNodeId === event.cabNode6 && titleText.endsWith("6");
+    const isNoDataCab6 = secondNodeId === 'nodata' && titleText.endsWith("6");
+
+    // GREEN only if a match exists
+    if (isCab1Match) { 
         shouldBeGreen = true;
-    }
-    // RED only if NO match and we hit nodata
-    else if (isNoDataCab1 || isNoDataCab6) {
+    }else if(isCab6Match){
+        shouldBeGreen = true;
+    }else if (isNoDataCab1 || isNoDataCab6) {
         shouldBeGreen = false;
     }
-            }
-          path.setAttribute('fill',  shouldBeGreen ? "green" : "#e4837a"); // green
-            });
-        }  
+
+    path.setAttribute('fill', shouldBeGreen ? 'green' : '#e4837a');
+});
+
+
+
+
+ 
+}  
         return svgDoc.documentElement.outerHTML;
-      };
+      },[]);
     
      
 
@@ -245,41 +284,85 @@ const splitIntoThreeTables = (data) => {
     return [t1, t2, t3];
 };
 
+// const createLinks = (item, results) => {
+// //   const matchedNodes = tableNodeSt.filter(node => node.nodeid === item.nodeid);
+// const matchedNodes = results.filter(r =>
+//     r.nodeId === item.cabNode1 || r.nodeId === item.cabNode6
+//   );
+// //   const matchedNodes = results.filter((node, index) => 
+// //     node?.nodeId === (item?.nodeid ?? 0)
+// // );
+
+
+
+//   if (matchedNodes.length === 0) {
+//     return { ...item, links: [{nodeId : 'nodata'},{nodeId : 'nodata'}] };
+//   }
+
+//   const links = matchedNodes.map(node => ({
+//     nodeId: node.nodeId,
+//     rtt: node.data.rtt,
+//     type: node.type || "station"
+//   }));
+
+//   return { ...item, links };
+// };
+
 const createLinks = (item, results) => {
-//   const matchedNodes = tableNodeSt.filter(node => node.nodeid === item.nodeid);
-const matchedNodes = results.filter(r =>
-    r.nodeId === item.cabNode1 || r.nodeId === item.cabNode6
-  );
-//   const matchedNodes = results.filter((node, index) => 
-//     node?.nodeId === (item?.nodeid ?? 0)
-// );
+  const link1 = results.find(r => r.nodeId === item.cabNode1);
+  const link2 = results.find(r => r.nodeId === item.cabNode6);
+   
+  return {
+    ...item,
+    links: [
+      link1
+        ? { nodeId: link1.nodeId, rtt: link1.data.rtt }
+        : { nodeId: "nodata" },
 
-
-
-  if (matchedNodes.length === 0) {
-    return { ...item, links: [{nodeId : 'nodata'},{nodeId : 'nodata'}] };
-  }
-
-  const links = matchedNodes.map(node => ({
-    nodeId: node.nodeId,
-    rtt: node.data.rtt,
-    type: node.type || "station"
-  }));
-
-  return { ...item, links };
+      link2
+        ? { nodeId: link2.nodeId, rtt: link2.data.rtt }
+        : { nodeId: "nodata" },
+    ]
+  };
 };
 
-useEffect(() => {
-         if (trainData.length === 0) return;
-    // if (results.length > 0) return;
-        const enrichedData = trainData.map(item => createLinks(item, results));
 
-        const [t1, t2, t3] = splitIntoThreeTables(enrichedData);
-        setTable1(t1);
-        setTable2(t2);
-        setTable3(t3);
-        // setIsLoadingTableNode(false);
-}, [trainData, results]);
+// useEffect(() => {
+//          if (processedTrains.length === 0) return;
+//     // if (results.length > 0) return;
+//         const enrichedData = processedTrains.map(item => createLinks(item, results));
+
+//         const [t1, t2, t3] = splitIntoThreeTables(enrichedData);
+//         setTable1(t1);
+//         setTable2(t2);
+//         setTable3(t3);
+//         // setIsLoadingTableNode(false);
+// }, [processedTrains, results]);
+
+
+useEffect(() => {
+    if (!svgContent || trainData.length === 0) return;
+
+    // STEP 1 — attach links from results
+    const withLinks = trainData.map(item => createLinks(item, results));
+
+    // STEP 2 — generate SVGs using injectTextToSvg
+    const modified = withLinks.map(event => ({
+        ...event,
+        svgUp: injectTextToSvg(svgContent, event.trainId, event, 1),
+        svgDown: injectTextToSvg(svgContent, event.trainId, event, 6)
+    }));
+
+    setProcessedTrains(modified);
+
+    // STEP 3 — split into tables
+    const [t1, t2, t3] = splitIntoThreeTables(modified);
+    setTable1(t1);
+    setTable2(t2);
+    setTable3(t3);
+
+}, [svgContent, trainData, results]);
+
 
 
 
@@ -356,13 +439,21 @@ useEffect(() => {
 }, [trainData]);
 
 
-useEffect(() => {
-    workersRef.current.forEach(w => {
-        try { w.terminate(); } catch {}
-    });
-    workersRef.current.length = 0;
-     setResults([]);   
-}, [trainValueSel, textName.data.mode]);
+// useEffect(() => {
+//     workersRef.current.forEach(w => {
+//         try { w.terminate(); } catch {}
+//     });
+//     workersRef.current.length = 0;
+//      setResults([]);   
+// }, [trainValueSel, textName.data.mode]);
+
+// useEffect(() => {
+//     setTable1([]);
+//     setTable2([]);
+//     setTable3([]);
+//     setProcessedTrains([]);
+//     setResults([]);
+// }, [trainValueSel, textName.data.mode]);
 
 
     const handleLimitValue=(event)=>{
@@ -419,7 +510,8 @@ const handleWorkerResponse = (event) => {
     //         };
 
     worker.onmessage = (event) => {
-    if (reqId !== requestIdRef.current) return;
+    // if (reqId !== requestIdRef.current) return;
+     if (event.data.reqId !== requestIdRef.current) return;
 
     if (event.data.done) {
         // All nodeIds completed for this worker
@@ -439,6 +531,7 @@ const handleWorkerResponse = (event) => {
             };
 
       worker.postMessage({
+        reqId,
         nodeIds: [item.cabNode1, item.cabNode6],  
         apiB: apiB  
       });
@@ -530,7 +623,7 @@ const handleWorkerResponse = (event) => {
                                     <td className="col-4">
                                     <div
                                         dangerouslySetInnerHTML={{
-                                        __html: injectTextToSvg(svgContent, event.trainId || `Train-${index}`,event,1),
+                                        __html:  event.svgUp
                                         }}
                                     />
                                     {/* <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
@@ -566,9 +659,9 @@ const handleWorkerResponse = (event) => {
                                 </tr>
                                 <tr key={index} className="col-12" style={{padding:'5px',position:'relative',borderBottom:'1px solid #212327d1'}}>
                                     <td className="col-4">
-                                    <div
+                                     <div
                                         dangerouslySetInnerHTML={{
-                                        __html: injectTextToSvg(svgContent, event.trainId || `Train-${index}`,event),
+                                        __html:  event.svgDown
                                         }}
                                     />
                                     {/* <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
@@ -642,9 +735,9 @@ const handleWorkerResponse = (event) => {
                                     <>
                                 <tr key={index} className="col-12" style={{padding:'5px',position:'relative'}}>
                                     <td className="col-3">
-                                    <div
+                                     <div
                                         dangerouslySetInnerHTML={{
-                                        __html: injectTextToSvg(svgContent, event.trainId || `Train-${index}`,event,1),
+                                        __html:  event.svgUp
                                         }}
                                     />
                                    {/* <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
@@ -678,9 +771,9 @@ const handleWorkerResponse = (event) => {
                                 </tr>
                                  <tr key={index} className="col-12" style={{padding:'5px',position:'relative',borderBottom:'1px solid #212327d1'}}>
                                     <td className="col-3">
-                                    <div
+                                     <div
                                         dangerouslySetInnerHTML={{
-                                        __html: injectTextToSvg(svgContent, event.trainId || `Train-${index}`,event),
+                                        __html:  event.svgDown
                                         }}
                                     />
                                    {/* <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
@@ -752,10 +845,10 @@ const handleWorkerResponse = (event) => {
                                  {table3 && table3.map((event, index) => (
                                     <>
                                 <tr key={index} className="col-12" style={{padding:'5px',position:'relative'}}>
-                                    <td className="col-5">
+                                    <td className="col-3">
                                     <div
                                         dangerouslySetInnerHTML={{
-                                        __html: injectTextToSvg(svgContent, event.trainId || `Train-${index}`,event,1),
+                                        __html:  event.svgUp
                                         }}
                                     />
                                     {/* <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
@@ -769,7 +862,7 @@ const handleWorkerResponse = (event) => {
                                         ? event.links.map(link => (link.rtt )) 
                                         : 'Loading...'} */}
                                     </td>
-                                     <td  className="col-4">
+                                     <td  className="col-3">
                                       <h6 style={{ margin: '0px' }}>
                                     {/* {event.links && event.links.length > 0 
                                         ? event.links.map(link => 
@@ -783,16 +876,16 @@ const handleWorkerResponse = (event) => {
                                     
 
                                     </td>
-                                    <td className="col-5"><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
+                                    <td className="col-6"><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
                                     <i class="fas fa-file-export trainexpor" role="button" tabindex="0">
                                         </i>
                                     </td>
                                 </tr>
                                  <tr key={index} className="col-12" style={{padding:'5px',position:'relative',borderBottom:'1px solid #212327d1'}}>
-                                    <td className="col-5">
+                                    <td className="col-3">
                                     <div
                                         dangerouslySetInnerHTML={{
-                                        __html: injectTextToSvg(svgContent, event.trainId || `Train-${index}`,event),
+                                        __html:  event.svgDown
                                         }}
                                     />
                                     {/* <h6 style={{margin:'0px'}}>Critical : {event.critical}</h6>
@@ -807,7 +900,7 @@ const handleWorkerResponse = (event) => {
                                     </h6>
 
                                     </td>
-                                     <td  className="col-4">
+                                     <td  className="col-3">
                                       <h6 style={{ margin: '0px' }}>
                                     {/* {event.links && event.links.length > 0 
                                         ? event.links.map(link => 
@@ -821,7 +914,7 @@ const handleWorkerResponse = (event) => {
                                     
 
                                     </td>
-                                    <td className="col-5"><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
+                                    <td className="col-6"><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
                                     <i class="fas fa-file-export trainexpor" role="button" tabindex="0">
                                         </i>
                                     </td>

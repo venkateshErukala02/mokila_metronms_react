@@ -30,21 +30,23 @@
 
 
 self.onmessage = async function(e) {
-    const { nodeIds, apiB } = e.data;
+    const { reqId,nodeIds, apiB } = e.data;
 
     for (const nodeId of nodeIds) {
         try {
             const res = await fetch(apiB + nodeId);
-            const data = await res.json();
+            const json = await res.json();
             
             postMessage({
+                reqId,
                 status: 'success',
                 nodeId,
-                data
+                data:json
             });
 
         } catch (err) {
             postMessage({
+                reqId,
                 status: 'error',
                 nodeId,
                 message: err.message
@@ -54,6 +56,6 @@ self.onmessage = async function(e) {
 
     // After ALL nodeIds are processed:
     // postMessage({ done: true });
-    postMessage({ status: 'done' });
+    postMessage({ reqId,status: 'done' });
 };
 
