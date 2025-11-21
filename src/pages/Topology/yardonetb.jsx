@@ -39,10 +39,11 @@ const YardTbone=({textName,yardfaclData})=>{
             if (!yardfaclData || yardfaclData.length === 0) return;
         
             for (const node of yardfaclData) {
-                const modifiedNodeId = Math.floor(Math.random() * 10); 
+                // const modifiedNodeId = Math.floor(Math.random() * 10); 
 
                 // const nodeId = node.nodeId ;
-                const url = `api/v2/nodelinks/linkstatstest?nodeId=${modifiedNodeId}`;
+                const url = `api/v2/nodelinks/linkstatstest?nodeId=0`;
+                // const url=''
                 await getYardLinkData(url, node.nodeId);
             }
         };
@@ -86,7 +87,7 @@ const YardTbone=({textName,yardfaclData})=>{
                                 </tr>
                             )}
 
-                            {!isLoading && !isError.status && yardfaclData.length === 0 && (
+                            {!isLoading && !isError.status && yardfaclData?.length === 0 && (
                                 <tr>
                                     <td colSpan="8" style={{ textAlign: "center" }}>
                                         No Data Available
@@ -94,7 +95,9 @@ const YardTbone=({textName,yardfaclData})=>{
                                 </tr>
                             )}
 
-                        {yardfaclData.map((node, index) => (
+                        {!isLoading &&
+                                !isError.status &&
+                                yardfaclData?.length > 0 && yardfaclData.map((node, index) => (
                             <tr key={index}>
                                 <td>{node.radioMode}</td>
                                 <td>{node.sysName}</td>

@@ -6,7 +6,7 @@ import southred from '../../assets/Train_southboundgreen copy.svg'
 import { Prev } from "react-bootstrap/esm/PageItem";
 // import TreeList from "./treelist";
 
-const TrainView=({textName})=>{
+const MailineView=({textName})=>{
 
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
@@ -618,4 +618,4 @@ useEffect(() => {
     )
 }
 
-export default TrainView;
+export default MailineView;

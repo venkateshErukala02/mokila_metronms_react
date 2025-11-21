@@ -23,6 +23,8 @@ import WaysideTable from "../Wayside/waysidetable";
 import WaysidePopupTable from "./waysidepopuptable";
 import LineTagSvg from "../Wayside/linetagsvg";
 import StationTagsTable from "../Wayside/stationtagstable";
+import YardSvgViewer from "./yardsvg";
+import MailineView from "./mailinetrainview";
 
 
 
@@ -160,6 +162,14 @@ useEffect(() => {
             <YardTbtwo textName={textName}/>
                     </>
                     );
+                }else if (textName.text === 'Finch trail track' || textName.text ==='VMC trail track'){
+                    return (
+                        <>
+                        <YardSvgViewer yardfaclData={yardfaclData} textName={textName}/>
+                <YardTbone yardfaclData={yardfaclData} textName={textName} />
+            <YardTbtwo textName={textName}/>
+                        </>
+                    )
                 }else{
                     return ( <> <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}/>
               <StationNodeTableView  textName={textName} rdDataRef={rdDataRef} />
@@ -171,12 +181,14 @@ useEffect(() => {
                 return  <TrainView textName={textName}/>
                     break;
             case 'mainline':
-                return  <TrainView textName={textName}/>
+                return  <MailineView textName={textName}/>
                     break;
             case 'yard':
+                // yardfaclData={yardfaclData}/
+                // yardfaclData={yardfaclData}
                 return  <>
-                <TopoSvgViewer yardfaclData={yardfaclData} textName={textName}/>
-                <YardTbone yardfaclData={yardfaclData} textName={textName} />
+                <TopoSvgViewer  textName={textName}/>
+                <YardTbone  textName={textName} />
             <YardTbtwo textName={textName}/>
                 </>
                     break;
@@ -211,6 +223,8 @@ useEffect(() => {
       return node.data?.display || node.text || "Unknown";
     }else if (mode === "facility" && (node.text === "Davisville" || node.text === "Wilson")) {
       return `Yard- ${node.text}` || "Unnamed Facility";
+    }else if (mode === "facility" && (node.text === "Finch trail track" || node.text === "VMC trail track")) {
+      return `${node.text}` || "Unnamed Facility";
     }else if (mode === "facility" || node.data?.parent === "yard_1") {
       return `Station- ${node.text}` || "Unnamed Facility";
     } else {

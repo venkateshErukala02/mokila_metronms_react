@@ -98,7 +98,7 @@ if (response.ok) {
                                 </tr>
                             )}
 
-                            {!isLoading && !isError.status && yrdEventData.length === 0 && (
+                            {!isLoading && !isError.status && yrdEventData?.length === 0 && (
                                 <tr>
                                     <td colSpan="8" style={{ textAlign: "center" }}>
                                         No Data Available
@@ -108,7 +108,7 @@ if (response.ok) {
 
                             {!isLoading &&
                                 !isError.status &&
-                                yrdEventData.length > 0 &&
+                                yrdEventData?.length > 0 &&
                                 yrdEventData.map((node, index) => (
                                     <tr key={index}>
                                         <td>{node.sysName}</td>
