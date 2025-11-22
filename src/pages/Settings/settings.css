@@ -189,7 +189,7 @@ tbody.settingbdtb>tr{width: 100%;font-size: 12px;}
         border: 1px solid #DDD;
         border-radius: 5px;
         width: 100%;
-        min-width: 148px;
+        min-width: 265px;
         max-width: 150px;
   }
   .trapsel{
@@ -531,7 +531,6 @@ tbody.settingbdtb>tr{width: 100%;font-size: 12px;}
 
 .eyeslashcl{
     float: right;
-    margin-top: -26px;
     position: relative;
     z-index: 2;
     color: #666666;
@@ -539,6 +538,7 @@ tbody.settingbdtb>tr{width: 100%;font-size: 12px;}
     height: 15px;
     width: 15px;
     display: inline;
+    margin-top: -25px;
 }
 .hrnote {
     color: #43474e63;

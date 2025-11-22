@@ -66,7 +66,7 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
             });
             if (response.ok) {
                 // setSuccess('Discovery started successfully');
-                alert('Discovery started successfully');
+                alert('Firmware upload started successfully');
                 handleProfileContclose();
                 if (refreshLineData) refreshLineData();
                 setLineName('')
@@ -122,7 +122,8 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
             if (response.ok) {
                 setSuccess('File upload has started.');
                 alert('File upload has started.')
-
+                handleProfileContclose();
+                if (refreshLineData) refreshLineData();
                 setSelectedFile(null);
             } else {
                 const errText = await response.text();
@@ -315,7 +316,7 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                 });
                 if (response.ok) {
                     // setSuccess('Discovery started successfully');
-                    alert('Discovery started successfully')
+                    alert('Firmware upload started successfully')
                     handleProfileContclose();
                 
                 } else {

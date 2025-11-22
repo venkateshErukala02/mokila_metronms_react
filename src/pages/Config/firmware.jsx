@@ -7,7 +7,7 @@ import { faL, fas } from "@fortawesome/free-solid-svg-icons";
 import FirmwarePopupTable from "./firmwarepopuptable";
 
 const FirmwareContainer = () => {
-    const [profileStatusCont, setProfileStatusCont] = useState(true);
+    const [profileStatusCont, setProfileStatusCont] = useState(false);
     const [firmwareData, setFirmwareData] = useState([]);
     const [userLimitValueSel, setUserLimitValueSel] = useState('50');
     const [isLoading, setIsLoading] = useState(false);
@@ -55,8 +55,8 @@ const FirmwareContainer = () => {
     useEffect(() => {
 
         const url = `api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=25`;
-        getFimwareData(url);
-
+        getFimwareData(url);                        
+        
     }, []);
 
     useEffect(() => {
@@ -245,7 +245,7 @@ const handleChange = (value) => {
                 </article>
 
                 <article className={profileStatusCont ? 'col-4' : 'collapsed'} >
-                    <FirmwareContainerSub    refreshLineData={()=>getFimwareData(`api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=25`)
+                    <FirmwareContainerSub  handleSubContainer={handleSubContainer}    refreshLineData={()=>getFimwareData(`api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=25`)
                                     }/>
                 </article>
             </article>

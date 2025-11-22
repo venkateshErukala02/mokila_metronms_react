@@ -227,8 +227,8 @@ const FirmwareMng = () => {
                         handleSubContainer={handleSubContainer}
                          mode={mode}
                          version={editVersion}
-                        // refreshLineData={() => getVersionData('api/v2/firmware/firmwares?&page=1&limit=50&sort=fileName.asc')
-                        // }
+                        refreshLineData={() => getVersionData('api/v2/firmware/firmwares?&page=1&limit=50&sort=fileName.asc')
+                        }
                     />
                 </article>
 

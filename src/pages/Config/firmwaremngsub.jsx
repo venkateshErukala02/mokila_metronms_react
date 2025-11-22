@@ -105,8 +105,9 @@ const FirmwareMngSubCont = ({ handleSubContainer, refreshLineData, mode, line })
 
             if (response.ok) {
                 setSuccess('File upload has started.');
-                alert('File upload has started.')
-
+                alert('Firmware upload has started.')
+                handleProfileContclose();
+                if (refreshLineData) refreshLineData();
                 setSelectedFile(null);
             } else {
                 const errText = await response.text();

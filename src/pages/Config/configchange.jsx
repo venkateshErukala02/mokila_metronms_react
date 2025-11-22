@@ -4,7 +4,7 @@ import './../Settings/settings.css';
 import ConfigChangeSub from "./configchangesub";
 
 const ConfigChange = () => {
-    const [profileStatusCont, setProfileStatusCont] = useState(true);
+    const [profileStatusCont, setProfileStatusCont] = useState(false);
     const [userData, setUserData] = useState([]);
     const [userLimitValueSel, setUserLimitValueSel] = useState('50');
     const [isLoading, setIsLoading] = useState(false);

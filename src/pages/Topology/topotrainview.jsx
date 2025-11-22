@@ -314,7 +314,9 @@ useEffect(() => {
     //     }));
      const modified = trainData.map(event => ({
         ...event,
-        svgUp: injectTextToSvg(svgContent, event.trainId, event, 1),
+        svgUpOne: injectTextToSvg(svgContent, event.trainId, event, 1),
+        svgDownOne: injectTextToSvg(svgContentNorth, event.trainId, event, 1),
+        svgUp: injectTextToSvg(svgContent, event.trainId, event, 6),
         svgDown: injectTextToSvg(svgContentNorth, event.trainId, event, 6)
     }));
 
@@ -388,7 +390,14 @@ useEffect(() => {
                                     <option value="1" label="30">30</option>
                                     <option value="2" label="45">45</option>
                                 </select>
-
+                                <article className="trainsel">
+                                <label for="" class="selectlbl">Select Section :</label>
+                                <select className="form-controll1" value={trainValueSel} onChange={handleTrains} style={{ width: "auto", display: 'inline-block' }} aria-invalid="false">
+                                    <option value="2" label="Select" disabled>Select</option>
+                                    <option value="11" label="Mainline">Mainline</option>
+                                    <option value="12" label="Yard">Yard</option>
+                                </select>
+                                </article>
                            {trainLabelSel !== 'Mainline' && trainLabelSel !== 'Yard' ? (
 <article className="boundimg" >
                                 <img src={northboundtr} alt="northtr" />
@@ -399,11 +408,11 @@ useEffect(() => {
                                 <img src={southred} alt="southtr" style={{float:'right'}} />
                             </article>)} 
 
-                <select className="form-controll1 trainsel" value={trainValueSel} onChange={handleTrains} style={{ width: "auto", display: 'inline-block' }} aria-invalid="false">
+                {/* <select className="form-controll1 trainsel" value={trainValueSel} onChange={handleTrains} style={{ width: "auto", display: 'inline-block' }} aria-invalid="false">
                                     <option value="2" label="Select" disabled>Select</option>
                                     <option value="11" label="Mainline">Mainline</option>
                                     <option value="12" label="Yard">Yard</option>
-                                </select>
+                                </select> */}
                             {trainLabelSel !== 'Mainline' && trainLabelSel !== 'Yard' ? (<article className="boundimg">
                                 <span className="southtxt">South Bound</span>
                                 <span className="northtxt">North Bound</span>
@@ -451,14 +460,28 @@ useEffect(() => {
                                    <td className="col-4">
                                     <div
                                         dangerouslySetInnerHTML={{
-                                        __html: event.direction === 'NBNE' ? event.svgUp : event.svgDown
+                                        __html: event.direction === 'NBNE' ? event.svgUpOne : event.svgDownOne
                                         }}
                                     />
                                     </td>
 
-                                    <td className="col-4" style={{width:'400px'}}><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
-                                    <i class="fas fa-file-export trainexpor" role="button" tabindex="0">
-                                        </i> 
+                                    <td className="col-4" style={{width:'400px'}}><div><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
+                                        </div>
+                                    <div style={{ marginTop: "5px" }} className="trainexpor">
+                                        <button
+                                        className="trainexporticon"
+                                        // onClick={() => handleExport(event)}
+                                        >
+                                        <i className="fas fa-file-export"></i>
+                                        </button>
+
+                                        <button
+                                        className="trainexporticon"
+                                        // onClick={() => handleAdd(event)}
+                                        >
+                                        <i className="fa-solid fa-plus"></i>
+                                        </button>
+                                    </div>
                                     </td>
                                 </tr>
                                 <tr key={index} className="col-12" style={{padding:'5px',position:'relative',borderBottom:'1px solid #212327d1'}}>
@@ -469,9 +492,24 @@ useEffect(() => {
                                         }}
                                     />
                                     </td>
-                                    <td className="col-4" style={{width:'400px'}}><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
-                                    <i class="fas fa-file-export trainexpor" role="button" tabindex="0">
-                                        </i> 
+                                    <td className="col-4" style={{width:'400px'}}>
+                                        <div><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
+                                        </div>
+                                    <div style={{ marginTop: "5px" }} className="trainexpor">
+                                        <button
+                                        className="trainexporticon"
+                                        // onClick={() => handleExport(event)}
+                                        >
+                                        <i className="fas fa-file-export"></i>
+                                        </button>
+
+                                        <button
+                                        className="trainexporticon"
+                                        // onClick={() => handleAdd(event)}
+                                        >
+                                        <i className="fa-solid fa-plus"></i>
+                                        </button>
+                                    </div>
                                     </td>
                                 </tr>
                                 </>
@@ -516,13 +554,27 @@ useEffect(() => {
                                     <td className="col-4">
                                     <div
                                         dangerouslySetInnerHTML={{
-                                        __html: event.direction === 'NBNE' ? event.svgUp : event.svgDown
+                                        __html: event.direction === 'NBNE' ? event.svgUpOne : event.svgDownOne
                                         }}
                                     />
                                     </td>
-                                    <td className="col-5"><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
-                                    <i class="fas fa-file-export trainexpor" role="button" tabindex="0">
-                                        </i>
+                                    <td className="col-5"><div><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
+                                        </div>
+                                    <div style={{ marginTop: "5px" }} className="trainexpor">
+                                        <button
+                                        className="trainexporticon"
+                                        // onClick={() => handleExport(event)}
+                                        >
+                                        <i className="fas fa-file-export"></i>
+                                        </button>
+
+                                        <button
+                                        className="trainexporticon"
+                                        // onClick={() => handleAdd(event)}
+                                        >
+                                        <i className="fa-solid fa-plus"></i>
+                                        </button>
+                                    </div>
                                     </td>
                                 </tr>
                                  <tr key={index} className="col-12" style={{padding:'5px',position:'relative',borderBottom:'1px solid #212327d1'}}>
@@ -533,9 +585,23 @@ useEffect(() => {
                                         }}
                                     />
                                     </td>
-                                    <td className="col-5"><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
-                                    <i class="fas fa-file-export trainexpor" role="button" tabindex="0">
-                                        </i>
+                                    <td className="col-5"><div><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
+                                        </div>
+                                    <div style={{ marginTop: "5px" }} className="trainexpor">
+                                        <button
+                                        className="trainexporticon"
+                                        // onClick={() => handleExport(event)}
+                                        >
+                                        <i className="fas fa-file-export"></i>
+                                        </button>
+
+                                        <button
+                                        className="trainexporticon"
+                                        // onClick={() => handleAdd(event)}
+                                        >
+                                        <i className="fa-solid fa-plus"></i>
+                                        </button>
+                                    </div>
                                     </td>
                                 </tr>
                                 </>
@@ -581,13 +647,27 @@ useEffect(() => {
                                     <td className="col-4">
                                     <div
                                         dangerouslySetInnerHTML={{
-                                        __html: event.direction === 'NBNE' ? event.svgUp : event.svgDown
+                                        __html: event.direction === 'NBNE' ? event.svgUpOne : event.svgDownOne
                                         }}
                                     />
                                     </td>
-                                    <td className="col-6"><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
-                                    <i class="fas fa-file-export trainexpor" role="button" tabindex="0">
-                                        </i>
+                                    <td className="col-6"><div><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
+                                        </div>
+                                    <div style={{ marginTop: "5px" }} className="trainexpor">
+                                        <button
+                                        className="trainexporticon"
+                                        // onClick={() => handleExport(event)}
+                                        >
+                                        <i className="fas fa-file-export"></i>
+                                        </button>
+
+                                        <button
+                                        className="trainexporticon"
+                                        // onClick={() => handleAdd(event)}
+                                        >
+                                        <i className="fa-solid fa-plus"></i>
+                                        </button>
+                                    </div>
                                     </td>
                                 </tr>
                                  <tr key={index} className="col-12" style={{padding:'5px',position:'relative',borderBottom:'1px solid #212327d1'}}>
@@ -595,12 +675,26 @@ useEffect(() => {
                                     <div
                                         dangerouslySetInnerHTML={{
                                         __html: event.direction === 'NBNE' ? event.svgUp : event.svgDown
-                                        }}
+                                        }}  
                                     />
                                     </td>
-                                    <td className="col-6"><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
-                                    <i class="fas fa-file-export trainexpor" role="button" tabindex="0">
-                                        </i>
+                                    <td className="col-6"><div><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
+                                        </div>
+                                    <div style={{ marginTop: "5px" }} className="trainexpor">
+                                        <button
+                                        className="trainexporticon"
+                                        // onClick={() => handleExport(event)}
+                                        >
+                                        <i className="fas fa-file-export"></i>
+                                        </button>
+
+                                        <button
+                                        className="trainexporticon"
+                                        // onClick={() => handleAdd(event)}
+                                        >
+                                        <i className="fa-solid fa-plus"></i>
+                                        </button>
+                                    </div>
                                     </td>
                                 </tr>
                                 </>

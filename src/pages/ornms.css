@@ -2397,11 +2397,11 @@ text-decoration: none;
 
 }
 .trainsel{
+    left: 12px;
     position: absolute;
-    right: 106px;
-    top: 0;
-
+    top: 24px;
 }
+
 .southtxt{
     font-size: 14px;
     color: black;
@@ -2418,6 +2418,20 @@ text-decoration: none;
     font-size: 16px;
     cursor: pointer;
     margin-top: -7px;
+}
+
+.trainexpor {
+    cursor: pointer;
+    font-size: 16px;
+    position: absolute;
+    right: 3px;
+    top: 2px;
+}
+.trainexporticon{
+    border: 0;
+    background: transparent;
+    margin: 0px 4px;
+    padding: 0;
 }
 
 .dis-none{
