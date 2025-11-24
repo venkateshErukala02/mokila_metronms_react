@@ -109,6 +109,57 @@ const FirmwareMng = () => {
         (item) => selected === "all" || item.deviceType === selected
         ) || [];
 
+
+           const handleDeleteFirmMng = async (item) => {
+       
+        const method = 'POST';
+        // const url= isEditMode  ? `rest/users/${user["user-id"]}` :'rest/users';
+        const confirmDel = window.confirm("Are you sure you want to delete this firmware?");
+    if (!confirmDel) return;
+        // const requestBody ={
+        // //    firmware: "16_314_Sample.bin"
+        //    firmware: `${item.version}_${item.fileName}`
+        // }
+
+        try {
+            const username = 'admin';
+            const password = 'admin';
+            const token = btoa(`${username}:${password}`)
+            const response = await fetch(`api/v2/firmware/delete?firmware=${item.version}_${item.fileName}`, {
+                method,
+                headers: {
+                    'Authorization': `Basic ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br, zstd'
+                },
+                // body: JSON.stringify(requestBody),
+            });
+
+            const text = await response.text();
+
+            if (response.ok) {
+                // alert("Are you sure you want to delete this firmware?")
+                // if(refreshUserData) refreshUserData();
+            //    setUserName('');
+            //    setFullName('');
+            //    setEmail('');
+            //    setPassword('');
+            //    setConfirmPassword('');
+            //    setLineNameSele(-1);
+            //    setRole('ROLE_READONLY');
+            } else {
+                setIsError('Error starting discovery');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            setIsError('An error occurred while contacting the server.');
+        } finally {
+            setIsLoading(false); // Turn off loading state
+        }
+
+    }
+
     return (
         <>
             <article className="row">
@@ -144,7 +195,7 @@ const FirmwareMng = () => {
                             </article>
                         </article>
 
-                        <article className="row border-allsd" style={{ height: '50vh' }}>
+                        <article className="row border-allsd" style={{ height: '0' }}>
                             <table className="col-12" style={{ height: '0vh' }}>
                                 <thead className="settingthtb">
                                     <tr>
@@ -152,7 +203,7 @@ const FirmwareMng = () => {
                                         <th>Firmware Version</th>
                                         <th>Created Time  </th>
                                         <th>Device Type <button class="glyphicon glyphicon-tasks" style={{backgroundColor:"#f2f2f2",paddingTop:'4px',position:'relative',border:'none',fontSize:'12px'}}  onClick={() => {setShowList(!showList);setSelected('all')}}></button>
-                                        {showList && (  <ul className="statuslist" style={{ transform :  'translate3d(1040px,65px,0)'}}>
+                                        {showList && (  <ul className={profileStatusCont ? 'statuslistfm_sub_cont' : 'statuslistfm' }>
                                         {statuses.map(({ label, value }) => (
                                             <li key={value}>
                                             <label>
@@ -204,7 +255,7 @@ const FirmwareMng = () => {
                                             <td>{formatDate(item.createdTime)}</td>
                                             <td>{item.deviceType}</td>
                                             <td><i className="fas fa-edit" onClick={() => handleEditLineDt(item)}></i></td>
-                                            <td><i className="fa fa-trash"></i></td>
+                                            <td onClick={()=>handleDeleteFirmMng(item)}><i className="fa fa-trash"></i></td>
                                         </tr>
                                     ))}
 

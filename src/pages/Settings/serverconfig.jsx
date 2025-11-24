@@ -23,7 +23,7 @@ const ServerConfigContainer = () => {
     const [authUser, setAuthUser] =  useState('');
     const [authUserPswd, setAuthUserPswd] = useState('');
     const [serverConfigDt,setServerConfigDt] = useState('');
-    const [hostCommunity,setHostCommunity] = useState(serverConfigDt.serveraddress);
+    const [hostCommunity,setHostCommunity] = useState('');
     const [serverAddress,setServerAddress] = useState('');
     const [rootPath,setRootPath] = useState('');
     const [port,setPort] = useState('');
@@ -123,54 +123,54 @@ const ServerConfigContainer = () => {
         }
     };
 
-    //    const handleAddServerConfig = async () => {
+       const handleAddServerConfig = async (user) => {
        
-    //     const method = 'POST';
-    //     // const url= isEditMode  ? `rest/users/${user["user-id"]}` :'rest/users';
-    //     const requestBody ={
-    //         serveraddress:user.tag,
-    //         tftprootpath:location,
-    //         isftp:direction,
-    //         traphostpwd:position,
-    //         tftpport:tagtype,
-    //     }
+        const method = 'POST';
+        // const url= isEditMode  ? `rest/users/${user["user-id"]}` :'rest/users';
+        const requestBody ={
+            serveraddress:user.serveraddress,
+            tftprootpath:user.tftprootpath,
+            isftp:user.isftp,
+            traphostpwd:user.traphostpwd,
+            tftpport:user.tftpport
+        }
 
-    //     try {
-    //         const username = 'admin';
-    //         const password = 'admin';
-    //         const token = btoa(`${username}:${password}`)
-    //         const response = await fetch(`api/v2/systemprops/update`, {
-    //             method,
-    //             headers: {
-    //                 'Authorization': `Basic ${token}`,
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify(requestBody),
-    //         });
+        try {
+            const username = 'admin';
+            const password = 'admin';
+            const token = btoa(`${username}:${password}`)
+            const response = await fetch(`api/v2/systemprops/update`, {
+                method,
+                headers: {
+                    'Authorization': `Basic ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody),
+            });
 
-    //         const text = await response.text();
+            const text = await response.text();
 
-    //         if (response.ok) {
-    //             alert('Server Configuration Added successfully')
-    //             // if(refreshUserData) refreshUserData();
-    //         //    setUserName('');
-    //         //    setFullName('');
-    //         //    setEmail('');
-    //         //    setPassword('');
-    //         //    setConfirmPassword('');
-    //         //    setLineNameSele(-1);
-    //         //    setRole('ROLE_READONLY');
-    //         } else {
-    //             setIsError('Error starting discovery');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error:', error);
-    //         setIsError('An error occurred while contacting the server.');
-    //     } finally {
-    //         setIsLoading(false); // Turn off loading state
-    //     }
+            if (response.ok) {
+                alert('Server Configuration Added successfully')
+                // if(refreshUserData) refreshUserData();
+            //    setUserName('');
+            //    setFullName('');
+            //    setEmail('');
+            //    setPassword('');
+            //    setConfirmPassword('');
+            //    setLineNameSele(-1);
+            //    setRole('ROLE_READONLY');
+            } else {
+                setIsError('Error starting discovery');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            setIsError('An error occurred while contacting the server.');
+        } finally {
+            setIsLoading(false); // Turn off loading state
+        }
 
-    // }
+    }
 
 
  useEffect(() => {
@@ -250,7 +250,7 @@ const ServerConfigContainer = () => {
                                                                 TFTP/FTP Root Path
                                                             </label>
                                                             <article className="col-sm-4 col-md-4 col-lg-5">
-                                                                <input type="text" name="" id="" value={rootPath}className="trapinpt"  onChange={(e)=> e.target.value}/>
+                                                                <input type="text" name="" id="" value={rootPath}className="trapinpt"  onChange={(e)=> setRootPath(e.target.value)}/>
                                                             </article>
                                                         </article>
                                                         <article className="form-row">
@@ -297,7 +297,7 @@ const ServerConfigContainer = () => {
                                                             <label htmlFor="" className="col-4 traplabel">
                                                             </label>
                                                             <article className="col-sm-4 col-md-4 col-lg-5" style={{ textAlign: 'right' }}>
-                                                                {/* <button className="createbtn" style={{ textAlign: 'right' }} type="button" onClick={handleAddServerConfig()}>Save</button> */}
+                                                                <button className="createbtn" style={{ textAlign: 'right' }} type="button" onClick={()=>handleAddServerConfig(serverConfigDt)}>Save</button>
                                                             </article>
                                                         </article>
 

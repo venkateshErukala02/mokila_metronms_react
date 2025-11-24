@@ -18,6 +18,7 @@ const FirmwareContainer = () => {
     const [showList, setShowList] = useState(false);
     const [showPopup,setShowPopup] = useState(false);
     const [firmpopupData,setFirmpopupData] = useState([]);
+    const [selectedTasks, setSelectedTasks] = useState([]);
 
     const getFimwareData = async (url) => {
         setIsLoading(true);
@@ -52,19 +53,29 @@ const FirmwareContainer = () => {
     };
 
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        const url = `api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=25`;
-        getFimwareData(url);                        
+    //     const url = `api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=25`;
+    //     getFimwareData(url);                        
         
-    }, []);
+    // }, []);
 
     useEffect(() => {
+    const url = `api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=25`;
 
-        const url = `api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=25`;
+    // fetch immediately
+    getFimwareData(url);
+
+    // fetch repeatedly every 10 seconds
+    const intervalId = setInterval(() => {
         getFimwareData(url);
+    }, 30000); // 10 sec (change as needed)
 
-    }, [selected]);
+    // cleanup interval on selected change OR component unmount
+    return () => clearInterval(intervalId);
+
+}, [selected]);
+
 
     const handleUserLimitValue = (event) => {
         setUserLimitValueSel(event.target.value);
@@ -106,6 +117,115 @@ const handleChange = (value) => {
     setFirmpopupData(data);
   }
 
+
+
+           const handleDeleteFirmware = async (item) => {
+       
+        const method = 'POST';
+        // const url= isEditMode  ? `rest/users/${user["user-id"]}` :'rest/users';
+        const confirmDel = window.confirm("Are you sure you want to delete this firmware?");
+    if (!confirmDel) return;
+        // const requestBody ={
+        // //    firmware: "16_314_Sample.bin"
+        //    firmware: `${item.version}_${item.fileName}`
+        // }
+
+        try {
+            const username = 'admin';
+            const password = 'admin';
+            const token = btoa(`${username}:${password}`)
+            const response = await fetch(`api/v2/task/canceltask/${item.taskId}`, {
+                method,
+                headers: {
+                    'Authorization': `Basic ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br, zstd'
+                },
+                // body: JSON.stringify(requestBody),
+            });
+
+            const text = await response.text();
+
+            if (response.ok) {
+                // alert("Are you sure you want to delete this firmware?")
+                // if(refreshUserData) refreshUserData();
+            //    setUserName('');
+            //    setFullName('');
+            //    setEmail('');
+            //    setPassword('');
+            //    setConfirmPassword('');
+            //    setLineNameSele(-1);
+            //    setRole('ROLE_READONLY');
+            } else {
+                setIsError({status: true, msg:'Failed to delete task'})
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            setIsError({status: true, msg: error.message})
+        } finally {
+            setIsLoading(false); // Turn off loading state
+        }
+
+    }
+
+    const toggleTaskSelection = (taskId) => {
+    setSelectedTasks(prev =>
+        prev.includes(taskId)
+            ? prev.filter(id => id !== taskId)
+            : [...prev, taskId]
+    );
+};
+
+const toggleSelectAll = () => {
+    if (selectedTasks.length === firmwareData.length) {
+        setSelectedTasks([]); 
+    } else {
+        setSelectedTasks(firmwareData.map(item => item.taskId));
+    }
+};
+
+const handleBulkDelete = async () => {
+    if (selectedTasks.length === 0) return;
+
+    const confirmDel = window.confirm(
+        `Delete ${selectedTasks.length} selected tasks?`
+    );
+
+    if (!confirmDel) return;
+
+    const username = 'admin';
+    const password = 'admin';
+    const token = btoa(`${username}:${password}`);
+
+    try {
+        // Run all delete requests in parallel
+        await Promise.all(
+            selectedTasks.map(taskId =>
+                fetch(`api/v2/task/canceltask/${taskId}`, {
+                    method: "POST",
+                    headers: {
+                        'Authorization': `Basic ${token}`,
+                        'Content-Type': 'application/json',
+                        'Accept': '*/*'
+                    }
+                })
+            )
+        );
+    } catch (e) {
+        console.error("Bulk delete error:", e);
+    }
+
+    // Refresh table
+    getFimwareData(
+        `api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=25`
+    );
+
+    // Clear selection
+    setSelectedTasks([]);
+};
+
+
     return (
         <>
             <article className="row">
@@ -123,7 +243,8 @@ const handleChange = (value) => {
                                 <article style={{ float: 'right' }}>
                                     <ul className="setttinglist">
                                          <li>
-                                            <button className="clearfix createbtn">Delete</button>
+                                            <button className="clearfix createbtn" disabled={selectedTasks.length === 0}
+                                            onClick={handleBulkDelete}>Delete Selected</button>
                                         </li>
                                         <li>
                                             <button className="clearfix createbtn" onClick={handleProfileContopen}>New Task</button>
@@ -132,10 +253,9 @@ const handleChange = (value) => {
 
                                         <li>
                                             <select className="form-controlfirm" value={userLimitValueSel} onChange={handleUserLimitValue} style={{ width: '50px', marginTop: '4px' }} aria-invalid="false">
-                                                <option value="0" label="50">50</option>
-                                                <option value="1" label="25" defaultValue={25}>25</option>
-                                                <option value="2" label="50">50</option>
-                                                <option value="3" label="100">100</option>
+                                               <option value="25">25</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
                                             </select>
                                         </li>
                                     </ul>
@@ -143,16 +263,21 @@ const handleChange = (value) => {
                             </article>
                         </article>
 
-                        <article className="row border-allsd" style={{ height: '50vh' }}>
+                        <article className="row border-allsd" style={{ height: '' }}>
                             <table className="col-12" style={{ height: '0vh' }}>
                                 <thead className="settingthtb" style={{position:'relative'}}>
                                     <tr>
-                                        <th><input className="incl2" type="checkbox"/></th>
+                                        <th> <input
+                                            className="incl2"
+                                            type="checkbox"
+                                            checked={selectedTasks.length === firmwareData.length && firmwareData.length > 0}
+                                            onChange={toggleSelectAll}
+                                        /></th>
                                         <th>Task ID</th>
                                         <th>Task Name</th>
                                         <th>Scheduled Time</th>
-                                        <th>Status <button class="glyphicon glyphicon-tasks" style={{backgroundColor:"#f2f2f2",paddingTop:'4px',position:'relative',border:'none',fontSize:'12px'}}  onClick={() => {setShowList(!showList);setSelected(4)}}></button>
-                                        {showList && (  <ul className="statuslist">
+                                        <th>Status <button className="glyphicon glyphicon-tasks" style={{backgroundColor:"#f2f2f2",paddingTop:'4px',position:'relative',border:'none',fontSize:'12px'}}  onClick={() => {setShowList(!showList);setSelected(4)}}></button>
+                                        {showList && (  <ul className={profileStatusCont ? 'statuslist_sub_cont' : 'statuslist'}>
                                         {statuses.map(({ label, value }) => (
                                             <li key={value}>
                                             <label>
@@ -198,16 +323,20 @@ const handleChange = (value) => {
                                         </tr>
                                     )}
                                     {firmwareData && firmwareData.map((item) => (
-                                        <tr key={item.id} onClick={()=>handleFirmwarePopup(item)}>
-                                            <td><input type="checkbox" className="incl"
-                                                    checked='' onChange=''
-                                                /></td>
+                                        <tr key={item.taskId} onClick={()=>handleFirmwarePopup(item)}>
+                                            <td> <input
+                                                type="checkbox"
+                                                className="incl"
+                                                checked={selectedTasks.includes(item.taskId)}
+                                                onChange={() => toggleTaskSelection(item.taskId)}
+                                                onClick={(e) => e.stopPropagation()} 
+                                            /></td>
                                             <td>{item.taskId}</td>
                                             <td>{item.task}</td>
                                             <td>{item.dateNTime}</td>
                                             <td>{item.status}</td>
                                             {/* <td ><i className="fas fa-edit" onClick={() => handleEditUserDt(item)}></i></td> */}
-                                            <td><i className="fa fa-trash"></i></td>
+                                            <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" onClick={() => handleDeleteFirmware(item)}></i></td>
                                         </tr>
                                     ))}
 
@@ -220,7 +349,7 @@ const handleChange = (value) => {
                         <div className="firmwarepopupStyle">
                         <div className="firmwarepopupBoxStyle">
                             <article>
-                                <i class="fa fa-close noticlose" role="button" tabindex="0" onClick={() => setShowPopup(false)} style={{ marginBottom: '5px', float: 'right',transform:'translateY(-8px)',fontSize:'15px',paddingRight:'12px' }}></i>
+                                <i className="fa fa-close noticlose" role="button" tabindex="0" onClick={() => setShowPopup(false)} style={{ marginBottom: '5px', float: 'right',transform:'translateY(-8px)',fontSize:'15px',paddingRight:'12px' }}></i>
                             {/* <button
                             onClick={() => setShowPopup(false)}
                             className="clearfix createbtn"

@@ -304,14 +304,6 @@ const splitIntoThreeTables = (data) => {
 
 useEffect(() => {
     if (!svgContent || !svgContentNorth || trainData.length === 0) return;
-
-    // const modified = trainData.map(event => ({
-    // ...event,
-    // ...(event.direction === "NBNE"
-    //     ? { svgUp: injectTextToSvg(svgContent, event.trainId, event, 1) }
-    //     : { svgDown: injectTextToSvg(svgContentNorth, event.trainId, event, 6) }
-    // )
-    //     }));
      const modified = trainData.map(event => ({
         ...event,
         svgUpOne: injectTextToSvg(svgContent, event.trainId, event, 1),
@@ -407,12 +399,6 @@ useEffect(() => {
                                 <img src={northgreen} alt="northtr"/>
                                 <img src={southred} alt="southtr" style={{float:'right'}} />
                             </article>)} 
-
-                {/* <select className="form-controll1 trainsel" value={trainValueSel} onChange={handleTrains} style={{ width: "auto", display: 'inline-block' }} aria-invalid="false">
-                                    <option value="2" label="Select" disabled>Select</option>
-                                    <option value="11" label="Mainline">Mainline</option>
-                                    <option value="12" label="Yard">Yard</option>
-                                </select> */}
                             {trainLabelSel !== 'Mainline' && trainLabelSel !== 'Yard' ? (<article className="boundimg">
                                 <span className="southtxt">South Bound</span>
                                 <span className="northtxt">North Bound</span>
@@ -465,7 +451,7 @@ useEffect(() => {
                                     />
                                     </td>
 
-                                    <td className="col-4" style={{width:'400px'}}><div><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
+                                    <td className="col-8"><div><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
                                         </div>
                                     <div style={{ marginTop: "5px" }} className="trainexpor">
                                         <button
@@ -492,7 +478,7 @@ useEffect(() => {
                                         }}
                                     />
                                     </td>
-                                    <td className="col-4" style={{width:'400px'}}>
+                                    <td className="col-8">
                                         <div><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
                                         </div>
                                     <div style={{ marginTop: "5px" }} className="trainexpor">
@@ -558,7 +544,7 @@ useEffect(() => {
                                         }}
                                     />
                                     </td>
-                                    <td className="col-5"><div><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
+                                    <td className="col-8"><div><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
                                         </div>
                                     <div style={{ marginTop: "5px" }} className="trainexpor">
                                         <button
@@ -585,7 +571,7 @@ useEffect(() => {
                                         }}
                                     />
                                     </td>
-                                    <td className="col-5"><div><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
+                                    <td className="col-8"><div><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
                                         </div>
                                     <div style={{ marginTop: "5px" }} className="trainexpor">
                                         <button
@@ -651,7 +637,7 @@ useEffect(() => {
                                         }}
                                     />
                                     </td>
-                                    <td className="col-6"><div><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
+                                    <td className="col-8"><div><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
                                         </div>
                                     <div style={{ marginTop: "5px" }} className="trainexpor">
                                         <button
@@ -678,7 +664,7 @@ useEffect(() => {
                                         }}  
                                     />
                                     </td>
-                                    <td className="col-6"><div><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
+                                    <td className="col-8"><div><span>{event.station}</span> <br /> <span>{event.code}-{event.direction}</span>
                                         </div>
                                     <div style={{ marginTop: "5px" }} className="trainexpor">
                                         <button
