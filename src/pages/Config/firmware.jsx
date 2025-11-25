@@ -89,9 +89,15 @@ const FirmwareContainer = () => {
         setMode('create');
     }
 
-    const handleSubContainer = () => {
-        setProfileStatusCont(false)
+    const handleSubContainer = (shouldRefresh = false) => {
+    setProfileStatusCont(false);
+
+    // Refresh only when child requests it
+    if (shouldRefresh) {
+        getFimwareData(`api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=25`);
     }
+};
+
     const handleEditUserDt = (user) => {
         setProfileStatusCont(true);
         setMode('edit');
@@ -119,55 +125,53 @@ const handleChange = (value) => {
 
 
 
-           const handleDeleteFirmware = async (item) => {
-       
-        const method = 'POST';
-        // const url= isEditMode  ? `rest/users/${user["user-id"]}` :'rest/users';
-        const confirmDel = window.confirm("Are you sure you want to delete this firmware?");
+    const handleDeleteFirmware = async (item) => {
+    const confirmDel = window.confirm("Are you sure you want to delete this firmware?");
     if (!confirmDel) return;
-        // const requestBody ={
-        // //    firmware: "16_314_Sample.bin"
-        //    firmware: `${item.version}_${item.fileName}`
-        // }
 
-        try {
-            const username = 'admin';
-            const password = 'admin';
-            const token = btoa(`${username}:${password}`)
-            const response = await fetch(`api/v2/task/canceltask/${item.taskId}`, {
-                method,
-                headers: {
-                    'Authorization': `Basic ${token}`,
-                    'Content-Type': 'application/json',
-                    'Accept': '*/*',
-                    'Accept-Encoding': 'gzip, deflate, br, zstd'
-                },
-                // body: JSON.stringify(requestBody),
-            });
+    setIsLoading(true);
 
-            const text = await response.text();
-
-            if (response.ok) {
-                // alert("Are you sure you want to delete this firmware?")
-                // if(refreshUserData) refreshUserData();
-            //    setUserName('');
-            //    setFullName('');
-            //    setEmail('');
-            //    setPassword('');
-            //    setConfirmPassword('');
-            //    setLineNameSele(-1);
-            //    setRole('ROLE_READONLY');
-            } else {
-                setIsError({status: true, msg:'Failed to delete task'})
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            setIsError({status: true, msg: error.message})
-        } finally {
-            setIsLoading(false); // Turn off loading state
+    try {
+        const username = 'admin';
+        const password = 'admin';
+        const token = btoa(`${username}:${password}`);
+        let url='';
+        if(item.status === 'Running'){
+            url = `api/v2/task/canceltask/${item.taskId}`
+        }else{
+            url = `api/v2/task/deletetask/${item.taskId}`
         }
 
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Basic ${token}`,
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            }
+        });
+
+        if (response.ok) {
+            await getFimwareData(
+                `api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=25`
+            );
+        } else {
+            setIsError({
+                status: true,
+                msg: 'Failed to delete task'
+            });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        setIsError({
+            status: true,
+            msg: error.message
+        });
+    } finally {
+        setIsLoading(false);
     }
+};
+
 
     const toggleTaskSelection = (taskId) => {
     setSelectedTasks(prev =>
@@ -191,39 +195,50 @@ const handleBulkDelete = async () => {
     const confirmDel = window.confirm(
         `Delete ${selectedTasks.length} selected tasks?`
     );
-
     if (!confirmDel) return;
+
+    setIsLoading(true);
 
     const username = 'admin';
     const password = 'admin';
     const token = btoa(`${username}:${password}`);
 
+    // Build request body
+    const requestBody = {
+        list: selectedTasks   // e.g. [21, 18]
+    };
+
     try {
-        // Run all delete requests in parallel
-        await Promise.all(
-            selectedTasks.map(taskId =>
-                fetch(`api/v2/task/canceltask/${taskId}`, {
-                    method: "POST",
-                    headers: {
-                        'Authorization': `Basic ${token}`,
-                        'Content-Type': 'application/json',
-                        'Accept': '*/*'
-                    }
-                })
-            )
+        const response = await fetch(`api/v2/task/deletetasks`, {
+            method: "POST",
+            headers: {
+                'Authorization': `Basic ${token}`,
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        if (!response.ok) {
+            throw new Error("Bulk delete failed");
+        }
+
+        // Refresh table after delete
+        await getFimwareData(
+            `api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=25`
         );
-    } catch (e) {
-        console.error("Bulk delete error:", e);
+
+        // Clear selection
+        setSelectedTasks([]);
+
+    } catch (error) {
+        console.error("Bulk delete error:", error);
+        setIsError({ status: true, msg: error.message });
+    } finally {
+        setIsLoading(false);
     }
-
-    // Refresh table
-    getFimwareData(
-        `api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=25`
-    );
-
-    // Clear selection
-    setSelectedTasks([]);
 };
+
 
 
     return (

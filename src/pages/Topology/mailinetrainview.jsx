@@ -27,6 +27,8 @@ const MailineView=({textName})=>{
     const [tableNodeSt, setTableNodeSt] = useState([]);
 const [apiUrl, setApiUrl] = useState("");
     const [svgContentNorth,setSvgContentNorth] = useState("");
+    const [showPopup,setShowPopup] = useState(false);
+    const [linkStatDt,setLinkStatDt] = useState([]);
 
 const [table1, setTable1] = useState([]);
 const [table2, setTable2] = useState([]);
@@ -103,77 +105,6 @@ useEffect(() => {
 }, [apiUrl]);
 
 
-// useEffect(() => {
-       
-//         let url = '';
-//         switch (textName.data.mode) {
-//             case 'Trains':
-//                 url = `api/v2/treeview/alltrains/2?_s=&limit=45&offset=0`;
-//                 setTrainValueSel('2');
-//                 setTrainLabelSel('Select');
-//                 break;
-//             case 'mainline':
-//                 url = `api/v2/treeview/alltrains/${trainValueSel}?_s=&limit=45&offset=0`;
-//                  setTrainValueSel('2');
-//                 setTrainLabelSel('Select');
-//                 break;
-//             default:
-//                 return; 
-//         }
-
-//          }, [textName]);
-    
-
-
-// useEffect(() => {
-//         let url =`api/v2/treeview/alltrains/${trainValueSel}?_s=&limit=45&offset=0`;
-//         fetchData(url)
-
-//          }, [textName, limitLabelSel, offsetValue,trainValueSel]);
-
-//     useEffect(() => {
-//         const controller = new AbortController();
-//         const signal = controller.signal;
-    
-//         const fetchData = async (url) => {
-//             setIsLoading(true);
-//             setIsError({ status: false, msg: "" });
-//             setTrainData([]); 
-    
-//             try {
-//                 const username = 'admin';
-//                 const password = 'admin';
-//                 const token = btoa(`${username}:${password}`)
-//                 const options = {
-//                     method: "GET",
-//                     headers: {
-//                         'Authorization': `Basic ${token}`
-//                     },
-//                     signal: signal
-//                 };
-//                 const response = await fetch(url, options);
-//                 const data = await response.json();
-    
-//                 if (response.ok) {
-//                     setTrainData(data || []);
-//                     setIsError({ status: false, msg: "" });
-//                 } else {
-//                     throw new Error("data not found");
-//                 }
-//             } catch (error) {
-//                 if (error.name !== 'AbortError') {
-//                     setIsError({ status: true, msg: error.message });
-//                 }
-//             } finally {
-//                 setIsLoading(false);
-//             }
-//         };
-    
-//         fetchData();
-    
-//         return () => controller.abort(); 
-//     }, [textName, limitLabelSel, offsetValue,trainValueSel]);
-    
 
 useEffect(() => {
     const controller = new AbortController();
@@ -363,6 +294,55 @@ useEffect(() => {
         setTrainLabelSel(label)
     }
 
+      const getServerStatusDt = async (url) => {
+    setIsLoading(true);
+    setIsError({ status: false, msg: "" });
+    const dt = new Date();
+    try {
+      const username = "admin";
+      const password = "admin";
+      const token = btoa(`${username}:${password}`);
+      const options = {
+        method: "GET",
+        headers: {
+          "Authorization": `Basic ${token}`,
+          "Content-Type": "application/json",
+        },
+      };
+      const response = await fetch(url, options);
+
+      if (response.status === 200) {
+        const data = await response.json();
+             if (data && data.links.length > 0) {
+              setLinkStatDt(data.links)
+            } 
+      } else if (response.status === 304) {
+        console.log("304 Not Modified – using cached data.");
+      } else {
+        throw new Error(`Unexpected response: ${response.status}`);
+      }
+    } catch (error) {
+      setIsError({ status: true, msg: error.message });
+      console.error("Fetch error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
+    const handleTrainPopup=(id)=>{
+    setShowPopup(true);
+    let url='';
+    if(id === undefined){
+        url = `api/v2//nodelinks/linkstatstest?nodeId=373`;
+ 
+    }else{
+        url = `api/v2//nodelinks/linkstatstest?nodeId=${id}`;
+    }
+        getServerStatusDt(url);
+    // setFirmpopupData(data);
+  }
+
 
     return(
         <>
@@ -409,7 +389,7 @@ useEffect(() => {
                             </article>)}
                             </article>
                             <hr />
-                            <article>
+                            <article style={{position:'relative'}}>
                             {!isLoading && !isError.status && table1 && table1.length > 0 &&  <table className="col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3 bordeer-allsd" style={{ height: 'auto', margin:'0 20px' }}>
                     <thead>
                         <tr>
@@ -466,7 +446,7 @@ useEffect(() => {
                                         className="trainexporticon"
                                         // onClick={() => handleAdd(event)}
                                         >
-                                        <i className="fa-solid fa-plus"></i>
+                                        <i className="fa-solid fa-plus" onClick={()=> handleTrainPopup(event.cabNode1)}></i>
                                         </button>
                                     </div>
                                     </td>
@@ -493,7 +473,7 @@ useEffect(() => {
                                         className="trainexporticon"
                                         // onClick={() => handleAdd(event)}
                                         >
-                                        <i className="fa-solid fa-plus"></i>
+                                        <i className="fa-solid fa-plus" onClick={()=> handleTrainPopup(event.cabNode6)}></i>
                                         </button>
                                     </div>
                                     </td>
@@ -558,7 +538,7 @@ useEffect(() => {
                                         className="trainexporticon"
                                         // onClick={() => handleAdd(event)}
                                         >
-                                        <i className="fa-solid fa-plus"></i>
+                                        <i className="fa-solid fa-plus" onClick={()=> handleTrainPopup(event.cabNode1)}></i>
                                         </button>
                                     </div>
                                     </td>
@@ -585,7 +565,7 @@ useEffect(() => {
                                         className="trainexporticon"
                                         // onClick={() => handleAdd(event)}
                                         >
-                                        <i className="fa-solid fa-plus"></i>
+                                        <i className="fa-solid fa-plus" onClick={()=> handleTrainPopup(event.cabNode6)}></i>
                                         </button>
                                     </div>
                                     </td>
@@ -651,7 +631,7 @@ useEffect(() => {
                                         className="trainexporticon"
                                         // onClick={() => handleAdd(event)}
                                         >
-                                        <i className="fa-solid fa-plus"></i>
+                                        <i className="fa-solid fa-plus" onClick={()=> handleTrainPopup(event.cabNode1)}></i>
                                         </button>
                                     </div>
                                     </td>
@@ -678,7 +658,7 @@ useEffect(() => {
                                         className="trainexporticon"
                                         // onClick={() => handleAdd(event)}
                                         >
-                                        <i className="fa-solid fa-plus"></i>
+                                        <i className="fa-solid fa-plus" onClick={()=> handleTrainPopup(event.cabNode6)}></i>
                                         </button>
                                     </div>
                                     </td>
@@ -689,6 +669,85 @@ useEffect(() => {
 
                     </tbody>
                 </table>}
+                    {showPopup && (
+                        <div className="firmwarepopupStyle">
+                        <div className="trainpopupBoxStyle">
+                            <article>
+                                <i className="fa fa-close noticlose" role="button" tabindex="0" onClick={() => setShowPopup(false)} style={{ marginBottom: '5px', float: 'right',transform:'translateY(-8px)',fontSize:'15px',paddingRight:'12px' }}></i>
+                            {/* <button
+                            onClick={() => setShowPopup(false)}
+                            className="clearfix createbtn"
+                            style={{ marginBottom: '5px', float: 'right' }}
+                            >
+                            Close
+                            </button> */}
+                            </article>
+                            <article >
+                            {/* <FirmwarePopupTable firmpopupData={firmpopupData} /> */}
+                            <article className="row" style={{marginTop:'20px',marginLeft:'20px'}}>
+                                <article className="col-12" style={{display:'flex'}}>
+                                    <article className="col-5">
+                                         <label for="name" className="selectlbl">Cab Number</label>
+                                    </article>
+                                    <article className="col-1">
+                                         <label for="name" className="selectlbl">:</label>
+                                    </article>
+                                    <article className="col-6">
+                                         <label for="name" className="selectlbl">{linkStatDt?.[0]?.sysName}</label>
+                                    </article>
+                                </article>
+                                <article className="col-12" style={{display:'flex'}}>
+                                    <article className="col-5">
+                                         <label for="name" className="selectlbl">LocalSnr  </label>
+                                    </article>
+                                    <article className="col-1">
+                                         <label for="name" className="selectlbl">:</label>
+                                    </article>
+                                    <article className="col-6">
+                                          <label htmlFor="name" className="selectlbl">
+                                        {linkStatDt?.[0]?.localsnr}
+                                        <i
+                                            className="fa-solid fa-wifi"
+                                            style={{
+                                            color: linkStatDt?.[0]?.localsnr >= 30 ? 'green' : 'red',
+                                            marginLeft: 10
+                                            }}
+                                        ></i>
+                                        </label>
+                                    </article>
+                                </article>
+                                <article className="col-12" style={{display:'flex'}}>
+                                    <article className="col-5">
+                                         <label for="name" className="selectlbl">Remote SNR</label>
+                                    </article>
+                                    <article className="col-1">
+                                         <label for="name" className="selectlbl">:</label>
+                                    </article>
+                                    <article className="col-6">
+                                      <label htmlFor="name" className="selectlbl">
+                                        {linkStatDt?.[0]?.remotesnr}
+                                        <i
+                                            className="fa-solid fa-wifi"
+                                            style={{
+                                            color: linkStatDt?.[0]?.remotesnr >= 30 ? 'green' : 'red',
+                                            marginLeft: 10
+                                            }}
+                                        ></i>
+                                        </label>
+                                    </article>
+                                </article>
+                            </article>
+                            </article>
+                            {/* <button
+                            onClick={() => setShowPopup(false)}
+                            className="clearfix createbtn"
+                            style={{ marginTop: '20px', float: 'right' }}
+                            >
+                            Close
+                            </button> */}
+                        </div>
+                        </div>
+                    )}
                             </article>
                             
             </article>

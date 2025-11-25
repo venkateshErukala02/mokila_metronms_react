@@ -255,7 +255,7 @@ const FirmwareMng = () => {
                                             <td>{formatDate(item.createdTime)}</td>
                                             <td>{item.deviceType}</td>
                                             <td><i className="fas fa-edit" onClick={() => handleEditLineDt(item)}></i></td>
-                                            <td onClick={()=>handleDeleteFirmMng(item)}><i className="fa fa-trash"></i></td>
+                                            <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" onClick={()=>handleDeleteFirmMng(item)}></i></td>
                                         </tr>
                                     ))}
 

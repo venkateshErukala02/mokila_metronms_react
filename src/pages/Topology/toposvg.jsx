@@ -576,7 +576,7 @@ useEffect(() => {
           });
 
           linesData.forEach(( lineObj ) => {
-            console.log(lineObj)
+            // console.log(lineObj)
             const lineId = Object.keys(lineObj)[0];     
             const lineStatus = lineObj[lineId];
             const el = svgRoot.querySelector(`[id='${lineId}']`);

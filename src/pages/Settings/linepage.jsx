@@ -81,6 +81,47 @@ const LineContainer=()=>{
     }
 
 
+        const handleDeleteLine = async (item) => {
+        const method = 'POST';
+        // const url= isEditMode  ? `rest/users/${user["user-id"]}` :'rest/users';
+        const confirmDel = window.confirm("Are you sure you want to delete this line?");
+    if (!confirmDel) return;
+        // const requestBody ={
+        // //    firmware: "16_314_Sample.bin"
+        //    firmware: `${item.version}_${item.fileName}`
+        // }
+
+        try {
+            const username = 'admin';
+            const password = 'admin';
+            const token = btoa(`${username}:${password}`)
+            const response = await fetch(`api/v2/regions/${item.id}`, {
+                method,
+                headers: {
+                    'Authorization': `Basic ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br, zstd'
+                },
+                // body: JSON.stringify(requestBody),
+            });
+
+            const text = await response.text();
+
+            if (response.ok) {
+                // alert("Are you sure you want to delete this firmware?")
+            } else {
+                setIsError('Error starting discovery');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            setIsError('An error occurred while contacting the server.');
+        } finally {
+            setIsLoading(false); // Turn off loading state
+        }
+
+    }
+
  
     return(
         <>
@@ -155,7 +196,7 @@ const LineContainer=()=>{
                                         <tr key={item.id}>
                                             <td>{item.name}</td>
                                             <td><i className="fas fa-edit" onClick={()=> handleEditLineDt(item)}></i></td>
-                                            <td><i className="fa fa-trash"></i></td>
+                                            <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" onClick={()=> handleDeleteLine(item)}></i></td>
                                         </tr>
                                     ))}
                                        

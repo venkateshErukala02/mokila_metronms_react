@@ -199,6 +199,13 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
             // setSuccess('Discovery started successfully');
             alert('Discovery started successfully')
             handleProfileContclose();
+            setDeviceType('');
+            setFileName('');
+            setSearchValue('');
+            setSearchData();
+            setSearchBtn(false);
+            setDeviceType('');
+            setSelectedItems('');
           
         } else {
             setError('Error starting discovery');

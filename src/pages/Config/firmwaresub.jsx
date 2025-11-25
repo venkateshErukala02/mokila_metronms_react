@@ -14,7 +14,7 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
     const [selectedFile, setSelectedFile] = useState(null);
     const [success, setSuccess] = useState('');
     const [selectedDate, setSelectedDate] = useState(null);
-    const [setInvenData, invenData] = useState('');
+    const [invenData,setInvenData] = useState('');
     const [role, setRole] = useState("fileupload");
     const [isImmediate, setIsImmediate] = useState(true);
     const [versionData, setVersionData] = useState('')
@@ -32,55 +32,9 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
 
 
     const handleProfileContclose = () => {
-        handleSubContainer(lineName)
+        handleSubContainer(true)
     }
 
-    const handleAddLine = async () => {
-        if (!lineName) {
-            alert("Please fill the field.");
-            return;
-        }
-        const requestBody = isEditMode ? {
-            id: line.id,
-            name: lineName,
-            type: 0
-
-        } : {
-            name: lineName,
-            type: 0
-        };
-
-        const method = isEditMode ? 'PUT' : "POST";
-        const url = isEditMode ? `api/v2/regions/${line.id}` : 'api/v2/regions'
-        try {
-            const username = 'admin';
-            const password = 'admin';
-            const token = btoa(`${username}:${password}`);
-            const response = await fetch(url, {
-                method,
-                headers: {
-                    'Authorization': `Basic ${token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(requestBody),
-            });
-            if (response.ok) {
-                // setSuccess('Discovery started successfully');
-                alert('Firmware upload started successfully');
-                handleProfileContclose();
-                if (refreshLineData) refreshLineData();
-                setLineName('')
-            } else {
-                setError('Error starting discovery');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            setError('An error occurred while contacting the server.');
-        } finally {
-            setLoading(false); // Turn off loading state
-        }
-
-    }
 
     useEffect(() => {
         if (isEditMode && line) {
@@ -122,8 +76,8 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
             if (response.ok) {
                 setSuccess('File upload has started.');
                 alert('File upload has started.')
-                handleProfileContclose();
                 if (refreshLineData) refreshLineData();
+                handleProfileContclose();
                 setSelectedFile(null);
             } else {
                 const errText = await response.text();
@@ -318,6 +272,12 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                     // setSuccess('Discovery started successfully');
                     alert('Firmware upload started successfully')
                     handleProfileContclose();
+                    setDeviceType('');
+                    setVersionTitle('');
+                    setSearchValue('');
+                    setSearchBtn(false);
+                    setSearchData([]);
+                    setSelectedItems('');
                 
                 } else {
                     setError('Error starting discovery');
@@ -368,7 +328,7 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                                         {versionData && versionData
                                         .filter((value) => value.deviceType === `${deviceType}`)
                                         .map((value,index) =>(
-                                            <option key={index} value={value.fileName}>{value.fileName}</option>
+                                            <option key={index} value={value.fileName}>{value.fileName}({value.version})</option>
                                         ))}
                                     </select>
                                 </article>

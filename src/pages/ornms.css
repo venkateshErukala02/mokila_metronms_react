@@ -2925,6 +2925,14 @@ svg *:focus {
   height: 168px;
 }
 
+.trainpopupBoxStyle {
+    background: #fff;
+    border-radius: 8px;
+    height: 168px;
+    padding: 5px 8px;
+    width: 298px;
+}
+
 .special-svg circle:hover {
     transform: scale(2);
     transform-box: fill-box;
