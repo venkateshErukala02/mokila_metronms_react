@@ -40,14 +40,14 @@ useEffect(() => {
 
     switch (textName.data.mode) {
         case "Trains":
-            // setTrainValueSel("2");
-            // setTrainLabelSel("Select");
+            setTrainValueSel("2");
+            setTrainLabelSel("Select");
             newUrl = `api/v2/treeview/alltrains/2?_s=&limit=45&offset=0`;
             break;
 
         case "mainline":
-            // setTrainValueSel("2");
-            // setTrainLabelSel("Select");
+            setTrainValueSel("2");
+            setTrainLabelSel("Select");
             newUrl = `api/v2/treeview/alltrains/2?_s=&limit=45&offset=0`;
             break;
 
@@ -177,7 +177,7 @@ useEffect(() => {
   
   
     return () => controller.abort();
-  }, [textName,trainData]);
+  }, [textName]);
 
     const injectTextToSvg = useCallback((svgString, trainId,event,digit) => {
         if (!svgString || !trainId ) return null
@@ -197,7 +197,7 @@ useEffect(() => {
 
             }
          }else{
-            if (paths.length > 0) {
+            if (paths.length > 0 && (trainLabelSel === 'Mainline' || trainLabelSel === 'Yard')) {
                 paths.forEach(path => {
                 const firstNodeId = event?.cabNode1Status === false ? false : true;
                 const secondNodeId = event?.cabNode6Status === false ? false : true;
@@ -219,7 +219,7 @@ useEffect(() => {
         }
         
         return svgDoc.documentElement.outerHTML;
-      },[trainLabelSel]);
+      },[trainLabelSel,textName,trainData]);
 
 const splitIntoThreeTables = (data) => {
     const t1 = [], t2 = [], t3 = [];
@@ -250,7 +250,7 @@ useEffect(() => {
     setTable2(t2);
     setTable3(t3);
 
-}, [svgContent, svgContentNorth,trainData,trainLabelSel]);
+}, [svgContent, svgContentNorth,trainData,trainLabelSel,textName]);
 
 
       const handleOffsetValueIncmt = () => {

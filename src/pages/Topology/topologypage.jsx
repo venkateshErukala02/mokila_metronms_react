@@ -24,7 +24,7 @@ import WaysidePopupTable from "./waysidepopuptable";
 import LineTagSvg from "../Wayside/linetagsvg";
 import StationTagsTable from "../Wayside/stationtagstable";
 import YardSvgViewer from "./yardsvg";
-import MailineView from "./mailinetrainview";
+import MainlineView from "./mainlinetrainview";
 
 
 
@@ -147,7 +147,7 @@ useEffect(() => {
     }
 
     const renderSectFacility=(textName)=>{
-        switch (textName.data.mode) {
+        switch (textName?.data?.mode) {
             // case 'facility':
             //   return  <> <TopoSvgViewer textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId}/>
             //   <StationNodeTableView  textName={textName}/>
@@ -181,7 +181,7 @@ useEffect(() => {
                 return  <TrainView textName={textName}/>
                     break;
             case 'mainline':
-                return  <MailineView textName={textName}/>
+                return  <MainlineView textName={textName}/>
                     break;
             case 'yard':
                 // yardfaclData={yardfaclData}/
@@ -197,8 +197,6 @@ useEffect(() => {
                 break;
         }
     }
-
-
      const renderTagView = (stationTagview, lineTagview) => {
         if (stationTagview) {
             return <>

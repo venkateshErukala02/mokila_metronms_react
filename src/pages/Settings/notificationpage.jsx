@@ -186,11 +186,39 @@ const NotificationContainer=()=>{
 
     }
 
-    
+       const handleDeleteNotifiConfig = async (item) => {
+        const method = 'DELETE';
+        const confirmDel = window.confirm("Are you sure you want to delete this notification config?");
+    if (!confirmDel) return;
+        try {
+            const username = 'admin';
+            const password = 'admin';
+            const token = btoa(`${username}:${password}`)
+            const response = await fetch(`api/v2/eventnotice/delete/${item.name}`, {
+                method,
+                headers: {
+                    'Authorization': `Basic ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br, zstd'
+                },
+            });
 
+            const text = await response.text();
 
+            if (response.ok) {
+            } else {
+                setIsError('Error starting discovery');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            setIsError('An error occurred while contacting the server.');
+        } finally {
+            setIsLoading(false);
+        }
 
- 
+    }
+
     return(
         <>
           <article className="row">
@@ -261,7 +289,9 @@ const NotificationContainer=()=>{
                                             <td>{item.uei}</td>
                                             <td>{item.status}</td>
                                             <td><i className="fas fa-edit" onClick={()=> handleEditSnmpDt(item)}></i></td>
-                                            <td><i className="fa fa-trash"></i></td>
+                                            <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" 
+                                            // onClick={()=> handleDeleteNotifiConfig(item)}
+                                            ></i></td>
 
                                         </tr>
                                     ))}

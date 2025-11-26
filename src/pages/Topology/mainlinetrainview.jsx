@@ -6,7 +6,7 @@ import southred from '../../assets/Train_southboundgreen copy.svg'
 import { Prev } from "react-bootstrap/esm/PageItem";
 // import TreeList from "./treelist";
 
-const MailineView=({textName})=>{
+const MainlineView=({textName})=>{
 
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
@@ -40,14 +40,14 @@ useEffect(() => {
 
     switch (textName.data.mode) {
         case "Trains":
-            // setTrainValueSel("2");
-            // setTrainLabelSel("Select");
+            setTrainValueSel("2");
+            setTrainLabelSel("Select");
             newUrl = `api/v2/treeview/alltrains/2?_s=&limit=45&offset=0`;
             break;
 
         case "mainline":
-            // setTrainValueSel("2");
-            // setTrainLabelSel("Select");
+            setTrainValueSel("2");
+            setTrainLabelSel("Select");
             newUrl = `api/v2/treeview/alltrains/2?_s=&limit=45&offset=0`;
             break;
 
@@ -198,7 +198,7 @@ useEffect(() => {
 
             }
          }else{
-            if (paths.length > 0) {
+            if (paths.length > 0 && (trainLabelSel === 'Mainline' || trainLabelSel === 'Yard')) {
                 paths.forEach(path => {
                 const firstNodeId = event?.cabNode1Status === false ? false : true;
                 const secondNodeId = event?.cabNode6Status === false ? false : true;
@@ -220,7 +220,7 @@ useEffect(() => {
         }
         
         return svgDoc.documentElement.outerHTML;
-      },[trainLabelSel]);
+      },[trainLabelSel,textName,trainData]);
 
 const splitIntoThreeTables = (data) => {
     const t1 = [], t2 = [], t3 = [];
@@ -251,7 +251,7 @@ useEffect(() => {
     setTable2(t2);
     setTable3(t3);
 
-}, [svgContent, svgContentNorth,trainData, results,trainLabelSel]);
+}, [svgContent, svgContentNorth,trainData,trainLabelSel,,textName]);
 
 
       const handleOffsetValueIncmt = () => {
@@ -757,4 +757,4 @@ useEffect(() => {
     )
 }
 
-export default MailineView;
+export default MainlineView;

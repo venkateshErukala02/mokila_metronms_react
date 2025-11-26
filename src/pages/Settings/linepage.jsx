@@ -82,7 +82,7 @@ const LineContainer=()=>{
 
 
         const handleDeleteLine = async (item) => {
-        const method = 'POST';
+        const method = 'DELETE';
         // const url= isEditMode  ? `rest/users/${user["user-id"]}` :'rest/users';
         const confirmDel = window.confirm("Are you sure you want to delete this line?");
     if (!confirmDel) return;
@@ -196,7 +196,9 @@ const LineContainer=()=>{
                                         <tr key={item.id}>
                                             <td>{item.name}</td>
                                             <td><i className="fas fa-edit" onClick={()=> handleEditLineDt(item)}></i></td>
-                                            <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" onClick={()=> handleDeleteLine(item)}></i></td>
+                                            <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" 
+                                            // onClick={()=> handleDeleteLine(item)}
+                                            ></i></td>
                                         </tr>
                                     ))}
                                        
