@@ -22,6 +22,12 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
     const [searchBtn, setSearchBtn] = useState(false);
     const [searchTrigger, setSearchTrigger] = useState(0);
     const dropdownRef = useRef(null);
+    const [deviceTypeRequired,setDeviceTypeRequired] = useState(true);
+    const [deviceType,setDeviceType] = useState('');
+    const [uciData,setUciData] = useState([]);
+    const [isOpen, setIsOpen] = useState(false);
+  const [searchConfigParameter, setSearchConfigParameter] = useState("");
+  const [selectedValue, setSelectedValue] = useState("");
 
     const handleProfileContclose = () => {
         handleSubContainer(lineName)
@@ -118,6 +124,60 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
         setSearchValue('');
       }
 
+           const getUcilistData = async (url) => {
+            setLoading(true);
+            setError({ status: false, msg: "" });
+            try {
+                const username = 'admin';
+                const password = 'admin';
+                const token = btoa(`${username}:${password}`)
+                const options = {
+                    method: "GET",
+                    headers: {
+                        'Authorization': `Basic ${token}`,
+                        "Content-Type": "application/json",
+                    },
+              
+    
+                };
+                const response = await fetch(url, options);
+    
+                const data = await response.json();
+    
+                if (response.ok) {
+                    setLoading(false);
+                    setUciData(data);
+                    setError({ status: false, msg: "" });
+                } else {
+                    throw new Error("data not found");
+                }
+            } catch (error) {
+                setLoading(false);
+                setError({ status: true, msg: error.message });
+            }
+        };
+
+         useEffect(() => {
+                const fetchUcilist = async()=>{
+                    const url= 'api/v2/profiles/ucilist'
+                   await getUcilistData(url);
+                 
+                }
+                fetchUcilist();
+            
+                }, []);
+
+             
+                    const filteredItems = uciData?.filter(item =>
+                    searchConfigParameter === "" ? true : item.dName.toLowerCase().includes(searchConfigParameter.toLowerCase())
+                    ) || [];
+
+
+                    const handleSelect = (value) => {
+                    setSelectedValue(value.dName);
+                    setIsOpen(false);
+                    };
+            
 
     return (
 
@@ -134,20 +194,70 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                 <article className="border-allsd" style={{ margin: '0 0 0 5px' }}>
                     <article >
                         <form action="" style={{ margin: '7px 10px 0 10px' }}>
-                            <article style={{ display: 'flex', paddingTop: '4px', paddingBottom: '20px' }}>
+                            <article style={{  paddingTop: '4px', paddingBottom: '5px' }}>
+                                <article>
+                                    <label className="settinglabelsub">Device Type</label>
+                            <select className="vlaninput" value={deviceType} onChange={(e)=> setDeviceType(e.target.value)}>
+                                <option value="" disabled>Select</option>
+                                <option value="sta">Train Radio</option>
+                                <option value="encoder">Encoder</option>
+                                <option value="transcoder">Transcoder</option>
+                                <option value="AP">Station Nodes</option>
+                                <option value="obc">OBC</option>
+                                <option value="CAM">Cameras</option>
+                            </select>
+                           {deviceTypeRequired && <p className="requiretitle">* Required Device Type</p> }
+                           </article>
+                           <article style={{display:'flex' ,position:'relative'}}>
                                 <label className="settinglabelsub">Select Config Parameter</label>
-                                <select className="form-controlfirm" value='' onChange='' style={{ width: '50px', marginTop: '4px' }} aria-invalid="false">
-                                    <option value="0" label="50">50</option>
-                                    <option value="1" label="25" defaultValue={25}>25</option>
-                                    <option value="2" label="50">50</option>
-                                    <option value="3" label="100">100</option>
-                                </select>
+                                <div>
+
+                                <button
+                                    className="form-controlfirm"
+                                    style={{ width: '50px', marginTop: '4px' }}
+                                    onClick={() => setIsOpen(!isOpen)}
+                                >
+                                    Select
+                                </button>
+
+                                {isOpen && (
+                                    <article className="configselecttart">
+                                    <ul className="ucilist">
+                                    <li>
+                                        <input
+                                        type="text"
+                                        placeholder="Search..."
+                                        value={searchConfigParameter}
+                                        onChange={(e) => setSearchConfigParameter(e.target.value)}
+                                        />
+                                    </li>
+
+                                    {filteredItems.map((item, index) => (
+                                        <li
+                                        key={index}
+                                        onClick={() => handleSelect(item)}
+                                        style={{ cursor: "pointer" }}
+                                        >
+                                        {item.dName}
+                                        </li>
+                            ))}
+
+                                    {filteredItems.length === 0 && <li>No results</li>}
+                                    </ul>
+                                    </article>
+                                )}
+                                </div>
+                                </article>
                             </article>
-                            <input type="text"
+                            <label className="settinglabelsub">{selectedValue || ''}</label>
+
+                            <input
+                                type="text"
                                 value={lineName}
-                                // required
                                 onChange={(e) => setLineName(e.target.value)}
-                                name="" placeholder="" id="" className="settinglabelsubinp" />
+                                className="settinglabelsubinp"
+                            />
+                            <article style={{position:'relative',zIndex:'0'}}>
                             <hr class=""></hr>
                             <p className="firmwarenote">Note:</p>
                             <article>
@@ -212,6 +322,7 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                                         })}
                                     </ul>
                                 </article>}
+                            </article>
                             </article>
                             <article className="row border-allsd" style={{ height: '16vh', overflow: 'hidden' }}>
                                 <table className="col-md-12 col-sm-12 col-lg-12 col-xl-12" style={{ tableLayout: 'fixed', width: '100%' }}>

@@ -186,7 +186,7 @@ const SectionContainer=()=>{
                                             <td>{item.parent}</td>
                                             <td ><i className="fas fa-edit" onClick={()=> handleEditSectionDt(item)}></i></td>
                                             <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" 
-                                            // onClick={()=> handleDeleteSection(item)}
+                                             onClick={()=> handleDeleteSection(item)}
                                             ></i></td>
                                         </tr>
                                     ))}

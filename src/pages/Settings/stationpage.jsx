@@ -72,41 +72,6 @@ const StationContainer=()=>{
         setMode('edit');
         setProfileStatusCont(true)
     }
-
-
-      const handleDeleteStation = async (item) => {
-        const method = 'DELETE';
-        const confirmDel = window.confirm("Are you sure you want to delete this section?");
-    if (!confirmDel) return;
-        try {
-            const username = 'admin';
-            const password = 'admin';
-            const token = btoa(`${username}:${password}`)
-            const response = await fetch(`api/v2/facilities/${item.id}`, {
-                method,
-                headers: {
-                    'Authorization': `Basic ${token}`,
-                    'Content-Type': 'application/json',
-                    'Accept': '*/*',
-                    'Accept-Encoding': 'gzip, deflate, br, zstd'
-                },
-            });
-
-            const text = await response.text();
-
-            if (response.ok) {
-            } else {
-                setIsError('Error starting discovery');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            setIsError('An error occurred while contacting the server.');
-        } finally {
-            setIsLoading(false); 
-        }
-
-    }
-
  
     return(
         <>
@@ -150,7 +115,6 @@ const StationContainer=()=>{
                                             <th>Line</th>
                                             <th>Section</th>
                                             <th>Edit</th>
-                                            <th>Delete </th>
                                         </tr>
 
                                     </thead>
@@ -184,11 +148,7 @@ const StationContainer=()=>{
                                             <td>{item.name}</td>
                                             <td>{item.regionName}</td>
                                             <td>{item.locationName}</td>
-                                            <td>{item.stcode}</td>
                                             <td ><i className="fas fa-edit" onClick={()=> handleEditStationDt(item)}></i></td>
-                                            <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" 
-                                            // onClick={()=> handleDeleteStation(item)}
-                                            ></i></td>
                                         </tr>
                                     ))}
                                        

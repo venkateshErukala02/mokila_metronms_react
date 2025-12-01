@@ -197,7 +197,7 @@ const LineContainer=()=>{
                                             <td>{item.name}</td>
                                             <td><i className="fas fa-edit" onClick={()=> handleEditLineDt(item)}></i></td>
                                             <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" 
-                                            // onClick={()=> handleDeleteLine(item)}
+                                             onClick={()=> handleDeleteLine(item)}
                                             ></i></td>
                                         </tr>
                                     ))}

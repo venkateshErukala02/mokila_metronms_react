@@ -91,7 +91,7 @@ const GroupContainer=()=>{
             const username = 'admin';
             const password = 'admin';
             const token = btoa(`${username}:${password}`)
-            const response = await fetch(`rest/groups/${item.group.name}`, {
+            const response = await fetch(`rest/groups/${item.name}`, {
                 method,
                 headers: {
                     'Authorization': `Basic ${token}`,
@@ -194,7 +194,7 @@ const GroupContainer=()=>{
                                            
                                             <td ><i className="fas fa-edit"></i></td>
                                             <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" 
-                                            // onClick={()=> handleDeleteGroup(item)}
+                                             onClick={()=> handleDeleteGroup(item)}
                                             ></i></td>
                                         </tr>
                                     ))}

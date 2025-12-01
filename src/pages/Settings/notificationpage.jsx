@@ -187,7 +187,7 @@ const NotificationContainer=()=>{
     }
 
        const handleDeleteNotifiConfig = async (item) => {
-        const method = 'DELETE';
+        const method = 'POST';
         const confirmDel = window.confirm("Are you sure you want to delete this notification config?");
     if (!confirmDel) return;
         try {
@@ -290,7 +290,7 @@ const NotificationContainer=()=>{
                                             <td>{item.status}</td>
                                             <td><i className="fas fa-edit" onClick={()=> handleEditSnmpDt(item)}></i></td>
                                             <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" 
-                                            // onClick={()=> handleDeleteNotifiConfig(item)}
+                                            onClick={()=> handleDeleteNotifiConfig(item)}
                                             ></i></td>
 
                                         </tr>

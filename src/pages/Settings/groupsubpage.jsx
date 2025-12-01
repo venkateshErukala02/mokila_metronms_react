@@ -4,39 +4,33 @@ import './../Settings/settings.css';
 
 
 const GroupSubCont=({handleSubContainer})=>{
-            const [selectedFile, setSelectedFile] = useState(null);
-    
+        const allUsers = ["Admin", "RTC"];
+
+  const [selectedUsers, setSelectedUsers] = useState([]);
+
+  const [selectedFromUsers, setSelectedFromUsers] = useState("");
+  const [selectedFromSelected, setSelectedFromSelected] = useState("");
 
     const handleProfileContclose=()=>{
         handleSubContainer()
     }
 
-    const handleFileChange = (event) => {
-        setSelectedFile(event.target.files[0]);
-    };
+        const addUser = () => {
+            if (
+            selectedFromUsers &&
+            !selectedUsers.includes(selectedFromUsers)
+            ) {
+            setSelectedUsers([...selectedUsers, selectedFromUsers]);
+            }
+        };
 
-    const handleUpload = () => {
-        if (selectedFile) {
-            console.log("Uploading:", selectedFile.name);
-            alert(`Uploading: ${selectedFile.name}`);
-            // Handle upload to server here
-        } else {
-            alert("Please select a file first.");
-        }
-    };
-
-    const downloadSampleCSV = () => {
-        const csvContent = "data:text/csv;charset=utf-8,"
-            + ["Name,Email,Age", "John Doe,john@example.com,30"].join("\n");
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "Sample.csv");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
-
+        const removeUser = () => {
+            if (selectedFromSelected) {
+            setSelectedUsers(
+                selectedUsers.filter((u) => u !== selectedFromSelected)
+            );
+            }
+        };
 
     return(
 
@@ -59,8 +53,43 @@ const GroupSubCont=({handleSubContainer})=>{
                                 <label className="settinglabelsub">Comments</label>
                                 <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" />
                                 </article>
-                                
 
+                               <article className="row" style={{ marginTop: "14px" }}>
+      
+                                <article className="col-4">
+                                    <h1 className="settinglabelsub">Users</h1>
+                                    <select
+                                    size="6"
+                                    className="groupselect"
+                                    style={{ width: "100%" }}
+                                    onChange={(e) => setSelectedFromUsers(e.target.value)}
+                                    >
+                                    {allUsers.map((u) => (
+                                        <option key={u} value={u}>{u}</option>
+                                    ))}
+                                    </select>
+                                </article>
+
+                                <article className="col-4 groupaddart">
+                                    <button onClick={addUser} className="createbtn">Add </button>
+                                    <br />
+                                    <button onClick={removeUser} className="createbtn"> Remove</button>
+                                </article>
+
+                                <article className="col-4">
+                                    <h1 className="settinglabelsub">Selected</h1>
+                                    <select
+                                    size="6"
+                                    className="groupselect"
+                                    style={{ width: "100%" }}
+                                    onChange={(e) => setSelectedFromSelected(e.target.value)}
+                                    >
+                                    {selectedUsers.map((u) => (
+                                        <option key={u} value={u}>{u}</option>
+                                    ))}
+                                    </select>
+                                </article>
+                                </article>
                                 <article className="uploadcont">
                                 <p className="notepara">Note:</p>
                                 <ul className="clearfix notelist">

@@ -29,6 +29,7 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
     const [deviceType,setDeviceType] = useState('')
     const [timestamp,setTimestamp] = useState('');
     const [deviceTypeRequired,setDeviceTypeRequired] = useState(true);
+    const [selectedIps, setSelectedIps] = useState([]);
 
 
     const handleProfileContclose = () => {
@@ -286,12 +287,30 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                 console.error('Error:', error);
                 setError('An error occurred while contacting the server.');
             } finally {
-                setLoading(false); // Turn off loading state
+                setLoading(false);
             }
 
         }
 
-            
+            const handleSelectAll = () => {
+                if (selectedIps.length === searchData.length) {
+                    setSelectedIps([]); 
+                } else {
+                    setSelectedIps(searchData.map(item => item.id)); 
+                }
+            };
+
+            const handleSelectItem = (id) => {
+                setSelectedIps(prev => {
+                    if (prev.includes(id)) {
+                        return prev.filter(item => item !== id);
+                    } else {
+                        return [...prev, id];
+                    }
+                });
+            };
+
+                        
 
 
     return (
@@ -422,12 +441,26 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                                 </ul>
                                 {searchBtn && searchData.length === 0 && <article ref={dropdownRef} style={{ maxHeight: '5vh', overflow: 'auto', position: 'absolute', backgroundColor: 'white', zIndex: '99999', width: '236px', left: "0" }} className="scheduletitle">No Data</article>}
                                 {searchData.length > 0 && <article ref={dropdownRef} style={{ maxHeight: '42vh', overflow: 'auto', position: 'absolute', backgroundColor: 'white', zIndex: '99999', width: '236px', left: "0" }}>
+                                     <div style={{ padding: "5px", borderBottom: "1px solid #ccc", display: "flex", alignItems: "center", gap: "8px",justifyContent:"end" }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedIps.length === searchData.length}
+                                        onChange={handleSelectAll}
+                                    />
+                                    <label className="scheduletitle">Add Selected</label>
+                                </div>
                                     <ul className="searchlist">
                                         {searchData && searchData.map((event) => {
-                                            const isAdded = addedItems.includes(event.id);
+                                                                        const isAdded = addedItems.includes(event.id);
+                                                                        const isChecked = selectedIps.includes(event.id); 
                                             return (
                                                 <li key={event.id}>
                                                     <article style={{ justifyContent: "space-between", display: 'flex', width: "100%" }}>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={isChecked}
+                                                        onChange={() => handleSelectItem(event.id)}
+                                                    />
                                                         <h5 className="scheduletitle">{event.primaryIP}</h5>
                                                         <button className="addbtn" onClick={() => handleAddToTable(event)}
                                                             disabled={isAdded}

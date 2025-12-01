@@ -3277,7 +3277,45 @@ svg *:focus {
   .obcsublist>li>a>i{margin-right: 5px;}
   .obcsublist>li.active>a>i {color: #006cfc;}
 
+  .ucilist{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
 
+  .ucilist li{
+    font-size: 12px;
+    font-family: "Lato-Regular";
+    padding: 0 10px;
+  }
+  .groupselect{
+    color: #212327;
+    display: block;
+    font-family: "Lato-Regular";
+    font-size: 13px;
+    font-weight: lighter;
+    letter-spacing: .2px;
+  }
+
+  select.groupselect option:checked {
+  background-color: transparent !important;
+  color: inherit;
+}
+
+.configselecttart{
+    overflow: auto;
+    height: 154px;
+    width: 264px;
+    position: absolute;
+    z-index: 9999999;
+    background-color: white;
+    border: 1px solid rgb(33 35 39 / 7%);
+}
+
+.groupaddart{
+    text-align: center;
+    padding: 40px 0;
+}
  /* width={700} height={240} */
 
 /*  */
