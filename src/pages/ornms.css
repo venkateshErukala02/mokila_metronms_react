@@ -3316,6 +3316,17 @@ svg *:focus {
     text-align: center;
     padding: 40px 0;
 }
+
+.configchangelabelsubinp {
+    background-color: initial;
+    border: 1px solid #dddfe2;
+    border-radius: 5px;
+    color: #1d2129;
+    display: inline-block;
+    font-family: system-ui;
+    font-size: 12px;
+    min-height: 37px;
+}
  /* width={700} height={240} */
 
 /*  */

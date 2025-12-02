@@ -10,7 +10,9 @@ const GroupContainer=()=>{
         const [groupLimitValueSel, setGroupLimitValueSel] = useState('50');
         const [isLoading, setIsLoading] = useState(false);
         const [isError, setIsError] = useState({ status: false, msg: "" }); 
-        
+        const [editGroup,setEditGroup] = useState(null); 
+        const [mode, setMode] = useState(null); 
+
         const getGroupData = async (url) => {
             setIsLoading(true);
             setIsError({ status: false, msg: "" });
@@ -73,11 +75,6 @@ const GroupContainer=()=>{
     
         }
 
-
-    const handleProfileContopen = () => {
-        setProfileStatusCont(true)
-    }
-
     const handleSubContainer=()=>{
         setProfileStatusCont(false)
     }
@@ -114,6 +111,18 @@ const GroupContainer=()=>{
             setIsLoading(false); 
         }
 
+    }
+
+     const handleProfileContopen = () => {
+        setProfileStatusCont(true);
+        setEditGroup(null);  
+        setMode('create');
+    }
+
+    const handleEditSectionDt=(item)=>{
+        setEditGroup(item);
+        setProfileStatusCont(true);
+        setMode('edit');
     }
  
     return(
@@ -192,7 +201,7 @@ const GroupContainer=()=>{
                                             <td>{item.name}</td>
                                             <td>{item.comments}</td>
                                            
-                                            <td ><i className="fas fa-edit"></i></td>
+                                            <td ><i className="fas fa-edit" onClick={()=> handleEditSectionDt(item)}></i></td>
                                             <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" 
                                              onClick={()=> handleDeleteGroup(item)}
                                             ></i></td>
@@ -206,7 +215,13 @@ const GroupContainer=()=>{
                     </article>
 
                     <article className={profileStatusCont ? 'col-4' : 'collapsed'} >
-                        <GroupSubCont handleSubContainer={handleSubContainer}/>
+                        <GroupSubCont handleSubContainer={handleSubContainer}
+                        mode={mode}  
+                        group={editGroup} 
+                         refreshGroupData={()=>
+                            getGroupData('rest/groups?limit=10&offset=0&sort=asc')
+                        }
+                        />
                     </article> 
                     </article>
         </>

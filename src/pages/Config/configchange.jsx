@@ -64,7 +64,7 @@ const ConfigChange = () => {
         setMode('create');
     }
 
-    const handleSubContainer = () => {
+    const handleSubContainer = (shouldRefresh = false) => {
         setProfileStatusCont(false)
     }
     const handleEditUserDt = (user) => {
@@ -170,7 +170,7 @@ const ConfigChange = () => {
                 </article>
 
                 <article className={profileStatusCont ? 'col-4' : 'collapsed'} >
-                    <ConfigChangeSub />
+                    <ConfigChangeSub handleSubContainer={handleSubContainer} />
                 </article>
             </article>
         </>

@@ -1,15 +1,19 @@
-import React,{useState} from "react";
+import {useState,useEffect} from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
 
 
-const GroupSubCont=({handleSubContainer})=>{
-        const allUsers = ["Admin", "RTC"];
+const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
+    const isEditMode = mode === 'edit';
+    const [selectedUsers, setSelectedUsers] = useState([]);
+    const [selectedFromUsers, setSelectedFromUsers] = useState("");
+    const [selectedFromSelected, setSelectedFromSelected] = useState("");
+    const [groupName,setGroupName] = useState('');
+    const [comment,setComment] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [isError, setIsError] = useState({ status: false, msg: "" });
+    const allUsers = ["admin", "rtc"];
 
-  const [selectedUsers, setSelectedUsers] = useState([]);
-
-  const [selectedFromUsers, setSelectedFromUsers] = useState("");
-  const [selectedFromSelected, setSelectedFromSelected] = useState("");
 
     const handleProfileContclose=()=>{
         handleSubContainer()
@@ -32,6 +36,74 @@ const GroupSubCont=({handleSubContainer})=>{
             }
         };
 
+
+         const handleAddGroup = async () => {
+        // if (!group) {
+        //     alert("Please select a file first.");
+        //     return;
+        // }
+        const requestBody = isEditMode ? {
+            // id: section.id,
+            // name: sectionName,
+            // parent: lineNameSele,
+            // type : 1
+        }:{
+            comments: comment,
+            name : groupName,
+            user: selectedUsers
+        };
+
+        const method = isEditMode ? 'PUT' :'POST';
+        const url= isEditMode ? `api/v2/locations` :'rest/groups';
+
+        try {
+            const username = 'admin';
+            const password = 'admin';
+            const token = btoa(`${username}:${password}`)
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    'Authorization': `Basic ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(requestBody),
+            });
+            if (response.ok) {
+                // setSuccess('Discovery started successfully');
+                // alert('Discovery started successfully')
+                handleProfileContclose();
+                if(refreshGroupData) refreshGroupData();
+                setGroupName('');
+                setComment('');
+                setSelectedUsers([]);
+            } else {
+                setIsError('Error starting discovery');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            setIsError('An error occurred while contacting the server.');
+        } finally {
+            setIsLoading(false); 
+        }
+
+    }
+
+
+     
+    useEffect(()=>{
+        if(isEditMode && group){
+             const grpUsers = group.users || group.user;
+            setGroupName(group.name || '');
+            setComment(group.comments || '');
+            setSelectedUsers(Array.isArray(grpUsers) ? grpUsers : []);
+
+        }else{
+            setGroupName('');
+            setComment('');
+            setSelectedUsers([])
+        }
+    },[group,mode])
+
     return(
 
         <>
@@ -48,10 +120,10 @@ const GroupSubCont=({handleSubContainer})=>{
                             <article >
                                 <form action="" style={{margin: '7px 10px 0 10px'}}>
                                 <label className="settinglabelsub">Group Name</label>
-                                <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" />
+                                <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" value={groupName}  onChange={(e)=> setGroupName(e.target.value)}/>
                                 <article>
                                 <label className="settinglabelsub">Comments</label>
-                                <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" />
+                                <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" value={comment} onChange={(e)=> setComment(e.target.value)}/>
                                 </article>
 
                                <article className="row" style={{ marginTop: "14px" }}>
@@ -71,9 +143,9 @@ const GroupSubCont=({handleSubContainer})=>{
                                 </article>
 
                                 <article className="col-4 groupaddart">
-                                    <button onClick={addUser} className="createbtn">Add </button>
+                                    <button type="button" onClick={addUser} className="createbtn">Add </button>
                                     <br />
-                                    <button onClick={removeUser} className="createbtn"> Remove</button>
+                                    <button type="button" onClick={removeUser} className="createbtn"> Remove</button>
                                 </article>
 
                                 <article className="col-4">
@@ -82,6 +154,7 @@ const GroupSubCont=({handleSubContainer})=>{
                                     size="6"
                                     className="groupselect"
                                     style={{ width: "100%" }}
+                                    value={selectedFromSelected}
                                     onChange={(e) => setSelectedFromSelected(e.target.value)}
                                     >
                                     {selectedUsers.map((u) => (
@@ -100,8 +173,8 @@ const GroupSubCont=({handleSubContainer})=>{
                                 </ul>
                                 <hr className="hrnote" />
                                 <center className="d-f">
-                                        <button className="cancelbtn">Cancle</button>
-                                        <button className="creatsetingbtn">Create</button>
+                                        <button className="cancelbtn" onClick={handleProfileContclose}>Cancle</button>
+                                        <button type="button" className="creatsetingbtn" onClick={handleAddGroup}>{isEditMode ? 'Update':'Create'}</button>
                                 </center>
                                
                                 </article>

@@ -442,12 +442,12 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                                 {searchBtn && searchData.length === 0 && <article ref={dropdownRef} style={{ maxHeight: '5vh', overflow: 'auto', position: 'absolute', backgroundColor: 'white', zIndex: '99999', width: '236px', left: "0" }} className="scheduletitle">No Data</article>}
                                 {searchData.length > 0 && <article ref={dropdownRef} style={{ maxHeight: '42vh', overflow: 'auto', position: 'absolute', backgroundColor: 'white', zIndex: '99999', width: '236px', left: "0" }}>
                                      <div style={{ padding: "5px", borderBottom: "1px solid #ccc", display: "flex", alignItems: "center", gap: "8px",justifyContent:"end" }}>
-                                    <input
+                                    {/* <input
                                         type="checkbox"
                                         checked={selectedIps.length === searchData.length}
                                         onChange={handleSelectAll}
                                     />
-                                    <label className="scheduletitle">Add Selected</label>
+                                    <label className="scheduletitle">Add Selected</label> */}
                                 </div>
                                     <ul className="searchlist">
                                         {searchData && searchData.map((event) => {
@@ -456,11 +456,11 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                                             return (
                                                 <li key={event.id}>
                                                     <article style={{ justifyContent: "space-between", display: 'flex', width: "100%" }}>
-                                                    <input
+                                                    {/* <input
                                                         type="checkbox"
                                                         checked={isChecked}
                                                         onChange={() => handleSelectItem(event.id)}
-                                                    />
+                                                    /> */}
                                                         <h5 className="scheduletitle">{event.primaryIP}</h5>
                                                         <button className="addbtn" onClick={() => handleAddToTable(event)}
                                                             disabled={isAdded}

@@ -9,6 +9,8 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
     const isEditMode = mode === 'edit';
 
     const [lineName, setLineName] = useState('');
+    const [configParamInput,setConfigParamInput] = useState('');
+    const [selectedLabelItems,setSelectedLabelItems] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
@@ -30,7 +32,7 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
   const [selectedValue, setSelectedValue] = useState("");
 
     const handleProfileContclose = () => {
-        handleSubContainer(lineName)
+        handleSubContainer(true)
     }
 
 
@@ -167,16 +169,37 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
             
                 }, []);
 
-             
-                    const filteredItems = uciData?.filter(item =>
-                    searchConfigParameter === "" ? true : item.dName.toLowerCase().includes(searchConfigParameter.toLowerCase())
-                    ) || [];
+                   
+            const filteredItems = uciData?.filter(item => {
+                if (deviceType && item.type !== deviceType) {
+                    return false;
+                }
+
+                if (searchConfigParameter === "") return true;
+
+                return item.dName.toLowerCase().includes(searchConfigParameter.toLowerCase());
+            }) || [];
 
 
-                    const handleSelect = (value) => {
-                    setSelectedValue(value.dName);
-                    setIsOpen(false);
-                    };
+            const handleSelect = (value) => {
+                setSelectedValue(value.dName);
+                setIsOpen(false);
+            };
+
+            const handleAdd = () => {
+                if (!configParamInput) return; 
+
+                const newItem = {
+                id: Date.now(), 
+                label: selectedValue,
+                value: configParamInput || '',
+                };
+
+                setSelectedLabelItems([...selectedLabelItems, newItem]);
+
+                setSelectedValue('')
+                setConfigParamInput('');
+            };
             
 
     return (
@@ -216,6 +239,7 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                                     className="form-controlfirm"
                                     style={{ width: '50px', marginTop: '4px' }}
                                     onClick={() => setIsOpen(!isOpen)}
+                                    disabled={!deviceType}
                                 >
                                     Select
                                 </button>
@@ -253,10 +277,41 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
 
                             <input
                                 type="text"
-                                value={lineName}
-                                onChange={(e) => setLineName(e.target.value)}
-                                className="settinglabelsubinp"
-                            />
+                                value={configParamInput}
+                                onChange={(e) => setConfigParamInput(e.target.value)}
+                                className="configchangelabelsubinp"
+                            /> 
+                            <button type="button" className="createbtn" style={{marginLeft:'28px'}}  onClick={handleAdd}>Add</button>
+                             <article className="row border-allsd" style={{ height: '12vh', overflow: 'hidden',margin:"18px 0" }}>
+                                <table className="col-md-12 col-sm-12 col-lg-12 col-xl-12" style={{ tableLayout: 'fixed', width: '100%' }}>
+                                    <thead className="configthtb">
+                                        <tr style={{ textAlign: 'center' }}>
+                                            <th>Name</th>
+                                            <th>Value</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+
+                                <div style={{ height: 'calc(12vh - 40px)', overflowY: 'auto' }}>
+                                    <table className="col-md-12 col-sm-12 col-lg-12 col-xl-12" style={{ tableLayout: 'fixed', width: '100%' }}>
+                                        <tbody className="configbdtb" style={{ textAlign: 'center' }}>
+                                            {Array.isArray(selectedLabelItems) && selectedLabelItems.length > 0 ? (
+                                                selectedLabelItems.map((event) => (
+                                                    <tr key={event.id}>
+                                                        <td style={{ width: '150px' }}>{event.label}</td>
+                                                        <td style={{ width: '150px' }}>{event.value}</td>
+                                                    </tr>
+                                                ))
+                                            ) : (
+                                                // <tr>
+                                                //     <td colSpan="4">No items found</td>
+                                                // </tr>
+                                                ''
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </article>
                             <article style={{position:'relative',zIndex:'0'}}>
                             <hr class=""></hr>
                             <p className="firmwarenote">Note:</p>
@@ -324,7 +379,7 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                                 </article>}
                             </article>
                             </article>
-                            <article className="row border-allsd" style={{ height: '16vh', overflow: 'hidden' }}>
+                            <article className="row border-allsd" style={{ height: '16vh', overflow: 'hidden',position:'relative',zIndex:'-1' }}>
                                 <table className="col-md-12 col-sm-12 col-lg-12 col-xl-12" style={{ tableLayout: 'fixed', width: '100%' }}>
                                     <thead className="configthtb">
                                         <tr style={{ textAlign: 'center' }}>

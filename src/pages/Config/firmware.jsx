@@ -127,6 +127,10 @@ const handleChange = (value) => {
 
     const handleDeleteFirmware = async (item) => {
     const confirmDel = window.confirm("Are you sure you want to delete this firmware?");
+    if (item.status === 'Running') {
+        alert("Running task cannot be cancelled.");
+        return;
+    }
     if (!confirmDel) return;
 
     setIsLoading(true);
@@ -136,7 +140,7 @@ const handleChange = (value) => {
         const password = 'admin';
         const token = btoa(`${username}:${password}`);
         let url='';
-        if(item.status === 'Running'){
+        if(item.status === 'Pending'){
             url = `api/v2/task/canceltask/${item.taskId}`
         }else{
             url = `api/v2/task/deletetask/${item.taskId}`
@@ -309,7 +313,7 @@ const handleBulkDelete = async () => {
                                         </ul>)}
                                         </th>
                                         {/* <th>Apply</th> */}
-                                        <th>Cancel</th>
+                                        <th>Cancel/Delete</th>
                                     </tr>
                                 </thead>
 
