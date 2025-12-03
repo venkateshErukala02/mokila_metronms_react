@@ -43,18 +43,17 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
         //     return;
         // }
         const requestBody = isEditMode ? {
-            // id: section.id,
-            // name: sectionName,
-            // parent: lineNameSele,
-            // type : 1
+           comments: comment,
+            name : groupName,
+            user: selectedUsers
         }:{
             comments: comment,
             name : groupName,
             user: selectedUsers
         };
 
-        const method = isEditMode ? 'PUT' :'POST';
-        const url= isEditMode ? `api/v2/locations` :'rest/groups';
+        const method = isEditMode ? 'POST' :'POST';
+        const url= isEditMode ? `rest/groups` :'rest/groups';
 
         try {
             const username = 'admin';
@@ -92,10 +91,10 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
      
     useEffect(()=>{
         if(isEditMode && group){
-             const grpUsers = group.users || group.user;
+            const grpUsers = typeof group.user === "string" ? [group.user] : group.user;
             setGroupName(group.name || '');
             setComment(group.comments || '');
-            setSelectedUsers(Array.isArray(grpUsers) ? grpUsers : []);
+            setSelectedUsers(grpUsers || []); 
 
         }else{
             setGroupName('');

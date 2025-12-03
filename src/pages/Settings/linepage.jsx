@@ -110,6 +110,8 @@ const LineContainer=()=>{
 
             if (response.ok) {
                 // alert("Are you sure you want to delete this firmware?")
+                 let url ='api/v2/regions?_s=&limit=10&offset=0&order=asc&orderBy=name'
+            getLineData(url);
             } else {
                 setIsError('Error starting discovery');
             }

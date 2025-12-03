@@ -207,6 +207,8 @@ const NotificationContainer=()=>{
             const text = await response.text();
 
             if (response.ok) {
+               const url='api/v2/eventnotice/list?limit=10&offset=0&sort=asc'
+            getNotificatioData(url);
             } else {
                 setIsError('Error starting discovery');
             }

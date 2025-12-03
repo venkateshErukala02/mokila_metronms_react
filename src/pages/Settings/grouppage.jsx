@@ -101,6 +101,8 @@ const GroupContainer=()=>{
             const text = await response.text();
 
             if (response.ok) {
+                const url='rest/groups?limit=10&offset=0&sort=asc'
+                getGroupData(url);
             } else {
                 setIsError('Error starting discovery');
             }

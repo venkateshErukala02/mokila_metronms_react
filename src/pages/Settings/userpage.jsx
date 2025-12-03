@@ -97,6 +97,8 @@ const UserContainer=()=>{
             const text = await response.text();
 
             if (response.ok) {
+                const url='rest/users/list?limit=10&offset=0&sort=asc'
+                getUserData(url);
             } else {
                 setIsError('Error starting discovery');
             }

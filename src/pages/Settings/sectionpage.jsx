@@ -96,6 +96,8 @@ const SectionContainer=()=>{
             const text = await response.text();
 
             if (response.ok) {
+                const url='api/v2/locations?_s=&limit=10&offset=0&order=asc&orderBy=name'
+                getSectionData(url);
             } else {
                 setIsError('Error starting discovery');
             }

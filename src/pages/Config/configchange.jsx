@@ -5,14 +5,29 @@ import ConfigChangeSub from "./configchangesub";
 
 const ConfigChange = () => {
     const [profileStatusCont, setProfileStatusCont] = useState(false);
-    const [userData, setUserData] = useState([]);
+    const [configChangeData, setConfigChangeData] = useState([]);
     const [userLimitValueSel, setUserLimitValueSel] = useState('50');
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [mode, setMode] = useState(null);
     const [editUser, setEditUser] = useState(null);
+    const [selected, setSelected] = useState(4);
+    const [showList, setShowList] = useState(false);
 
-    const getUserData = async (url) => {
+
+    const statuses = [
+        { label: "All", value: 4 },
+        { label: "Pending", value: 0 },
+        { label: "Running", value: 1 },
+        { label: "Successful", value: 2 },
+        { label: "Failed", value: 3 },
+    ];
+
+    const handleChange = (value) => {
+        setSelected(value); // only one selected at a time
+    };
+        
+    const getConfigChangeData = async (url) => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
@@ -33,7 +48,7 @@ const ConfigChange = () => {
 
             if (response.ok) {
                 setIsLoading(false);
-                setUserData([]);
+                setConfigChangeData(data);
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("data not found");
@@ -45,12 +60,18 @@ const ConfigChange = () => {
     };
 
 
-    useEffect(() => {
-
-        const url = 'rest/users/list?limit=10&offset=0&sort=asc'
-        getUserData(url);
-
-    }, [userLimitValueSel]);
+     useEffect(() => {
+        const url = `api/v2/task/list?show=configpush&status=${selected}&offset=0&count=25`;
+    
+        getConfigChangeData(url);
+    
+        const intervalId = setInterval(() => {
+            getConfigChangeData(url);
+        }, 30000); 
+    
+        return () => clearInterval(intervalId);
+    
+    }, [selected]);
 
     const handleUserLimitValue = (event) => {
         setUserLimitValueSel(event.target.value);
@@ -122,7 +143,24 @@ const ConfigChange = () => {
                                         <th>Task ID</th>
                                         <th>Task Name</th>
                                         <th>Scheduled Time</th>
-                                        <th>Status</th>
+                                        <th style={{position:'relative'}}>Status
+                                            <button className="glyphicon glyphicon-tasks" style={{backgroundColor:"#f2f2f2",paddingTop:'4px',border:'none',fontSize:'12px'}}  onClick={() => {setShowList(!showList);setSelected(4)}}></button>
+                                        {showList && (  <ul className={profileStatusCont ? 'configchngstatuslist_sub_cont' : 'configchngstatuslist'}>
+                                        {statuses.map(({ label, value }) => (
+                                            <li key={value}>
+                                            <label>
+                                                <input
+                                                type="checkbox"
+                                                className="incl"
+                                                checked={selected === value}
+                                                onChange={() => handleChange(value)}
+                                                />
+                                                {label}
+                                            </label>
+                                            </li>
+                                        ))}
+                                        </ul>)}
+                                        </th>
                                         <th>Cancel</th>
                                     </tr>
 
@@ -144,21 +182,27 @@ const ConfigChange = () => {
                                         </tr>
                                     )}
 
-                                    {!isLoading && !isError.status && (!userData || userData.length === 0) && (
+                                    {!isLoading && !isError.status && (!configChangeData || configChangeData.length === 0) && (
                                         <tr>
                                             <td colSpan="12" style={{ textAlign: "center" }}>
                                                 No Data Available
                                             </td>
                                         </tr>
                                     )}
-                                    {userData && userData.map((item) => (
+                                    {configChangeData && configChangeData.map((item) => (
                                         <tr key={item.id}>
-                                            <td>{item["user-id"]}</td>
-                                            <td>{item["full-name"]}</td>
-                                            <td>{item.email}</td>
-                                            <td>{item.role}</td>
-                                            <td>{item["region-name"]}</td>
-                                            <td ><i className="fas fa-edit" onClick={() => handleEditUserDt(item)}></i></td>
+                                           <td> <input
+                                                type="checkbox"
+                                                className="incl"
+                                                // checked={selectedTasks.includes(item.taskId)}
+                                                // onChange={() => toggleTaskSelection(item.taskId)}
+                                                // onClick={(e) => e.stopPropagation()} 
+                                            /></td>
+                                            <td>{item.taskId}</td>
+                                            <td>{item.task}</td>
+                                            <td>{item.dateNTime}</td>
+                                            <td>{item.status}</td>
+                                            {/* <td ><i className="fas fa-edit" onClick={() => handleEditUserDt(item)}></i></td> */}
                                             <td><i className="fa fa-trash"></i></td>
                                         </tr>
                                     ))}

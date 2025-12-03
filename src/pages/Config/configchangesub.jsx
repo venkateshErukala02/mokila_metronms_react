@@ -28,8 +28,9 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
     const [deviceType,setDeviceType] = useState('');
     const [uciData,setUciData] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
-  const [searchConfigParameter, setSearchConfigParameter] = useState("");
-  const [selectedValue, setSelectedValue] = useState("");
+    const [searchConfigParameter, setSearchConfigParameter] = useState("");
+    const [selectedValue, setSelectedValue] = useState("");
+    const [timestamp, setTimestamp] = useState(Date.now());
 
     const handleProfileContclose = () => {
         handleSubContainer(true)
@@ -190,8 +191,8 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                 if (!configParamInput) return; 
 
                 const newItem = {
-                id: Date.now(), 
-                label: selectedValue,
+                // id: Date.now(), 
+                key: selectedValue,
                 value: configParamInput || '',
                 };
 
@@ -201,6 +202,77 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                 setConfigParamInput('');
             };
             
+
+              const handleApplyConfigChange = async () => {
+                const numbNodes = addedItems.map(item => Number(item));
+//                 {
+//     "deviceType": "obc",
+//     "nodes": [
+//         123,
+//         568
+//     ],
+//     "params": [
+//         {
+//             "key": "1",
+//             "value": "sdf"
+//         },
+//         {
+//             "key": "2",
+//             "value": "sdf"
+//         },
+//         {
+//             "key": "3",
+//             "value": "sdf"
+//         }
+//     ]
+// }
+                const requestBody = {
+                    deviceType : deviceType,
+                    nodes :numbNodes,
+                    params : selectedLabelItems
+            }
+            const schedule = isImmediate === true ? 'im' :'sch';
+            let url= `api/v2/bulk/pushconfig/${schedule}/${timestamp}`;
+            try {
+                const username = 'admin';
+                const password = 'admin';
+                const token = btoa(`${username}:${password}`)
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        // 'Authorization': `Basic ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(requestBody),
+                });
+                if (response.ok) {
+                    // setSuccess('Discovery started successfully');
+                    alert('Firmware upload started successfully')
+                    handleProfileContclose();
+                    setDeviceType('');
+                    // setVersionTitle('');
+                    setSearchValue('');
+                    setSearchBtn(false);
+                    setSearchData([]);
+                    setSelectedItems('');
+                
+                } else {
+                    setError('Error starting discovery');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                setError('An error occurred while contacting the server.');
+            } finally {
+                setLoading(false);
+            }
+
+        }
+
+         const handleDateChange = (date) => {
+            setSelectedDate(date);
+            const timestamp = date.getTime();  
+            setTimestamp(timestamp);        
+        };
 
     return (
 
@@ -298,7 +370,7 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                                             {Array.isArray(selectedLabelItems) && selectedLabelItems.length > 0 ? (
                                                 selectedLabelItems.map((event) => (
                                                     <tr key={event.id}>
-                                                        <td style={{ width: '150px' }}>{event.label}</td>
+                                                        <td style={{ width: '150px' }}>{event.key}</td>
                                                         <td style={{ width: '150px' }}>{event.value}</td>
                                                     </tr>
                                                 ))
@@ -331,7 +403,7 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                                             selected={selectedDate}
                                             showTimeSelect
                                             dateFormat="yyyy-MM-dd HH:mm"
-                                            onChange={(date) => setSelectedDate(date)}
+                                             onChange={handleDateChange}
                                             className="myDatepickercl" />
                                     </article>
                                 </article>
@@ -413,8 +485,8 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                             </article>
 
                             <center style={{ marginTop: '16px', marginBottom: '16px' }}>
-                                <button className="cancelbtn">Cancel</button>
-                                <button className="creatsetingbtn">Apply</button>
+                                <button type="button" className="cancelbtn">Cancel</button>
+                                <button type="button" className="creatsetingbtn" onClick={handleApplyConfigChange} disabled={selectedItems.length === 0}>Apply</button>
                             </center>
                         </form>
                     </article>

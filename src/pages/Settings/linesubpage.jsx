@@ -47,7 +47,7 @@ const LineSubCont = ({ handleSubContainer,refreshLineData,mode,line }) => {
             });
             if (response.ok) {
                 // setSuccess('Discovery started successfully');
-                alert('Discovery started successfully');
+                alert('Created line successfully');
                 handleProfileContclose();
                 if (refreshLineData) refreshLineData();
                 setLineName('')

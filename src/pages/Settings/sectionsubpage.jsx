@@ -96,7 +96,7 @@ const SectionSubCont=({handleSubContainer,refreshSectionData,mode,section})=>{
             });
             if (response.ok) {
                 // setSuccess('Discovery started successfully');
-                alert('Discovery started successfully')
+                alert('Section Created successfully')
                 handleProfileContclose();
                 if(refreshSectionData) refreshSectionData();
                 setSectionName('')
