@@ -295,7 +295,7 @@ const handleBulkDelete = async () => {
                                         <th>Task ID</th>
                                         <th>Task Name</th>
                                         <th>Scheduled Time</th>
-                                        <th>Status <button className="glyphicon glyphicon-tasks" style={{backgroundColor:"#f2f2f2",paddingTop:'4px',position:'relative',border:'none',fontSize:'12px'}}  onClick={() => {setShowList(!showList);setSelected(4)}}></button>
+                                        <th>Status <button className="glyphicon glyphicon-tasks configchangeicon" onClick={() => {setShowList(!showList);setSelected(4)}}></button>
                                         {showList && (  <ul className={profileStatusCont ? 'statuslist_sub_cont' : 'statuslist'}>
                                         {statuses.map(({ label, value }) => (
                                             <li key={value}>

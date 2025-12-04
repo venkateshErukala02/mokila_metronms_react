@@ -64,11 +64,9 @@ article.row {
 
 
 thead.settingthtb>tr{border-bottom: 2px solid rgb(33 35 39 / 7%);text-align: left;}
-thead.settingthtb>tr>th{font-size: 15px;font-family: "Lato-Regular";font-weight: 100;padding: 13px;color: #212327;letter-spacing: 0.6px;width: 150px; /* Set a fixed width for each column */
-    white-space: nowrap; }
+thead.settingthtb>tr>th{font-size: 15px;font-family: "Lato-Regular";font-weight: 100;padding: 13px;color: #212327;letter-spacing: 0.6px;width: 100%;white-space: nowrap;position: relative; }
 
-tbody.settingbdtb>tr>td{font-size: 12px;font-family: "Lato-Regular";padding: 6px 10px;color: #50565e;letter-spacing: 0.2px;text-align: left;width: 150px; /* Set a fixed width for each column */
-    white-space: nowrap; }
+tbody.settingbdtb>tr>td{font-size: 12px;font-family: "Lato-Regular";padding: 6px 10px;color: #50565e;letter-spacing: 0.2px;text-align: left;width: 100%;white-space: nowrap;}
 tbody.settingbdtb>tr:nth-child(odd){        background-color: rgb(229 241 255 / 50%);
 }
 .settingbdtb{border-bottom: 1px solid rgb(33 35 39 / 7%);}
@@ -80,7 +78,10 @@ tbody.settingbdtb>tr>td>i{padding: 0 12px;}
 
 .settingbdtb>tr:last-child{border-bottom: none;}
 
-
+table {
+    table-layout: fixed; /* Forces the table to use fixed layout */
+    width: 100%; /* Ensures the table takes full width */
+}
 
 
 /* ---------------------------------------------------------------------- */

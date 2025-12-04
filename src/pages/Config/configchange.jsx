@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
 import ConfigChangeSub from "./configchangesub";
@@ -13,7 +13,8 @@ const ConfigChange = () => {
     const [editUser, setEditUser] = useState(null);
     const [selected, setSelected] = useState(4);
     const [showList, setShowList] = useState(false);
-
+    const previousDataRef = useRef(null);
+    const [selectedTasks, setSelectedTasks] = useState([]);
 
     const statuses = [
         { label: "All", value: 4 },
@@ -27,8 +28,11 @@ const ConfigChange = () => {
         setSelected(value); // only one selected at a time
     };
         
-    const getConfigChangeData = async (url) => {
-        setIsLoading(true);
+    const getConfigChangeData = async (url,isInterval = false) => {
+        if(previousDataRef.current === ''){
+            console.log('mmmpppp');
+            setIsLoading(true);
+        }
         setIsError({ status: false, msg: "" });
         try {
             const username = 'admin';
@@ -48,7 +52,10 @@ const ConfigChange = () => {
 
             if (response.ok) {
                 setIsLoading(false);
-                setConfigChangeData(data);
+                 if (JSON.stringify(data) !== JSON.stringify(previousDataRef.current)) {
+                    setConfigChangeData(data);
+                    previousDataRef.current = data; // Update the ref with new data
+                }
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("data not found");
@@ -56,18 +63,29 @@ const ConfigChange = () => {
         } catch (error) {
             setIsLoading(false);
             setIsError({ status: true, msg: error.message });
+        }finally {
+        if (!isInterval) {
+            setIsLoading(false);
+            }
         }
     };
 
 
      useEffect(() => {
+
+        const fetchIntervalData = () => {
         const url = `api/v2/task/list?show=configpush&status=${selected}&offset=0&count=25`;
     
-        getConfigChangeData(url);
+        getConfigChangeData(url,true);
+        }
+
+         fetchIntervalData();
+
+  const intervalId = setInterval(fetchIntervalData, 10000);
     
-        const intervalId = setInterval(() => {
-            getConfigChangeData(url);
-        }, 30000); 
+        // const intervalId = setInterval(() => {
+        //     getConfigChangeData(url);
+        // }, 10000); 
     
         return () => clearInterval(intervalId);
     
@@ -95,6 +113,125 @@ const ConfigChange = () => {
     }
 
 
+     const handleDeleteConfigChange = async (item) => {
+    const confirmDel = window.confirm("Are you sure you want to delete this config?");
+    if (item.status === 'Running') {
+        alert("Running task cannot be cancelled.");
+        return;
+    }
+    if (!confirmDel) return;
+
+    setIsLoading(true);
+
+    try {
+        const username = 'admin';
+        const password = 'admin';
+        const token = btoa(`${username}:${password}`);
+        let url='';
+        if(item.status === 'Pending'){
+            url = `api/v2/task/canceltask/${item.taskId}`
+        }else{
+            url = `api/v2/task/deletetask/${item.taskId}`
+        }
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Basic ${token}`,
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            }
+        });
+
+        if (response.ok) {
+            await getConfigChangeData(
+                `api/v2/task/list?show=configpush&status=${selected}&offset=0&count=25`
+            );
+        } else {
+            setIsError({
+                status: true,
+                msg: 'Failed to delete task'
+            });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        setIsError({
+            status: true,
+            msg: error.message
+        });
+    } finally {
+        setIsLoading(false);
+    }
+    };
+
+
+
+
+    const toggleTaskSelection = (taskId) => {
+    setSelectedTasks(prev =>
+        prev.includes(taskId)
+            ? prev.filter(id => id !== taskId)
+            : [...prev, taskId]
+    );
+};
+
+const toggleSelectAll = () => {
+    if (selectedTasks.length === configChangeData.length) {
+        setSelectedTasks([]); 
+    } else {
+        setSelectedTasks(configChangeData.map(item => item.taskId));
+    }
+};
+
+const handleBulkDelete = async () => {
+    if (selectedTasks.length === 0) return;
+
+    const confirmDel = window.confirm(
+        `Delete ${selectedTasks.length} selected tasks?`
+    );
+    if (!confirmDel) return;
+
+    setIsLoading(true);
+
+    const username = 'admin';
+    const password = 'admin';
+    const token = btoa(`${username}:${password}`);
+
+    // Build request body
+    const requestBody = {
+        list: selectedTasks   // e.g. [21, 18]
+    };
+
+    try {
+        const response = await fetch(`api/v2/task/deletetasks`, {
+            method: "POST",
+            headers: {
+                'Authorization': `Basic ${token}`,
+                'Content-Type': 'application/json',
+                'Accept': '*/*'
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        if (!response.ok) {
+            throw new Error("Bulk delete failed");
+        }
+
+        // Refresh table after delete
+        await getConfigChangeData(
+                `api/v2/task/list?show=configpush&status=${selected}&offset=0&count=25`
+        );
+
+        // Clear selection
+        setSelectedTasks([]);
+
+    } catch (error) {
+        console.error("Bulk delete error:", error);
+        setIsError({ status: true, msg: error.message });
+    } finally {
+        setIsLoading(false);
+    }
+};
 
 
 
@@ -115,7 +252,8 @@ const ConfigChange = () => {
                                 <article style={{ float: 'right' }}>
                                     <ul className="setttinglist">
                                          <li>
-                                            <button className="clearfix createbtn">Delete</button>
+                                            <button className="clearfix createbtn" disabled={selectedTasks.length === 0}
+                                            onClick={handleBulkDelete}>Delete Selected</button>
                                         </li>
                                         <li>
                                             <button className="clearfix createbtn" onClick={handleProfileContopen}>New Task</button>
@@ -139,12 +277,15 @@ const ConfigChange = () => {
                             <table className="col-12" style={{ height: '0vh' }}>
                                 <thead className="settingthtb">
                                     <tr>
-                                        <th><input className="incl2" type="checkbox"/></th>
+                                        <th><input className="incl2" type="checkbox"
+                                         checked={selectedTasks.length === configChangeData.length && configChangeData.length > 0}
+                                            onChange={toggleSelectAll}
+                                        /></th>
                                         <th>Task ID</th>
                                         <th>Task Name</th>
                                         <th>Scheduled Time</th>
-                                        <th style={{position:'relative'}}>Status
-                                            <button className="glyphicon glyphicon-tasks" style={{backgroundColor:"#f2f2f2",paddingTop:'4px',border:'none',fontSize:'12px'}}  onClick={() => {setShowList(!showList);setSelected(4)}}></button>
+                                        <th>Status
+                                            <button className="glyphicon glyphicon-tasks configchangeicon"  onClick={() => {setShowList(!showList);setSelected(4)}}></button>
                                         {showList && (  <ul className={profileStatusCont ? 'configchngstatuslist_sub_cont' : 'configchngstatuslist'}>
                                         {statuses.map(({ label, value }) => (
                                             <li key={value}>
@@ -194,16 +335,15 @@ const ConfigChange = () => {
                                            <td> <input
                                                 type="checkbox"
                                                 className="incl"
-                                                // checked={selectedTasks.includes(item.taskId)}
-                                                // onChange={() => toggleTaskSelection(item.taskId)}
-                                                // onClick={(e) => e.stopPropagation()} 
+                                                checked={selectedTasks.includes(item.taskId)}
+                                                onChange={() => toggleTaskSelection(item.taskId)}
+                                                onClick={(e) => e.stopPropagation()} 
                                             /></td>
                                             <td>{item.taskId}</td>
                                             <td>{item.task}</td>
                                             <td>{item.dateNTime}</td>
                                             <td>{item.status}</td>
-                                            {/* <td ><i className="fas fa-edit" onClick={() => handleEditUserDt(item)}></i></td> */}
-                                            <td><i className="fa fa-trash"></i></td>
+                                            <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" onClick={() => handleDeleteConfigChange(item)}></i></td>
                                         </tr>
                                     ))}
 
