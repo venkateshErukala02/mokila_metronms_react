@@ -199,16 +199,6 @@ const countDtt = isNaN(rawCpu) ? '0.00' : cpuValue.toFixed(2);
         
         <div>{format(new Date(payload[0].payload.timestamp),'HH mm') || 0}</div>
          <div style={{paddingTop:'20px'}}>{payload[0].name} : {countDtt || 0}</div>
-        {/* {payload.map((pld) =>{
-          const countDTT =  pld?.payload?.cpuDt;
-          const countTx = countDTT === 'number' ? parseInt(countDTT) : '0';
-        return (
-          <div style={{ display: "inline-block", padding: 10 }}>
-          <div style={{ color: 'black' }}>
-                        {pld.dataKey}: {countTx}
-                        </div>
-          </div>
-        )})} */}
       </div>
     );
   }

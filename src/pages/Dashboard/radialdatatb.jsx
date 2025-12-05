@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import '../ornms.css'
@@ -34,13 +34,9 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
             };
             const response = await fetch(url, options);
             const data = await response.json();
-            //   console.log('llol',response)
             if (response.ok) {
                 setIsLoading(false);
                 setRdData(data.nodes || []);
-
-
-                // console.log('lpll',data)
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("data not found");
@@ -247,31 +243,6 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
         const label = event.target.options[event.target.selectedIndex].label;
         setLimitValueSelLabel(label)
     }
-
-    // useEffect(()=>{
-    //     const fetchData=async()=>{
-    //         let url = `api/v2//dashboard/filternodesg?filter=productCode&value=ap&offset=${pageSize}&limit=${limitValueSelLabel}&status=all&rd=ap&sort=sysUptime&by=desc&ar=glob`;
-
-    //        await fetchDataRadial(url);
-    //     }
-
-    //     fetchData();
-    // },[]);
-
-
-
-    // useEffect(() => {
-
-    //     // if(apiStatus === 'apall' || 'transcoderall'||'camall'|| 'obcall' || 'staall' || 'encoderall'||  ){
-    //   const fetchData = async () => {
-    //     let url = `api/v2//dashboard/filternodesg?filter=productCode&value=ap&offset=${pageSize}&limit=${limitValueSelLabel}&status=all&rd=ap&sort=sysUptime&by=desc&ar=glob`;
-    //     await fetchDataRadial(url);
-    //   };
-    //   fetchData();
-    // // }
-    // }, [pageSize, limitValueSelLabel]);
-
-
 
 
 

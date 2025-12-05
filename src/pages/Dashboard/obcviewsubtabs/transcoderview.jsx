@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-
-// import LatencyChart from "./latencychart";
 import LatencyChart from "../latencychart";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -49,8 +47,6 @@ if(startDate && endDate !== null){
 const handleCpuchart=()=>{
   setCpuChartStatus(prevStatus => !prevStatus)
 }
-
-// const components = [<LatencyChart/>'']
 
 
   return (
@@ -148,21 +144,10 @@ const handleCpuchart=()=>{
             </article>
                 <article className="col-md-6 graphbord1">
               <article className="obcsubtabwidthcl">
-                {/* <TxRxDiffchart currentTab='obc' graphOption={graphOption} graphOptionValue={graphOptionValue}/> */}
               </article>
             </article>
             </article>
             </article>
-                 {/* <article className="col-md-12" style={{marginTop:'20px'}}>
-              <article className="latencyfullwidthcl">
-                <article className="latency-togglebtn cpuart-highlight" style={{textAlign:'center'}}>
-                   <span className={`${cpuChartStatus === true ? 'cpu-higlight': ''}`}>CPU </span><i class={`fa-solid fa-toggle-on ${cpuChartStatus === true ? 'fa-rotate-180' : ''} `} onClick={handleCpuchart}></i> <span className={`${cpuChartStatus === true ? '': 'cpu-higlight'}`}>Latency</span>
-                  </article> 
-              <article className="latencyfullwidthcl graphbord2">
-                 {cpuChartStatus ? (<CpuChart currentTab='obc' graphOption={graphOption} graphOptionValue={graphOptionValue}/>) : (<LatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue}/>)}      
-                       </article>
-                       </article>
-                </article> */}
                 </article>
     </>
   );

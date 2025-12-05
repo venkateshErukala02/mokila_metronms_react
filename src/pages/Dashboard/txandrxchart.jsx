@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { format } from 'date-fns'
 import {
     ResponsiveContainer,
@@ -27,7 +27,6 @@ const TxRxDiffchart = ({ graphOption, graphOptionValue,currentTab }) => {
 
     const formatChartData = (apiData) => {
         const { timestamps, labels, columns } = apiData;
-        //  let arr = { "timestamp": 0, "index": i, "txDiff": 0, 'rxDiff': 0 }
 
         return timestamps.map((timestamp, index) => {
             return {
@@ -120,16 +119,15 @@ const TxRxDiffchart = ({ graphOption, graphOptionValue,currentTab }) => {
                 console.log("404 Not Found – clearing data.");
 
                 if (graphOption === 'live') {
-                    // Clear live chart data
-                    setDifferenceData([]); // Make sure this state exists and is used to render the live chart
+                    setDifferenceData([]); 
                     lastTx = 0;
                     lastRx = 0;
                     counterRef.current = 1;
                 } else {
                     try
                     {   
-                        const text = await response.text();  // Try to read the body
-                        const data = text ? JSON.parse(text) : {};  // Safely parse if it's not empty
+                        const text = await response.text();
+                        const data = text ? JSON.parse(text) : {};  
                         const formatted = formatChartData(data);
                         setDifferenceData(Array.isArray(formatted) ? formatted : []);
                     } catch (err) {
@@ -198,7 +196,6 @@ useEffect(() => {
 
 
 const hourFormat = (graphOption) => {
-    //debugger;
     if (graphOption === 'onehour') {
         return 'HH:mm';
     } else if (graphOption === 'oneday') {
@@ -222,27 +219,10 @@ const CustomTooltip = ({ active, payload, label }) => {
                {/* <h1 style={{paddingBottom:'40px'}}>{traincab}</h1> */}
                 <div>{format(new Date(payload[0].payload.timestamp), 'HH mm') || 0}</div>
                 <span>Bytes</span>
-                   {/* <div>Bytes</div> */}
-
                    <ul className="txrxlist">
                         <li>Tx : {txValue}</li>
                         <li>Rx : {rxValue}</li>
                    </ul>
-                {/* {payload.map((pld) => (
-                    // <div style={{ display: "inline-block", padding: 10 }}>
-                    //    <div style={{ color: 'black' }}>
-                    //     {pld.dataKey}: {pld.value != null ? pld.value.toFixed(2) : "0.00"}
-                    //     </div>
-
-                    // </div>
-                    <ul className="txrxlist">
-                        <li>
-                            {pld.dataKey}: {pld.value != null ? pld.value.toFixed(2) : "0.00"}
-                        </li>
-                    </ul>
-                ))} */}
-                                     {/* <div>traincab : {traincab}</div> */}
-
             </div>
         );
     }
@@ -296,10 +276,8 @@ return (
                         fontFamily="Lato-Regular"
                         letterSpacing="0.2px"
                     />
-                    {/* <YAxis ticks={[0, 0.1, 0.2, 0.3, 0.4, 0.5]} /> */}
                     <YAxis domain={differenceData.length === 0 ? [0, 5] : ['auto', 'auto']} />
                     <Tooltip content={<CustomTooltip />} cursor={{ fill: "transparent" }} />
-                    {/* <Legend /> */}
                     <Legend content={<CustomLegend />} />
                     <Area
                         type="monotone"

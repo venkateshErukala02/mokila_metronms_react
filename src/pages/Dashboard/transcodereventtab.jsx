@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import DatePicker from "react-datepicker";
 import TranscoderEventLog from "./transcoderEventslog";
 
 const TcEventTab=()=>{
-
-
- const [eventmainData, setEventmainData] = useState([]);
+    const [eventmainData, setEventmainData] = useState([]);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [typevalueSel, setTypevalueSel] = useState('events');
     const [typelabelSel, setTypelabelSel] = useState('Events');
-    const [selectedDuration, setSelectedDuration] = useState(86400000); // keep as raw value
+    const [selectedDuration, setSelectedDuration] = useState(86400000);
     const [eventtimeSel, setEventtimeSel] = useState(Date.now() - 86400000);
     const [eventmainSeverityValueSel, setEventmainSeverityValueSel] = useState('-1');
     const [eventmainSeverityLabelSel, setEventmainSeverityLabelSel] = useState('All');
@@ -19,7 +17,6 @@ const TcEventTab=()=>{
     const [eventmainLimitLabelSel, setEventmainLimitLabelSel] = useState('50');
     const [eventauditLimitValueSel, setEventauditLimitValueSel] = useState('1');
     const [eventauditLimitLabelSel, setEventauditLimitLabelSel] = useState('50');
-    // const [date,setDate] =  useState();
      
       const [logsMode,setLogsMode]=useState('LOGS');
      const [searchBtn, setSearchBtn] = useState(false);
@@ -31,15 +28,6 @@ const TcEventTab=()=>{
     const [date, setDate] = useState(null);
 
  const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
-
-
-//      const location = useLocation();
-// const nodeData = location.state?.node;
-// useEffect(() => {
-
-//   }, [nodeData]);
-
-
 
     const getDataEvntMain = async (url) => {
         setIsLoading(true);
@@ -87,36 +75,9 @@ const TcEventTab=()=>{
         }
     };
 
-    // useEffect(() => {
-    //   const url='api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D1747558597559&ar=glob&limit=50&offset=0&order=desc&orderBy=id'
-    //     getDataEvntMain(url);
-    // }, []);
-
-
-
-    // useEffect(() => {
-    //     const newTimestamp = Date.now() - selectedDuration;
-    //     setEventtimeSel(newTimestamp);
-    // }, [selectedDuration]);
-
-    // useEffect(() => {
-    //     const baseFilter = `eventDisplay==Y;eventSource!=syslogd`;
-    //     const severityFilter = eventmainSeverityValueSel !== "-1" ? `;eventSeverity==${eventmainSeverityValueSel}` : '';
-    //     const timestamp = Date.now() - selectedDuration;
-
-    //     const url = `api/v2/events/list?_s=${baseFilter}${severityFilter};eventCreateTime=gt=${timestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=0`;
-
-    //     getDataEvntMain(url);
-    // }, [selectedDuration, eventmainLimitLabelSel, eventmainSeverityValueSel]);
-
-
     const toggleDropdown = () => {
         setDropdownOpen(!isDropdownOpen);
     };
-
-
-
-
 
     useEffect(() => {
 
@@ -130,8 +91,6 @@ const TcEventTab=()=>{
                 const formatDate = new Date(date);
                 effectiveDate = formatDate.getTime();
             }
-
-
 
         let url = '';
 
@@ -161,52 +120,6 @@ const TcEventTab=()=>{
                 break;
         }
     }, [typevalueSel,nodeDataId,date]);
-
-    // useEffect(() => {
-    //     const url = `api/v2/audit/list?_s=&limit=${eventauditLimitLabelSel}&offset=0&order=desc&orderBy=id`;
-    //     getDataEvntMain(url);
-    // }, [eventauditLimitLabelSel]);
-
-    // const handleEventIP = async () => {
-
-
-    //     if (!eventipTextipText) {
-    //       alert("Please enter a search term");
-    
-    //     } else {
-    //       setSearchBtn(true)
-    
-    
-    //       try {
-    //         const response = await fetch(`api/v2/nodes/search?_s=sysName==${firmipText}*,label==${firmipText},assetRecord.serialNumber==${firmipText}&limit=100&offset=0&order=asc`, {
-    //           method: "GET",
-    //           headers: {
-    //             "Content-Type": "application/json",
-    //           },
-    //         });
-    //         const data = await response.json();
-    
-    //         if (response.ok) {
-    //           setIsLoading(false);
-    //           setFirmData(data.nodes || []);
-    //           setFirmipText('')
-    //           setIsError({ status: false, msg: "" });
-    //           console.log("okkoo", data);
-    //           console.log("gdgd", response);
-    //           setIsError({ status: false, msg: "" });
-    //         } else {
-    //           throw new Error("data not found");
-    //         }
-    
-    //       } catch (error) {
-    //         setIsLoading(false);
-    //         setIsError({ status: true, msg: error.message });
-    //       }
-    //     }
-    
-    //   }  //
-
-
 
     const formatTime = (timestamp) => {
         const date = new Date(timestamp);
@@ -319,14 +232,7 @@ const TcEventTab=()=>{
                         </button>
                         <button className="clearfix numcl"><span>1</span></button>
                         <button className="clearfix arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
-                        {/* <span className="eventscp">Scope : </span>
-                        <span className="eventgolcl" onClick={toggleDropdown} >Golbal <span class="fa fa-chevron-down highlightText v-align-tt iconsy"></span></span> */}
-
-                        {/* <input type="text"  value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="IP Address " id="" className="form-contltranscd-evnt" />
-                        <button className="clearfix createbtn" >Search</button>
-                        <button className="clearfix createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button> */}
-
-             
+            
                     </article>
                     <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
                         <button className="clearfix arrowlf">
@@ -362,16 +268,6 @@ const TcEventTab=()=>{
                                 <option value="2" label="Cleared">Cleared</option>
                                 <option value="1" label="Indeterminate">Indeterminate</option>
                             </select>
-                            {/* <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
-
-
-                            <select name="name" id="name" value='' onChange='' className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
-                                <option value="3600000" label="Last hour">Last hour</option>
-                                <option value="28800000" label="8 hours">8 hours</option>
-                                <option value="86400000" label="24 hours">24 hours</option>
-                                <option value="172800000" label="48 hours">48 hours</option>
-                            </select> */}
-
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
 
                         <article className="trans-datepickerbg" style={{display:'inline-block'}}>
@@ -491,12 +387,9 @@ const TcEventTab=()=>{
             </article>)} 
             </article>
               ) :(
-            //  <article className="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-            //     <article style={{borderLeft: '8px solid white'}}>
             <article className="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12" style={{padding:'0'}}>
                 <TranscoderEventLog date={date} currentTab='transcoder'/>
           </article>
-            //  </article>
               )}
             </article>
         

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import DatePicker from "react-datepicker";
@@ -29,11 +29,6 @@ const ObcEventTab=({nodeItemDt})=>{
     const [isError, setIsError] = useState({ status: false, msg: "" });
 
  const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
-//      const location = useLocation();
-// const nodeData = location.state?.node;
-// useEffect(() => {
-
-//   }, [nodeData]);
 
 
     const getDataEvntMain = async (url) => {
@@ -82,28 +77,6 @@ const ObcEventTab=({nodeItemDt})=>{
         }
     };
 
-    // useEffect(() => {
-    //   const url='api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D1747558597559&ar=glob&limit=50&offset=0&order=desc&orderBy=id'
-    //     getDataEvntMain(url);
-    // }, []);
-
-
-
-    // useEffect(() => {
-    //     const newTimestamp = Date.now() - selectedDuration;
-    //     setEventtimeSel(newTimestamp);
-    // }, [selectedDuration]);
-
-    // useEffect(() => {
-    //     const baseFilter = `eventDisplay==Y;eventSource!=syslogd`;
-    //     const severityFilter = eventmainSeverityValueSel !== "-1" ? `;eventSeverity==${eventmainSeverityValueSel}` : '';
-    //     const timestamp = Date.now() - selectedDuration;
-
-    //     const url = `api/v2/events/list?_s=${baseFilter}${severityFilter};eventCreateTime=gt=${timestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=0`;
-
-    //     getDataEvntMain(url);
-    // }, [selectedDuration, eventmainLimitLabelSel, eventmainSeverityValueSel]);
-
 
     const toggleDropdown = () => {
         setDropdownOpen(!isDropdownOpen);
@@ -151,51 +124,6 @@ const ObcEventTab=({nodeItemDt})=>{
                 break;
         }
     }, [typevalueSel,nodeDataId]);
-
-    // useEffect(() => {
-    //     const url = `api/v2/audit/list?_s=&limit=${eventauditLimitLabelSel}&offset=0&order=desc&orderBy=id`;
-    //     getDataEvntMain(url);
-    // }, [eventauditLimitLabelSel]);
-
-    // const handleEventIP = async () => {
-
-
-    //     if (!eventipTextipText) {
-    //       alert("Please enter a search term");
-    
-    //     } else {
-    //       setSearchBtn(true)
-    
-    
-    //       try {
-    //         const response = await fetch(`api/v2/nodes/search?_s=sysName==${firmipText}*,label==${firmipText},assetRecord.serialNumber==${firmipText}&limit=100&offset=0&order=asc`, {
-    //           method: "GET",
-    //           headers: {
-    //             "Content-Type": "application/json",
-    //           },
-    //         });
-    //         const data = await response.json();
-    
-    //         if (response.ok) {
-    //           setIsLoading(false);
-    //           setFirmData(data.nodes || []);
-    //           setFirmipText('')
-    //           setIsError({ status: false, msg: "" });
-    //           console.log("okkoo", data);
-    //           console.log("gdgd", response);
-    //           setIsError({ status: false, msg: "" });
-    //         } else {
-    //           throw new Error("data not found");
-    //         }
-    
-    //       } catch (error) {
-    //         setIsLoading(false);
-    //         setIsError({ status: true, msg: error.message });
-    //       }
-    //     }
-    
-    //   }  //
-
 
 
     const formatTime = (timestamp) => {
@@ -309,13 +237,6 @@ const ObcEventTab=({nodeItemDt})=>{
                         </button>
                         <button className="clearfix numcl"><span>1</span></button>
                         <button className="clearfix arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
-                        {/* <span className="eventscp">Scope : </span>
-                        <span className="eventgolcl" onClick={toggleDropdown} >Golbal <span class="fa fa-chevron-down highlightText v-align-tt iconsy"></span></span> */}
-
-                        {/* <input type="text"  value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="IP Address " id="" className="form-contltranscd-evnt" />
-                        <button className="clearfix createbtn" >Search</button>
-                        <button className="clearfix createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button> */}
-
              
                     </article>
                     <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
@@ -437,7 +358,6 @@ const ObcEventTab=({nodeItemDt})=>{
                             {Array.isArray(eventmainData) && eventmainData.length > 0 ? (
                                 eventmainData.map((event) => (
                                     <tr key={event.id}>
-                                        {/* <td><i className={getCategoryClass(event.severity)}></i>{event.ipAddress ? event.ipAddress : event.host}</td> */}
                                         <td>{formatTime(event.time)}</td>
                                         <td>{event.severity}</td>
                                         <td>{event.logMessage}</td>

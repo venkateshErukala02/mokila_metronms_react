@@ -48,8 +48,6 @@ const handleCpuchart=()=>{
   setCpuChartStatus(prevStatus => !prevStatus)
 }
 
-// const components = [<LatencyChart/>'']
-
 
   return (
     <>

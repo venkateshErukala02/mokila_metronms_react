@@ -1,12 +1,9 @@
 
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import React, { useState, useEffect,useRef } from "react";
-// import { RadialBar, Tooltip, RadialBarChart, Legend, Label } from "recharts";
 import { PieChart, Pie, Cell,Legend,Tooltip,Label } from "recharts";
 import '../ornms.css';
 import { useSelector } from "react-redux";
-
-
 import '../Dashboard/dashboard.css';
 import { useDispatch } from 'react-redux';
 import {handleCurrentPie} from '../Action/action'
@@ -26,19 +23,9 @@ const GdChart = ({ getDataStatus }) => {
     setIsError({ status: false, msg: "" });
 
     try {
-      // const eventSource = new EventSource('api/v2//dashboard/nodes/counts_fsummary');
-
-      // eventSource.onmessage = (event) => {
-      //   const data = JSON.parse(event.data); // Parse the incoming event data
-
-      //   setUserDatapie(data);
-      //   setIsLoading(false);
-      //   setIsError({ status: false, msg: "" });
-      // };
-
       const username = 'admin';
       const password = 'admin';
-      const encoded = btoa(`${username}:${password}`); // base64 encode
+      const encoded = btoa(`${username}:${password}`);
 
       const eventSource = new EventSourcePolyfill(
         'api/v2//dashboard/nodes/counts_fsummary',
@@ -58,7 +45,7 @@ const GdChart = ({ getDataStatus }) => {
         console.error('Error occurred with EventSource:', error);
         setIsLoading(false);
         setIsError({ status: true, msg: "Error fetching data" });
-        eventSource.close(); // Close the EventSource connection on error
+        eventSource.close(); 
       };
 
     } catch (error) {
@@ -264,7 +251,7 @@ return (
                   color : COLOR_MAP[entry.name] || '#ccc',
                   originalName: entry.name,
                 }))
-                .sort((a, b) => legendOrder.indexOf(a.originalName) - legendOrder.indexOf(b.originalName)) // Sort based on legendOrder
+                .sort((a, b) => legendOrder.indexOf(a.originalName) - legendOrder.indexOf(b.originalName)) 
             }
             onClick={(e) => handleLegendClick(e.value)}
             formatter={(value) => {

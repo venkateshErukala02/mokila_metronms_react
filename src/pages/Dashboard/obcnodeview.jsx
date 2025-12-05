@@ -84,18 +84,8 @@ const ObcNodeView = () => {
     }
   }, [nodeIpaddress]);
 
-
-
-
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-
-  // const handleRowClick = () => {
-  //               navigate('/node-event', { state: { nodeItemDt } });
-  //               dispatch(handleNodeData(nodeItemDt))
-  //               };
 
 
   const handleRowClick = (value) => {
@@ -142,10 +132,6 @@ const ObcNodeView = () => {
                   className="fas fa-chart-area Monitor-icon"
                   style={{ fontSize: "22px" }}
                 ></i> Events </a></li>
-                {/* <li onClick={() => handleRowClick('PingAreaChart')}><i
-                      className="fas fa-chart-area Monitor-icon"
-                      style={{ fontSize: "22px" }}
-                    ></i> Sumary1</li> */}
               </ul>
             </article>
           </article>

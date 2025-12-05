@@ -8,67 +8,6 @@ import NetworkMonitoringDashboard from "./nodeviewchart";
 
 
 const TrainSummaryTab = ({ nodeItemDt }) => {
- 
-  // console.log('hhhhhhhh',nodeDataId);
-  
-
-  //  const [isLoading, setIsLoading] = useState("");
-  //    const [isError, setIsError] = useState("");
-
-  //    const count = useSelector((state) => state);
-  //    const isVisible = useSelector((state) => state.visibility.isVisible);
-  //    const [currentTab,setCurrentTab] = useState('summary');
-  //          const [nodeItemDt, setNodeItemDt] = useState([]);
-
-
-
-  //   const getServerStatusDt = async (url) => {
-  //      setIsLoading(true);
-  //      setIsError({ status: false, msg: "" });
-  //      try {
-  //        const username = "admin";
-  //        const password = "admin";
-  //        const token = btoa(`${username}:${password}`);
-  //        const options = {
-  //          method: "GET",
-  //          headers: {
-  //            "Authorization": `Basic ${token}`,   
-  //            "Content-Type": "application/json",
-  //          },
-  //        };
-  //        const response = await fetch(url,options);
-  //        const data = await response.json();
-
-  //        if (response.ok) {
-  //          setIsLoading(false);
-
-
-  //          setNodeItemDt(data);
-  //          console.log("Fetched server status:", data);
-  //          setIsError({ status: false, msg: "" });
-  //        } else {
-  //          throw new Error("Data not found");
-  //        }
-  //      } catch (error) {
-  //        setIsLoading(false);
-  //        setIsError({ status: true, msg: error.message });
-  //        console.error("Fetch error:", error);
-  //      }
-  //    };
-
-  //    useEffect(() => {
-  //      const fetchData = async () => {
-  //        let url = `api/v2//nodemanageview/summarydb?nodeId=${nodeDataId}`;
-  //        await getServerStatusDt(url);
-  //      };
-  //      fetchData();
-  //    }, [nodeDataId]);
-
-  //    // useEffect(()=>{
-  //    //   if(nodeDataId){
-  //    //     localStorage.setItem('nodeId')
-  //    //   }
-  //    // },[nodeDataId])
 
   return (
     <>
@@ -111,11 +50,6 @@ const TrainSummaryTab = ({ nodeItemDt }) => {
                           />
                           <h6>Radio Mode <span>{nodeItemDt.radioMode === 'sta' ? 'SU' : ''}</span></h6>
                         </li>
-                        {/* <li>   <img
-                          src={ptmplinkimage}
-                          alt="PTMP"
-                          style={{ marginRight: "6px" }}
-                        /> <h6>Link Type  <span className="">{nodeItemDt[0]?.linkType}</span></h6></li> */}
                         <li>
                           <i
                             className="hardwareversionicon"
@@ -157,15 +91,6 @@ const TrainSummaryTab = ({ nodeItemDt }) => {
                             </span>
                           </h6>
                         </li>
-                        {/* <li>
-                          <i className="staioncicon"></i>
-                          <h6> Station
-                            <span>
-                              {nodeItemDt.station}
-                            </span>
-                          </h6>
-                        </li> */}
-
                       </ul>
 
                     </article>

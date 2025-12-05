@@ -75,10 +75,6 @@ const ObcSummaryTab = ({ nodeItemDt, currentTab }) => {
     fetchData();
   }, []);
 
-  //         if (!nodeItemDt || Object.keys(nodeItemDt).length === 0) {
-  //   return <div>Loading configuration...</div>;
-  // }
-
 
   const getDiskData = async (url) => {
     setIsLoading(true);
@@ -180,47 +176,11 @@ const ObcSummaryTab = ({ nodeItemDt, currentTab }) => {
 
                       <ul className="summarylist">
                         <li>
-                          {/* <i
-                          className="serialnumbericon"
-                          style={{ marginRight: "6px" }}
-                        ></i> */}
                           <h6> IP<span> {nodeItemDt.obcnetip}</span></h6></li>
-                        {/* <li>
-                          <i
-                          className="firmwareicon"
-                          style={{ marginRight: "6px" }}
-                        ></i>
-                        <h6> Netmask<span> {nodeItemDt.obcnetmask}</span></h6></li> */}
                         <li>
-                          {/* <img
-                            src={radioimage}
-                            alt=""
-                            style={{ marginRight: "6px" }}
-                          /> */}
                           <h6>Encoder <span>{nodeItemDt.encoderip}</span></h6>
                         </li>
-                        {/* <li>  
-                          <img
-                          src={bootloader}
-                          alt=""
-                          style={{
-                            width: "35px",
-                            height: "35px",
-                            marginRight: "6px",
-                          }}
-                        />
-                          <h6> Gateway<span>{nodeItemDt.obcnetgway} </span></h6></li> */}
-
-                        {/* <li>   <img
-                          src={ptmplinkimage}
-                          alt="PTMP"
-                          style={{ marginRight: "6px" }}
-                        /> <h6>Link Type  <span className="">{nodeItemDt[0]?.linkType}</span></h6></li> */}
                         <li>
-                          {/* <i
-                            className="hardwareversionicon"
-                            style={{ marginRight: "6px" }}
-                          ></i> */}
                           <h6>NTP <span>{nodeItemDt.ntpserverip}</span></h6>
                         </li>
                         <li>

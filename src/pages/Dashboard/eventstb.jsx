@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import '../ornms.css';
 import '../Dashboard/dashboard.css';
 
@@ -12,7 +12,7 @@ const formatDate = (timestamp) => {
 const Tableone = () => {
     const [eventData, setEventData] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [selectedDuration, setSelectedDuration] = useState(86400000); // keep as raw value
+    const [selectedDuration, setSelectedDuration] = useState(86400000); 
     const [eventtimeSel, setEventtimeSel] = useState(Date.now() - 86400000);
     const [eventLimitValueSel, setEventLimitValueSel] = useState('1');
     const [eventLimitLabelSel, setEventLimitLabelSel] = useState('50');
@@ -42,7 +42,7 @@ const Tableone = () => {
 
             if (response.status === 204) {
                 setIsLoading(false);
-                setEventData([]); // Treat as empty data
+                setEventData([]); 
                 return;
             }
 
@@ -67,30 +67,11 @@ const Tableone = () => {
     }, [selectedDuration]);
 
 
-    // useEffect(() => {
-    //     const url = `api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventLimitLabelSel}&offset=0`;
-    //     // http://localhost:8980/ornms/api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D1744351398086&ar=glob&limit=50&offset=0
-    //     // http://localhost:8980/ornms/api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventSeverity%3D%3D7;eventCreateTime%3Dgt%3D1744351433038&ar=glob&limit=50&offset=0
-
-    //     getDataEvents(url);
-    // }, [eventtimeSel,eventLimitLabelSel]);
-
-    // useEffect(()=>{
-    //     const url= `api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventSeverity%3D%3D${eventSeverityValueSel};eventCreateTime%3Dgt%3D1744351922846&ar=glob&limit=50&offset=0`;
-    //     getDataEvents(url);
-    //     // http://localhost:8980/ornms/api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D1744351812366&ar=glob&limit=50&offset=0
-
-
-    // },[eventSeverityValueSel])
-
-
-
     useEffect(() => {
         const baseFilter = `eventDisplay==Y;eventSource!=syslogd`;
         const severityFilter = eventSeverityValueSel !== "-1" ? `;eventSeverity==${eventSeverityValueSel}` : '';
         const timestamp = Date.now() - selectedDuration;
         const url = `api/v2/events/list?_s=${baseFilter}${severityFilter};eventCreateTime=gt=${timestamp}&ar=glob&limit=${eventLimitLabelSel}&offset=${fromValue}`
-        // const url = `api/v2/events/list?_s=${baseFilter}${severityFilter};eventCreateTime=gt=${timestamp}&ar=glob&limit=${eventLimitLabelSel}&offset=0`;
 
         getDataEvents(url);
     }, [eventSeverityValueSel, selectedDuration, eventLimitLabelSel,fromValue]);
@@ -221,9 +202,7 @@ const Tableone = () => {
 
                         {!isLoading && !isError.status && (!eventData || eventData.length === 0) && (
                             <tr className="col-12 dashbdnodata">
-                                {/* <td colSpan="12" style={{ textAlign: "center",width:'100%' }}> */}
                                 No Data Available
-                                {/* </td> */}
                             </tr>
                         )}
                         {eventData.event && eventData.event.map((event, index) => (

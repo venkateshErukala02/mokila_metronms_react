@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import LatencyChart from "./latencychart";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -48,9 +47,6 @@ if(startDate && endDate !== null){
 const handleCpuchart=()=>{
   setCpuChartStatus(prevStatus => !prevStatus)
 }
-
-// const components = [<LatencyChart/>'']
-
 
   return (
     <>

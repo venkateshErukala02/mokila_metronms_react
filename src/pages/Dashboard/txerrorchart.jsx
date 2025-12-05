@@ -48,10 +48,8 @@ const TxErrorChart = ({ graphOption,graphOptionValue,currentTab}) => {
 
     return timestamps.map((timestamp, index) => {
       return {
-        // timestamp: new Date(timestamp).toLocaleTimeString(), 
         timestamp: timestamp || 0,
         txErrorValue: parseFloat(columns[0].values[index]) || 0,
-        // [labels[1]]: parseFloat(columns[1].values[index])
       };
     });
   };
@@ -82,7 +80,6 @@ const TxErrorChart = ({ graphOption,graphOptionValue,currentTab}) => {
              let dt = new Date();
             const dataNew = {
             txErrorValue: data.tx_errors || 0,
-            // lsnr: data.remotesnr,
             timestamp: dt.getTime() || 0,
             index: counterRef.current
           }
@@ -151,7 +148,6 @@ const TxErrorChart = ({ graphOption,graphOptionValue,currentTab}) => {
 
 
   const hourFormat = (graphOption) => {
-    //debugger;
     if (graphOption === 'onehour') {
       return 'HH:mm';
     } else if (graphOption === 'oneday') {
@@ -170,8 +166,6 @@ const TxErrorChart = ({ graphOption,graphOptionValue,currentTab}) => {
   if (active && payload && payload.length) {
     return (
       <div className="custom-tooltip">
-        {/* <p className="label">{`${label} : ${payload[0].value}`}</p>
-        <p className="label">{`${label} : ${payload[0].payload.timestamp}`}</p> */}
         <div>{format(new Date(payload[0].payload.timestamp),'HH mm')}</div>
         {payload.map((pld) =>{
           const countTx = pld.value === 'number' ? parseInt(pld.value) : '0';
@@ -189,10 +183,7 @@ const TxErrorChart = ({ graphOption,graphOptionValue,currentTab}) => {
   return null;
 };
 
-
-// http://192.168.1.11:8084/transcoder/api/v1/cpu
-
-    const CustomLegend = (props) => {
+  const CustomLegend = (props) => {
   const { payload } = props;
 
   return (
@@ -237,9 +228,7 @@ const TxErrorChart = ({ graphOption,graphOptionValue,currentTab}) => {
                   // tickFormatter={(tick) => `${tick}`}
                 />
                 <YAxis domain={txErrorDt.length === 0 ? [0, 100] : ['auto', 'auto']} />
-
                 <Tooltip  content={<CustomTooltip />} cursor={{ fill: "transparent" }}/>
-                {/* <Legend onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} /> */}
                   <Legend content={<CustomLegend />} />
                 <Area
                   type="monotone"

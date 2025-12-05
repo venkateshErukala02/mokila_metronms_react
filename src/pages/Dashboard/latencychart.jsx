@@ -49,9 +49,7 @@ const LatencyChart = ({ graphOption, graphOptionValue ,labelName }) => {
     return timestamps.map((timestamp, index) => {
       const latency = parseFloat(columns[0].values[index]);
       return {
-        // timestamp: new Date(timestamp).toLocaleTimeString(), 
         timestamp: timestamp,
-        // [labels[0]]: parseFloat(columns[0].values[index]),
         Latency: isNaN(latency) ? 0 : latency,
       };
     });
@@ -78,14 +76,12 @@ const LatencyChart = ({ graphOption, graphOptionValue ,labelName }) => {
 
       if (response.status === 200) {
         const data = await response.json();
-        // console.log('ppppp',data);
         
 
         if (graphOption === 'live') {
           let dt = new Date();
           const dataNew = {
             Latency: data.rtt || 0,
-            // lsnr: data.remotesnr,
             timestamp: dt.getTime(),
             index: counterRef.current
           }
@@ -97,10 +93,6 @@ const LatencyChart = ({ graphOption, graphOptionValue ,labelName }) => {
           counterRef.current += 1;
         } else {
           const formatted = formatChartData(data);
-          // console.log('leneneen',formatted.length);
-          // console.log('data',formatted);
-          
-          
           setGpItemDt(formatted);
         }
       } else if (response.status === 304) {
@@ -161,7 +153,6 @@ const LatencyChart = ({ graphOption, graphOptionValue ,labelName }) => {
 
 
   const hourFormat = (graphOption) => {
-    //debugger;
     if (graphOption === 'onehour') {
       return 'HH:mm';
     } else if (graphOption === 'oneday') {
@@ -174,28 +165,6 @@ const LatencyChart = ({ graphOption, graphOptionValue ,labelName }) => {
       return 'HH:mm';
     }
   };
-
-
-  //   const CustomTooltip = ({payload, label }) => {
-  //   if (payload && payload.length) {
-  //     return (
-  //       <div className="custom-tooltip">
-  //         <div>{format(new Date(payload[0].payload.timestamp),'HH mm')}</div>
-  //         {payload.map((pld) => (
-  //           <div style={{ display: "inline-block", padding: 10 }}>
-  //           <div style={{ color: 'black' }}>
-  //                         {/* {pld.dataKey}: {pld.value != null ? pld.value.toFixed(2) : "0.00"} */}
-  //                         {pld.dataKey}: {isNaN(pld.value) ? "0.00" : pld.value.toFixed(2)}
-  //                         </div>
-  //           </div>
-  //         ))}
-  //       </div>
-  //     );
-  //   }
-
-  //   return null;
-  // };
-
 
 
   const CustomTooltip = ({ payload, label }) => {
@@ -264,11 +233,8 @@ const LatencyChart = ({ graphOption, graphOptionValue ,labelName }) => {
                 tickFormatter={(timestamp) => format(new Date(timestamp), hourFormat(graphOption))}
               // tickFormatter={(tick) => `${tick}`}
               />
-              {/* <YAxis /> */}
               <YAxis ticks={[0, 1, 2, 3, 4, 5]} />
-              {/* <YAxis domain={['auto', 'auto']} /> */}
               <Tooltip content={<CustomTooltip />} cursor={{ fill: "transparent" }} />
-              {/* <Legend  onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} /> */}
               <Legend content={<CustomLegend />} />
               <Area
                 type="monotone"

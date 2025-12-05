@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux';
@@ -20,7 +20,6 @@ const TranscoderView = () => {
     const nodeDataId = useSelector((state) => state.node?.node?.nodeId);
     const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress) || localStorage.getItem('nodeIpaddress');
      const nodeLocation = useSelector((state) => state.node?.node?.location);
-    // console.log('ghjjjjj', );
 
 
     useEffect(()=>{

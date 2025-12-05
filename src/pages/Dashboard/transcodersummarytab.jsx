@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import transcoderImage from "../../assets/img/transcoderimg.jpeg";
 import radioimage from "../../assets/img/radiomode.png";
@@ -117,53 +117,6 @@ const TcSummaryTab = ({ transcoderData }) => {
         }
     };
 
-
-
-    //  const handleAddBitrateData = async () => {
-    //     if (!bitRate) {
-    //         alert("Please select a file first.");
-    //         return;
-    //     }
-    //     const requestBody =  {
-    //         name: stationName,
-    //         region : {id:stationSel},
-    //         stcode: stationCode
-    //     };
-    //     const method = isEditMode ? 'POST' : 'POST';
-    //     const url = isEditMode ? 'api/v2/facilities/update' :'api/v2/facilities'
-    //     try {
-    //         const username = 'admin';
-    //         const password = 'admin';
-    //         const token = btoa(`${username}:${password}`)
-    //         const response = await fetch(url, {
-    //             method,
-    //             headers: {
-    //                 'Authorization': `Basic ${token}`,
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify(requestBody),
-    //         });
-    //         if (response.ok) {
-               
-    //             // alert(isEditMode ? 'Station updated successfully' : 'Station created successfully')
-    //             // handleProfileContclose();
-    //             // if(refreshStationData) refreshStationData();
-    //             // setStationName('');
-    //             // setStationCode('');
-    //         } else {
-    //             setError('Error starting discovery');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error:', error);
-    //         setError('An error occurred while contacting the server.');
-    //     } finally {
-    //         setLoading(false); // Turn off loading state
-    //     }
-
-    // }
-
-
-
     useEffect(() => {
         const fetchData = async () => {
             let url = `http://${nodeIpaddress}:8084/transcoder/api/v1/uptime`;
@@ -185,8 +138,6 @@ const TcSummaryTab = ({ transcoderData }) => {
     const handleEditBit=()=>{
         setIsEditMode(true);
     }
-
-
 
     const nodeLocation = useSelector((state) => state.node.node.location) || localStorage.getItem('nodeLocation');
     const nodeIpaddress = useSelector((state) => state.node.node.ipAddress) || localStorage.getItem('nodeIpaddress');
@@ -232,11 +183,6 @@ const TcSummaryTab = ({ transcoderData }) => {
                                                     />
                                                     <h6>NTP <span>{transcoderData?.System?.sntpip} </span></h6>
                                                 </li>
-                                                {/* <li>   <img
-                          src={ptmplinkimage}
-                          alt="PTMP"
-                          style={{ marginRight: "6px" }}
-                        /> <h6>Link Type  <span className="">{nodeItemDt[0]?.linkType}</span></h6></li> */}
                                                 <li>
                                                     <i
                                                         className="hardwareversionicon"
@@ -304,7 +250,6 @@ const TcSummaryTab = ({ transcoderData }) => {
                                                               <button className="resetbtn" style={{marginRight:'15px'}} 
                                                               onClick={handleEditBit}
                                                               >Edit</button>
-                                                      {/* <button className="createbtn"  disabled={!isEditMode} onClick={handleAddBitrateData} >Save</button> */}
                                                       <button 
                                                         className="createbtn" 
                                                         // onClick={handleAddBitrateData}

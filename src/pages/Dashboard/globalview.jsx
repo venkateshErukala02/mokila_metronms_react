@@ -1,7 +1,4 @@
-import React from "react";
-
 import GdChart from "./scopepiechart";
-
 import BsChart from "./scoperaidalchart";
 import '../Dashboard/dashboard.css';
 

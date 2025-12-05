@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux';
@@ -24,7 +24,6 @@ const TrainNodeView = () => {
   const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
 
   const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress);
-  console.log('ghjjjjj', nodeDataId);
 
   const getServerStatusDt = async (url) => {
     setIsLoading(true);
@@ -81,19 +80,8 @@ const TrainNodeView = () => {
     }
   }, [nodeIpaddress]);
 
-
-
-
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-
-  // const handleRowClick = () => {
-  //               navigate('/node-event', { state: { nodeItemDt } });
-  //               dispatch(handleNodeData(nodeItemDt))
-  //               };
-
 
   const handleRowClick = (value) => {
     setCurrentTab(value);
@@ -139,10 +127,6 @@ const TrainNodeView = () => {
                   className="fas fa-chart-area Monitor-icon"
                   style={{ fontSize: "22px" }}
                 ></i> Events </a></li>
-                {/* <li onClick={() => handleRowClick('PingAreaChart')}><i
-                      className="fas fa-chart-area Monitor-icon"
-                      style={{ fontSize: "22px" }}
-                    ></i> Sumary1</li> */}
               </ul>
             </article>
           </article>

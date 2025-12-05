@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { format } from 'date-fns'
 import {
   ResponsiveContainer,
@@ -18,33 +18,6 @@ const LocalSnr = ({ graphOption, graphOptionValue }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState({ status: false, msg: "" });
   const counterRef = useRef(1);
-
-  // const formatChartData = (apiData) => {
-  //   const { timestamps, labels, columns } = apiData;
-
-  //   return timestamps.map((timestamp, index) => {
-  //      const filteredValues = columns[2].values.filter(num => typeof num === 'number' && !isNaN(num));
-
-  //       const hasDecimal = filteredValues.some(num => num % 1 !== 0);
-
-  //        if(hasDecimal){
-  //         return {timestamp: timestamp,
-  //       [labels[0]]: 0,
-  //       [labels[1]]: 0,
-  //       [labels[2]]: 0,
-  //         }
-  //       }else{
-  //          return {timestamp: timestamp,
-  //       [labels[0]]: parseFloat(columns[0].values[index]),
-  //       [labels[1]]: parseFloat(columns[1].values[index]),
-  //       [labels[2]]: parseFloat(columns[2].values[index]),
-  //         }
-
-  //       }
-      
-  //   });
-  // };
-  
 
   const formatChartData = (apiData) => {
   const { timestamps, labels, columns } = apiData;
@@ -231,7 +204,6 @@ const LocalSnr = ({ graphOption, graphOptionValue }) => {
 
 
   const hourFormat = (graphOption) => {
-    //debugger;
     if (graphOption === 'onehour') {
       return 'HH:mm';
     } else if (graphOption === 'oneday') {
@@ -317,15 +289,12 @@ const CustomLegend = (props) => {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="timestamp"
-              // type="number"
-              // domain={[now.getTime(),thirtyMinutesLater.getTime()]}
               tickFormatter={(timestamp) => format(new Date(timestamp), hourFormat(graphOption))}
               fontFamily="Lato-Regular"
               letterSpacing="0.2px" 
             />
             <YAxis ticks={[0,20,40,60,80]} />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: "transparent" }}/>
-            {/* <Legend /> */}
               <Legend content={<CustomLegend />} />
             <Area
               type="monotone"

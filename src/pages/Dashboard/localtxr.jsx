@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
  import { format } from 'date-fns'
 
 import {
@@ -24,8 +24,6 @@ const TxChart = ({graphOption,graphOptionValue}) => {
   const { timestamps, labels, columns } = apiData;
 
   return timestamps.map((timestamp, index) => {
-    //    const val0 = columns[0]?.values[index];
-    // const val1 = columns[1]?.values[index];
     const val2 = columns[2]?.values[index];
 
     const hasDecimal = typeof val2 === 'number' && !isNaN(val2) && val2 % 1 !== 0;
@@ -39,7 +37,6 @@ const TxChart = ({graphOption,graphOptionValue}) => {
       }
     }else{
       return {
-      // timestamp: new Date(timestamp).toLocaleTimeString(), 
          timestamp: timestamp, 
       [labels[0]]: parseFloat(columns[0].values[index]),   
       [labels[1]]: parseFloat(columns[1].values[index]),
@@ -187,7 +184,6 @@ useEffect(() => {
 
 
   const hourFormat = (graphOption) => {
-    //debugger;
     if (graphOption === 'onehour') {
       return 'HH:mm';
     } else if (graphOption === 'oneday') {
@@ -268,23 +264,14 @@ const CustomLegend = (props) => {
                       <AreaChart data={snrData}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis
-                        //type="number"
                          dataKey="timestamp"
                         tickFormatter={(timestamp) => format(new Date(timestamp), hourFormat(graphOption))}
                           fontFamily="Lato-Regular"
                           letterSpacing="0.2px"
                           orientation="bottom"
                         />
-                        {/* <XAxis
-                        orientation="bottom"
-                          dataKey="name"
-                          reversed
-                          fontFamily="Lato-Regular"
-                          letterSpacing="0.2px"
-                        /> */}
                         <YAxis ticks={[0,1,2,3,4,5,6,7,8,9,10]} />
                         <Tooltip  content={<CustomTooltip />} cursor={{ fill: "transparent" }}/>
-                        {/* <Legend  /> */}
                         <Legend content={<CustomLegend />} />
                         <Area
                           type="monotone"

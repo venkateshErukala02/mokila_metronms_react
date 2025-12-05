@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { format } from 'date-fns'
 import {
     ResponsiveContainer,
@@ -32,9 +32,7 @@ const TemperatureChart = ({ graphOption, graphOptionValue }) => {
         return timestamps.map((timestamp, index) => {
             const Temperature = parseFloat(columns[0].values[index]);
             return {
-                // timestamp: new Date(timestamp).toLocaleTimeString(), 
                 timestamp: timestamp,
-                // [labels[0]]: parseFloat(columns[0].values[index]),
                 Temperature: isNaN(Temperature) ? 0 : Temperature,
             };
         });
@@ -61,8 +59,6 @@ const TemperatureChart = ({ graphOption, graphOptionValue }) => {
 
             if (response.status === 200) {
                 const data = await response.json();
-                // console.log('ppppp',data);
-
 
                 if (graphOption === 'live') {
                     let dt = new Date();
@@ -145,7 +141,6 @@ const TemperatureChart = ({ graphOption, graphOptionValue }) => {
 
 
     const hourFormat = (graphOption) => {
-        //debugger;
         if (graphOption === 'onehour') {
             return 'HH:mm';
         } else if (graphOption === 'oneday') {
@@ -226,11 +221,8 @@ const TemperatureChart = ({ graphOption, graphOptionValue }) => {
                                 tickFormatter={(timestamp) => format(new Date(timestamp), hourFormat(graphOption))}
                             // tickFormatter={(tick) => `${tick}`}
                             />
-                            {/* <YAxis /> */}
-                            {/* <YAxis ticks={[0, 1, 2, 3, 4, 5]} /> */}
                             <YAxis domain={['auto', 'auto']} />
                             <Tooltip content={<CustomTooltip />} cursor={{ fill: "transparent" }} />
-                            {/* <Legend  onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} /> */}
                             <Legend content={<CustomLegend />} />
                             <Area
                                 type="monotone"

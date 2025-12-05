@@ -1,6 +1,5 @@
 import React, { useState, useEffect,useRef } from "react";
 import logo from '../../assets/img/keywestlogo.png'
-// import { RadialBar, Tooltip, RadialBarChart } from "recharts";
 import { PieChart, Pie, Cell, Legend, Tooltip, Label } from "recharts";
 import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux';
@@ -15,11 +14,6 @@ const BsChart = ({ getDataStatus }) => {
    const [activeChart, setActiveChart] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState({ status: false, msg: "" });
-
-  // const getHandleData=(value)=>{
-  //   console.log('check',value);
-
-  // }
 
   const getData = async () => {
     setIsLoading(true);
@@ -40,7 +34,6 @@ const BsChart = ({ getDataStatus }) => {
       };
       const response = await fetch(url, options);
       const data = await response.json();
-      // console.log('newdata',data)
       if (response.ok) {
         setIsLoading(false);
         setUserData(data);
@@ -60,7 +53,7 @@ const BsChart = ({ getDataStatus }) => {
 
   const extractValues = (obj) =>
     Object.entries(obj)
-      .filter(([key]) => key !== "total")  // Exclude 'total'
+      .filter(([key]) => key !== "total") 
       .map(([key, value]) => ({
         name: key,
         down: value.down,
@@ -68,60 +61,8 @@ const BsChart = ({ getDataStatus }) => {
         actualValue: value.down + value.up
       }));
 
-  // const customOrder = ['ap', 'transcoder', 'cam', 'sta', 'encoder'];
-
-
-  // const staArray = userData.sta ? extractValues(userData).sort((a, b) => {
-  //   return customOrder.indexOf(a.name) - customOrder.indexOf(b.name);
-  // }) : [];
-
-  // const hasItem = (name) => staArray.some(item => item.name === name);
-
-  // if (!hasItem('transcoder') && userData.transcoder === '') {
-  //   staArray.splice(1, 0, {
-  //     name:'transcoder',
-  //     down: 0,
-  //     up: 0,
-  //   });
-
-  // }
-
-  // if (!hasItem('cam')) {
-  //   staArray.splice(2, 0, {
-  //     name:'cam',
-  //     down: 0,
-  //     up: 0
-  //   });
-  // }
-
-  // if (!hasItem('obc')) {
-  //   staArray.splice(3, 0, {
-  //     name:'obc',
-  //     down: 0,
-  //    up: 0
-  //   });
-  // }
-
-  // if (!hasItem('ioc')) {
-  //   staArray.splice(6, 0, {
-  //     name: "IOC",
-  //     down: 0,
-  //     up: 0
-  //   });
-
-  // }
-
-  // if (!hasItem('ptmp')) {
-  //   staArray.splice(7, 0, {
-  //     name:'ptmp',
-  //     down: 0,
-  //      up: 0
-  //   });  
-  // }
-
   const staArrayRaw = userData.sta ? extractValues(userData) : [];
 
-// Add missing items first
 const hasItem = (name) => staArrayRaw.some(item => item.name === name);
 
 if (!hasItem('transcoder')) {
@@ -148,22 +89,13 @@ if (!hasItem('ioc')) {
 //   staArrayRaw.push({ name: 'ptmp', down: 0, up: 0 });
 // }
 
-// Now apply sorting based on customOrder
 const customOrder = ['ap', 'transcoder', 'cam', 'obc', 'sta', 'encoder','ioc'];
 const staArray = staArrayRaw.sort((a, b) => {
   const indexA = customOrder.indexOf(a.name);
   const indexB = customOrder.indexOf(b.name);
 
-  // Items not in customOrder go to the end
   return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
 });
-
-  
- 
-
-
-  console.log('paiooia',staArray);
-
 
   const CustomTooltip = ({ active, payload,data }) => {
     if (active && payload && payload.length) {
@@ -187,14 +119,6 @@ const staArray = staArrayRaw.sort((a, b) => {
   
     return null;
   };
-
-  
-  // const CustomTooltip=()=>{
-    
-  // }
-
-  
-  
   
 
   const getRadialColor = (value, type) => {
@@ -217,8 +141,6 @@ const staArray = staArrayRaw.sort((a, b) => {
    
 
   }
-
-
 
   const renderHeadname=(value)=>{
     switch (value) {
@@ -274,25 +196,11 @@ useEffect(() => {
   };
 }, []);
 
-//  const count = useSelector((state) => state);
-  // const isVisible = useSelector((state) => state.visibility.isVisible);
-  // const [currentTab,setCurrentTab] = useState('summary')
-        // const [nodeItemDt, setNodeItemDt] = useState([]);
-
-
- 
-       
         const dataName = useSelector((state) => state.piename.piename);
          console.log('lplppplplplplppleeeeeeeeeeeee',dataName);
         const getChartClass=(item)=>{
-          // if(item ===dataName){
-          //   return 'active';
-          // }else{
-          //   return '';
-          // }
            return item === dataName ? 'active' : '';
         }
-
 
         const location = useLocation();
 
@@ -361,19 +269,12 @@ useEffect(() => {
                       <Cell key={`cell-${idx}`} fill={entry.fill} style={{cursor:"pointer"}}
                       
                       onClick={(e)=> {
-                        //  e.stopPropagation();
                           e.stopPropagation();
                          e.preventDefault();
                          setActiveChart(entry.title)
                         getIndividualhalfpieData(entry.title,entry.name.toLowerCase())}}  
                       />
                     ))}
-                    {/* <Label
-                      // value={item.actualValue}
-                      value={item.actualValue === 0 ? 0 : item.actualValue}
-                      position="center"
-                      style={{ fill: "#000", fontSize: 15 }}
-                    /> */}
                     <Label
                       value={(item.up === 0 && item.down === 0) ? 0 : item.actualValue}
                       position="center"

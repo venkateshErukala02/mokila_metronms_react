@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import DatePicker from "react-datepicker";
@@ -12,7 +12,7 @@ const SnEventTab=()=>{
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [typevalueSel, setTypevalueSel] = useState('syslogd');
     const [typelabelSel, setTypelabelSel] = useState('Syslogs');
-    // const [selectedDuration, setSelectedDuration] = useState(86400000); // keep as raw value
+    // const [selectedDuration, setSelectedDuration] = useState(86400000); 
     const [eventtimeSel, setEventtimeSel] = useState(Date.now() - 86400000);
     const [eventmainSeverityValueSel, setEventmainSeverityValueSel] = useState('-1');
     const [eventmainSeverityLabelSel, setEventmainSeverityLabelSel] = useState('All');
@@ -33,12 +33,6 @@ const SnEventTab=()=>{
      const [isLastPage, setIsLastPage] = useState(false);
 
  const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
-//      const location = useLocation();
-// const nodeData = location.state?.node;
-// useEffect(() => {
-
-//   }, [nodeData]);
-
 
  const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress)|| localStorage.getItem('nodeIpaddress');
 
@@ -55,14 +49,6 @@ const SnEventTab=()=>{
             const username = 'admin';
             const password = 'admin';
             const token = btoa(`${username}:${password}`)
-            // const options = {
-            //     method: "GET",
-            //     headers: {
-            //         'Authorization': `Basic ${token}`,
-            //         "Content-Type": "application/json",
-            //     },
-
-            // };
            let options = {
         method: "GET",
         headers: {
@@ -70,28 +56,6 @@ const SnEventTab=()=>{
             "Content-Type": "application/json",
         },
         };
-
-        // if (typevalueSel === 'syslogd') {
-        //     const now = Date.now();
-        //     const duration = selectedDuration;
-        //     const start = now-duration;
-        //         options = {
-        //     method: "POST",
-        //     headers: {
-        //         'Authorization': `Basic ${token}`,
-        //         "Content-Type": "application/json",
-        //     },
-        // body:JSON.stringify({
-        //     filterSource: `${nodeIpaddress}`, // wrap IP in quotes
-        //     start: `${selectedDuration}`,
-        //     end: "now",
-        //     from: `${fromValue}`,
-        //     size: `${eventmainLimitLabelSel}`
-        // })
-        // };
-        
-        // }
-
             const response = await fetch(url, options);
 
             if (response.status === 204) {
@@ -123,34 +87,9 @@ const SnEventTab=()=>{
         }
     };
 
-    // useEffect(() => {
-    //   const url='api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D1747558597559&ar=glob&limit=50&offset=0&order=desc&orderBy=id'
-    //     getDataEvntMain(url);
-    // }, []);
-
-
-
-    // useEffect(() => {
-    //     const newTimestamp = Date.now() - selectedDuration;
-    //     setEventtimeSel(newTimestamp);
-    // }, [selectedDuration]);
-
-    // useEffect(() => {
-    //     const baseFilter = `eventDisplay==Y;eventSource!=syslogd`;
-    //     const severityFilter = eventmainSeverityValueSel !== "-1" ? `;eventSeverity==${eventmainSeverityValueSel}` : '';
-    //     const timestamp = Date.now() - selectedDuration;
-
-    //     const url = `api/v2/events/list?_s=${baseFilter}${severityFilter};eventCreateTime=gt=${timestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=0`;
-
-    //     getDataEvntMain(url);
-    // }, [selectedDuration, eventmainLimitLabelSel, eventmainSeverityValueSel]);
-
-
     const toggleDropdown = () => {
         setDropdownOpen(!isDropdownOpen);
     };
-
-
 
     useEffect(() => {
 
@@ -194,52 +133,6 @@ const SnEventTab=()=>{
         }
     }, [typevalueSel,nodeDataId,selectedDuration,eventmainLimitLabelSel,fromValue,pageSize]);
 
-    // useEffect(() => {
-    //     const url = `api/v2/audit/list?_s=&limit=${eventauditLimitLabelSel}&offset=0&order=desc&orderBy=id`;
-    //     getDataEvntMain(url);
-    // }, [eventauditLimitLabelSel]);
-
-    // const handleEventIP = async () => {
-
-
-    //     if (!eventipTextipText) {
-    //       alert("Please enter a search term");
-    
-    //     } else {
-    //       setSearchBtn(true)
-    
-    
-    //       try {
-    //         const response = await fetch(`api/v2/nodes/search?_s=sysName==${firmipText}*,label==${firmipText},assetRecord.serialNumber==${firmipText}&limit=100&offset=0&order=asc`, {
-    //           method: "GET",
-    //           headers: {
-    //             "Content-Type": "application/json",
-    //           },
-    //         });
-    //         const data = await response.json();
-    
-    //         if (response.ok) {
-    //           setIsLoading(false);
-    //           setFirmData(data.nodes || []);
-    //           setFirmipText('')
-    //           setIsError({ status: false, msg: "" });
-    //           console.log("okkoo", data);
-    //           console.log("gdgd", response);
-    //           setIsError({ status: false, msg: "" });
-    //         } else {
-    //           throw new Error("data not found");
-    //         }
-    
-    //       } catch (error) {
-    //         setIsLoading(false);
-    //         setIsError({ status: true, msg: error.message });
-    //       }
-    //     }
-    
-    //   }  //
-
-
-
     const formatTime = (timestamp) => {
         const date = new Date(timestamp);
         return date.toLocaleString();
@@ -281,10 +174,6 @@ const SnEventTab=()=>{
         setTypelabelSel(label);
 
     }
-
-
-    
-
 
     const handleMainEventLimitValue = (event) => {
         let selectedIndex = event.target.selectedIndex;
@@ -339,10 +228,6 @@ const SnEventTab=()=>{
                 setIsLastPage(true);
             }
 
-
-
-    
- 
     return (
         <>
          <article className="row">
@@ -354,15 +239,7 @@ const SnEventTab=()=>{
                             <i className="fa-solid fa-arrow-left"></i>
                         </button>
                         <button className="clearfix numcl"><span>{pageSize}</span></button>
-                        <button className="clearfix arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
-                        {/* <span className="eventscp">Scope : </span>
-                        <span className="eventgolcl" onClick={toggleDropdown} >Golbal <span class="fa fa-chevron-down highlightText v-align-tt iconsy"></span></span> */}
-
-                        {/* <input type="text"  value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="IP Address " id="" className="form-contltranscd-evnt" />
-                        <button className="clearfix createbtn" >Search</button>
-                        <button className="clearfix createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button> */}
-
-             
+                        <button className="clearfix arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>         
                     </article>
                     <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
                         <button className="clearfix arrowlf">
@@ -408,24 +285,6 @@ const SnEventTab=()=>{
                                 <option value="now-1d" label="24 hours">24 hours</option>
                                 <option value="now-2d" label="48 hours">48 hours</option>
                             </select>
-
-                            {/* <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
-
-                            <article className="trans-datepickerbg" style={{display:'inline-block'}}>
-                            <DatePicker
-                            selected={selectedDate}
-                            showTimeSelect
-                             className="myDatepickercl"
-                            dateFormat="yyyy-MM-dd HH:mm"
-                            onChange={(date) => setSelectedDate(date)} />
-
-                            </article>
-                             <button class="clearfix createbtn" style={{marginLeft:'10px'}} onClick={()=>{
-                        setDate(selectedDate)
-                    }
-                    }>Search</button> */}
-                          
-
                             <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
                                 <option value="0" label="25">25</option>
                                 <option value="1" label="50">50</option>
@@ -484,7 +343,6 @@ const SnEventTab=()=>{
                             {Array.isArray(eventmainData) && eventmainData.length > 0 ? (
                                 eventmainData.map((event) => (
                                     <tr key={event.id}>
-                                        {/* <td><i className={getCategoryClass(event.severity)}></i>{event.ipAddress ? event.ipAddress : event.host}</td> */}
                                         <td>{formatTime(event.time)}</td>
                                         <td>{event.severity}</td>
                                         <td>{event.logMessage}</td>

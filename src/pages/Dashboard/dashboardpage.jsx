@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
 import '../ornms.css'
-
 import GdChart from "./scopepiechart";
 import BsChart from "./scoperaidalchart";
 import LeftNavList from "../Navbar/leftnavpage";
 import { useSelector } from 'react-redux';
 import Tableone from "./eventstb";
-// import { toggleVisibility } from '../Action/action';
-// import { getAuthToken } from '../config';
 import RadialDataTb from "./radialdatatb";
 import GlobalView from "./globalview";
 import LineoneView from "./lineoneview";
@@ -89,17 +86,15 @@ const DashBoardPage = () => {
         const dropdown = document.getElementById('dropdown');
         if (dropdown) {
             if (dropdown.style.display === 'block' || dropdown.classList.contains('show')) {
-                // Hide the dropdown with transition
                 dropdown.classList.remove('show');
                 setTimeout(() => {
-                    dropdown.style.display = 'none'; // Hide after transition
-                }, 500); // Match the transition time
+                    dropdown.style.display = 'none'; 
+                }, 500); 
             } else {
-                // Show the dropdown with transition
                 dropdown.style.display = 'block';
                 setTimeout(() => {
-                    dropdown.classList.add('show'); // Add class after it's visible to start transition
-                }, 10); // Tiny delay to allow for display: block to be applied first
+                    dropdown.classList.add('show'); 
+                }, 10); 
             }
         }
     };
@@ -205,15 +200,12 @@ const DashBoardPage = () => {
                             {renderDashboardCont()}
 
                         </article>
-                        {/* </article> */}
-                        {/* <article className="container-fluid"> */}
                         <article className="row" style={{ margin: '5px 0px 5px 5px' }}>
                             <article className="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12 border-allsdnew" style={{ height: '0vh' }} >
                                 <RadialDataTb radialData={radialData} dname={dname} circleId={circleId} lineInfo={lineInfo} />
 
                             </article>
                         </article>
-                        {/* </article> */}
                     </article>
                     <article className="col-sm-4 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
 

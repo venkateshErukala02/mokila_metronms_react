@@ -42,9 +42,6 @@ if(startDate && endDate !== null){
 }  
 }
 
-// const components = [<LatencyChart/>'']
-
-
 const data = [
   { date: new Date('2024-01-01'), value: 100 },
   { date: new Date('2024-01-02'), value: 200 },
@@ -141,7 +138,6 @@ const data = [
               </article>
             </article>
             <article className="col-md-12">
-              {/* <AreaChart data={data} graphOption={graphOption} graphOptionValue={graphOptionValue}/> */}
             </article>
           </article>
         </article>
