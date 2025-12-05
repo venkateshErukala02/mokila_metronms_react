@@ -1,22 +1,19 @@
-import React,{useState} from "react";
+import {useState} from "react";
 import '../ornms.css'
 import './../Discovery/discovery.css';
 
 
 const ProvisionContainerDis = ({ proviContdata,getCloseProviCont,setIsProvisioned }) => {
 
-     const [loading, setLoading] = useState(false);
-    
-        const [error, setError] = useState('');
-        const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const handleCancleproviCont=()=>{
         getCloseProviCont()
     }
 
     const handleProviContdata = async (data) => {
-        console.log('kkppk',data);
         const nodeIds = data.map(item => item.nodeId);
-        console.log('lpplsszzzzzzzz',nodeIds)
         const url = 'api/v2/profiles/4/applyToNodes'
 
         setError('');
@@ -44,7 +41,7 @@ const ProvisionContainerDis = ({ proviContdata,getCloseProviCont,setIsProvisione
             console.error('Error:', error);
             setError('An error occurred while contacting the server.');
         } finally {
-            setLoading(false); // Turn off loading state
+            setLoading(false); 
         }
     };
 

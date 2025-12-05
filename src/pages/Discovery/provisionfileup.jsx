@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import './../Discovery/discovery.css';
 
 
@@ -22,7 +22,7 @@ const ProvisionFileUp = () => {
         setSuccess('');
 
         const formData = new FormData();
-        formData.append('upfile', selectedFile); // your API should accept a field named "file"
+        formData.append('upfile', selectedFile);
 
         try {
             const username = 'admin';
@@ -34,7 +34,7 @@ const ProvisionFileUp = () => {
                     'Authorization': `Basic ${token}`
                    
                 },
-                body: formData, // Don't set Content-Type manually!
+                body: formData, 
             });
 
             if (response.ok) {
@@ -71,10 +71,6 @@ const ProvisionFileUp = () => {
     const handleFileChange = (event) => {
         setSelectedFile(event.target.files[0]);
     };
-
-
-
-
 
 
     return (

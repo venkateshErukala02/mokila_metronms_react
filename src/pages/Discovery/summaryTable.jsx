@@ -1,16 +1,13 @@
-import React,{useState,useEffect} from "react";
+import {useState,useEffect} from "react";
 import '../ornms.css';
 import gif from '../../assets/img/progress.gif'
 import './../Discovery/discovery.css';
 
 
-
-
-
 const SummaryTable=()=>{
-     const [summaryDatatb, setSummaryDatatb] = useState({});
-        const [isLoading, setIsLoading] = useState(false);
-        const [isError, setIsError] = useState({ status: false, msg: "" });
+    const [summaryDatatb, setSummaryDatatb] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
+    const [isError, setIsError] = useState({ status: false, msg: "" });
 
     const getDatasummarytb = async () => {
           setIsLoading(true);
@@ -20,23 +17,20 @@ const SummaryTable=()=>{
             const password = 'admin';
             const token = btoa(`${username}:${password}`)
             const url='api/v2/dtask/list?_s=&limit=25&offset=0&order=desc&orderBy=id';
-           
-      const options = {
-        method: "GET", 
-        headers: {
-          'Authorization': `Basic ${token}`,
-          "Content-Type": "application/json",
-      },
-
-      };
+            const options = {
+              method: "GET", 
+              headers: {
+                'Authorization': `Basic ${token}`,
+                "Content-Type": "application/json",
+                 },
+            };
             const response = await fetch(url, options);
             if (response.status === 204) {
                 setIsLoading(false);
-                setSummaryDatatb([]); // Treat as empty data
+                setSummaryDatatb([]);
                 return;
             }
             const data = await response.json();
-    //       console.log('summtbb',data.list)
             if (response.ok) {
               setIsLoading(false);
               setSummaryDatatb(data);
@@ -95,30 +89,20 @@ const SummaryTable=()=>{
                     </tr>
                   </thead>
                   <tbody className="distbbdtwo">
-                  {/* {isLoading && (
-                            <tr>
-                                <td colSpan="8" style={{ textAlign: "center" }}>
-                                    Loading...
-                                </td>
-                            </tr>
-                        )}
-
-                        {isError.status && (
-                            <tr>
-                                <td colSpan="12" style={{ textAlign: "center", color: "red" }}>
-                                    {isError.msg}
-                                </td>
-                            </tr>
-                        )}
-
-                        {!isLoading && !isError.status && summaryDatatb.list === null && (
-                            <tr>
-                                <td colSpan="12" style={{ textAlign: "center" }}>
-                                    No Data Available
-                                </td>
-                            </tr>
-                        )}
-                    {summaryDatatb.list && summaryDatatb.list.map((item) => (
+                  {isLoading ? (
+                    <tr>
+                      <td colSpan="6" style={{ textAlign: "center", padding: "50px 0" }}>
+                        {/* <img src={gif} alt="Loading..." style={{ height: '40px' }} /> */}
+                      </td>
+                    </tr>
+                  ) : isError.status ? (
+                    <tr>
+                      <td colSpan="6" style={{ textAlign: "center", color: "red" }}>
+                        {isError.msg}
+                      </td>
+                    </tr>
+                  ) : summaryDatatb.list && summaryDatatb.list.length > 0 ? (
+                    summaryDatatb.list.map((item) => (
                       <tr key={item.id}>
                         <td>{item.date}</td>
                         <td>{item.start}</td>
@@ -126,51 +110,19 @@ const SummaryTable=()=>{
                         <td>{item.status}</td>
                         <td>{item.icmp}</td>
                         <td>{item.snmp}</td>
-
                       </tr>
-                    ))} */}
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="6" style={{ textAlign: "center" }}>
+                        No Data Available  
 
-
-  {isLoading ? (
-    <tr>
-      <td colSpan="6" style={{ textAlign: "center", padding: "50px 0" }}>
-        {/* <img src={gif} alt="Loading..." style={{ height: '40px' }} /> */}
-      </td>
-    </tr>
-  ) : isError.status ? (
-    <tr>
-      <td colSpan="6" style={{ textAlign: "center", color: "red" }}>
-        {isError.msg}
-      </td>
-    </tr>
-  ) : summaryDatatb.list && summaryDatatb.list.length > 0 ? (
-    summaryDatatb.list.map((item) => (
-      <tr key={item.id}>
-        <td>{item.date}</td>
-        <td>{item.start}</td>
-        <td>{item.end}</td>
-        <td>{item.status}</td>
-        <td>{item.icmp}</td>
-        <td>{item.snmp}</td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan="6" style={{ textAlign: "center" }}>
-        No Data Available  
-
-      </td>
-    </tr>
-  )}
-
-
-                    
+                      </td>
+                    </tr>
+                  )}
                   </tbody>
                 </table>
               </article>
-            
-
-
             </article>
         </>
     )

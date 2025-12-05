@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import '../ornms.css';
 import './../Discovery/discovery.css';
 
@@ -59,7 +59,7 @@ const DiscovContai = () => {
             console.error('Error:', error);
             setError('An error occurred while contacting the server.');
         } finally {
-            setLoading(false); // Turn off loading state
+            setLoading(false); 
         }
     };
 
@@ -97,7 +97,7 @@ const DiscovContai = () => {
             console.error('Error:', error);
             setError('An error occurred while contacting the server.');
         } finally {
-            setLoading(false); // Turn off loading state
+            setLoading(false); 
         }
 
     }
@@ -124,44 +124,6 @@ const DiscovContai = () => {
         setSelectedFile(event.target.files[0]);
     };
 
-    // const handleUpload = async() => {
-    //     if (selectedFile) {
-    //         // console.log("Uploading:", selectedFile.name);
-    //         // alert(`Uploading: ${selectedFile.name}`);
-    //         // Handle upload to server here
-    //         const requestBody = {
-    //             begin: ipbeginValue,
-    //             end: ipendValue
-    //         };
-    
-    //         try {
-    //             const response = await fetch("api/v2/discovery/rangedisc", {
-    //                 method: "POST",
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                 },
-    //                 body: JSON.stringify(requestBody),
-    //             });
-    //             if (response.ok) {
-    //                 setSuccess('Discovery started successfully');
-    //                 setIpEndValue('');
-    //                 setIpbeginValue('')
-    //             } else {
-    //                 setError('Error starting discovery');
-    //             }
-    //         } catch (error) {
-    //             console.error('Error:', error);
-    //             setError('An error occurred while contacting the server.');
-    //         } finally {
-    //             setLoading(false); // Turn off loading state
-    //         }
-    
-
-
-    //     } else {
-    //         alert("Please select a file first.");
-    //     }
-    // };
 
     const handleUpload = async (e) => {
         e.preventDefault();
@@ -175,7 +137,7 @@ const DiscovContai = () => {
         setSuccess('');
     
         const formData = new FormData();
-        formData.append('upfile', selectedFile); // your API should accept a field named "file"
+        formData.append('upfile', selectedFile);
     
         try {
             const username = 'admin';
@@ -186,7 +148,7 @@ const DiscovContai = () => {
                 headers: {
                     'Authorization': `Basic ${token}`
                 },
-                body: formData, // Don't set Content-Type manually!
+                body: formData, 
             });
     
             if (response.ok) {
@@ -241,7 +203,7 @@ const DiscovContai = () => {
                                     className="clearfix form-controldis searchbar"
                                     placeholder="Specific IP Address"
                                     value={discAddValue}
-                                    onChange={(e) => setDiscAddValue(e.target.value)} // Update the state on change
+                                    onChange={(e) => setDiscAddValue(e.target.value)}
                                 />
                             </li>
                             <li>
@@ -264,7 +226,7 @@ const DiscovContai = () => {
                                     className="clearfix form-controldis searchbar"
                                     placeholder="IP Range Begin"
                                     value={ipbeginValue}
-                                    onChange={(e) => setIpbeginValue(e.target.value)} // Update the state on change
+                                    onChange={(e) => setIpbeginValue(e.target.value)} 
                                 />
                             </li>
                             <li>
@@ -273,7 +235,7 @@ const DiscovContai = () => {
                                     className="clearfix form-controldis searchbar"
                                     placeholder={isByMask ? "Subnet Mask" : "IP Range End"}
                                     value={ipendValue}
-                                    onChange={(e) => setIpEndValue(e.target.value)} // Update the state on change
+                                    onChange={(e) => setIpEndValue(e.target.value)} 
                                 />
                             </li>
                             <li>
@@ -318,8 +280,6 @@ const DiscovContai = () => {
                     </article>
 
                     )}
-                    {/* {error && <p className="error-message">{error}</p>}
-                    {success && <p className="success-message">{success}</p>} */}
                 </article>
 
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import './../Discovery/discovery.css';
 
 
@@ -80,7 +80,7 @@ const ProvisionTb = ({ getProviContData }) => {
       setLabelRadio(label)
 
     }
-    // setLabelText(label); // optional if needed for UI
+    // setLabelText(label); 
   };
   const handleLink = (event) => {
     const value = event.target.value;
@@ -105,10 +105,6 @@ const ProvisionTb = ({ getProviContData }) => {
     setLimitValueSelLabel(label)
   }
 
-
-
-
-
   const handleCheckboxChange = (key) => {
     setSelectedRows((prevSelected) =>
       prevSelected.includes(key)
@@ -126,9 +122,7 @@ const ProvisionTb = ({ getProviContData }) => {
     }
   };
   
-  
- 
-  // Handle Apply button click - Send selected data via API
+
   const handleApply = async () => {
     if (selectedRows.length === 0) {
       alert("Please select at least one row.");
@@ -150,7 +144,6 @@ const ProvisionTb = ({ getProviContData }) => {
       };
       const response = await fetch(url, options);
       const data = await response.json();
-      console.log('jhsjkfjkskksssssssss', data.list)
       if (response.ok) {
         setIsLoading(false);
         setFirmData(data);
@@ -177,8 +170,6 @@ const ProvisionTb = ({ getProviContData }) => {
   return () => clearInterval(intervalId);
   }, [unassignLabel, limitValueSelLabel]);
   
-
-//  let url='api/v2/discovery/showunprovisioned?show=none&ofs=0&limit=25&sort=ipAddress&by=desc'
 
   return (
 
@@ -231,12 +222,6 @@ const ProvisionTb = ({ getProviContData }) => {
               <span className="addcloum" style={{ marginLeft: '5px' }}>Select Columns<span style={{ marginLeft: "7px", marginTop: "2px" }} class="glyphicon glyphicon-tasks"></span>
 
               </span>
-              {/* <select className="form-controlfirm" value={unassignSel} onChange={handleUnassign} style={{ width: "auto", marginLeft: '0px', display: 'inline-block' }} aria-invalid="false">
-                <option value="1" selected="selected" label="Unassigned">Unassigned</option>
-                <option value="0" label="All">All</option>
-
-
-              </select> */}
               <select className="form-controlfirm" value={limitValueSel} onChange={handleLimitValue} style={{ width: "auto" }} aria-invalid="false">
                 <option value="0" label="100">100</option>
                 <option value="1" selected="selected" label="200">200</option>
@@ -251,23 +236,10 @@ const ProvisionTb = ({ getProviContData }) => {
               }} />
               <button className="clearfix createbtn" onClick={handleFirmIP} style={{ marginLeft: '7px' }}>Search</button>
               <button className="clearfix createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
-
-              {/* <select className="form-controlfirm" value={provisionSel} onChange={handleProvision} style={{ marginRight: '5px' }} aria-invalid="false">
-                <option value="1" selected="selected" label="Firmware">Firmware</option>
-                <option value="0" label="Provision">Provision</option>
-
-
-              </select> */}
               <button className="clearfix createbtn m-l10">Upgrade</button>
               <span className="addcloum" style={{ marginLeft: '5px' }}>Select Columns<span style={{ marginLeft: "7px", marginTop: "2px" }} class="glyphicon glyphicon-tasks"></span>
 
               </span>
-              {/* <select className="form-controlfirm"  value={unassignSel} onChange={handleUnassign} style={{ width: "auto", marginLeft: '10px', display: 'inline-block' }} aria-invalid="false">
-                <option value="1" selected="selected" label="Unassigned">Unassigned</option>
-                <option value="0" label="All">All</option>
-
-
-              </select> */}
               <select className="form-controlfirm" value={limitValueSel} onChange={handleLimitValue} style={{ width: "auto" }} aria-invalid="false">
                 <option value="0" label="100">100</option>
                 <option value="1" selected="selected" label="200">200</option>
@@ -275,10 +247,6 @@ const ProvisionTb = ({ getProviContData }) => {
                 <option value="3" label="400">400</option>
               </select>
             </article>
-
-
-
-
           </article>
         </article>
       </article>
@@ -321,104 +289,55 @@ const ProvisionTb = ({ getProviContData }) => {
                 </td>
               </tr>
             )}
+            {!isLoading && !isError.status && (
+              <>
+                {(() => {
+                  const filteredData = firmData
+                    .filter((node) => {
+                      if (linkLabel === "All" || linkLabel === "") return true;
+                      return node.productCode?.toLowerCase() === linkLabel.toLowerCase();
+                    })
+                    .filter((node) => 
+                      labelRadio === "none" || 
+                      labelRadio === "" || 
+                      labelRadio.toUpperCase() === "ALL" || 
+                      node.radioMode === labelRadio.toUpperCase()
+                    );
 
-            {/* {!isLoading && !isError.status &&  (!firmData || firmData.length === 0) && (
-              <tr>
-                <td colSpan="12" style={{ textAlign: "center" }}>
-                  No Data Available
-                </td>
-              </tr>
-            )} */}
+                  if (filteredData.length === 0) {
+                    return (
+                      <tr>
+                        <td colSpan="11" style={{ textAlign: "center" }}>
+                          No data available
+                        </td>
+                      </tr>
+                    );
+                  }
 
-            {/* {!isLoading &&
-                            !isError.status &&
-                            firmData.length > 0 && */}
-
-            {/* {!isLoading &&
-              !isError.status &&
-              firmData.length > 0 &&
-              firmData
-                .filter((node) => {
-                  if (linkLabel === "All" || linkLabel === "") return true;
-                  return node.productCode?.toLowerCase() === linkLabel.toLowerCase();
-                })
-                // .filter((node) => {
-                //   if (labelRadio.toUpperCase() === "All" || labelRadio === "") return true;
-                //   return node.radioMode === labelRadio.toUpperCase();
-                // })
-                // .filter((node) => node.radioMode === labelRadio.toUpperCase())
-                // .filter((node) => node.radioMode === labelRadio.toUpperCase() || labelRadio.toUpperCase() === "ALL" || labelRadio === "")
-                .filter((node) => labelRadio === "none" || labelRadio === "" || labelRadio.toUpperCase() === "ALL" || node.radioMode === labelRadio.toUpperCase())
-
-                .map((node, index) => (
-                  <tr key={node.id}>
-                    <td><input type="checkbox"
-
-                      checked={selectedRows.includes(node.id)}
-                      onChange={() => handleCheckboxChange(node.id)} /></td>
-
-                    <td>{node.sysName}</td>
-                    <td>{node.ipAddress}</td>
-                    <td>{node.macaddress}</td>
-                    <td>{node.serialNum}</td>
-                    <td>{node.modelNum}</td>
-                    <td>{node.firmware}</td>
-                    <td>{node.status}</td>
-                    <td>{node.sysUptime}</td>
-                    <td>{node.productCode}</td>
-                    <td>{node.radioMode}</td>
-                  </tr>
-                ))} */}
-
-{!isLoading && !isError.status && (
-  <>
-    {(() => {
-      const filteredData = firmData
-        .filter((node) => {
-          if (linkLabel === "All" || linkLabel === "") return true;
-          return node.productCode?.toLowerCase() === linkLabel.toLowerCase();
-        })
-        .filter((node) => 
-          labelRadio === "none" || 
-          labelRadio === "" || 
-          labelRadio.toUpperCase() === "ALL" || 
-          node.radioMode === labelRadio.toUpperCase()
-        );
-
-      if (filteredData.length === 0) {
-        return (
-          <tr>
-            <td colSpan="11" style={{ textAlign: "center" }}>
-              No data available
-            </td>
-          </tr>
-        );
-      }
-
-      return filteredData.map((node) => (
-        <tr key={node.ipAddress}>
-          <td>
-            <input
-              type="checkbox"
-              checked={selectedRows.includes(node.ipAddress)}
-      onChange={() => handleCheckboxChange(node.ipAddress)}
-            />
-          </td>
-          <td>{node.sysName}</td>
-          <td>{node.ipAddress}</td>
-          <td>{node.macaddress}</td>
-          <td>{node.serialNum}</td>
-          <td>{node.modelNum}</td>
-          <td>{node.firmware}</td>
-          <td>{node.status}</td>
-          <td>{node.sysUptime}</td>
-          <td>{node.productCode}</td>
-          <td>{node.radioMode}</td>
-        </tr>
-      ));
-    })()}
-  </>
-)}
+                  return filteredData.map((node) => (
+                    <tr key={node.ipAddress}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selectedRows.includes(node.ipAddress)}
+                  onChange={() => handleCheckboxChange(node.ipAddress)}
+                        />
+                      </td>
+                      <td>{node.sysName}</td>
+                      <td>{node.ipAddress}</td>
+                      <td>{node.macaddress}</td>
+                      <td>{node.serialNum}</td>
+                      <td>{node.modelNum}</td>
+                      <td>{node.firmware}</td>
+                      <td>{node.status}</td>
+                      <td>{node.sysUptime}</td>
+                      <td>{node.productCode}</td>
+                      <td>{node.radioMode}</td>
+                    </tr>
+                  ));
+                })()}
+              </>
+            )}
 
           </tbody>
         </table>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import '../ornms.css';
 import SumBarChart from './provisionfileup';
 import LeftNavList from "../Navbar/leftnavpage";
