@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import LeftNavList from "../Navbar/leftnavpage";
 import { useSelector } from 'react-redux';
 import '../ornms.css';
@@ -8,7 +8,6 @@ import './../Inventory/inventory.css';
 const InventRpt = () => {
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const isVisible = useSelector(state => state.visibility.isVisible);
-
     const [invenData, setInvenData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
@@ -27,24 +26,15 @@ const InventRpt = () => {
             const password = 'admin';
             const token = btoa(`${username}:${password}`)
             const url = `api/v2/nodes?_s=&limit=${limitValueSelLabel}&offset=${pageSize}&order=asc&orderBy=id`;
-
-
             const options = {
                 method: "GET",
                 headers: {
                     'Authorization': `Basic ${token}`,
                     "Content-Type": "application/json",
                 },
-          
-
             };
             const response = await fetch(url, options);
-
             const data = await response.json();
-
-
-
-
             if (response.ok) {
                 setIsLoading(false);
                 setInvenData(data);
@@ -88,69 +78,6 @@ const InventRpt = () => {
         return `${hours}:${minutes}:${seconds}.${milliseconds}`;
     };
 
-
-    // const handleDelete = async(idToDelete) => {
-    //         const requestBody = {
-    //            nodeCheck : idToDelete,
-    //            nodeData : idToDelete
-    //         };
-
-    //         try {
-    //             const response = await fetch("admin/deleteSelNodes", {
-    //                 method: "POST",
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                 },
-    //                 body: JSON.stringify(requestBody),
-    //             });
-    //             if (response.ok) {
-    //                 setSuccess('Discovery started successfully');
-
-    //             } else {
-    //                 setIsError('Error starting discovery');
-    //             }
-    //         } catch (error) {
-    //             console.error('Error:', error);
-    //             setIsError('An error occurred while contacting the server.');
-    //         } finally {
-    //             setIsLoading(false); // Turn off loading state
-    //         }
-
-    //     }
-
-    // const handleDelete = async (idToDelete) => {
-    //     const formData = new FormData();
-    //     formData.append("nodeCheck", idToDelete);
-    //     formData.append("nodeData", idToDelete);
-
-    //     try {
-    //         const response = await fetch("admin/deleteSelNodes", {
-    //             method: "POST",
-    //             body: formData, // Note: Do NOT set Content-Type here
-    //         });
-
-    //         if (response.ok) {
-    //             setSuccess("Node deleted successfully");
-
-    //             // Update UI: Remove deleted item from table
-    //             const updatedNodes = invenData.node.filter(node => node.id !== idToDelete);
-    //             setInvenData(prev => ({
-    //                 ...prev,
-    //                 node: updatedNodes,
-    //                 totalCount: updatedNodes.length
-    //             }));
-    //         } else {
-    //             setIsError({ status: true, msg: "Error deleting node" });
-    //         }
-    //     } catch (error) {
-    //         console.error("Error:", error);
-    //         setIsError({ status: true, msg: "An error occurred while deleting node." });
-    //     } finally {
-    //         setIsLoading(false);
-    //     }
-    // };
-
-
     const getNodeIdsBySelectedIPs = () => {
         if (!Array.isArray(invenData.node)) return [];
         return invenData.node
@@ -174,9 +101,6 @@ const InventRpt = () => {
             bodyData.append("nodeCheck", id);
             bodyData.append("nodeData", id);
         });
-        // const bodyData = new URLSearchParams();
-        // bodyData.append("nodeCheck", idToDelete);
-        // bodyData.append("nodeData", idToDelete);
 
         try {
             const response = await fetch("admin/deleteSelNodes", {
@@ -230,10 +154,6 @@ const InventRpt = () => {
         );
     };
 
-
-
-
-
     const toggleDropdown = () => {
         setDropdownOpen(!isDropdownOpen);
     };
@@ -260,7 +180,6 @@ const InventRpt = () => {
                             // setFromValue('0');
                     }
         }
-
 
         const handleLimitValue = (event) => {
         setLimitValueSel(event.target.value);
