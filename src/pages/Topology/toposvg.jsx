@@ -180,7 +180,8 @@ useEffect(() => {
       if(textName.text === 'yard_1'){
           svg= 'davisville_track.svg'
       }else{
-        svg = textName.data.display+'.svg';
+        // svg = textName.data.display+'.svg';
+        svg= 'davisville_track.svg'
       }
     }
     }

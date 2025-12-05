@@ -318,8 +318,8 @@ const DiscovContai = () => {
                     </article>
 
                     )}
-                    {error && <p className="error-message">{error}</p>}
-                    {success && <p className="success-message">{success}</p>}
+                    {/* {error && <p className="error-message">{error}</p>}
+                    {success && <p className="success-message">{success}</p>} */}
                 </article>
 
 
