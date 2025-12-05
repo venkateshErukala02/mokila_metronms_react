@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
 import ConfigChangeSub from "./configchangesub";
@@ -25,7 +25,7 @@ const ConfigChange = () => {
     ];
 
     const handleChange = (value) => {
-        setSelected(value); // only one selected at a time
+        setSelected(value); 
     };
         
     const getConfigChangeData = async (url,isInterval = false) => {
@@ -54,7 +54,7 @@ const ConfigChange = () => {
                 setIsLoading(false);
                  if (JSON.stringify(data) !== JSON.stringify(previousDataRef.current)) {
                     setConfigChangeData(data);
-                    previousDataRef.current = data; // Update the ref with new data
+                    previousDataRef.current = data; 
                 }
                 setIsError({ status: false, msg: "" });
             } else {
@@ -82,10 +82,6 @@ const ConfigChange = () => {
          fetchIntervalData();
 
   const intervalId = setInterval(fetchIntervalData, 10000);
-    
-        // const intervalId = setInterval(() => {
-        //     getConfigChangeData(url);
-        // }, 10000); 
     
         return () => clearInterval(intervalId);
     
@@ -197,9 +193,8 @@ const handleBulkDelete = async () => {
     const password = 'admin';
     const token = btoa(`${username}:${password}`);
 
-    // Build request body
     const requestBody = {
-        list: selectedTasks   // e.g. [21, 18]
+        list: selectedTasks   
     };
 
     try {
@@ -217,12 +212,10 @@ const handleBulkDelete = async () => {
             throw new Error("Bulk delete failed");
         }
 
-        // Refresh table after delete
         await getConfigChangeData(
                 `api/v2/task/list?show=configpush&status=${selected}&offset=0&count=25`
         );
 
-        // Clear selection
         setSelectedTasks([]);
 
     } catch (error) {

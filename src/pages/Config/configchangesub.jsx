@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
 import DatePicker from "react-datepicker";
@@ -205,27 +205,6 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
 
               const handleApplyConfigChange = async () => {
                 const numbNodes = addedItems.map(item => Number(item));
-//                 {
-//     "deviceType": "obc",
-//     "nodes": [
-//         123,
-//         568
-//     ],
-//     "params": [
-//         {
-//             "key": "1",
-//             "value": "sdf"
-//         },
-//         {
-//             "key": "2",
-//             "value": "sdf"
-//         },
-//         {
-//             "key": "3",
-//             "value": "sdf"
-//         }
-//     ]
-// }
                 const requestBody = {
                     deviceType : deviceType,
                     nodes :numbNodes,
@@ -246,11 +225,9 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                     body: JSON.stringify(requestBody),
                 });
                 if (response.ok) {
-                    // setSuccess('Discovery started successfully');
                     alert('Firmware upload started successfully')
                     handleProfileContclose();
                     setDeviceType('');
-                    // setVersionTitle('');
                     setSearchValue('');
                     setSearchBtn(false);
                     setSearchData([]);

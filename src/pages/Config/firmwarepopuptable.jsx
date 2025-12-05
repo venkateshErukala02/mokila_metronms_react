@@ -21,66 +21,6 @@ const FirmwarePopupTable = ({ currentTagid,firmpopupData }) => {
      const firmData = firmpopupData || {}; 
     const taskDetails = firmData.taskDetails || [];
 
-
-    // const handleCurrentTagData = async (url) => {
-    //     if (!currentTagid) {
-    //         alert("Please enter a search term");
-    //         return;
-    //     }
-
-    //     setSearchBtn(true);
-    //     setIsLoading(true);
-    //     setIsError({ status: false, msg: "" });
-
-    //     try {
-    //         const response = await fetch(url,
-    //             // `api/v2/nodes/search?_s=assetRecord.serialNumber==${radialipText},sysName==${radialipText},label==${radialipText}&limit=${limitValueSelLabel}&offset=0&order=asc`,
-    //             {
-    //                 method: "GET",
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                 },
-    //             }
-    //         );
-
-    //         if (response.status === 204) {
-    //             setIsLoading(false);
-    //             setRdData([]);
-    //             return;
-    //         }
-
-    //         const data = await response.json(); // Only parse once
-
-    //         if (response.ok) {
-    //             setIsLoading(false);
-    //             // setRdData(data || []);
-    //             setRdData(Array.isArray(data) ? data : [data])
-    //             console.log('popoopopo', data);
-    //             console.log('fghjk', rdData);
-    //             setIsError({ status: false, msg: '' });
-    //         } else {
-    //             throw new Error("Data not found");
-    //         }
-    //     } catch (error) {
-    //         setIsLoading(false);
-    //         setIsError({ status: true, msg: error.message || "Something went wrong" });
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     if (!currentTagid) return;
-    //     const url = `api/v2/wayside/fetchtime/${currentTagid}`;
-    //     handleCurrentTagData(url);
-    // }, [currentTagid]);
-
-    // useEffect(() => {
-    //     if (!radialipText.trim()) return;
-    //     const url = `api/v2/nodes/search?_s=assetRecord.serialNumber==${radialipText},sysName==${radialipText},label==${radialipText}&limit=${limitValueSelLabel}&offset=0&order=asc`;
-    //     handleRadialIP(url);
-
-
-    // }, [limitValueSelLabel]);
-
     const handleClearSerch = () => {
         setSearchBtn(false);
         setRadialipText('');
@@ -99,18 +39,6 @@ const FirmwarePopupTable = ({ currentTagid,firmpopupData }) => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    // const count = useSelector(state => state.count);
-
-    // const handleRowClick = (node) => {
-    //     if (`${node.productCode}` === 'AP') {
-    //         navigate('/SN-view')
-    //         dispatch(handleNodeData(node))
-    //     } else {
-    //         navigate(`${node.productCode}-view`, { state: { node } });
-    //         dispatch(handleNodeData(node))
-    //     }
-
-    // };
 
 
     const handleIncreamentOffset = () => {

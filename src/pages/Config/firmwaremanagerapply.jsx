@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
 import DatePicker from "react-datepicker";
@@ -72,7 +72,7 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
             console.error('Error:', error);
             setError('An error occurred while contacting the server.');
         } finally {
-            setLoading(false); // Turn off loading state
+            setLoading(false); 
         }
 
     }
@@ -214,7 +214,7 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
         console.error('Error:', error);
         setError('An error occurred while contacting the server.');
     } finally {
-        setLoading(false); // Turn off loading state
+        setLoading(false); 
     }
 
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
 
@@ -63,7 +63,7 @@ const FirmwareMngSubCont = ({ handleSubContainer, refreshLineData, mode, line })
             console.error('Error:', error);
             setError('An error occurred while contacting the server.');
         } finally {
-            setLoading(false); // Turn off loading state
+            setLoading(false);
         }
 
     }
@@ -172,7 +172,6 @@ const FirmwareMngSubCont = ({ handleSubContainer, refreshLineData, mode, line })
                                     />
                                     <button onClick={() => document.getElementById("hiddenFileInput").click()} class="attachcl">
                                         <i class="fa-solid fa-paperclip"></i></button>
-                                    {/* <button onClick={handleUpload} class="uploadcl"><i class="fa-solid fa-upload"></i></button> */}
                                 </article>
                                 <hr class="hrnote"></hr>
                                 <center className="d-f">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
 import './../Inventory/inventory.css';
@@ -52,26 +52,15 @@ const FirmwareContainer = () => {
         }
     };
 
-
-    // useEffect(() => {
-
-    //     const url = `api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=25`;
-    //     getFimwareData(url);                        
-        
-    // }, []);
-
     useEffect(() => {
     const url = `api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=25`;
 
-    // fetch immediately
     getFimwareData(url);
 
-    // fetch repeatedly every 10 seconds
     const intervalId = setInterval(() => {
         getFimwareData(url);
-    }, 30000); // 10 sec (change as needed)
+    }, 30000); 
 
-    // cleanup interval on selected change OR component unmount
     return () => clearInterval(intervalId);
 
 }, [selected]);
@@ -92,7 +81,6 @@ const FirmwareContainer = () => {
     const handleSubContainer = (shouldRefresh = false) => {
     setProfileStatusCont(false);
 
-    // Refresh only when child requests it
     if (shouldRefresh) {
         getFimwareData(`api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=25`);
     }
@@ -115,7 +103,7 @@ const FirmwareContainer = () => {
   ];
 
 const handleChange = (value) => {
-    setSelected(value); // only one selected at a time
+    setSelected(value); 
   };
 
   const handleFirmwarePopup=(data)=>{
@@ -207,9 +195,8 @@ const handleBulkDelete = async () => {
     const password = 'admin';
     const token = btoa(`${username}:${password}`);
 
-    // Build request body
     const requestBody = {
-        list: selectedTasks   // e.g. [21, 18]
+        list: selectedTasks   
     };
 
     try {
@@ -227,12 +214,10 @@ const handleBulkDelete = async () => {
             throw new Error("Bulk delete failed");
         }
 
-        // Refresh table after delete
         await getFimwareData(
             `api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=25`
         );
 
-        // Clear selection
         setSelectedTasks([]);
 
     } catch (error) {
@@ -312,7 +297,6 @@ const handleBulkDelete = async () => {
                                         ))}
                                         </ul>)}
                                         </th>
-                                        {/* <th>Apply</th> */}
                                         <th>Cancel/Delete</th>
                                     </tr>
                                 </thead>
@@ -354,7 +338,6 @@ const handleBulkDelete = async () => {
                                             <td>{item.task}</td>
                                             <td>{item.dateNTime}</td>
                                             <td>{item.status}</td>
-                                            {/* <td ><i className="fas fa-edit" onClick={() => handleEditUserDt(item)}></i></td> */}
                                             <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" onClick={() => handleDeleteFirmware(item)}></i></td>
                                         </tr>
                                     ))}
@@ -369,24 +352,10 @@ const handleBulkDelete = async () => {
                         <div className="firmwarepopupBoxStyle">
                             <article>
                                 <i className="fa fa-close noticlose" role="button" tabindex="0" onClick={() => setShowPopup(false)} style={{ marginBottom: '5px', float: 'right',transform:'translateY(-8px)',fontSize:'15px',paddingRight:'12px' }}></i>
-                            {/* <button
-                            onClick={() => setShowPopup(false)}
-                            className="clearfix createbtn"
-                            style={{ marginBottom: '5px', float: 'right' }}
-                            >
-                            Close
-                            </button> */}
                             </article>
                             <article style={{display:'inline-block'}}>
                             <FirmwarePopupTable firmpopupData={firmpopupData} />
                             </article>
-                            {/* <button
-                            onClick={() => setShowPopup(false)}
-                            className="clearfix createbtn"
-                            style={{ marginTop: '20px', float: 'right' }}
-                            >
-                            Close
-                            </button> */}
                         </div>
                         </div>
                     )}

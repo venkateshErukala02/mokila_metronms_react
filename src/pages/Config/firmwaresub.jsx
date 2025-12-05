@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import  { useEffect, useRef, useState } from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
 import DatePicker from "react-datepicker";

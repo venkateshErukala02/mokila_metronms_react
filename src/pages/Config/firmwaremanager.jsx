@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
 import './../Inventory/inventory.css';
@@ -102,7 +102,7 @@ const FirmwareMng = () => {
         ];
 
         const handleChange = (value) => {
-            setSelected(value); // only one selected at a time
+            setSelected(value); 
         };
 
        const filteredData = versionData.filter(
@@ -115,12 +115,8 @@ const FirmwareMng = () => {
         const method = 'POST';
         // const url= isEditMode  ? `rest/users/${user["user-id"]}` :'rest/users';
         const confirmDel = window.confirm("Are you sure you want to delete this firmware?");
-    if (!confirmDel) return;
-        // const requestBody ={
-        // //    firmware: "16_314_Sample.bin"
-        //    firmware: `${item.version}_${item.fileName}`
-        // }
-
+        if (!confirmDel) return;
+    
         try {
             const username = 'admin';
             const password = 'admin';
@@ -133,7 +129,6 @@ const FirmwareMng = () => {
                     'Accept': '*/*',
                     'Accept-Encoding': 'gzip, deflate, br, zstd'
                 },
-                // body: JSON.stringify(requestBody),
             });
 
             const text = await response.text();
@@ -155,7 +150,7 @@ const FirmwareMng = () => {
             console.error('Error:', error);
             setIsError('An error occurred while contacting the server.');
         } finally {
-            setIsLoading(false); // Turn off loading state
+            setIsLoading(false); 
         }
 
     }

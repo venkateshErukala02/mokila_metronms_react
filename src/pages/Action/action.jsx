@@ -1,4 +1,3 @@
-// actions.js
 export const TOGGLE_VISIBILITY = 'TOGGLE_VISIBILITY';
 export const CURRENT_PIE= 'CURRENT_PIE';
 export const CURRENT_STATIONID = 'CURRENT_STATIONID';
