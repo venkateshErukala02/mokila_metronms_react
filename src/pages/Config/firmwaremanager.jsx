@@ -16,9 +16,13 @@ const FirmwareMng = () => {
     const [mode, setMode] = useState(null);
     const [selected, setSelected] = useState('all');
     const [showList, setShowList] = useState(false);
+    const previousDataRef = useRef(null);
 
-    const getVersionData = async (url) => {
-        setIsLoading(true);
+    const getVersionData = async (url,isInterval = false) => {
+         if(previousDataRef.current === ''){
+            console.log('mmmpppp');
+            setIsLoading(true);
+        }
         setIsError({ status: false, msg: "" });
         try {
             const username = 'admin';
@@ -39,7 +43,10 @@ const FirmwareMng = () => {
 
             if (response.ok) {
                 setIsLoading(false);
-                setVersionData(data);
+                 if (JSON.stringify(data) !== JSON.stringify(previousDataRef.current)) {
+                    setVersionData(data);
+                    previousDataRef.current = data; 
+                }
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("data not found");
@@ -47,18 +54,40 @@ const FirmwareMng = () => {
         } catch (error) {
             setIsLoading(false);
             setIsError({ status: true, msg: error.message });
+        }finally {
+        if (!isInterval) {
+            setIsLoading(false);
+            }
         }
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const url = 'api/v2/firmware/firmwares?&page=1&limit=50&sort=fileName.asc'
-            await getVersionData(url);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const url = 'api/v2/firmware/firmwares?&page=1&limit=50&sort=fileName.asc'
+    //         await getVersionData(url);
 
+    //     }
+    //     fetchData();
+
+    // }, []);
+
+
+     useEffect(() => {
+
+        const fetchIntervalData = () => {
+        const url = 'api/v2/firmware/firmwares?&page=1&limit=50&sort=fileName.asc'
+    
+        getVersionData(url,true);
         }
-        fetchData();
 
+         fetchIntervalData();
+
+    const intervalId = setInterval(fetchIntervalData, 10000);
+    
+        return () => clearInterval(intervalId);
+    
     }, []);
+
 
 
 

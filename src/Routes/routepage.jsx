@@ -8,7 +8,6 @@ import InventRpt from '../pages/Inventory/inventorypage';
 import SettPage from '../pages/Settings/settingspage';
 import Navbar from '../pages/Navbar/navbarpage';
 import NewTopology from '../pages/Testtopo/newtopology';
-import SubwayMap from '../pages/Navbar/sample';
 import TestPie from '../test/testing';
 import StationNodeDetails from '../pages/Dashboard/stationnodeview';
 import TranscoderView from '../pages/Dashboard/transcoderview';

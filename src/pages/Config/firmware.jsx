@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import  { useState, useEffect, useRef } from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
 import './../Inventory/inventory.css';
@@ -19,9 +19,13 @@ const FirmwareContainer = () => {
     const [showPopup,setShowPopup] = useState(false);
     const [firmpopupData,setFirmpopupData] = useState([]);
     const [selectedTasks, setSelectedTasks] = useState([]);
+    const previousDataRef = useRef(null);
 
     const getFimwareData = async (url) => {
-        setIsLoading(true);
+         if(previousDataRef.current === ''){
+            console.log('mmmpppp');
+            setIsLoading(true);
+        }
         setIsError({ status: false, msg: "" });
         try {
             const username = 'admin';
@@ -41,7 +45,10 @@ const FirmwareContainer = () => {
 
             if (response.ok) {
                 setIsLoading(false);
-                setFirmwareData(data);
+                 if (JSON.stringify(data) !== JSON.stringify(previousDataRef.current)) {
+                      setFirmwareData(data); 
+                    previousDataRef.current = data; 
+                }
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("data not found");
@@ -59,7 +66,7 @@ const FirmwareContainer = () => {
 
     const intervalId = setInterval(() => {
         getFimwareData(url);
-    }, 30000); 
+    }, 10000); 
 
     return () => clearInterval(intervalId);
 
