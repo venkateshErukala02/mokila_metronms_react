@@ -2,19 +2,17 @@ import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import '../ornms.css';
 import '../Navbar/leftnavpage.css';
-// import '@fortawesome/fontawesome-free/css/all.min.css';
 
 
 const LeftNavList = () => {
     const navigate = useNavigate();
-    const location = useLocation();  // Get the current path
+    const location = useLocation();
 
     const handleClick = (path) => {
-        navigate(path);  // Navigate directly
+        navigate(path);
     };
 
     const getActiveIndex = (path) => {
-        // Match the current path with the item path and return its index
         const pathToIndex = {
             "/": 0,
             "/Discovery": 1,
@@ -29,7 +27,7 @@ const LeftNavList = () => {
         return pathToIndex[path] ?? null;
     };
 
-    const activeIndex = getActiveIndex(location.pathname); // Get active index from current location
+    const activeIndex = getActiveIndex(location.pathname); 
 
     return (
             <article style={{display:"inline-block"}}>

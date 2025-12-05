@@ -1,8 +1,7 @@
-// reducer.js
 import { TOGGLE_VISIBILITY,CURRENT_PIE, CURRENT_STATIONID,NODE_DATA,CLEAR_PIE } from '../Action/action';
 
 const initialState = {
-  isVisible: true,  // Initially, the element is visible
+  isVisible: true,
 };
 
 const initialState1 ={
@@ -24,7 +23,7 @@ export const visibilityReducer = (state = initialState, action) => {
     case TOGGLE_VISIBILITY:
       return {
         ...state,
-        isVisible: !state.isVisible,  // Toggle the visibility
+        isVisible: !state.isVisible,
       };
     default:
       return state;
@@ -67,7 +66,7 @@ export const nodeReducer = (state = initialState3, action) => {
     case NODE_DATA:
       return {
         ...state,
-        node: action.payload, // fixed from "state.payload"
+        node: action.payload,
       };
     default:
       return state;

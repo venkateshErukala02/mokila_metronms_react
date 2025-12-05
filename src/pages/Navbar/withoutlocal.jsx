@@ -8,34 +8,7 @@ const GdChart = ({ toggleDropdown, Dataget }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState({ status: false, msg: "" });
 
-  // const getDatapiech = () => {
-  //   setIsLoading(true);
-  //   setIsError({ status: false, msg: "" });
-
-  //   try {
-  //     const eventSource = new EventSource('/skypoint/api/v2/dashboard/nodes/counts_fsummary');
-
-  //     eventSource.onmessage = (event) => {
-  //       const data = JSON.parse(event.data); // Parse the incoming event data
-
-  //       setUserDatapie(data);
-  //       setIsLoading(false);
-  //       setIsError({ status: false, msg: "" });
-  //     };
-
-  //     eventSource.onerror = (error) => {
-  //       console.error('Error occurred with EventSource:', error);
-  //       setIsLoading(false);
-  //       setIsError({ status: true, msg: "Error fetching data" });
-  //       eventSource.close(); // Close the EventSource connection on error
-  //     };
-
-  //   } catch (error) {
-  //     setIsLoading(false);
-  //     setIsError({ status: true, msg: error.message });
-  //   }
-  // };
-
+  
 
   const getDatapiech = () => {
     setIsLoading(true);
@@ -43,21 +16,18 @@ const GdChart = ({ toggleDropdown, Dataget }) => {
   
     const username = 'admin';
     const password = 'admin';
-    const encodedCredentials = btoa(`${username}:${password}`); // Base64 encode the username and password
+    const encodedCredentials = btoa(`${username}:${password}`); 
   
     try {
-      // Create the EventSource with the correct URL
       const eventSource = new EventSource(
         `http://localhost:8980/ornms/api/v2/dashboard/nodes/counts_fsummary`
       );
-  
-      // Set up the Authorization header manually
       eventSource.headers = {
         Authorization: `Basic ${encodedCredentials}`,
       };
   
       eventSource.onmessage = (event) => {
-        const data = JSON.parse(event.data); // Parse the incoming event data
+        const data = JSON.parse(event.data);
         setUserDatapie(data);
         setIsLoading(false);
         setIsError({ status: false, msg: "" });
@@ -66,10 +36,9 @@ const GdChart = ({ toggleDropdown, Dataget }) => {
       eventSource.onerror = (error) => {
         console.error('Error occurred with EventSource:', error);
         if (eventSource.readyState === EventSource.CLOSED) {
-          // Try reconnecting after some time
           setTimeout(() => {
-            getDatapiech(); // Retry the connection
-          }, 5000); // Reconnect after 5 seconds
+            getDatapiech(); 
+          }, 5000);
         }
       };
     } catch (error) {
@@ -156,7 +125,6 @@ const GdChart = ({ toggleDropdown, Dataget }) => {
             return (
               <Cell
                 key={`cell-${index}`}
-                // fill={COLORS[index % COLORS.length]}
                 fill={isActive ?  'white' : COLORS[index % COLORS.length] }
 
               />
@@ -175,7 +143,7 @@ const GdChart = ({ toggleDropdown, Dataget }) => {
                 color: COLORS[index % COLORS.length],
                 originalName: entry.name,
               }))
-              .sort((a, b) => legendOrder.indexOf(a.originalName) - legendOrder.indexOf(b.originalName)) // Sort based on legendOrder
+              .sort((a, b) => legendOrder.indexOf(a.originalName) - legendOrder.indexOf(b.originalName)) 
           }
         onClick={(e) => handleLegendClick(e.value)}
          formatter={(value) => {
