@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
 import ConfigChangeSub from "./configchangesub";
+import FirmwarePopupTable from "./firmwarepopuptable";
 
 const ConfigChange = () => {
     const [profileStatusCont, setProfileStatusCont] = useState(false);
@@ -15,6 +16,8 @@ const ConfigChange = () => {
     const [showList, setShowList] = useState(false);
     const previousDataRef = useRef(null);
     const [selectedTasks, setSelectedTasks] = useState([]);
+    const [showPopup,setShowPopup] = useState(false);
+    const [configpopupData,setConfigpopupData] = useState([]);
 
     const statuses = [
         { label: "All", value: 4 },
@@ -27,6 +30,11 @@ const ConfigChange = () => {
     const handleChange = (value) => {
         setSelected(value); 
     };
+
+     const handleConfigChangePopup=(data)=>{
+        setShowPopup(true);
+        setConfigpopupData(data);
+    }
         
     const getConfigChangeData = async (url,isInterval = false) => {
         if(previousDataRef.current === ''){
@@ -324,7 +332,7 @@ const handleBulkDelete = async () => {
                                         </tr>
                                     )}
                                     {configChangeData && configChangeData.map((item) => (
-                                        <tr key={item.id}>
+                                        <tr key={item.id} onClick={()=>handleConfigChangePopup(item)}>
                                            <td> <input
                                                 type="checkbox"
                                                 className="incl"
@@ -344,6 +352,18 @@ const handleBulkDelete = async () => {
                             </table>
                         </article>
                     </article>
+                    {showPopup && (
+                        <div className="firmwarepopupStyle">
+                        <div className="firmwarepopupBoxStyle">
+                            <article>
+                                <i className="fa fa-close noticlose" role="button" tabindex="0" onClick={() => setShowPopup(false)} style={{ marginBottom: '5px', float: 'right',transform:'translateY(-8px)',fontSize:'15px',paddingRight:'12px' }}></i>
+                            </article>
+                            <article style={{display:'inline-block'}}>
+                            <FirmwarePopupTable firmpopupData={configpopupData} />
+                            </article>
+                        </div>
+                        </div>
+                    )}
                 </article>
 
                 <article className={profileStatusCont ? 'col-4' : 'collapsed'} >
