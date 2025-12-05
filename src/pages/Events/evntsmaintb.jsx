@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import '../ornms.css'
 import './../Events/events.css';
 
@@ -10,7 +10,7 @@ const EventMainTB = () => {
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [typevalueSel, setTypevalueSel] = useState('events');
     const [typelabelSel, setTypelabelSel] = useState('Events');
-    const [selectedDuration, setSelectedDuration] = useState(86400000); // keep as raw value
+    const [selectedDuration, setSelectedDuration] = useState(86400000);
     const [eventtimeSel, setEventtimeSel] = useState(Date.now() - 86400000);
     const [eventmainSeverityValueSel, setEventmainSeverityValueSel] = useState('');
     const [eventmainSeverityLabelSel, setEventmainSeverityLabelSel] = useState('All');
@@ -75,34 +75,15 @@ const EventMainTB = () => {
     }
     };
 
-    // useEffect(() => {
-    //   const url='api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D1747558597559&ar=glob&limit=50&offset=0&order=desc&orderBy=id'
-    //     getDataEvntMain(url);
-    // }, []);
-
-
 
     useEffect(() => {
         const newTimestamp = Date.now() - selectedDuration;
         setEventtimeSel(newTimestamp);
     }, [selectedDuration]);
 
-    // useEffect(() => {
-    //     const baseFilter = `eventDisplay==Y;eventSource!=syslogd`;
-    //     const severityFilter = eventmainSeverityValueSel !== "-1" ? `;eventSeverity==${eventmainSeverityValueSel}` : '';
-    //     const timestamp = Date.now() - selectedDuration;
-
-    //     const url = `api/v2/events/list?_s=${baseFilter}${severityFilter};eventCreateTime=gt=${timestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=0`;
-
-    //     getDataEvntMain(url);
-    // }, [selectedDuration, eventmainLimitLabelSel, eventmainSeverityValueSel]);
-
-
     const toggleDropdown = () => {
         setDropdownOpen(!isDropdownOpen);
     };
-
-
 
     useEffect(() => {
         let url = '';
@@ -311,17 +292,7 @@ const EventMainTB = () => {
                     }
                     url = start + filter + '&offset=0&order=desc&orderBy=id';
                      handleRadialIPa(url);
-                    console.log('apppoooiii',url)
                 }
-                // if (eventmainSeverityValueSel) {
-                //     filter  =  filter +'eventSeverity%3D%3D' + `${eventmainSeverityValueSel}` + ';';
-                // }
-                //  if (eventtimeSel) {
-                //     filter  =  filter +'eventCreateTime%3Dgt%3D' + `${eventtimeSel}`;
-                // }
-                // if (cat slected) {
-                //     filter  =  filter +'logDesc%D%D' + `*${eventipText}*;
-                // }
                
             }
         }
@@ -355,7 +326,7 @@ const EventMainTB = () => {
                 return;
             }
 
-            const data = await response.json(); // Only parse once
+            const data = await response.json();
 
             if (response.ok) {
                 setIsLoading(false);
