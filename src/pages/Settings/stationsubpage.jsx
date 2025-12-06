@@ -21,7 +21,12 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
     
 
     const handleProfileContclose=()=>{
-        handleSubContainer()
+        handleSubContainer();
+        setStationName('');
+        setLinenameSel('');
+        setStationSel('');
+        setStationCode('');
+        setSelectedFile(null);
     }
 
     const handleFileChange = (event) => {
@@ -232,7 +237,10 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
                 handleProfileContclose();
                 if(refreshStationData) refreshStationData();
                 setStationName('');
+                setLinenameSel('');
+                setStationSel('');
                 setStationCode('');
+                setSelectedFile(null);
             } else {
                 setError('Error starting discovery');
             }
@@ -319,8 +327,8 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
                                 <article className="uploadcont">
                                 <hr className="hrnote" />
                                 <center className="d-f">
-                                        <button className="cancelbtn" onClick={handleProfileContclose}>Cancle</button>
-                                        <button className="creatsetingbtn" onClick={handleAddStation}>
+                                        <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancle</button>
+                                        <button type="button" className="creatsetingbtn" onClick={handleAddStation}>
                                         {isEditMode ? 'Update' : 'Create'}
                                     </button>
                                 </center>
@@ -339,8 +347,8 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
                             />
                                      <button onClick={() => document.getElementById("hiddenFileInput").click()} class="attachcl">
                                 <i class="fa-solid fa-paperclip"></i></button>
-                            <button onClick={handleUpload} className="uploadcl"><i class="fa-solid fa-upload"></i></button>
-                            <button onClick={downloadSampleCSV} className="createbtn">Sample.csv<i class="fa fa-file-text" aria-hidden="true"></i></button>
+                            <button type="button" onClick={handleUpload} className="uploadcl"><i class="fa-solid fa-upload"></i></button>
+                            <button type="button" onClick={downloadSampleCSV} className="createbtn">Sample.csv<i class="fa fa-file-text" aria-hidden="true"></i></button>
 
                                 </article>} 
                                 </article>

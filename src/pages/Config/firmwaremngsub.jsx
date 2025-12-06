@@ -18,7 +18,10 @@ const FirmwareMngSubCont = ({ handleSubContainer, refreshLineData, mode, line })
 
 
     const handleProfileContclose = () => {
-        handleSubContainer(lineName)
+        handleSubContainer(lineName);
+        setVersion('');
+        setDeviceType('');
+        setSelectedFile(null);
     }
 
     const handleAddLine = async () => {
@@ -109,6 +112,9 @@ const FirmwareMngSubCont = ({ handleSubContainer, refreshLineData, mode, line })
                 handleProfileContclose();
                 if (refreshLineData) refreshLineData();
                 setSelectedFile(null);
+                setDeviceType('');
+                setVersion('');
+
             } else {
                 const errText = await response.text();
                 setError(`Error starting discovery: ${errText}`);
@@ -175,7 +181,7 @@ const FirmwareMngSubCont = ({ handleSubContainer, refreshLineData, mode, line })
                                 </article>
                                 <hr class="hrnote"></hr>
                                 <center className="d-f">
-                                    <button className="cancelbtn" onClick={handleProfileContclose}>Cancle</button>
+                                    <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
                                     <button className="creatsetingbtn" onClick={handleUpload}>
                                         {isEditMode ? 'Update' : 'Upload'}
                                     </button>

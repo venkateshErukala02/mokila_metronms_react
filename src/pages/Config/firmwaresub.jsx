@@ -33,7 +33,21 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
 
 
     const handleProfileContclose = () => {
-        handleSubContainer(true)
+        handleSubContainer(true);
+        setSelectedFile(null);
+        setDeviceType('');
+        setVersionTitle('');
+        setSearchValue('');
+        setSearchBtn(false);
+        setSearchData([]);
+        setSelectedItems([]);
+        setAddedItems([]);
+        setDeviceType('');
+        setSearchBtn(false);
+        setTimestamp('');
+        setSelectedDate(null);
+        setRole('fileupload');
+        setIsImmediate(true);
     }
 
 
@@ -80,6 +94,20 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                 if (refreshLineData) refreshLineData();
                 handleProfileContclose();
                 setSelectedFile(null);
+                setDeviceType('');
+                setVersionTitle('');
+                setSearchValue('');
+                setSearchBtn(false);
+                setSearchData([]);
+                setSelectedItems([]);
+                setAddedItems([]);
+                setDeviceType('');
+                setSearchBtn(false);
+                setTimestamp('');
+                setSelectedDate(null);
+                setRole('fileupload');
+                setIsImmediate(true);
+                
             } else {
                 const errText = await response.text();
                 setError(`Error starting discovery: ${errText}`);
@@ -273,12 +301,20 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                     // setSuccess('Discovery started successfully');
                     alert('Firmware upload started successfully')
                     handleProfileContclose();
+                    setSelectedFile(null);
                     setDeviceType('');
                     setVersionTitle('');
                     setSearchValue('');
                     setSearchBtn(false);
                     setSearchData([]);
-                    setSelectedItems('');
+                    setSelectedItems([]);
+                    setAddedItems([]);
+                    setDeviceType('');
+                    setSearchBtn(false);
+                    setTimestamp('');
+                    setSelectedDate(null);
+                    setRole('fileupload');
+                    setIsImmediate(true);
                 
                 } else {
                     setError('Error starting discovery');
@@ -414,8 +450,8 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                                 </article>
                                 <hr class="hrnote"></hr>
                                 <center className="d-f">
-                                    <button className="cancelbtn" onClick={handleProfileContclose}>Cancle</button>
-                                    <button className="creatsetingbtn" onClick={handleUpload}>
+                                    <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
+                                    <button type="button" className="creatsetingbtn" onClick={handleUpload}>
                                         {isEditMode ? 'Update' : 'Upload'}
                                     </button>
                                 </center>
@@ -511,7 +547,7 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                             </article>
 
                             <center style={{ marginTop: '16px', marginBottom: '16px' }}>
-                                <button type="button" className="cancelbtn">Cancel</button>
+                                <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
                                 <button type="button" className="uploadsetingbtn" onClick={handleApplyFirmware} disabled={selectedItems.length === 0}>Apply</button>
                             </center>
                                 </article>}

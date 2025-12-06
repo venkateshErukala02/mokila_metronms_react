@@ -20,7 +20,10 @@ const SectionSubCont=({handleSubContainer,refreshSectionData,mode,section})=>{
 
 
     const handleProfileContclose=()=>{
-        handleSubContainer()
+        handleSubContainer();
+        setSectionName('');
+        setLineNameSele('');
+        setLineLabelSel('');
     }
 
     
@@ -99,7 +102,9 @@ const SectionSubCont=({handleSubContainer,refreshSectionData,mode,section})=>{
                 alert('Section Created successfully')
                 handleProfileContclose();
                 if(refreshSectionData) refreshSectionData();
-                setSectionName('')
+                setSectionName('');
+                setLineNameSele('');
+                setLineLabelSel('');
             } else {
                 setIsError('Error starting discovery');
             }
@@ -178,8 +183,8 @@ useEffect(()=>{
                                 </ul>
                                 <hr className="hrnote" />
                                 <center className="d-f">
-                                        <button className="cancelbtn" onClick={handleProfileContclose}>Cancle</button>
-                                        <button className="creatsetingbtn" onClick={handleAddSection}>
+                                        <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancle</button>
+                                        <button type="button" className="creatsetingbtn" onClick={handleAddSection}>
                                            {isEditMode ? 'Update':'Create'}
                                             </button>
                                 </center>

@@ -27,7 +27,19 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
     const dropdownRef = useRef(null);
     
     const handleProfileContclose = () => {
-        handleSubContainer(fileName)
+        handleSubContainer(fileName);
+        setSelectedFile(null);
+        setDeviceType('');
+        setFileName('');
+        setAddedItems([]);
+        setSelectedItems([]);
+        setSearchData([]);
+        setSearchValue('');
+        setSearchBtn(false);
+        setTimestamp('');
+        setSelectedDate(null);
+        setIsImmediate(true);
+        
     }
 
     const handleAddLine = async () => {
@@ -64,7 +76,17 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
                 alert('Firmware started successfully');
                 handleProfileContclose();
                 if (refreshLineData) refreshLineData();
-                setFileName('')
+                setSelectedFile(null);
+                setFileName('');
+                setDeviceType('');
+                setAddedItems([]);
+                setSelectedItems([]);
+                setSearchData([]);
+                setSearchValue('');
+                setSearchBtn(false);
+                setTimestamp('');
+                setSelectedDate(null);
+                setIsImmediate(true);
             } else {
                 setError('Error starting discovery');
             }
@@ -199,14 +221,17 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
             // setSuccess('Discovery started successfully');
             alert('Discovery started successfully')
             handleProfileContclose();
+            setSelectedFile(null);
             setDeviceType('');
             setFileName('');
             setSearchValue('');
-            setSearchData();
+            setSearchData([]);
             setSearchBtn(false);
             setDeviceType('');
-            setSelectedItems('');
-          
+            setSelectedItems([]);
+            setDeviceType('');
+            setAddedItems([]);   
+            setIsImmediate(true);       
         } else {
             setError('Error starting discovery');
         }
@@ -357,7 +382,7 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
                             </article>
 
                             <center style={{ marginTop: '16px', marginBottom: '16px' }}>
-                                <button type="button" className="cancelbtn">Cancel</button>
+                                <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
                                 <button type="button" className="creatsetingbtn" onClick={handleApplyFirmware}>Apply</button>
                             </center>
                                 </article>

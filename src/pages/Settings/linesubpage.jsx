@@ -13,7 +13,8 @@ const LineSubCont = ({ handleSubContainer,refreshLineData,mode,line }) => {
 
 
     const handleProfileContclose = () => {
-        handleSubContainer(lineName)
+        handleSubContainer(lineName);
+        setLineName('');
     }
 
     const handleAddLine = async () => {
@@ -102,8 +103,8 @@ const LineSubCont = ({ handleSubContainer,refreshLineData,mode,line }) => {
                                 </ul>
                                 <hr className="hrnote" />
                                 <center className="d-f">
-                                    <button className="cancelbtn" onClick={handleProfileContclose}>Cancle</button>
-                                    <button className="creatsetingbtn" onClick={handleAddLine}>
+                                    <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancle</button>
+                                    <button type="button" className="creatsetingbtn" onClick={handleAddLine}>
                                        {isEditMode ? 'Update' :'Create'} 
                                         </button>
                                 </center>

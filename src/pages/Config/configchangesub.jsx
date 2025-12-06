@@ -33,7 +33,20 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
     const [timestamp, setTimestamp] = useState(Date.now());
 
     const handleProfileContclose = () => {
-        handleSubContainer(true)
+        handleSubContainer(true);
+        setDeviceType('');
+        setSearchValue('');
+        setSearchBtn(false);
+        setSearchData([]);
+        setSelectedItems(''); 
+        setSearchConfigParameter('');
+        setTimestamp(Date.now())
+        setSelectedValue('');
+        setAddedItems([]);
+        setSelectedLabelItems([]);
+        setConfigParamInput('');
+        setIsImmediate(true);
+        setSelectedDate('');
     }
 
 
@@ -231,7 +244,15 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                     setSearchValue('');
                     setSearchBtn(false);
                     setSearchData([]);
-                    setSelectedItems('');
+                    setSelectedItems(''); 
+                    setSearchConfigParameter('');
+                    setTimestamp(Date.now())
+                    setSelectedValue('');
+                    setAddedItems([]);
+                    setSelectedLabelItems([]);
+                    setConfigParamInput('');
+                    setIsImmediate(true);
+                    setSelectedDate('');
                 
                 } else {
                     setError('Error starting discovery');
@@ -329,8 +350,9 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                                 value={configParamInput}
                                 onChange={(e) => setConfigParamInput(e.target.value)}
                                 className="configchangelabelsubinp"
+                                disabled={!selectedValue}
                             /> 
-                            <button type="button" className="createbtn" style={{marginLeft:'28px'}}  onClick={handleAdd}>Add</button>
+                            <button type="button" className="createbtn" style={{marginLeft:'28px'}}  onClick={handleAdd} disable={!configParamInput}>Add</button>
                              <article className="row border-allsd" style={{ height: '12vh', overflow: 'hidden',margin:"18px 0" }}>
                                 <table className="col-md-12 col-sm-12 col-lg-12 col-xl-12" style={{ tableLayout: 'fixed', width: '100%' }}>
                                     <thead className="configthtb">
@@ -396,8 +418,9 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                                                 value={searchValue}
                                                 onChange={(e) => setSearchValue(e.target.value)}
                                                 className="searchIpinput"
+                                                disabled={selectedLabelItems.length === 0}
                                             />
-                                            <button type="button" className="createbtn" onClick={handleSearchClick}>Search</button>
+                                            <button type="button" className="createbtn" onClick={handleSearchClick} disabled={deviceType === '' || searchValue.trim() === ''}>Search</button>
                                             <button className="clearfix createbtn" type="button" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
 
                                         </article>
@@ -462,7 +485,7 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                             </article>
 
                             <center style={{ marginTop: '16px', marginBottom: '16px' }}>
-                                <button type="button" className="cancelbtn">Cancel</button>
+                                <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
                                 <button type="button" className="creatsetingbtn" onClick={handleApplyConfigChange} disabled={selectedItems.length === 0}>Apply</button>
                             </center>
                         </form>
