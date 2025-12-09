@@ -107,6 +107,50 @@ const WaysideTagContainer=()=>{
 
 
 
+//    const handleUpload = async (e) => {
+//         e.preventDefault();
+//         if (!selectedFile) {
+//             alert("Please select a file first.");
+//             return;
+//         }
+
+//         setIsLoading(true);
+//         setIsError('');
+//         setSuccess('');
+
+//         const formData = new FormData();
+//         formData.append('upfile', selectedFile);
+
+//         try {
+//             const username = 'admin';
+//             const password = 'admin';
+//             const token = btoa(`${username}:${password}`)
+//             const response = await fetch(`api/v2/firmware/uploaddiscctx/${deviceType}/${version}`, {
+//                 method: "POST",
+//                 headers: {
+//                     'Authorization': `Basic ${token}`
+//                 },
+//                 body: formData,
+//             });
+
+//             if (response.ok) {
+//                 setSuccess('File upload has started.');
+//                 alert('File upload has started.')
+
+//                 setSelectedFile(null);
+//             } else {
+//                 const errText = await response.text();
+//                 setIsError(`Error starting discovery: ${errText}`);
+//             }
+//         } catch (error) {
+//             console.error('Upload Error:', error);
+//             setIsError('An error occurred while contacting the server.');
+//         } finally {
+//             setIsLoading(false);
+//         }
+//     };
+
+
    const handleUpload = async (e) => {
         e.preventDefault();
         if (!selectedFile) {
@@ -125,7 +169,7 @@ const WaysideTagContainer=()=>{
             const username = 'admin';
             const password = 'admin';
             const token = btoa(`${username}:${password}`)
-            const response = await fetch(`api/v2/firmware/uploaddiscctx/${deviceType}/${version}`, {
+            const response = await fetch('api/v2/wayside/uploadtags', {
                 method: "POST",
                 headers: {
                     'Authorization': `Basic ${token}`

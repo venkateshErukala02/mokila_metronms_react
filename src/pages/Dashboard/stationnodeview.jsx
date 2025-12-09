@@ -7,7 +7,6 @@ import "../ornms.css";
 import LeftNavList from "../Navbar/leftnavpage";
 import SnSummaryTab from "./stationsummarytab";
 import SnEventTab from "./stationeventstab";
-import PingAreaChart from "./samplechart";
 
 const StationNodeDetails = () => {
   const [isLoading, setIsLoading] = useState("");
@@ -94,9 +93,6 @@ const StationNodeDetails = () => {
       case 'events':
         return <SnEventTab />
         break;
-      case 'PingAreaChart':
-        return <PingAreaChart />
-        break
       default:
         break;
     }

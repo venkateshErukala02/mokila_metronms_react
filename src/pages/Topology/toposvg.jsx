@@ -171,7 +171,7 @@ useEffect(() => {
       } else if (textName.data.mode == 'location') {
           svg =  textName.text+'.svg';
       } else if (textName.data.mode == 'facility') {
-        if(textName.text === 'Davisville' || textName.text ==='Wilson'){
+        if(textName.data.display === 'davisville_track' || textName.data.display ==='wilson_track'){
           svg= 'davisville_track.svg'
         }else{
         svg =  'Station_Line1.svg';

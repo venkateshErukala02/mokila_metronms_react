@@ -154,12 +154,12 @@ useEffect(() => {
             //                </> 
             //     break;
             case 'facility':{
-                if(textName.text === 'Davisville' || textName.text ==='Wilson'){
+                if(textName.data.display === 'davisville_track' || textName.data.display ==='wilson_track'){
                     return(
                     <>
                       <TopoSvgViewer yardfaclData={yardfaclData} textName={textName}/>
-                <YardTbone yardfaclData={yardfaclData} textName={textName} />
-            <YardTbtwo textName={textName}/>
+                        <YardTbone yardfaclData={yardfaclData} textName={textName} />
+                        <YardTbtwo textName={textName}/>
                     </>
                     );
                 }else if (textName.text === 'Finch trail track' || textName.text ==='VMC trail track'){

@@ -7,7 +7,6 @@ import "../ornms.css";
 import LeftNavList from "../Navbar/leftnavpage";
 import SnSummaryTab from "./stationsummarytab";
 import SnEventTab from "./stationeventstab";
-import PingAreaChart from "./samplechart";
 import TrainSummaryTab from "./trainsummarytab";
 import TrainEventTab from "./traineventtab"; 
 
@@ -96,9 +95,6 @@ const TrainNodeView = () => {
       case 'events':
         return <TrainEventTab />
         break;
-      case 'PingAreaChart':
-        return <PingAreaChart />
-        break
       default:
         break;
     }

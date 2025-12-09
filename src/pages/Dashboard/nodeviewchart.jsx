@@ -6,7 +6,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import LocalSnr from "./localsnr";
 import TxChart from "./localtxr";
 import { useSelector } from "react-redux";
-import AreaChart from "./samplechart";
 import '../ornms.css';
 
 
