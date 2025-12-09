@@ -11,6 +11,7 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
     const [lineName, setLineName] = useState('');
     const [configParamInput,setConfigParamInput] = useState('');
     const [selectedLabelItems,setSelectedLabelItems] = useState([]);
+    const [selectedValueItems,setSelectedValueItems] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
@@ -30,6 +31,7 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
     const [isOpen, setIsOpen] = useState(false);
     const [searchConfigParameter, setSearchConfigParameter] = useState("");
     const [selectedValue, setSelectedValue] = useState("");
+    const [selectedLabel,setSelectedLabel] = useState('');
     const [timestamp, setTimestamp] = useState(Date.now());
 
     const handleProfileContclose = () => {
@@ -38,12 +40,14 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
         setSearchValue('');
         setSearchBtn(false);
         setSearchData([]);
-        setSelectedItems(''); 
+        setSelectedItems([]); 
         setSearchConfigParameter('');
         setTimestamp(Date.now())
         setSelectedValue('');
         setAddedItems([]);
         setSelectedLabelItems([]);
+        setSelectedValueItems([]);
+        setSelectedLabel('');
         setConfigParamInput('');
         setIsImmediate(true);
         setSelectedDate('');
@@ -112,11 +116,11 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
     const handleAddToTable = (event) => {
 
         if (!addedItems.includes(event.id)) {
-            setAddedItems([...addedItems, event.id])
+            setAddedItems((prevAddedItems) => [...prevAddedItems, event.id]);
         }
 
         if (!selectedItems.some(item => item.id === event.id)) {
-            setSelectedItems([...selectedItems, event])
+            setSelectedItems((prevSelectedItems) => [...prevSelectedItems, event]);
         }
     };
 
@@ -196,7 +200,8 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
 
 
             const handleSelect = (value) => {
-                setSelectedValue(value.dName);
+                setSelectedLabel(value.dName);
+                setSelectedValue(value.command);
                 setIsOpen(false);
             };
 
@@ -205,13 +210,21 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
 
                 const newItem = {
                 // id: Date.now(), 
+                key: selectedLabel,
+                value: configParamInput || '',
+                };
+
+                const newItemValue = {
+                // id: Date.now(), 
                 key: selectedValue,
                 value: configParamInput || '',
                 };
 
+                setSelectedValueItems([...selectedValueItems, newItemValue]);
                 setSelectedLabelItems([...selectedLabelItems, newItem]);
 
-                setSelectedValue('')
+                setSelectedValue('');
+                setSelectedLabel('')
                 setConfigParamInput('');
             };
             
@@ -221,7 +234,7 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                 const requestBody = {
                     deviceType : deviceType,
                     nodes :numbNodes,
-                    params : selectedLabelItems
+                    params : selectedValueItems
             }
             const schedule = isImmediate === true ? 'im' :'sch';
             let url= `api/v2/bulk/pushconfig/${schedule}/${timestamp}`;
@@ -244,12 +257,14 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                     setSearchValue('');
                     setSearchBtn(false);
                     setSearchData([]);
-                    setSelectedItems(''); 
+                    setSelectedItems([]); 
                     setSearchConfigParameter('');
                     setTimestamp(Date.now())
                     setSelectedValue('');
                     setAddedItems([]);
                     setSelectedLabelItems([]);
+                    setSelectedValueItems([]);
+                    setSelectedLabel('');
                     setConfigParamInput('');
                     setIsImmediate(true);
                     setSelectedDate('');
@@ -343,14 +358,14 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                                 </div>
                                 </article>
                             </article>
-                            <label className="settinglabelsub">{selectedValue || ''}</label>
+                            <label className="settinglabelsub">{selectedLabel || ''}</label>
 
                             <input
                                 type="text"
                                 value={configParamInput}
                                 onChange={(e) => setConfigParamInput(e.target.value)}
                                 className="configchangelabelsubinp"
-                                disabled={!selectedValue}
+                                disabled={!selectedLabel}
                             /> 
                             <button type="button" className="createbtn" style={{marginLeft:'28px'}}  onClick={handleAdd} disable={!configParamInput}>Add</button>
                              <article className="row border-allsd" style={{ height: '12vh', overflow: 'hidden',margin:"18px 0" }}>
@@ -383,7 +398,7 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                                     </table>
                                 </div>
                             </article>
-                            <article style={{position:'relative',zIndex:'0'}}>
+                            <article style={{position:'relative'}}>
                             <hr class=""></hr>
                             <p className="firmwarenote">Note:</p>
                             <article>
@@ -451,7 +466,7 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                                 </article>}
                             </article>
                             </article>
-                            <article className="row border-allsd" style={{ height: '16vh', overflow: 'hidden',position:'relative',zIndex:'-1' }}>
+                            <article className="row border-allsd" style={{ height: '16vh', overflow: 'hidden',position:'relative' }}>
                                 <table className="col-md-12 col-sm-12 col-lg-12 col-xl-12" style={{ tableLayout: 'fixed', width: '100%' }}>
                                     <thead className="configthtb">
                                         <tr style={{ textAlign: 'center' }}>
@@ -462,7 +477,7 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                                     </thead>
                                 </table>
 
-                                <div style={{ height: 'calc(16vh - 40px)', overflowY: 'auto' }}>
+                                <div style={{ height: 'calc(16vh - 40px)', overflowY: 'auto',width: '100%' }}>
                                     <table className="col-md-12 col-sm-12 col-lg-12 col-xl-12" style={{ tableLayout: 'fixed', width: '100%' }}>
                                         <tbody className="configbdtb" style={{ textAlign: 'center' }}>
                                             {Array.isArray(selectedItems) && selectedItems.length > 0 ? (

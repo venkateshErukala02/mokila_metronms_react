@@ -238,11 +238,11 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
         const handleAddToTable = (event) => {
     
             if (!addedItems.includes(event.id)) {
-                setAddedItems([...addedItems, event.id])
+                setAddedItems((prevAddedItems) => [...prevAddedItems, event.id]);
             }
     
             if (!selectedItems.some(item => item.id === event.id)) {
-                setSelectedItems([...selectedItems, event])
+                setSelectedItems((prevSelectedItems) => [...prevSelectedItems, event]);
             }
         };
     
