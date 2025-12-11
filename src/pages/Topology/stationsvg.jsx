@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLayoutEffect } from 'react';
 import '../ornms.css'
  
@@ -86,9 +86,8 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
     }, [svgContent])
 
     useEffect(() => {
-        // Reset stationStatus if the new mode doesn't require it
         if (textName?.data?.mode !== 'facility') {
-            setStationStatus([]);  // Clear old data
+            setStationStatus([]); 
         }
     }, [textName]);
 
@@ -197,7 +196,7 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
 
         let url = 'images/' + svg;
         setSvgContent('');
-        // Call fetchSvg with signal
+        // Api call fetchSvg with signal
         fetch(url, controller.signal)
             .then((res) => res.text())
             .then((data) => {
@@ -205,7 +204,7 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
             });
 
 
-        // Cleanup on unmount or textName change
+        // Cleaning up on unmount or textName change
         return () => controller.abort();
     }, [textName]);
 
@@ -231,7 +230,7 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
 
                 if (bottomLayer) {
                     bottomLayer.setAttribute('train-id', item.trainId + item.obc);
-                    bottomLayer.style.cursor = "pointer"; // Optional: show hand cursor
+                    bottomLayer.style.cursor = "pointer";
                     bottomLayer.addEventListener('click', handleTrainClick);
                 }
 
@@ -247,7 +246,7 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
                 const bottomLayer = svgRoot.querySelector('#bottom_train_layer');
 
                 if (bottomLayer) {
-                    bottomLayer.style.cursor = "pointer"; // Optional: show hand cursor
+                    bottomLayer.style.cursor = "pointer"; 
                     bottomLayer.addEventListener('click', handleTrainClick);
                 }
                 const tnelement = svgRoot.querySelector('#bottomtrainclicktext');
@@ -264,7 +263,7 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
                 const topLayer = svgRoot.querySelector('#top_train_layer');
 
                 if (topLayer) {
-                    topLayer.style.cursor = "pointer"; // Optional: show hand cursor
+                    topLayer.style.cursor = "pointer";
                     topLayer.addEventListener('click', handleTrainClick);
                 }
                 const tnelement = svgRoot.querySelector('#toptrainclicktext');
@@ -281,7 +280,7 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
                 const topLayer = svgRoot.querySelector('#top_train_layer');
 
                 if (topLayer) {
-                    topLayer.style.cursor = "pointer"; // Optional: show hand cursor
+                    topLayer.style.cursor = "pointer";
                     topLayer.addEventListener('click', handleTrainClick);
                 }
                 const tnelement = svgRoot.querySelector('#toptrainclicktext');
@@ -301,8 +300,6 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
     }, [trainData, svgContent]);
 
     const handleTrainClick = (event) => {
-        // const tainId = trainData.at
-        // setTrainId();
         let trainIcon = event.target.parentElement
         let trainId = trainIcon.getAttribute('train-id');
         setTrainView(true);
@@ -325,7 +322,7 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
         if (validTags.includes(id)) {
           el.style.fill = '#cccccc';
     
-          // Remove old <title> if any
+          // Removing old Title if anything there
           const oldTitle = el.querySelector('title');
           if (oldTitle) oldTitle.remove();
         }
@@ -413,11 +410,6 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
 
     return (
         <>
-        {/* {textName?.data?.mode === 'facility' || textName?.data?.mode === 'location' || textName?.data?.mode === 'region' ? ( <article className="row">
-                            <article className="col-3">
-                              {trainView === true ?(<h1 className="mapheading">Train View : {trainId}</h1>) : (<h1 className="mapheading">{getNodeLabel(textName)}</h1>)}  
-                            </article>
-                                </article>) : ''}    */}
             <article className="border-allsd" style={{ textAlign: 'center', paddingTop: '56px', paddingBottom: '56px' }}>
                 <div ref={svgContainerRef} dangerouslySetInnerHTML={{ __html: svgContent }} />
             </article>

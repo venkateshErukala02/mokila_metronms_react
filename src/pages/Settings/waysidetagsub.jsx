@@ -3,7 +3,7 @@ import '../ornms.css'
 import './../Settings/settings.css';
 
 
-const WaysideTagSubCont = ({ handleSubContainer, refreshLineData, mode, user }) => {
+const WaysideTagSubCont = ({ handleSubContainer, refreshTagData, mode, user }) => {
 
     const isEditMode = mode === 'edit';
 
@@ -129,7 +129,7 @@ const WaysideTagSubCont = ({ handleSubContainer, refreshLineData, mode, user }) 
                 // setSuccess('Discovery started successfully');
                 alert('Discovery started successfully')
                 handleProfileContclose();
-                // if(refreshUserData) refreshUserData();
+                if(refreshTagData) refreshTagData();
             //    setUserName('');
             //    setFullName('');
             //    setEmail('');

@@ -4,7 +4,6 @@ import northboundtr from '../../assets/img/Train_northbound_new.svg'
 import northgreen from '../../assets/Train_northboundgreen.svg'
 import southred from '../../assets/Train_southboundgreen copy.svg'
 import { Prev } from "react-bootstrap/esm/PageItem";
-// import TreeList from "./treelist";
 
 const MainlineView=({textName})=>{
 
@@ -55,7 +54,7 @@ useEffect(() => {
             return;
     }
 
-    setApiUrl(newUrl); // << store the API URL in state
+    setApiUrl(newUrl);
 }, [textName]);
 
 useEffect(() => {
@@ -65,7 +64,7 @@ useEffect(() => {
 
 
 useEffect(() => {
-    if (!apiUrl) return; // do nothing until url exists
+    if (!apiUrl) return; 
 
     const controller = new AbortController();
     const signal = controller.signal;
@@ -674,16 +673,8 @@ useEffect(() => {
                         <div className="trainpopupBoxStyle">
                             <article>
                                 <i className="fa fa-close noticlose" role="button" tabindex="0" onClick={() => setShowPopup(false)} style={{ marginBottom: '5px', float: 'right',transform:'translateY(-8px)',fontSize:'15px',paddingRight:'12px' }}></i>
-                            {/* <button
-                            onClick={() => setShowPopup(false)}
-                            className="clearfix createbtn"
-                            style={{ marginBottom: '5px', float: 'right' }}
-                            >
-                            Close
-                            </button> */}
                             </article>
                             <article >
-                            {/* <FirmwarePopupTable firmpopupData={firmpopupData} /> */}
                             <article className="row" style={{marginTop:'20px',marginLeft:'20px'}}>
                                 <article className="col-12" style={{display:'flex'}}>
                                     <article className="col-5">
@@ -738,13 +729,6 @@ useEffect(() => {
                                 </article>
                             </article>
                             </article>
-                            {/* <button
-                            onClick={() => setShowPopup(false)}
-                            className="clearfix createbtn"
-                            style={{ marginTop: '20px', float: 'right' }}
-                            >
-                            Close
-                            </button> */}
                         </div>
                         </div>
                     )}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Tree from '../Topology/tree';
 import './../Topology/topology.css';
 
@@ -59,13 +59,13 @@ const TreeList = ({ getElementAtEvent }) => {
   
           const updateNodeChildren = (nodes) => {
             for (let node of nodes) {
-              // Match using unique ID or `data.display`
+              // If it match using uniqueid or data.display
               if (
                 node.data?.id === selectedNode.data?.id &&
                 node.data?.mode === selectedNode.data?.mode
               ) {
 
-                // Prevent overwriting if children already exist
+                // It prevent  overwritingif  children  already  exist
                 if (!node.children || node.children.length === 0) {
                   node.children = filteredData;
                 }

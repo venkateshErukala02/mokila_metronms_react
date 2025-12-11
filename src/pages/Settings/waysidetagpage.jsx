@@ -6,7 +6,7 @@ import WaysideTagSubCont from "./waysidetagsub";
 
 const WaysideTagContainer=()=>{
         const [profileStatusCont, setProfileStatusCont] = useState(false);
-        const [userData, setUserData] = useState([]);
+        const [tagData, setTagData] = useState([]);
         const [userLimitValueSel, setUserLimitValueSel] = useState('1');
         const [isLoading, setIsLoading] = useState(false);
         const [isError, setIsError] = useState({ status: false, msg: "" });
@@ -23,7 +23,7 @@ const WaysideTagContainer=()=>{
         const userDataRef = useRef('');
 
         const value = priorityChecked ? "highpriority" : "none";
-        const getUserData = async (url) => {
+        const getTagData = async (url) => {
             setIsLoading(true);
             setIsError({ status: false, msg: "" });
             try {
@@ -44,7 +44,7 @@ const WaysideTagContainer=()=>{
     
                 if (response.ok) {
                     setIsLoading(false);
-                    setUserData(data);
+                    setTagData(data);
                     setIsError({ status: false, msg: "" });
                 } else {
                     throw new Error("data not found");
@@ -59,14 +59,14 @@ const WaysideTagContainer=()=>{
      useEffect(() => {
 
             const url=`api/v2/wayside/waySideTags?page=${pageCount}`;
-            getUserData(url);
+            getTagData(url);
     
         }, [pageCount]);
 
         //  useEffect(() => {
 
         //     const url='api/v2/wayside/waySideTags?page=1'
-        //     getUserData(url);
+        //     getTagData(url);
     
         // }, []);
 
@@ -82,7 +82,7 @@ const WaysideTagContainer=()=>{
             }
         }
         const handleIncrement =()=>{
-            if(userData.totalPages === pageCount){
+            if(tagData.totalPages === pageCount){
             setPageCount(prev => prev);
             }else{
                  setPageCount(prev => (prev+1));
@@ -306,14 +306,14 @@ const WaysideTagContainer=()=>{
                                         </tr>
                                     )}
 
-                                    {!isLoading && !isError.status && (!userData?.tags || userData?.tags?.length === 0) && (
+                                    {!isLoading && !isError.status && (!tagData?.tags || tagData?.tags?.length === 0) && (
                                         <tr>
                                             <td colSpan="12" style={{ textAlign: "center" }}>
                                                 No Data Available
                                             </td>
                                         </tr>
                                     )}
-                                    {userData?.tags && userData?.tags?.map((item) => (
+                                    {tagData?.tags && tagData?.tags?.map((item) => (
                                         <tr key={item.id}>
                                             <td><input type="checkbox" className="incl"
                                                     checked=''
@@ -361,7 +361,7 @@ const WaysideTagContainer=()=>{
                         <WaysideTagSubCont handleSubContainer={handleSubContainer}
                         mode={mode}  
                         user={editUser} 
-                        // refreshUserData={()=> getUserData('rest/users/list?limit=10&offset=0&sort=asc')}
+                         refreshTagData={()=> getTagData(`api/v2/wayside/waySideTags?page=${pageCount}`)}
                         />
                     </article> 
                     </article>

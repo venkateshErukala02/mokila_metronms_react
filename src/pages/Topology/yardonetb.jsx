@@ -1,10 +1,9 @@
 import React,{useState,useEffect} from "react";
 
 
-const YardTbone=({textName,yardfaclData})=>{
+const YardTbone=({textName,yardfacilitieData})=>{
      const [isLoading, setIsLoading] = useState(false);
      const [isError, setIsError] = useState({ status: false, msg: "" });
-    // const [yardfaclData, setYardfaclData] = useState([]);
     const [linkData,setLinkData] = useState({});
 
 
@@ -33,34 +32,55 @@ const YardTbone=({textName,yardfaclData})=>{
         }
     };
 
+  
+
+
+
+    // useEffect(()=>{
+    //     if (!textName?.data) return;
+  
+    //     let url = "";
+    //     if(textName.data.display === 'davisville_track' || textName.data.display ==='wilson_track'){
+    //         url = `api/v2/dashboard/filternodes?ar=yard_1&facilities=${textName.data.display}&state=up&offset=1&limit=45&status=active&sort=productcode&by=desc`;
+    //     }else{
+    //         url = `api/v2/dashboard/filternodes?ar=yard_1&facilities=davisville_track&state=up&offset=1&limit=45&status=active&sort=productcode&by=desc`;
+    //     }
+
+    //     getYardEventData(url);
+
+    // },[textName]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            if (!yardfaclData || yardfaclData.length === 0) return;
-        
-            for (const node of yardfaclData) {
-                // const modifiedNodeId = Math.floor(Math.random() * 10); 
+    const fetchData = async () => {
+        console.log("yardfacilitieData = ", yardfacilitieData);
 
-                // const nodeId = node.nodeId ;
-                const url = `api/v2/nodelinks/linkstatstest?nodeId=0`;
-                // const url=''
-                await getYardLinkData(url, node.nodeId);
-            }
-        };
-    
-        fetchData();
-    }, [yardfaclData]);
+        if (!yardfacilitieData || yardfacilitieData.length === 0) {
+            console.log("No data — loop skipped");
+            return;
+        }
+
+        for (const node of yardfacilitieData) {
+            console.log("Looping node:", node);
+            const url = `api/v2/nodelinks/linkstatstest?nodeId=0`; // test API
+            // const url = `api/v2/nodelinks/linkstats?nodeId=${node.nodeId}`; // working API
+            await getYardLinkData(url, node.nodeId);
+        }
+    };
+
+    fetchData();
+}, [yardfacilitieData]);
+
     
     
 
     return(
         <>
            <article className="row">
-                <article style={{ minHeight:'205px',maxHeight:'205px',overflowY:'auto'}}>
+                <article style={{ minHeight:'375px',maxHeight:'375px',overflowY:'auto'}}>
                     <table className="col-12 border-allsd" style={{ height: '0vh' }}>
-                        <thead className="yardtb">
-                            <tr className="col-3">
-                                <th className="col-1">Location</th>
+                        <thead className="yardtb"> 
+                            <tr>
+                                <th>Location</th>
                                 <th>System Name</th>
                                 <th>Primary IP</th>
                                 <th>Status</th>
@@ -73,7 +93,7 @@ const YardTbone=({textName,yardfaclData})=>{
                         <tbody className="yardtbbd">
                             {isLoading && (
                                 <tr>
-                                    <td colSpan="8" style={{ textAlign: "center" }}>
+                                    <td colSpan="12" style={{ textAlign: "center" }}>
                                         Loading...
                                     </td>
                                 </tr>
@@ -81,15 +101,15 @@ const YardTbone=({textName,yardfaclData})=>{
 
                             {isError.status && (
                                 <tr>
-                                    <td colSpan="8" style={{ textAlign: "center", color: "red" }}>
+                                    <td colSpan="12" style={{ textAlign: "center", color: "red" }}>
                                         {isError.msg}
                                     </td>
                                 </tr>
                             )}
 
-                            {!isLoading && !isError.status && yardfaclData?.length === 0 && (
+                            {!isLoading && !isError.status && yardfacilitieData?.length === 0 && (
                                 <tr>
-                                    <td colSpan="8" style={{ textAlign: "center" }}>
+                                    <td colSpan="12" style={{ textAlign: "center" }}>
                                         No Data Available
                                     </td>
                                 </tr>
@@ -97,24 +117,29 @@ const YardTbone=({textName,yardfaclData})=>{
 
                         {!isLoading &&
                                 !isError.status &&
-                                yardfaclData?.length > 0 && yardfaclData.map((node, index) => (
+                                yardfacilitieData?.length > 0 && yardfacilitieData
+                                .filter(node => node.type.includes('AP') || node.type.includes('SN')) 
+                                .map((node, index) => (
                             <tr key={index}>
-                                <td>{node.radioMode}</td>
-                                <td>{node.sysName}</td>
+                                <td>{node.connectedTo}</td>
+                                <td>{node.systemName}</td>
                                 <td>{node.ipAddress}</td>
                                 <td>{node.status}</td>
                                 <td>{(linkData[node.nodeId] || []).length}</td>
-
-                                {(linkData[node.nodeId] || []).map((item, i) => (
-                                    <React.Fragment key={i}>
-                                        {/* <td>{linkData[node.nodeId].length}</td> */}
-                                        <td>
+                                     <td>
+                                    {(linkData[node.nodeId] || []).length > 0 ? (
                                         <ul className="linkcablist">
-                                            <li>{item.cabId} {item.sysName}</li>
+                                        {linkData[node.nodeId].map((item, i) => (
+                                            <li key={i}>
+                                                <span>{item.traincab}</span>
+                                            <h6>{item.cabId} {item.sysName}</h6>
+                                            </li>
+                                        ))}
                                         </ul>
-                                        </td>
-                                    </React.Fragment>
-                                ))}
+                                    ) : (
+                                        <span>No cab details available</span>
+                                    )}
+                                    </td>
                             </tr>
                         ))}
 

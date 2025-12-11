@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 
 const TrainLogs = ({ trainId }) => {
     const [isLoading, setIsLoading] = useState(false);
-
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [trainEventData, setTrainEventData] = useState('');
     const [trainlogsDt, setTrainLogsDt] = useState('');
@@ -27,7 +26,7 @@ const TrainLogs = ({ trainId }) => {
 
             if (response.status === 204) {
                 setIsLoading(false);
-                setTrainEventData([]); // Treat as empty data
+                setTrainEventData([]); 
                 return;
             }
 
@@ -66,7 +65,7 @@ const TrainLogs = ({ trainId }) => {
 
             if (response.status === 204) {
                 setIsLoading(false);
-                setTrainLogsDt([]); // Treat as empty data
+                setTrainLogsDt([]); 
                 return;
             }
 
@@ -117,7 +116,6 @@ const TrainLogs = ({ trainId }) => {
                             <article className="sbcard-header">
                                 Alarms
                             </article>
-                            {/* <h1>helo</h1> */}
                             <table className="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12 bordeer-allsd" style={{ height: '90vh' }}>
                                 <thead>
                                     <tr>

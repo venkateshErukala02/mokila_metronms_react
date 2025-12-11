@@ -1,4 +1,4 @@
-import React, { useState,useEffect,useRef } from "react";
+import { useState,useEffect,useRef } from "react";
 import '../ornms.css';
 
 const TrainLineView=({trainId})=>{
@@ -54,10 +54,6 @@ useEffect(()=>{
 },[]);
 
 useEffect(()=>{
-    // const fetchData=async()=>{
-    //     await  getTrainStatusDt();
-    // }
-    // fetchData();
      const intervalId = setInterval(() => {
       getTrainStatusDt();
   }, 30000); 
@@ -139,7 +135,6 @@ useEffect(() => {
     
         let url = 'images/trainview_Line1.svg';
         setSvgContent('');
-        // Call fetchSvg with signal
         fetch(url,controller.signal)
           .then((res) => res.text())
           .then((data) => {
@@ -152,7 +147,6 @@ useEffect(() => {
 
     return(
         <>
-        {/* <h1>Train Line View</h1> */}
         <article className="border-allsd">
             <div ref={svgContainerRef} dangerouslySetInnerHTML={{ __html: svgContent }} />
 </article>

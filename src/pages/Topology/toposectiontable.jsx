@@ -1,8 +1,7 @@
-import React,{useState,useEffect} from "react";
+import {useState,useEffect} from "react";
 
 
 const TopoSectionTable=({textName})=>{
-    // const lineName= textName.text;
     const [sectionTbData,setSectionTbData] = useState('');
     const [limitValueSel, setLimitValueSel] = useState('');
     const [limitValueSelLabel, setLimitValueSelLabel] = useState('50');
@@ -28,13 +27,9 @@ const TopoSectionTable=({textName})=>{
             };
             const response = await fetch(url, options);
             const data = await response.json();
-            //   console.log('llol',response)
             if (response.ok) {
                 setIsLoading(false);
                 setSectionTbData(data.nodes || []);
-
-
-                // console.log('lpll',data)
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("data not found");
@@ -83,13 +78,6 @@ const TopoSectionTable=({textName})=>{
         // setRdData([])
     }
 
-
-    // const handleLimitValue = (event) => {
-    //     setLimitValueSel(event.target.value);
-    //     const label = event.target.options[event.target.selectedIndex].label;
-    //     setLimitValueSelLabel(label)
-    // }
-
     return(
         <>
         <article className="piechtcont">
@@ -118,13 +106,6 @@ const TopoSectionTable=({textName})=>{
                             </li>
                             <li>
                                 <label htmlFor="" className="addcloum">Add Columns  <span className="glyphicon glyphicon-tasks"></span></label>
-
-                                {/* <select className="form-controll1" value={limitValueSel} onChange={handleLimitValue} style={{ width: 'auto' }} aria-invalid="false">
-                                    <option value="0" label="25" defaultValue={25}>25</option>
-                                    <option value="1" label="50">50</option>
-                                    <option value="2" label="100">100</option>
-                                    <option value="3" label="500">500</option>
-                                </select> */}
                             </li>
                         </ul>
 
@@ -140,8 +121,6 @@ const TopoSectionTable=({textName})=>{
                             <tr>
                                 <th>System Name</th>
                                 <th>Primary IP</th>
-                                {/* <th>Firmware</th>
-                                <th>Status</th> */}
                                 <th>Up Time</th>
                                 <th>Device Type</th>
                                 <th>Position</th>
@@ -182,8 +161,6 @@ const TopoSectionTable=({textName})=>{
                                         <td>{node.ipAddress}</td>
                                         <td>{node.firmware}</td>
                                         <td>{node.status}</td>
-                                        {/* <td>{node.sysUptime}</td>
-                                        <td>{node.productCode}</td> */}
                                         <td>{node.radioMode}</td>
                                     </tr>
                                 ))}

@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import {useState,useEffect} from "react";
 import '../ornms.css';
 import '../Topology/topology.css';
 
@@ -26,13 +26,9 @@ const SouthBoundTb=({textName})=>{
             const response = await fetch(url, options);
             
             const data = await response.json();
-            //   console.log('llol',response)
             if (response.ok) {
                 setIsLoading(false);
                 setSouthData(data || []);
-
-
-                 console.log('lpll',data)
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("data not found");

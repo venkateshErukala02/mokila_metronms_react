@@ -1,7 +1,5 @@
-import React, { useState,useEffect, useRef } from "react";
+import { useState,useEffect, useRef } from "react";
 import TreeList from "../Topology/treelist";
-import MapLat from "../Topology/mapcomp";
-import TransmitTab from '../Topology/topologygraph';
 import '../ornms.css'
 import LeftNavList from "../Navbar/leftnavpage";
 import { useSelector } from 'react-redux';
@@ -27,9 +25,6 @@ import YardSvgViewer from "./yardsvg";
 import MainlineView from "./mainlinetrainview";
 
 
-
-
-
 const TopoPg = () => {
 
     const [textName, setTextName] = useState('');
@@ -51,14 +46,16 @@ const TopoPg = () => {
     const [selectedTab,setSelectedTab] = useState('linkview')
     const isVisible = useSelector(state => state.visibility.isVisible);
     const [timeLeft, setTimeLeft] = useState(30);
+    const [yardfacilitieData, setYardfacilitieData] = useState([]);
+    
 
     const handleNodeClick = (value) => {
         console.log('lplplp',value);
         setTextName(value);
+        // nodeData
     }
 
 
-    const [yardfaclData, setYardfaclData] = useState([]);
 const [isLoading, setIsLoading] = useState(false);
 const [isError, setIsError] = useState({ status: false, msg: "" });
 const [trainView,setTrainView]= useState(false);
@@ -79,7 +76,7 @@ useEffect(() => {
     return () => clearInterval(timer);
   }, []);
 
-const getYardfaclData = async (url) => {
+  const getYardfacilitieData = async (url) => {
     setIsLoading(true);
     setIsError({ status: false, msg: "" });
     try {
@@ -91,7 +88,7 @@ const getYardfaclData = async (url) => {
         });
         const data = await response.json();
         if (response.ok) {
-            setYardfaclData(data.nodes || []);
+            setYardfacilitieData(data || []);
             setIsError({ status: false, msg: "" });
         } else {
             throw new Error("Data not found");
@@ -103,22 +100,14 @@ const getYardfaclData = async (url) => {
     }
 };
  
-useEffect(() => {
-    if (!textName?.data) return;
-  
-    let url = "";
-  
-    if (textName.data.mode === "yard") {
-      if (textName.text === "yard_1") {
-        url = `api/v2/dashboard/filternodes?ar=${textName.text}&facilities=davisville_track&state=up&offset=1&limit=45&status=active&sort=productcode&by=desc`;
-      } else {
-        url = `api/v2/dashboard/filternodes?ar=${textName.data.parent}&facilities=${textName.data.display}&state=up&offset=1&limit=45&status=active&sort=productcode&by=desc`;
-      }
-  
-      getYardfaclData(url);
-    }
-  }, [textName]);
-  
+
+useEffect(()=>{
+        if (!textName?.data) return;
+        let url= `api/v2/treeview/station/${textName.data.id}`;
+        getYardfacilitieData(url);
+
+    },[textName]);
+
 
 
     const renderSectComponent=(textName)=>{
@@ -148,26 +137,21 @@ useEffect(() => {
 
     const renderSectFacility=(textName)=>{
         switch (textName?.data?.mode) {
-            // case 'facility':
-            //   return  <> <TopoSvgViewer textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId}/>
-            //   <StationNodeTableView  textName={textName}/>
-            //                </> 
-            //     break;
             case 'facility':{
                 if(textName.data.display === 'davisville_track' || textName.data.display ==='wilson_track'){
                     return(
                     <>
-                      <TopoSvgViewer yardfaclData={yardfaclData} textName={textName}/>
-                        <YardTbone yardfaclData={yardfaclData} textName={textName} />
-                        <YardTbtwo textName={textName}/>
+                      <TopoSvgViewer yardfacilitieData={yardfacilitieData}  textName={textName}/>
+                        <YardTbone yardfacilitieData={yardfacilitieData} textName={textName} />
+                        {/* <YardTbtwo textName={textName}/> */}
                     </>
                     );
                 }else if (textName.text === 'Finch trail track' || textName.text ==='VMC trail track'){
                     return (
                         <>
-                        <YardSvgViewer yardfaclData={yardfaclData} textName={textName}/>
-                <YardTbone yardfaclData={yardfaclData} textName={textName} />
-            <YardTbtwo textName={textName}/>
+                        <YardSvgViewer yardfacilitieData={yardfacilitieData}  textName={textName}/>
+                <YardTbone yardfacilitieData={yardfacilitieData} textName={textName} />
+            {/* <YardTbtwo textName={textName}/> */}
                         </>
                     )
                 }else{
@@ -184,12 +168,10 @@ useEffect(() => {
                 return  <MainlineView textName={textName}/>
                     break;
             case 'yard':
-                // yardfaclData={yardfaclData}/
-                // yardfaclData={yardfaclData}
                 return  <>
-                <TopoSvgViewer  textName={textName}/>
-                <YardTbone  textName={textName} />
-            <YardTbtwo textName={textName}/>
+                <TopoSvgViewer yardfacilitieData={yardfacilitieData}  textName={textName}/>
+                <YardTbone yardfacilitieData={yardfacilitieData} textName={textName} />
+            {/* <YardTbtwo textName={textName}/> */}
                 </>
                     break;
             default:
@@ -237,13 +219,9 @@ useEffect(() => {
       return (
       <span>
         Link View - {textName.data.display}
-        {/* <span onClick={(e)=>{ 
-            e.stopPropagation();
-            handleStationTabview();}} style={{ marginLeft: '8px', cursor: 'pointer' }}>x</span> */}
       </span>
     );
     }else if(mode === "location"){
-        // return 'Link View - Line-1';
         return (
       <span>
             Link View - {textName.data.display}
@@ -256,9 +234,6 @@ useEffect(() => {
          return (
       <span>
         Link View - Station View
-        {/* <span onClick={(e)=>{ 
-            e.stopPropagation();
-            handleStationTabview();}} style={{ marginLeft: '8px', cursor: 'pointer' }}>x</span> */}
       </span>)
     } 
     else if (
@@ -484,14 +459,6 @@ useEffect(() => {
                         <TreeList getElementAtEvent={handleNodeClick} />
                             </article>
                             <article>
-                                 {/* <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Tag type :</label>
-                                <select name="name" id="name" value={tagTypeValue} onChange={handleTagType} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
-                                    <option value="all" label="All">All</option>
-                                   <option value="TDM" label="Tdm">Tdm</option>
-                                   <option value="NTDM" label="Ntdm">Ntdm</option>
-                                   <option value="ATC" label="Atc">Atc</option>
-                                </select> */}
-                                {/* <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} tagTypeValue={tagTypeValue} /> */}
                             </article>
 
                     </article>
@@ -522,19 +489,7 @@ useEffect(() => {
                 <>
                 {tagTableView === true ? (
                     <>
-                     {/* <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Tag type :</label>
-                                <select name="name" id="name" value={tagTypeValue} onChange={handleTagType} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
-                                    <option value="all" label="All">All</option>
-                                   <option value="TDM" label="Tdm">Tdm</option>
-                                   <option value="NTDM" label="Ntdm">Ntdm</option>
-                                   <option value="ATC" label="Atc">Atc</option>
-                                </select>
-                                 <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Select Station :</label>
-                                <select name="name" id="name" value={tagTypeValue} onChange={handleTagType} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
-
-                                    <option value="all" label="All">All</option>
-                                </select> */}
-                                <article style={{margin:'5px'}}>
+                    <article style={{margin:'5px'}}>
                     <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} textName={textName}/>
                     </article>
                     {textName && textName?.data?.mode === 'facility' ? (<article style={{margin:'5px',marginTop:'15px'}}>
@@ -582,21 +537,6 @@ useEffect(() => {
                     )}
 
                     {trainView === true && renderSectTrainView(trainView)}
-
-                    {/* {showPopup && (
-                        <div className="popupStyle">
-                        <div className="popupBoxStyle">
-                            <WaysidePopupTable currentTagid={currentTagid} />
-                            <button
-                            onClick={() => setShowPopup(false)}
-                            className="clearfix createbtn"
-                            style={{ marginTop: '20px', float: 'right' }}
-                            >
-                            Close
-                            </button>
-                        </div>
-                        </div>
-                    )} */}
                     </>
                 )}
                 </>

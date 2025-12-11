@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState,useEffect } from "react";
+import { useState,useEffect } from "react";
 import "../ornms.css";
 import './../Topology/topology.css';
 import globe from '../../assets/img/glob2.png';
@@ -7,12 +7,10 @@ import { useSelector } from "react-redux";
 
 
 const getElementAtEvent =(value)=>{
-  // console.log(value);
 
 }
 
 const Tree = ({ data,getElementAtEvent,selectedNode,setSelectedNode,isLastChild}) => {
-  // const [getdata, setGetData]
   const [selectedParent, setSelectedParent] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState({ status: false, msg: "" });
@@ -25,7 +23,7 @@ const Tree = ({ data,getElementAtEvent,selectedNode,setSelectedNode,isLastChild}
   
  }
   const dataName = useSelector((state) => state.stationid.stationid);
-// console.log('jsjnjnjsdsnjd',dataName)
+console.log('jsjnjnjsdsnjd',dataName)
 
   
   return (
@@ -52,7 +50,6 @@ const Tree = ({ data,getElementAtEvent,selectedNode,setSelectedNode,isLastChild}
 
 
 const TreeNode = ({ node, selectedNode, setSelectedNode,getElementAtEvent,isLastChild,dataName }) => {
-  //  const [childVisible, setChildVisibility] = useState(false);
   const [childVisible, setChildVisibility] = useState(
   selectedNode?.text === dataName
 );
@@ -61,9 +58,6 @@ const TreeNode = ({ node, selectedNode, setSelectedNode,getElementAtEvent,isLast
   if (node.data?.mode === 'sta') {
     return null;
   }
-
-  // console.log(JSON.stringify(parent, null, 2))
-  // console.log(JSON.stringify(selectedNode, null, 2))
 
 
   let children = [];
@@ -134,7 +128,6 @@ const TreeNode = ({ node, selectedNode, setSelectedNode,getElementAtEvent,isLast
         e.stopPropagation();
         setSelectedNode(node);
         getElementAtEvent(node);
-        // console.log(JSON.stringify(node, null, 2))
         // setChildVisibility((v) => !v)
       }}
       style={{

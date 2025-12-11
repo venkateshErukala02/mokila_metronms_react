@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import '../ornms.css';
 import './../Topology/topology.css';
 
@@ -27,14 +27,13 @@ const dataString = JSON.stringify({
 
 const dataObject = JSON.parse(dataString);
 
-const region = dataObject.region[0];  // Access the first region
+const region = dataObject.region[0];  
 
-// Total, lat, and long for the region
 const regionTotal = region.total;
 const regionLat = region.lat;
 const regionLong = region.long;
 
-const facility = region.facility[0];  // Access the first facility
+const facility = region.facility[0];  
 
 const facilityTotal = facility.total;
 const facilityLat = facility.lat;
@@ -163,12 +162,10 @@ const  MapLat = ({ mapValue }) => {
     const [iframeSrc, setIframeSrc] = useState('');
 
     useEffect(() => {
-        // Dynamically set the src for the iframe after the component mounts
         setIframeSrc(`https://maps.google.com/maps?q=${24.555059},${-81.779984}&h1=es;&output=embed`);
 
         switch (mapValue) {
             case 'DefaultRegion':
-                // Assuming you want to display the facility location
                 setIframeSrc(`https://maps.google.com/maps?q=${facilityLat},${facilityLong}&h1=es;&output=embed`);
                 break;
 
@@ -177,13 +174,11 @@ const  MapLat = ({ mapValue }) => {
                 const ip41 = Dcity.find(city => city.text === '192.168.1.41');
 
                 if (ip42 && ip41) {
-                    // Use the actual lat and long from the ip42 and ip41 objects
-                    const lat1 = ip42.data.lat;  // 101
-                    const lng1 = ip42.data.long; // 201
-                    const lat2 = ip41.data.lat;  // 0
-                    const lng2 = ip41.data.long; // 0
+                    const lat1 = ip42.data.lat;  
+                    const lng1 = ip42.data.long; 
+                    const lat2 = ip41.data.lat;  
+                    const lng2 = ip41.data.long; 
 
-                    // Correcting the map URL for multiple markers
                     const iframeUrl = `https://maps.google.com/maps?q=${lat1},${lng1}&markers=${lat1},${lng1}|${lat2},${lng2}&h1=es;&output=embed`;
                     setIframeSrc(iframeUrl);
                 }
@@ -194,13 +189,11 @@ const  MapLat = ({ mapValue }) => {
                 const ip411 = Dcity.find(city => city.text === '192.168.1.41');
 
                 if (ip421 && ip411) {
-                    // Use the actual lat and long from the ip42 and ip41 objects
-                    const lat1 = ip421.data.lat;  // 101
-                    const lng1 = ip421.data.long; // 201
-                    const lat2 = ip411.data.lat;  // 0
-                    const lng2 = ip411.data.long; // 0
+                    const lat1 = ip421.data.lat;  
+                    const lng1 = ip421.data.long; 
+                    const lat2 = ip411.data.lat;  
+                    const lng2 = ip411.data.long; 
 
-                    // Correcting the map URL for multiple markers
                     const iframeUrl = `https://maps.google.com/maps?q=${lat1},${lng1}&markers=${lat1},${lng1}|${lat2},${lng2}&h1=es;&output=embed`;
                     setIframeSrc(iframeUrl);
                 }
@@ -210,13 +203,11 @@ const  MapLat = ({ mapValue }) => {
                 const ip4111 = Dcity.find(city => city.text === '192.168.1.41');
 
                 if (ip4211 && ip4111) {
-                    // Use the actual lat and long from the ip42 and ip41 objects
-                    const lat1 = ip4211.data.lat;  // 101
-                    const lng1 = ip4211.data.long; // 201
-                    const lat2 = ip4111.data.lat;  // 0
-                    const lng2 = ip4111.data.long; // 0
+                    const lat1 = ip4211.data.lat;  
+                    const lng1 = ip4211.data.long; 
+                    const lat2 = ip4111.data.lat;  
+                    const lng2 = ip4111.data.long; 
 
-                    // Correcting the map URL for multiple markers
                     const iframeUrl = `https://maps.google.com/maps?q=${lat1},${lng1}&markers=${lat1},${lng1}|${lat2},${lng2}&h1=es;&output=embed`;
                     setIframeSrc(iframeUrl);
                 }
@@ -226,13 +217,11 @@ const  MapLat = ({ mapValue }) => {
                 const ip1 = Dcity.find(city => city.text === '192.168.1.41');
 
                 if (ip2 && ip1) {
-                    // Use the actual lat and long from the ip42 and ip41 objects
-                    const lat1 = ip2.data.lat;  // 101
-                    const lng1 = ip2.data.long; // 201
-                    const lat2 = ip1.data.lat;  // 0
-                    const lng2 = ip1.data.long; // 0
+                    const lat1 = ip2.data.lat;  
+                    const lng1 = ip2.data.long; 
+                    const lat2 = ip1.data.lat;  
+                    const lng2 = ip1.data.long; 
 
-                    // Correcting the map URL for multiple markers
                     const iframeUrl = `https://maps.google.com/maps?q=${lat1},${lng1}&markers=${lat1},${lng1}|${lat2},${lng2}&h1=es;&output=embed`;
                     setIframeSrc(iframeUrl);
                 }
@@ -242,13 +231,11 @@ const  MapLat = ({ mapValue }) => {
                 const ip11 = Dcity.find(city => city.text === '192.168.1.41');
 
                 if (ip21 && ip11) {
-                    // Use the actual lat and long from the ip42 and ip41 objects
-                    const lat1 = ip21.data.lat;  // 101
-                    const lng1 = ip21.data.long; // 201
-                    const lat2 = ip11.data.lat;  // 0
-                    const lng2 = ip11.data.long; // 0
+                    const lat1 = ip21.data.lat;  
+                    const lng1 = ip21.data.long; 
+                    const lat2 = ip11.data.lat;  
+                    const lng2 = ip11.data.long; 
 
-                    // Correcting the map URL for multiple markers
                     const iframeUrl = `https://maps.google.com/maps?q=${lat1},${lng1}&markers=${lat1},${lng1}|${lat2},${lng2}&h1=es;&output=embed`;
                     setIframeSrc(iframeUrl);
                 }
@@ -261,10 +248,6 @@ const  MapLat = ({ mapValue }) => {
 
     return (
         <article style={{position:'relative'}}>
-            {/* <div className="gm-style-moc" style="z-index: 4; position: absolute; height: 100%; width: 100%; padding: 0px; 
-            border-width: 0px; margin: 0px; left: 0px; top: 0px; transition-property: opacity, 
-            display; opacity: 0; transition-duration: 0.8s; display: none;">
-                <p className="gm-style-mot">Use ctrl + scroll to zoom the map</p></div> */}
             <iframe
                 id="iframeId"
                 width="100%"
@@ -273,7 +256,7 @@ const  MapLat = ({ mapValue }) => {
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                src={iframeSrc}  // Set the iframe src dynamically
+                src={iframeSrc}  
             ></iframe>
            {mapValue == '192.168.1.41'? <article className="clearfix maptt" style={{position:'absolute',top:'60px',right:'0'}}>
                 <table>

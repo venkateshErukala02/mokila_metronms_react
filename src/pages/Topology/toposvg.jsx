@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import '../ornms.css';
 import '../Dashboard/dashboard.css';
 import TopoSectionTable from "./toposectiontable";
@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import {handleStationCircleId} from '../Action/action'
 
 
-const TopoSvgViewer = ({textName,yardfaclData,setTrainView,setStationView,setTrainLabelDiply,setTrainId,getCircleId,getLineId,setStationTagview,setLineTagview}) => {
+const TopoSvgViewer = ({textName,yardfacilitieData,setTrainView,setStationView,setTrainLabelDiply,setTrainId,getCircleId,getLineId,setStationTagview,setLineTagview}) => {
  const [svgContent, setSvgContent] = useState("");
   const [error, setError] = useState("");
   const svgContainerRef = useRef(null);
@@ -25,40 +25,6 @@ const TopoSvgViewer = ({textName,yardfaclData,setTrainView,setStationView,setTra
     const [circleId,setCircleId] = useState(null);
     const [success, setSuccess] = useState('');
     const [svgVersion, setSvgVersion] = useState(0);
-
-
-//   useEffect(() => {
-    // const fetchSvg = async (url) => {
-    //   try {
-    //     const username = "admin";
-    //     const password = "admin";
-    //     const token = btoa(`${username}:${password}`);
-
-    //     // let url= `http://localhost:3000images/${}.svg`;
-
-
-    //     const response = await fetch(
-    //       url,   
-    //         {
-    //       method: "GET",
-    //       headers: {
-    //         "Authorization": `Basic ${token}`,
-    //         "Accept": "image/svg+xml"
-    //       }
-    //     });
-
-    //     if (!response.ok) {
-    //       throw new Error("Failed to fetch SVG");
-    //     }
-
-    //     const svgText = await response.text();
-    //     setSvgContent(svgText);
-    //   } catch (err) {
-    //     console.error("SVG fetch error:", err);
-    //     setError(err.message);
-    //   }
-    // };
-
 
     const fetchSvg = async (url, signal) => {
         try {
@@ -78,10 +44,6 @@ const TopoSvgViewer = ({textName,yardfaclData,setTrainView,setStationView,setTra
           if (!res.ok) throw new Error("Failed to load SVG");
           const svgText = await res.text();
           setSvgContent(svgText);
-          
-          // Do something with svgText, e.g.:
-          // document.getElementById('svg-container').innerHTML = svgText;
-      
         } catch (err) {
           if (err.name === 'AbortError') {
             console.log('Fetch aborted');
@@ -171,8 +133,10 @@ useEffect(() => {
       } else if (textName.data.mode == 'location') {
           svg =  textName.text+'.svg';
       } else if (textName.data.mode == 'facility') {
-        if(textName.data.display === 'davisville_track' || textName.data.display ==='wilson_track'){
-          svg= 'davisville_track.svg'
+        if(textName.data.display === 'davisville_track'){
+          svg= 'davisville_track.svg';
+        }else if(textName.data.display === 'wilson_track'){
+          svg= 'wilson_track.svg';
         }else{
         svg =  'Station_Line1.svg';
         }
@@ -190,7 +154,6 @@ useEffect(() => {
 
     let url = 'images/' + svg;
     setSvgContent('');
-    // Call fetchSvg with signal
     fetch(url,controller.signal)
       .then((res) => res.text())
       .then((data) => {
@@ -198,61 +161,9 @@ useEffect(() => {
       });
   
   
-    // Cleanup on unmount or textName change
     return () => controller.abort();
   }, [textName]);
-  
-// 2. Fetch API data and update SVG once it's loaded
-// useEffect(() => {
-//   if (!svgContent) return;
-
-//   // Simulated API call
-
-//   const username = 'admin';
-//         const password = 'admin';
-//         const token = btoa(`${username}:${password}`)
-//         const options = {
-//             method: "GET",
-//             headers: {
-//                 'Authorization': `Basic ${token}`
-//             }
-
-//         };
-//   let call = "";
-//   if (textName.length == 0) {
-//     call = "all";
-//     textName = {"data":{"mode":"global"}}
-//   } else {
-//     if(textName.text==="Global"){
-//       call = "all";
-//     }else{
-//       call = textName.text
-//     }
-//   }
-//   if (textName.data.mode != 'facility' && textName.data.type != 'facility') {
-//     fetch(`api/v2/dashboard/linestatus/${call}`,options) // Replace with your actual API
-//     .then((res) => res.json())
-//     .then((response) => {
-//       // Example: data = { voughan_metropolitan_centre: "green", union: "red" }
-//       const data = response.data;
-//       const svgRoot = svgContainerRef.current;
-
-//       data.forEach(({ station, status }) => {
-//         const el = svgRoot.querySelector(`#${station}`);
-//         if (el && status === "down") {
-//           el.setAttribute("fill", "red");
-//         } else if (el && status === "up")  {
-//           el.setAttribute("fill", "green");
-//         }
-//       });
-//     });
-//   } 
-//   else {
-//     if (textName.data.mode == 'facility')
-//       getStationStatusDt();
-//   }
-  
-// }, [svgContent]);
+ 
 
 useLayoutEffect(() => {
   if (!svgContent) return;
@@ -312,8 +223,6 @@ useLayoutEffect(() => {
 
 
 const handleTrainClick = (event) => {
-  // const tainId = trainData.at
-  // setTrainId();
   let trainIcon =  event.target.parentElement
   let trainId = trainIcon.getAttribute('train-id');
  setTrainView(true);
@@ -333,11 +242,10 @@ useEffect(() => {
 
   const trainLayer = svgRoot.querySelector('#bottom_train_layer');
   // if (trainLayer) {
-  //   // trainLayer.style.display = "none"; // Optional: show hand cursor
+  //   // trainLayer.style.display = "none";
   //   // trainLayer.addEventListener('click', handleTrainClick);
   // }
 
-  // // Cleanup to prevent memory leaks
   // return () => {
   //   if (trainLayer) {
   //     trainLayer.removeEventListener('click', handleTrainClick);
@@ -406,22 +314,40 @@ useEffect(() => {
 
 
 useEffect(() => {
-  if (!svgContent || textName.data?.mode !== 'yard') return;
+  // if (!svgContent || textName.data?.mode !== 'yard') return;
 
   const svgRoot = svgContainerRef.current;
-  if (!svgRoot || !Array.isArray(yardfaclData)) return;
+  if (!svgRoot || !Array.isArray(yardfacilitieData)) return;
 
-  yardfaclData.forEach((item) => {
-    const el = svgRoot.querySelector(`#${item.radioMode}`);
-    if (!el) return;
-
-    if (item.status === "Down") {
+  yardfacilitieData.forEach((yarditem) => {
+     const position = yarditem.position;
+     if(position === '-'){
+      return;
+     }
+    const el = svgRoot.querySelector(`#${position}`);
+    if (el){
+    if (yarditem.status === "down") {
       el.setAttribute("fill", "red");
-    } else if (item.status === "Up") {
+    } else if (yarditem.status === "up") {
       el.setAttribute("fill", "rgb(102, 204, 51)");
     }
+
+     const titleEl = svgRoot.querySelectorAll('title'); 
+     titleEl.forEach((textTitl) => {
+      if (textTitl && el ) {
+        textTitl.textContent = `${yarditem.systemName} ${yarditem.ipAddress}`;
+      }
+     })
+      
+    const textElements = svgRoot.querySelectorAll('.yardtexsty');
+      textElements.forEach((textElement) => {
+        textElement.style.fontSize = '20px';  
+      });
+    }
+
+     
   });
-}, [textName.text, svgContent, yardfaclData]);
+}, [textName.text, svgContent, yardfacilitieData]);
 
 
 useLayoutEffect(() => {
@@ -446,7 +372,7 @@ useLayoutEffect(() => {
 
        if (bottomLayer) {
           bottomLayer.setAttribute('train-id',item.trainId + item.obc);
-          bottomLayer.style.cursor = "pointer"; // Optional: show hand cursor
+          bottomLayer.style.cursor = "pointer"; 
           bottomLayer.addEventListener('click', handleTrainClick);
   }
 
@@ -462,7 +388,7 @@ useLayoutEffect(() => {
       const bottomLayer = svgRoot.querySelector('#bottom_train_layer');
 
        if (bottomLayer) {
-    bottomLayer.style.cursor = "pointer"; // Optional: show hand cursor
+    bottomLayer.style.cursor = "pointer"; 
     bottomLayer.addEventListener('click', handleTrainClick);
   }
         const tnelement = svgRoot.querySelector('#bottomtrainclicktext');
@@ -479,7 +405,7 @@ useLayoutEffect(() => {
       const topLayer = svgRoot.querySelector('#top_train_layer');
 
        if (topLayer) {
-    topLayer.style.cursor = "pointer"; // Optional: show hand cursor
+    topLayer.style.cursor = "pointer"; 
     topLayer.addEventListener('click', handleTrainClick);
   }
       const tnelement = svgRoot.querySelector('#toptrainclicktext');
@@ -496,7 +422,7 @@ useLayoutEffect(() => {
       const topLayer = svgRoot.querySelector('#top_train_layer');
 
        if (topLayer) {
-    topLayer.style.cursor = "pointer"; // Optional: show hand cursor
+    topLayer.style.cursor = "pointer";
     topLayer.addEventListener('click', handleTrainClick);
   }
       const tnelement = svgRoot.querySelector('#toptrainclicktext');
@@ -536,9 +462,8 @@ useEffect(() => {
 }, [stationStatus, svgContent]);
 
 useEffect(() => {
-  // Reset stationStatus if the new mode doesn't require it
   if (textName?.data?.mode !== 'facility') {
-    setStationStatus([]);  // Clear old data
+    setStationStatus([]); 
   }
 }, [textName]);
 
@@ -577,7 +502,6 @@ useEffect(() => {
           });
 
           linesData.forEach(( lineObj ) => {
-            // console.log(lineObj)
             const lineId = Object.keys(lineObj)[0];     
             const lineStatus = lineObj[lineId];
             const el = svgRoot.querySelector(`[id='${lineId}']`);
@@ -726,7 +650,7 @@ useEffect(() => {
     const texts = svgRoot.querySelectorAll("text[id]");
   
     const handleCircleClick = (event) => {
-      if (event.type ==='click' &&  event.button === 0) { // Left-click
+      if (event.type ==='click' &&  event.button === 0) { //Left-click
         const circle = event.currentTarget;
         const circleId = circle.getAttribute("id");
   

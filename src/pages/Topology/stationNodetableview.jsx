@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import {useState,useEffect} from "react";
 import TopoSectionTable from "./toposectiontable";
 import '../ornms.css';
 import '../Topology/topology.css';
@@ -8,7 +8,6 @@ import StationTagsTable from "../Wayside/stationtagstable";
 
 
 const StationNodeTableView=({textName , rdDataRef})=>{
-    // const lineName= textName.text
     const [sectionTbData,setSectionTbData] = useState('');
     const [limitValueSel, setLimitValueSel] = useState('');
     const [limitValueSelLabel, setLimitValueSelLabel] = useState('50');
@@ -26,15 +25,9 @@ const StationNodeTableView=({textName , rdDataRef})=>{
                     <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6" style={{padding:'5px'}}>
                        <TopoSectionTable textName={textName}/>
                        <article>
-                        {/* <SouthBoundTb textName={textName}/> */}
                        </article>
                     </article>
                     <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6" style={{padding:'5px'}}>
-                        {/* <article className={textName.data.mode !== 'facility' ? 'dis-none' : 'dis-blck'}>
-                        <SouthBoundTb textName={textName}/>
-                        <NorthBoundTb textName={textName}/>
-                        </article> */}
-                        {/* <StationTagsTable rdDataRef={rdDataRef} /> */}
                           <SouthBoundTb textName={textName}/>
                         <article>
                              <NorthBoundTb textName={textName}/>
