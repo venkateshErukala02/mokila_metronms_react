@@ -125,7 +125,7 @@ const FirmwareMng = () => {
             { label: "All", value: "all" },
             { label: "Encoder", value: "encoder" },
             { label: "Station Node", value: "AP" },
-            // { label: "transcoder", value: "transcoder" },
+            { label: "Transcoder", value: "transcoder" },
             // { label: "train radio", value: "train radio" },
             { label: "OBC", value: "obc" },
         ];

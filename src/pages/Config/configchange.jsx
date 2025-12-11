@@ -274,9 +274,9 @@ const handleBulkDelete = async () => {
                             </article>
                         </article>
 
-                        <article className="row border-allsd" style={{ height: '50vh' }}>
+                        <article className="row border-allsd">
                             <table className="col-12" style={{ height: '0vh' }}>
-                                <thead className="settingthtb">
+                                <thead className="settingthtb"> 
                                     <tr>
                                         <th><input className="incl2" type="checkbox"
                                          checked={selectedTasks.length === configChangeData.length && configChangeData.length > 0}

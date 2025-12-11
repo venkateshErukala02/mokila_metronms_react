@@ -470,7 +470,7 @@ tbody.inventbdtb>tr{border-bottom: 1px solid rgb(33 35 39 / 7%);}
 
 
 thead.settingthtb>tr{border-bottom: 2px solid rgb(33 35 39 / 7%);}
-thead.settingthtb>tr>th{font-size: 15px;font-family: "Lato-Regular";font-weight: 100;padding: 13px;color: #212327;letter-spacing: 0.6px;}
+thead.settingthtb>tr>th{font-size: 15px;font-family: "Lato-Regular";font-weight: 100;padding: 13px;color: #212327;letter-spacing: 0.6px;} 
 
 tbody.settingbdtb>tr>td{font-size: 12px;font-family: "Lato-Regular";padding: 6px 10px;color: #50565e;letter-spacing: 0.2px;}
 tbody.settingbdtb>tr:nth-child(odd){        background-color: rgb(229 241 255 / 50%);
@@ -491,7 +491,7 @@ tbody.settingbdtb>tr{width: 100%;font-size: 12px;}
 
 
 thead.yardtb>tr{border-bottom: 2px solid rgb(33 35 39 / 7%);}
-thead.yardtb>tr>th{font-size: 12.5px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #212327;letter-spacing: 0.6px;}
+thead.yardtb>tr>th{font-size: 13px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #212327;letter-spacing: 0.6px;width: 100%;}
 
 tbody.yardtbbd>tr>td{font-size: 12px;font-family: "Lato-Regular";padding: 6px;color: #50565e;letter-spacing: 0.2px;}
 tbody.yardtbbd>tr:nth-child(odd){        background-color: white;
@@ -500,7 +500,7 @@ tbody.yardtbbd>tr:nth-child(odd){        background-color: white;
 tbody.yardtbbd>tr:nth-child(even){        background-color:white;
 }
 tbody.yardtbbd>tr{border-bottom: 1px solid rgb(33 35 39 / 7%);}
-
+tbody.yardtbbd>tr{width: 100%;font-size: 12px;}
 
 .yardtbbd>tr:last-child{border-bottom: none;}
 
@@ -2443,10 +2443,16 @@ text-decoration: none;
 .linkcablist{
     list-style: none;
 }
-.linkcablist li{
+.linkcablist>li{
     float: left;
     font-size: 12px;
-    
+    background: #cbcbe2;
+    margin-right: 10px;
+    padding: 6px;
+    color: black;
+}
+.linkcablist>li>span{
+    color: rebeccapurple;
 }
 
 .line-hegt{
@@ -3175,8 +3181,8 @@ svg *:focus {
     padding: 10px;
     position: absolute;
     text-align: left;
-    height: 112px;
-    width: 128px;
+    height: 136px;
+    width: 130px;
     z-index: 1000; 
 }
 

@@ -310,7 +310,7 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                                 <option value="sta">Train Radio</option>
                                 <option value="encoder">Encoder</option>
                                 <option value="transcoder">Transcoder</option>
-                                <option value="AP">Station Nodes</option>
+                                <option value="SN">Station Nodes</option>
                                 <option value="obc">OBC</option>
                                 <option value="CAM">Cameras</option>
                             </select>
