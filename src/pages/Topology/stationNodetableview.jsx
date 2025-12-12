@@ -1,13 +1,12 @@
 import {useState,useEffect} from "react";
-import TopoSectionTable from "./toposectiontable";
 import '../ornms.css';
 import '../Topology/topology.css';
 import SouthBoundTb from "./southboundtb";
 import NorthBoundTb from "./northboundtb";
-import StationTagsTable from "../Wayside/stationtagstable";
+import StationNodesvgTable from "./stationnodessvgtable";
 
 
-const StationNodeTableView=({textName , rdDataRef})=>{
+const StationNodeTableView=({textName , rdDataRef,yardfacilitieData})=>{
     const [sectionTbData,setSectionTbData] = useState('');
     const [limitValueSel, setLimitValueSel] = useState('');
     const [limitValueSelLabel, setLimitValueSelLabel] = useState('50');
@@ -23,7 +22,7 @@ const StationNodeTableView=({textName , rdDataRef})=>{
         <article className="piechtcont">
                 <article className="row border-lrr">
                     <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6" style={{padding:'5px'}}>
-                       <TopoSectionTable textName={textName}/>
+                       <StationNodesvgTable yardfacilitieData={yardfacilitieData} textName={textName}/>
                        <article>
                        </article>
                     </article>

@@ -61,8 +61,8 @@ const YardTbone=({textName,yardfacilitieData})=>{
 
         for (const node of yardfacilitieData) {
             console.log("Looping node:", node);
-            const url = `api/v2/nodelinks/linkstatstest?nodeId=0`; // test API
-            // const url = `api/v2/nodelinks/linkstats?nodeId=${node.nodeId}`; // working API
+            // const url = `api/v2/nodelinks/linkstatstest?nodeId=0`; // test API
+            const url = `api/v2/nodelinks/linkstats?nodeId=${node.nodeId}`; // working API
             await getYardLinkData(url, node.nodeId);
         }
     };
@@ -70,14 +70,18 @@ const YardTbone=({textName,yardfacilitieData})=>{
     fetchData();
 }, [yardfacilitieData]);
 
+ useEffect(() => {
+        window.scrollTo(0, 0);  
+    }, [textName?.data?.display,yardfacilitieData]); 
+
     
     
 
     return(
         <>
            <article className="row">
-                <article style={{ minHeight:'375px',maxHeight:'375px',overflowY:'auto'}}>
-                    <table className="col-12 border-allsd" style={{ height: '0vh' }}>
+                <article style={{ minHeight:'375px',maxHeight:'375px',overflowY:'auto'}}  id="yardTableContainer">
+                    <table className="col-12 border-allsd table-fixed failtagtbl" style={{ height: '0vh' }}>
                         <thead className="yardtb"> 
                             <tr>
                                 <th>Location</th>
@@ -137,7 +141,7 @@ const YardTbone=({textName,yardfacilitieData})=>{
                                         ))}
                                         </ul>
                                     ) : (
-                                        <span>No cab details available</span>
+                                        <span></span>
                                     )}
                                     </td>
                             </tr>

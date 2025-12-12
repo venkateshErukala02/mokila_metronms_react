@@ -137,6 +137,8 @@ useEffect(() => {
           svg= 'davisville_track.svg';
         }else if(textName.data.display === 'wilson_track'){
           svg= 'wilson_track.svg';
+        }else if(textName.text === 'Finch trail track' || textName.text ==='VMC trail track'){
+          svg= 'Finch_trail_track.svg';
         }else{
         svg =  'Station_Line1.svg';
         }
@@ -314,10 +316,31 @@ useEffect(() => {
 
 
 useEffect(() => {
-  // if (!svgContent || textName.data?.mode !== 'yard') return;
 
   const svgRoot = svgContainerRef.current;
   if (!svgRoot || !Array.isArray(yardfacilitieData)) return;
+
+  const resetSVGStyles = () => {
+    const svgRoot = svgContainerRef.current; 
+     const ids = ['FTT1', 'FTT2', 'FTT3'];
+   ids.forEach((id) => {
+    const rectElement = svgRoot.querySelector(`#${id}`);
+    if (rectElement) {
+      rectElement.setAttribute('fill', 'red');
+      rectElement.setAttribute('stroke', '#231F20');
+      rectElement.setAttribute('stroke-width', '0.5');
+      rectElement.setAttribute('width', '15');
+      rectElement.setAttribute('height', '15');
+    }
+
+    const titleElement = svgRoot.querySelector(`#${id} + title`);
+    if (titleElement) {
+      titleElement.textContent = ''; 
+    }
+   })
+  };
+
+  resetSVGStyles();
 
   yardfacilitieData.forEach((yarditem) => {
      const position = yarditem.position;
@@ -332,12 +355,10 @@ useEffect(() => {
       el.setAttribute("fill", "rgb(102, 204, 51)");
     }
 
-     const titleEl = svgRoot.querySelectorAll('title'); 
-     titleEl.forEach((textTitl) => {
-      if (textTitl && el ) {
-        textTitl.textContent = `${yarditem.systemName} ${yarditem.ipAddress}`;
+      const titleEl = svgRoot.querySelector(`#${position} + title`);
+      if (titleEl) {
+        titleEl.textContent = `${yarditem.systemName} ${yarditem.ipAddress}`;
       }
-     })
       
     const textElements = svgRoot.querySelectorAll('.yardtexsty');
       textElements.forEach((textElement) => {
@@ -345,6 +366,10 @@ useEffect(() => {
       });
     }
 
+
+     return () => {
+    resetSVGStyles(); 
+  };
      
   });
 }, [textName.text, svgContent, yardfacilitieData]);

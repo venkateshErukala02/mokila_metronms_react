@@ -504,7 +504,36 @@ tbody.yardtbbd>tr{width: 100%;font-size: 12px;}
 
 .yardtbbd>tr:last-child{border-bottom: none;}
 
+thead.yardtb > tr > th:nth-child(1),  
+thead.yardtb > tr > th:nth-child(2),  
+thead.yardtb > tr > th:nth-child(3),  
+thead.yardtb > tr > th:nth-child(4),  
+thead.yardtb > tr > th:nth-child(5) { 
+    width: 120px; 
+}
 
+thead.yardtb > tr > th:nth-child(6) { 
+    width: auto;
+}
+
+tbody.yardtbbd > tr > td:nth-child(1), 
+tbody.yardtbbd > tr > td:nth-child(2), 
+tbody.yardtbbd > tr > td:nth-child(3), 
+tbody.yardtbbd > tr > td:nth-child(4),
+tbody.yardtbbd > tr > td:nth-child(5) {
+    width: 120px; 
+}
+
+tbody.yardtbbd > tr > td:nth-child(6) {
+    width: auto; 
+}
+
+thead.yardtb {
+    background: #fff;
+    position: sticky;
+    top: -1px;
+    z-index: 2;
+}
 
 
 /* ------------------------------------------------------ */
@@ -2442,6 +2471,8 @@ text-decoration: none;
 }
 .linkcablist{
     list-style: none;
+    max-height: 150px;
+    overflow-y: auto; 
 }
 .linkcablist>li{
     float: left;
@@ -2450,10 +2481,14 @@ text-decoration: none;
     margin-right: 10px;
     padding: 6px;
     color: black;
+    margin-bottom: 5px;
+    white-space: nowrap;
 }
 .linkcablist>li>span{
     color: rebeccapurple;
 }
+
+
 
 .line-hegt{
      background-image:url();

@@ -106,7 +106,7 @@ useEffect(()=>{
         let url= `api/v2/treeview/station/${textName.data.id}`;
         getYardfacilitieData(url);
 
-    },[textName]);
+    },[textName]); 
 
 
 
@@ -135,10 +135,12 @@ useEffect(()=>{
         }
     }
 
+    
+
     const renderSectFacility=(textName)=>{
         switch (textName?.data?.mode) {
             case 'facility':{
-                if(textName.data.display === 'davisville_track' || textName.data.display ==='wilson_track'){
+                if(textName.data.display === 'davisville_track' || textName.data.display ==='wilson_track' || textName.text === 'Finch trail track' || textName.text ==='VMC trail track' ){
                     return(
                     <>
                       <TopoSvgViewer yardfacilitieData={yardfacilitieData}  textName={textName}/>
@@ -146,7 +148,7 @@ useEffect(()=>{
                         {/* <YardTbtwo textName={textName}/> */}
                     </>
                     );
-                }else if (textName.text === 'Finch trail track' || textName.text ==='VMC trail track'){
+                }else if (textName.text === 'Carhouse' ){
                     return (
                         <>
                         <YardSvgViewer yardfacilitieData={yardfacilitieData}  textName={textName}/>
@@ -156,7 +158,7 @@ useEffect(()=>{
                     )
                 }else{
                     return ( <> <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}/>
-              <StationNodeTableView  textName={textName} rdDataRef={rdDataRef} />
+              <StationNodeTableView  yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} />
                       </> );
                 }
             }
@@ -203,7 +205,7 @@ useEffect(()=>{
       return node.data?.display || node.text || "Unknown";
     }else if (mode === "facility" && (node.text === "Davisville" || node.text === "Wilson")) {
       return `Yard- ${node.text}` || "Unnamed Facility";
-    }else if (mode === "facility" && (node.text === "Finch trail track" || node.text === "VMC trail track")) {
+    }else if (mode === "facility" && (node.text === "Finch trail track" || node.text === "VMC trail track" || node.text === 'Carhouse')) {
       return `${node.text}` || "Unnamed Facility";
     }else if (mode === "facility" || node.data?.parent === "yard_1") {
       return `Station- ${node.text}` || "Unnamed Facility";
