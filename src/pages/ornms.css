@@ -494,7 +494,7 @@ thead.yardtb>tr{border-bottom: 2px solid rgb(33 35 39 / 7%);}
 thead.yardtb>tr>th{font-size: 13px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #212327;letter-spacing: 0.6px;width: 100%;}
 
 tbody.yardtbbd>tr>td{font-size: 12px;font-family: "Lato-Regular";padding: 6px;color: #50565e;letter-spacing: 0.2px;}
-tbody.yardtbbd>tr:nth-child(odd){        background-color: white;
+tbody.yardtbbd>tr:nth-child(odd){        background-color:rgb(229 241 255 / 50%);
 }
 .yardtbbd{border-bottom: 1px solid rgb(33 35 39 / 7%);}
 tbody.yardtbbd>tr:nth-child(even){        background-color:white;
@@ -680,10 +680,10 @@ thead.statustagthtb>tr{border-bottom: 1px solid rgb(33 35 39 / 7%);}
 thead.statustagthtb>tr>th{font-size: 12.5px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #212327;letter-spacing: 0.6px;}
 
 tbody.statustagtbbd>tr>td{font-size: 13px;font-family: "Lato-Regular";padding: 6px;color: #50565e;letter-spacing: 0.2px;text-align: left;}
-tbody.statustagtbbd>tr:nth-child(odd){        background-color: white;
+tbody.statustagtbbd>tr:nth-child(odd){       background-color:rgb(229 241 255 / 50%);
 }
 .statustagtbbd{border-bottom: 1px solid rgb(33 35 39 / 7%);}
-tbody.statustagtbbd>tr:nth-child(even){       background-color: #fafafa;
+tbody.statustagtbbd>tr:nth-child(even){       background-color: white;
 }
 tbody.statustagtbbd>tr{border-bottom: 1px solid rgb(33 35 39 / 7%);}
 
@@ -3340,6 +3340,8 @@ svg *:focus {
     font-family: system-ui;
     font-size: 12px;
     min-height: 37px;
+    font-family: "Lato-Regular";
+
 }
 
 
@@ -3378,6 +3380,8 @@ svg *:focus {
     position: relative;
     font-weight: 700;
     color: #495057;
+    font-family: "Lato-Regular";
+
 }
 .configchngstatuslist>li>label>input{
     margin-right: 10px;
@@ -3391,6 +3395,7 @@ svg *:focus {
     display: inline-block;
     position: relative;
     font-weight: 700;
+    font-family: "Lato-Regular";
     color: #495057;
 }
 .configchngstatuslist_sub_cont>li>label>input{
@@ -3402,6 +3407,46 @@ svg *:focus {
     padding-top: 4px;
     border: none;
     font-size: 12px;
+}
+.hardwaretitle{
+    background-color: #ffffff !important;
+    color: #666666;
+    font-size: 16px;
+    font-weight: 900;
+    padding: 6px;
+    font-family: "Lato-Regular";
+    letter-spacing: 1.05px;
+}
+
+.selectdevititle{
+    font-size: 15px;
+    color: #495057;
+    margin: 0;
+    padding: 0;
+    font-weight: 400;
+    font-family: "Lato-Regular";
+
+}
+.notehardpara {
+    color: #212327;
+    font-family: Lato-Regular;
+    letter-spacing: .2px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    font-size: 12.5px;
+}
+.hardwarenotelist{
+    list-style-type: none;
+    margin: 0;
+    padding-left: 8px;
+}
+.hardwarenotelist>li{
+    color: #212327;
+    font-family: "Lato-Regular";
+    margin-bottom: 3px;
+    margin-left: 5px;
+    font-size: 12.5px;
+    
 }
 
  /* width={700} height={240} */

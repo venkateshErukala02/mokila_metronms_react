@@ -2,10 +2,17 @@ import React,{useState,useEffect} from "react";
 
 
 const YardTbone=({textName,yardfacilitieData})=>{
-     const [isLoading, setIsLoading] = useState(false);
-     const [isError, setIsError] = useState({ status: false, msg: "" });
+    const [isLoading, setIsLoading] = useState(false);
+    const [isError, setIsError] = useState({ status: false, msg: "" });
     const [linkData,setLinkData] = useState({});
+    const [sortedData, setSortedData] = useState([]); 
+    const [sortOrder, setSortOrder] = useState('asc'); 
+    const [sortField, setSortField] = useState('status');
 
+
+    useEffect(() => {
+    setSortedData(yardfacilitieData);
+  }, [yardfacilitieData]);
 
     const getYardLinkData = async (url, nodeId) => {
         try {
@@ -74,8 +81,42 @@ const YardTbone=({textName,yardfacilitieData})=>{
         window.scrollTo(0, 0);  
     }, [textName?.data?.display,yardfacilitieData]); 
 
-    
-    
+  
+
+    const ipToArray = (ip) => ip.split('.').map(num => parseInt(num, 10));
+
+  const handleSort = (field) => {
+    const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc'; 
+    setSortOrder(newSortOrder);
+    setSortField(field); 
+
+    const sortedArray = [...yardfacilitieData].sort((a, b) => {
+      if (field === 'status') {
+        const statusOrder = { 'up': 1, 'down': 0 };
+        return (statusOrder[a.status] - statusOrder[b.status]) * (newSortOrder === 'asc' ? 1 : -1);
+      }
+
+      if (field === 'ipAddress') {
+        const ipA = ipToArray(a.ipAddress);
+        const ipB = ipToArray(b.ipAddress);
+        for (let i = 0; i < ipA.length; i++) {
+          if (ipA[i] !== ipB[i]) {
+            return (ipA[i] - ipB[i]) * (newSortOrder === 'asc' ? 1 : -1);
+          }
+        }
+        return 0;
+      }
+
+      if (field === 'connectedTo') {
+        return a.connectedTo.localeCompare(b.connectedTo) * (newSortOrder === 'asc' ? 1 : -1);
+      }
+
+      return 0; 
+    });
+
+    setSortedData(sortedArray); 
+  };
+  
 
     return(
         <>
@@ -86,8 +127,8 @@ const YardTbone=({textName,yardfacilitieData})=>{
                             <tr>
                                 <th>Location</th>
                                 <th>System Name</th>
-                                <th>Primary IP</th>
-                                <th>Status</th>
+                                <th onClick={() => handleSort("ipAddress")}>Primary IP</th>
+                                <th onClick={() => handleSort("status")} >Status</th>
                             
                                 <th>	Connected cabs </th>
                                 <th style={{paddingLeft:'25px'}}>Cab Info</th>

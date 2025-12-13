@@ -8,6 +8,7 @@ import SectionIcon from './../../assets/img/location.png';
 import FirmwareMng from "./firmwaremanager";
 import ConfigChange from "./configchange";
 import FirmwareContainer from "./firmware";
+import HardwareReplacementContainer from "./hardwarereplacement";
 
 
 const ConfigPage = () => {
@@ -21,7 +22,8 @@ const ConfigPage = () => {
 
     const dropdownMap = {
         firmware: 'firmware',
-        bulk: 'bulk'
+        bulk: 'bulk',
+        provisioning : 'provisioning'
     };
 
     Object.values(dropdownMap).forEach(id => {
@@ -48,7 +50,8 @@ const ConfigPage = () => {
                 return <ConfigChange />;
             case 'firmware':
                 return <FirmwareContainer />;
-            
+            case 'HardwareReplacement':
+                return <HardwareReplacementContainer />;
             default:
                 return <FirmwareMng />;
         }
@@ -86,6 +89,11 @@ const ConfigPage = () => {
                                         <ul className="clearfix profsublist list-pn" id="bulk" style={{ display: 'none' }}>
                                             <li onClick={() => SelectSettingCont('configchange')}><img src={LinesIcon} alt="line" />Config Change</li>
                                             <li onClick={() => SelectSettingCont('firmware')}><img src={SectionIcon} alt="section" /> Firmware</li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="" className="clearfix profilel new" onClick={(e) => {showDropdown('provisioning', e);SelectSettingCont('HardwareReplacement')}}><i className="fa fa-lg fa-cog"></i>Provisioning</a>
+                                        <ul className="clearfix profsublist list-pn" id="provisioning" style={{ display: 'none' }}>
+                                            <li onClick={() => SelectSettingCont('HardwareReplacement')}><img src={LinesIcon} alt="line" />Hardware Replacement</li>
                                         </ul>
                                     </li>
 

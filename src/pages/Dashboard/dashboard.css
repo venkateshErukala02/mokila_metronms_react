@@ -75,11 +75,11 @@ thead.tbtwo>tr>th{font-size: 12.5px;font-family: "Lato-Regular";font-weight: 900
 tbody.tbbdtwo>tr>td{font-size: 13px;font-family: "Lato-Regular";padding: 6px;color: #50565e;letter-spacing: 0.2px; white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;}
-tbody.tbbdtwo>tr:nth-child(odd){        background-color: white;
+tbody.tbbdtwo>tr:nth-child(odd){        background-color:rgb(229 241 255 / 50%);
 }
-.tbbdtwo{border-bottom: 1px solid rgb(33 35 39 / 7%);}
 tbody.tbbdtwo>tr:nth-child(even){        background-color:white;
 }
+.tbbdtwo{border-bottom: 1px solid rgb(33 35 39 / 7%);}
 tbody.tbbdtwo>tr{border-bottom: 1px solid rgb(33 35 39 / 7%);}
 
 
@@ -96,7 +96,7 @@ thead.firmpopuptbtwo>tr>th{font-size: 12.5px;font-family: "Lato-Regular";font-we
 tbody.firmpopuptbbdtwo>tr>td{font-size: 13px;font-family: "Lato-Regular";padding: 6px;color: #50565e;letter-spacing: 0.2px; white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;}
-tbody.firmpopuptbbdtwo>tr:nth-child(odd){        background-color: white;
+tbody.firmpopuptbbdtwo>tr:nth-child(odd){        background-color:rgb(229 241 255 / 50%);
 }
 .firmpopuptbbdtwo{border-bottom: 1px solid rgb(33 35 39 / 7%);}
 tbody.firmpopuptbbdtwo>tr:nth-child(even){        background-color:white;
@@ -154,11 +154,11 @@ tbody.failtagtbbd > tr > td {
 }
 
 tbody.failtagtbbd > tr:nth-child(odd) {
-  background-color: white;
+  background-color:rgb(229 241 255 / 50%);
 }
 
 tbody.failtagtbbd > tr:nth-child(even) {
-  background-color: #fafafa;
+  background-color: white;
 }
 
 tbody.failtagtbbd > tr {
