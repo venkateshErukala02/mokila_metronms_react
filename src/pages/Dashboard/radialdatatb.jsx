@@ -50,6 +50,7 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
     const apiStatus = radialData + dname;
 
     useEffect(() => {
+        const fetchData = () => {
         let url = '';
 
         switch (apiStatus) {
@@ -152,7 +153,14 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
                 url = `api/v2//dashboard/filternodesg?filter=productCode&value=ap&offset=${pageSize}&limit=${limitValueSelLabel}&status=all&rd=ap&sort=sysUptime&by=desc&ar=glob`;
                 fetchDataRadial(url);
                 break;
-        }
+        } 
+    }
+        fetchData();
+
+        const intervalId = setInterval(fetchData,30000);
+
+        return ()=> clearInterval(intervalId);
+
     }, [radialData, dname, limitValueSelLabel, pageSize, apiStatus]);
 
 

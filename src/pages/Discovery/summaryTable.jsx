@@ -46,11 +46,11 @@ const SummaryTable=()=>{
       
         useEffect(() => {
            getDatasummarytb();
-          //  const intervalId = setInterval(() => {
-          //   getDatasummarytb();
-          //   }, 5000); 
+           const intervalId = setInterval(() => {
+            getDatasummarytb();
+            }, 30000); 
     
-          //   return () => clearInterval(intervalId);
+            return () => clearInterval(intervalId);
         }, []);
    
 

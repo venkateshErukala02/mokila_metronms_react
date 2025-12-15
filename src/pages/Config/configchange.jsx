@@ -87,9 +87,9 @@ const ConfigChange = () => {
         getConfigChangeData(url,true);
         }
 
-         fetchIntervalData();
+        fetchIntervalData();
 
-  const intervalId = setInterval(fetchIntervalData, 10000);
+        const intervalId = setInterval(fetchIntervalData, 10000);
     
         return () => clearInterval(intervalId);
     

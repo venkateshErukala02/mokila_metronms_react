@@ -46,10 +46,17 @@ const UserContainer=()=>{
 
 
      useEffect(() => {
-
+        const fetchUserData = async()=>{
             // const url = `rest/users/list?limit=${userLimitValueSel}&offset=0&sort=asc`
             const url='rest/users/list?limit=10&offset=0&sort=asc'
             getUserData(url);
+        }
+
+        fetchUserData();
+
+        const intervalId = setInterval(fetchUserData,30000);
+
+        return ()=> clearInterval(intervalId);
     
         }, [userLimitValueSel]);
 

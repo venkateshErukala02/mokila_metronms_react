@@ -39,8 +39,16 @@ const FacilityContainer=()=>{
 
 
      useEffect(() => {
+        const fetchFacilityData = async()=>{
             const url = `api/v2/facilities?_s=&limit=${facilityLimitValueSel}&offset=0&order=asc&orderBy=name`
-            getFacilityData(url);
+           await getFacilityData(url);
+        }
+
+        fetchFacilityData();
+
+        const intervalId = setInterval(fetchFacilityData,30000);
+
+        return ()=>clearInterval(intervalId);
     
         }, [facilityLimitValueSel]);
 

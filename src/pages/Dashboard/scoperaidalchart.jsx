@@ -49,6 +49,10 @@ const BsChart = ({ getDataStatus }) => {
 
   useEffect(() => {
     getData();
+
+    const intervalId = setInterval(getData,30000);
+
+    return ()=> clearInterval(intervalId);
   }, []);
 
   const extractValues = (obj) =>

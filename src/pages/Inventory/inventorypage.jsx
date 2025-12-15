@@ -49,11 +49,11 @@ const InventRpt = () => {
     };
 
     useEffect(() => {
-        // getDataInvety();
-            // const intervalId = setInterval(()=>{
+        getDataInvety();
+            const intervalId = setInterval(()=>{
                 getDataInvety()
-            // },1000);
-        //   return ()=> clearInterval(intervalId);
+            },30000);
+          return ()=> clearInterval(intervalId);
     }, [pageSize,limitValueSelLabel]);
 
     let activeTrueCount = 0;

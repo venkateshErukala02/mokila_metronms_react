@@ -68,12 +68,21 @@ const Tableone = () => {
 
 
     useEffect(() => {
+        const fetchData =()=>{
         const baseFilter = `eventDisplay==Y;eventSource!=syslogd`;
         const severityFilter = eventSeverityValueSel !== "-1" ? `;eventSeverity==${eventSeverityValueSel}` : '';
         const timestamp = Date.now() - selectedDuration;
         const url = `api/v2/events/list?_s=${baseFilter}${severityFilter};eventCreateTime=gt=${timestamp}&ar=glob&limit=${eventLimitLabelSel}&offset=${fromValue}`
 
         getDataEvents(url);
+        }
+
+        fetchData();
+
+        const intervalId  = setInterval(fetchData,30000);
+
+        return ()=> clearInterval(intervalId); 
+
     }, [eventSeverityValueSel, selectedDuration, eventLimitLabelSel,fromValue]);
 
 

@@ -53,6 +53,10 @@ const LineContainer=()=>{
          
         }
         fetchLinesData();
+
+        const intervalId = setInterval(fetchLinesData,30000);
+
+        return ()=> clearInterval(intervalId);
     
         }, [regionLimitValueSel]);
 

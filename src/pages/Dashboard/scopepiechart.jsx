@@ -57,6 +57,11 @@ const GdChart = ({ getDataStatus }) => {
 
   useEffect(() => {
     getDatapiech();
+
+    const intervalId = setInterval(getDatapiech,30000);
+
+    return ()=> clearInterval(intervalId);
+
   }, []);
 
     const getActValue = (arr) => {

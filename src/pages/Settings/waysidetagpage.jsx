@@ -57,9 +57,15 @@ const WaysideTagContainer=()=>{
 
 
      useEffect(() => {
-
+            const fetchData =async()=>{
             const url=`api/v2/wayside/waySideTags?page=${pageCount}`;
-            getTagData(url);
+            await getTagData(url);
+            }
+            fetchData();
+
+            const intervalId=setInterval(fetchData,30000);
+
+            return ()=> clearInterval(intervalId);
     
         }, [pageCount]);
 

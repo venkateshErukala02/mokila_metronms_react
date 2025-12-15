@@ -46,9 +46,17 @@ const SectionContainer=()=>{
 
 
      useEffect(() => {
+        const fetchSectionData=async()=>{
         const url='api/v2/locations?_s=&limit=10&offset=0&order=asc&orderBy=name'
             // const url = `api/v2/cities?_s=&limit=${cityLimitValueSel}&offset=0&order=asc&orderBy=name`
-            getSectionData(url);
+            await getSectionData(url);
+        }
+
+        fetchSectionData();
+
+        const intervalId = setInterval(fetchSectionData,30000);
+
+        return ()=> clearInterval(intervalId);
     
         }, [cityLimitValueSel]);
 
