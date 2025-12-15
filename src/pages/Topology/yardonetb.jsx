@@ -1,21 +1,19 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect, useMemo} from "react";
 
 
 const YardTbone=({textName,yardfacilitieData})=>{
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [linkData,setLinkData] = useState({});
     const [sortedData, setSortedData] = useState([]); 
     const [sortOrder, setSortOrder] = useState('asc'); 
     const [sortField, setSortField] = useState('status');
+    const [dataLoaded, setDataLoaded] = useState(false);
 
 
-    useEffect(() => {
-    setSortedData(yardfacilitieData);
-  }, [yardfacilitieData]);
-
-    const getYardLinkData = async (url, nodeId) => {
+      const getYardLinkData = async (url, nodeId) => {
         try {
+            // setIsLoading(true); 
             const response = await fetch(url, {
                 method: "GET",
                 headers: {
@@ -34,14 +32,45 @@ const YardTbone=({textName,yardfacilitieData})=>{
             }
         } catch (error) {
             setIsError({ status: true, msg: error.message });
-        } finally {
-            setIsLoading(false);
-        }
+        } 
     };
 
-  
+
+    const fetchData = useMemo(() => {
+   return yardfacilitieData.map(node => {
+    return getYardLinkData(
+      `api/v2/nodelinks/linkstats?nodeId=${node.nodeId}`,
+      node.nodeId
+   )});
+}, [yardfacilitieData]);
 
 
+    useEffect(() => {
+    if (!yardfacilitieData || yardfacilitieData.length === 0) {
+        setSortedData([]);
+        setDataLoaded(true);
+        setIsLoading(false);
+        return;
+    }
+        setIsLoading(true);
+        setDataLoaded(false); 
+        setSortedData(yardfacilitieData);
+
+
+        Promise.all(fetchData)
+      .then(() => {
+        setDataLoaded(true);
+      })
+      .finally(() => {
+        setIsLoading(false); // Stop loading after all data is fetched
+      });
+    }, [yardfacilitieData,fetchData]);
+
+
+    useEffect(() => {
+        setDataLoaded(false);
+        setSortedData([]);
+    }, [textName?.data?.display]);
 
     // useEffect(()=>{
     //     if (!textName?.data) return;
@@ -56,26 +85,6 @@ const YardTbone=({textName,yardfacilitieData})=>{
     //     getYardEventData(url);
 
     // },[textName]);
-
-    useEffect(() => {
-    const fetchData = async () => {
-        console.log("yardfacilitieData = ", yardfacilitieData);
-
-        if (!yardfacilitieData || yardfacilitieData.length === 0) {
-            console.log("No data — loop skipped");
-            return;
-        }
-
-        for (const node of yardfacilitieData) {
-            console.log("Looping node:", node);
-            // const url = `api/v2/nodelinks/linkstatstest?nodeId=0`; // test API
-            const url = `api/v2/nodelinks/linkstats?nodeId=${node.nodeId}`; // working API
-            await getYardLinkData(url, node.nodeId);
-        }
-    };
-
-    fetchData();
-}, [yardfacilitieData]);
 
  useEffect(() => {
         window.scrollTo(0, 0);  
@@ -136,7 +145,7 @@ const YardTbone=({textName,yardfacilitieData})=>{
                         </thead>
 
                         <tbody className="yardtbbd">
-                            {isLoading && (
+                            {isLoading && yardfacilitieData?.length > 0 && sortedData?.length > 0&& (
                                 <tr>
                                     <td colSpan="12" style={{ textAlign: "center" }}>
                                         Loading...
@@ -152,7 +161,7 @@ const YardTbone=({textName,yardfacilitieData})=>{
                                 </tr>
                             )}
 
-                            {!isLoading && !isError.status && yardfacilitieData?.length === 0 && (
+                            {dataLoaded && sortedData?.length === 0 && (
                                 <tr>
                                     <td colSpan="12" style={{ textAlign: "center" }}>
                                         No Data Available
@@ -160,9 +169,8 @@ const YardTbone=({textName,yardfacilitieData})=>{
                                 </tr>
                             )}
 
-                        {!isLoading &&
-                                !isError.status &&
-                                yardfacilitieData?.length > 0 && yardfacilitieData
+                        {dataLoaded &&
+                                sortedData?.length > 0 && sortedData
                                 .filter(node => node.type.includes('AP') || node.type.includes('SN')) 
                                 .map((node, index) => (
                             <tr key={index}>
