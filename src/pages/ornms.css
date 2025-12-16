@@ -2974,6 +2974,31 @@ svg *:focus {
     width: 298px;
 }
 
+.eventpopupcont{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.eventboxstyle{
+    background-color: white;
+    border-radius: 10px;
+    height: 32vh;
+    width: 500px;
+    padding: 10px;
+}
+.evntdetailtitle{
+    padding: 15px 10px;
+    font-size: 15px;
+}
+
 .special-svg circle:hover {
     transform: scale(2);
     transform-box: fill-box;

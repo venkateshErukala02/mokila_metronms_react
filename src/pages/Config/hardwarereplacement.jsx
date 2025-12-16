@@ -2,23 +2,27 @@ import { useState, useEffect, useRef } from "react";
 import '../../pages/ornms.css'
 
 const HardwareReplacementContainer = () => {
-    const [searchValue, setSearchValue] = useState('');
+    const [searchOldDeviceValue, setSearchOldDeviceValue] = useState('');
+    const [searchNewDeviceValue, setSearchNewDeviceValue] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [searchData, setSearchData] = useState('');
+    const [searchOldDeviceData, setSearchOldDeviceData] = useState([]);
+    const [searchNewDeviceData, setSearchNewDeviceData] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
     const [addedItems, setAddedItems] = useState([]);
     const [searchBtn, setSearchBtn] = useState(false);
-    const [searchTrigger, setSearchTrigger] = useState(0);
+    const [searchOldDeviceTrigger, setSearchOldDeviceTrigger] = useState(0);
+    const [searchNewDeviceTrigger,setSearchNewDeviceTrigger] = useState(0);
     const [selectedIps, setSelectedIps] = useState([]);
     const dropdownRef = useRef(null);
+    const [selectedRows, setSelectedRows] = useState([]);
 
     useEffect(() => {
 
-        const handleSearchData = async (searchValue) => {
+        const handleSearcNewDevicehData = async (searchNewDeviceValue) => {
 
             try {
-                const response = await fetch(`api/v2/nodes?_s=assetRecord.serialNumber==${searchValue},label==${searchValue},sysName==${searchValue}&ar=devicetype&limit=25&offset=0&order=asc&orderBy=id`, {
+                const response = await fetch(`api/v2/nodes?_s=assetRecord.serialNumber==${searchNewDeviceValue},label==${searchNewDeviceValue},sysName==${searchNewDeviceValue}&ar=devicetype&limit=25&offset=0&order=asc&orderBy=id`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -28,7 +32,7 @@ const HardwareReplacementContainer = () => {
 
                 if (response.ok) {
                     setLoading(false);
-                    setSearchData(data.node || []);
+                    setSearchNewDeviceData(data.node || []);
                     setError({ status: false, msg: "" });
                     setError({ status: false, msg: "" });
                 } else {
@@ -42,15 +46,50 @@ const HardwareReplacementContainer = () => {
 
         }
 
-        if (searchValue.trim()) {
-            handleSearchData(searchValue);
+        if (searchNewDeviceValue.trim()) {
+            handleSearcNewDevicehData(searchNewDeviceValue);
         }
-    }, [searchTrigger]);
+    }, [searchNewDeviceTrigger]);
 
+     useEffect(() => {
+
+        const handleSearcOldDevicehData = async (searchOldDeviceValue) => {
+
+            try {
+                const response = await fetch(`api/v2/profiles/listconfigs?address=${searchOldDeviceValue}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    setLoading(false);
+                    setSearchOldDeviceData(data || []);
+                    setError({ status: false, msg: "" });
+                    setError({ status: false, msg: "" });
+                    setSearchOldDeviceValue('');
+                } else {
+                    throw new Error("data not found");
+                }
+
+            } catch (error) {
+                setLoading(false);
+                setError({ status: true, msg: error.message });
+            }
+
+        }
+
+        if (searchOldDeviceValue.trim()) {
+            handleSearcOldDevicehData(searchOldDeviceValue);
+        }
+    }, [searchOldDeviceTrigger]);
 
     const handleClearSearch = () => {
         setSearchBtn(false);
-        setSearchValue('');
+        setSearchNewDeviceValue('');
+        setSearchNewDeviceData([]);
     }
 
     const handleAddToTable = (event) => {
@@ -64,16 +103,45 @@ const HardwareReplacementContainer = () => {
         }
     };
 
-    const handleSearchClick = (e) => {
+    const handleOldDeviceSearchClick = (e) => {
         e.preventDefault();
-        if (!searchValue.trim()) {
+        if (!searchOldDeviceValue.trim()) {
+            alert("Please enter a search term");
+
+        } else {
+            setSearchOldDeviceTrigger(prev => prev + 1);
+        }
+    }
+
+     const handleNewDeviceSearchClick = (e) => {
+        e.preventDefault();
+        if (!searchNewDeviceValue.trim()) {
             alert("Please enter a search term");
 
         } else {
             setSearchBtn(true);
-            setSearchTrigger(prev => prev + 1);
+            setSearchNewDeviceTrigger(prev => prev + 1);
         }
     }
+
+     const handleSelectAll = () => {
+        // const allKeys = searchOldDeviceData.map((node) => node.fileName);
+        // if (selectedRows.length === allKeys.length) {
+        //     setSelectedRows([]);
+        // } else {
+        //     setSelectedRows(allKeys);
+        // }
+    };
+
+     const handleCheckboxChange = (key) => {
+        setSelectedRows((prevSelected) =>
+            prevSelected.includes(key)
+                ? prevSelected.filter((rowKey) => rowKey !== key)
+                : [...prevSelected, key]
+        );
+    };
+
+
 
     return (
 
@@ -97,61 +165,29 @@ const HardwareReplacementContainer = () => {
                                                 <input
                                                     type="text"
                                                     placeholder="Search IP Address"
-                                                    value={searchValue}
-                                                    onChange={(e) => setSearchValue(e.target.value)}
+                                                    value={searchOldDeviceValue}
+                                                    onChange={(e) => setSearchOldDeviceValue(e.target.value)}
                                                     className="searchIpinput"
                                                 />
-                                                <button type="button" className="searchfirmbtn" onClick={handleSearchClick}>Search</button>
-                                                <button className="clearfix createbtn" type="button" onClick={handleClearSearch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
-
+                                                <button type="button" className="searchfirmbtn" onClick={handleOldDeviceSearchClick}>Search</button>
                                             </article>
                                         </li>
                                     </ul>
-                                    {searchBtn && searchData.length === 0 && <article ref={dropdownRef} style={{ maxHeight: '5vh', overflow: 'auto', position: 'absolute', backgroundColor: 'white', zIndex: '99999', width: '236px', left: "0" }} className="scheduletitle">No Data</article>}
-                                    {searchData.length > 0 && <article ref={dropdownRef} style={{ maxHeight: '42vh', overflow: 'auto', position: 'absolute', backgroundColor: 'white', zIndex: '99999', width: '236px', left: "0" }}>
-                                        <div style={{ padding: "5px", borderBottom: "1px solid #ccc", display: "flex", alignItems: "center", gap: "8px", justifyContent: "end" }}>
-                                            {/* <input
-                                        type="checkbox"
-                                        checked={selectedIps.length === searchData.length}
-                                        onChange={handleSelectAll}
-                                    />
-                                    <label className="scheduletitle">Add Selected</label> */}
-                                        </div>
-                                        <ul className="searchlist">
-                                            {searchData && searchData.map((event) => {
-                                                const isAdded = addedItems.includes(event.id);
-                                                const isChecked = selectedIps.includes(event.id);
-                                                return (
-                                                    <li key={event.id}>
-                                                        <article style={{ justifyContent: "space-between", display: 'flex', width: "100%" }}>
-                                                            {/* <input
-                                                        type="checkbox"
-                                                        checked={isChecked}
-                                                        onChange={() => handleSelectItem(event.id)}
-                                                    /> */}
-                                                            <h5 className="scheduletitle">{event.primaryIP}</h5>
-                                                            <button className="addbtn" onClick={() => handleAddToTable(event)}
-                                                                disabled={isAdded}
-                                                                style={{
-                                                                    backgroundColor: isAdded ? '#ccc' : '#007bff',
-                                                                    color: isAdded ? '#666' : 'white',
-                                                                    cursor: isAdded ? 'not-allowed' : 'pointer'
-                                                                }}
-                                                            >{isAdded ? 'Added' : 'Add'}</button>
-                                                        </article>
-                                                    </li>
-                                                )
-                                            })}
-                                        </ul>
-                                    </article>}
                                 </article>
                                 <article className="row border-allsd" style={{ height: '28vh', overflow: 'hidden', margin: "22px 0" }}>
                                     <table className="col-md-12 col-sm-12 col-lg-12 col-xl-12" style={{ tableLayout: 'fixed', width: '100%' }}>
                                         <thead className="configthtb">
                                             <tr style={{ textAlign: 'center' }}>
-                                                <th>System Name</th>
-                                                <th>IP Address</th>
-                                                <th>Station</th>
+                                                <th style={{ width: '96px' ,textAlign:'center'}}><input type="checkbox" className="incl"
+                                            onChange={handleSelectAll}
+                                            checked={
+                                                Array.isArray(searchOldDeviceData) &&
+                                                searchOldDeviceData.length > 0 &&
+                                                selectedRows.length === searchOldDeviceData.length
+                                            }
+                                        /></th>
+                                                <th style={{ width: '150px' }}>IP Address</th>
+                                                <th style={{ width: '146px' }}>Date</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -159,12 +195,15 @@ const HardwareReplacementContainer = () => {
                                     <div style={{ height: 'calc(28vh - 40px)', overflowY: 'auto' }}>
                                         <table className="col-md-12 col-sm-12 col-lg-12 col-xl-12" style={{ tableLayout: 'fixed', width: '100%' }}>
                                             <tbody className="configbdtb" style={{ textAlign: 'center' }}>
-                                                {Array.isArray(selectedItems) && selectedItems.length > 0 ? (
-                                                    selectedItems.map((event) => (
+                                                {Array.isArray(searchOldDeviceData) && searchOldDeviceData.length > 0 ? (
+                                                    searchOldDeviceData.map((event) => (
                                                         <tr key={event.id}>
-                                                            <td style={{ width: '150px' }}>{event.sysName}</td>
-                                                            <td style={{ width: '150px' }}>{event.primaryIP}</td>
-                                                            <td style={{ width: '100px' }}>{event.facility}</td>
+                                                            <td style={{ width: '96px' ,textAlign:'center'}}><input type="checkbox" className="incl"
+                                                    checked={selectedRows.includes(event.fileName)}
+                                                    onChange={() => handleCheckboxChange(event.fileName)}
+                                                /></td>
+                                                            <td style={{ width: '150px' }}>{event.ipAddress}</td>
+                                                            <td style={{ width: '146px' }}>{event.date}</td>
                                                         </tr>
                                                     ))
                                                 ) : (
@@ -189,38 +228,27 @@ const HardwareReplacementContainer = () => {
                                                 <input
                                                     type="text"
                                                     placeholder="Search IP Address"
-                                                    value={searchValue}
-                                                    onChange={(e) => setSearchValue(e.target.value)}
+                                                    value={searchNewDeviceValue}
+                                                    onChange={(e) => setSearchNewDeviceValue(e.target.value)}
                                                     className="searchIpinput"
                                                 />
-                                                <button type="button" className="searchfirmbtn" onClick={handleSearchClick}>Search</button>
+                                                <button type="button" className="searchfirmbtn" onClick={handleNewDeviceSearchClick}>Search</button>
                                                 <button className="clearfix createbtn" type="button" onClick={handleClearSearch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
 
                                             </article>
                                         </li>
                                     </ul>
-                                    {searchBtn && searchData.length === 0 && <article ref={dropdownRef} style={{ maxHeight: '5vh', overflow: 'auto', position: 'absolute', backgroundColor: 'white', zIndex: '99999', width: '236px', left: "0" }} className="scheduletitle">No Data</article>}
-                                    {searchData.length > 0 && <article ref={dropdownRef} style={{ maxHeight: '42vh', overflow: 'auto', position: 'absolute', backgroundColor: 'white', zIndex: '99999', width: '236px', left: "0" }}>
+                                    {searchBtn && searchNewDeviceData.length === 0 && <article ref={dropdownRef} style={{ maxHeight: '5vh', overflow: 'auto', position: 'absolute', backgroundColor: 'white', zIndex: '99999', width: '236px', left: "0" }} className="scheduletitle">No Data</article>}
+                                    {searchNewDeviceData.length > 0 && <article ref={dropdownRef} style={{ maxHeight: '42vh', overflow: 'auto', position: 'absolute', backgroundColor: 'white', zIndex: '99999', width: '236px', left: "0" }}>
                                         <div style={{ padding: "5px", borderBottom: "1px solid #ccc", display: "flex", alignItems: "center", gap: "8px", justifyContent: "end" }}>
-                                            {/* <input
-                                        type="checkbox"
-                                        checked={selectedIps.length === searchData.length}
-                                        onChange={handleSelectAll}
-                                    />
-                                    <label className="scheduletitle">Add Selected</label> */}
                                         </div>
                                         <ul className="searchlist">
-                                            {searchData && searchData.map((event) => {
+                                            {searchNewDeviceData && searchNewDeviceData.map((event) => {
                                                 const isAdded = addedItems.includes(event.id);
                                                 const isChecked = selectedIps.includes(event.id);
                                                 return (
                                                     <li key={event.id}>
                                                         <article style={{ justifyContent: "space-between", display: 'flex', width: "100%" }}>
-                                                            {/* <input
-                                                        type="checkbox"
-                                                        checked={isChecked}
-                                                        onChange={() => handleSelectItem(event.id)}
-                                                    /> */}
                                                             <h5 className="scheduletitle">{event.primaryIP}</h5>
                                                             <button className="addbtn" onClick={() => handleAddToTable(event)}
                                                                 disabled={isAdded}

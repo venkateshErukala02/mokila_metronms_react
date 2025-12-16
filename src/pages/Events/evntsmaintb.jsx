@@ -25,7 +25,8 @@ const EventMainTB = () => {
     const [pageSize, setPageSize] = useState(1);
     const [nodeIdData,setNodeIdData] = useState('');
     const nodeIdRef = useRef(null);
-
+    const [showEventPopup,setShowEventPopup] = useState(false);
+    const [eventpopupData,setEventpopupData] = useState([]);
     const getDataEvntMain = async (url) => {
        if(eventipText === ''){
         setIsLoading(true);
@@ -354,6 +355,15 @@ const EventMainTB = () => {
     };
 
 
+    const handleEventPopup=(event)=>{
+        setShowEventPopup(true);
+        setEventpopupData(event)
+    }
+
+    const handleEventPopupClose=()=>{
+        setShowEventPopup(false);
+    }
+
 
     return (
         <>
@@ -485,7 +495,7 @@ const EventMainTB = () => {
                                 )}
                                 {Array.isArray(eventmainData) && eventmainData?.length > 0 ? (
                                     eventmainData.map((event) => (
-                                        <tr key={event.id}>
+                                        <tr key={event.id} onClick={()=>handleEventPopup(event)}>
                                             <td><i className={getCategoryClass(event.severity)}></i>{event.ipAddress ? event.ipAddress : event.host}</td>
                                             <td>{formatTime(event.time)}</td>
                                             <td>{event.severity}</td>
@@ -532,6 +542,26 @@ const EventMainTB = () => {
                         </table>
                     </article>
                 </article>)}
+
+              {showEventPopup  && <article className="eventpopupcont">
+                    <article className="eventboxstyle">
+                        {eventpopupData &&(
+                            <article>
+                                <article className="evntdetailtitle">
+                                    Event details
+                                </article>
+                                <h1>Event Id:{eventpopupData.id}</h1>
+                                <h2>Event Time: {new Date(eventpopupData.createTime).toLocaleString()}</h2>
+                                <h3>Sevirity: {eventpopupData.severity}</h3>
+                                <span>{eventpopupData.description}</span>
+                                <hr />
+                                <article style={{textAlign:'center'}}>
+                                    <button className="createbtn" type="button" onClick={handleEventPopupClose}>Close</button>
+                                </article>
+                            </article>
+                        ) }
+                    </article>
+                </article>}
             {/* <article id="dropdown" className={`dropcont ${isDropdownOpen ? 'open' : 'closed'}`}>
                 <article className='headernav'>
                     <h4 className='filthead'>Filter</h4>
