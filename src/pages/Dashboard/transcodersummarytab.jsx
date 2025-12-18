@@ -79,7 +79,6 @@ const TcSummaryTab = ({ transcoderData }) => {
         } catch (error) {
             setIsLoading(false);
             setIsError({ status: true, msg: error.message });
-            console.error("Fetch error:", error);
         }
     };
 
@@ -113,7 +112,6 @@ const TcSummaryTab = ({ transcoderData }) => {
         } catch (error) {
             setIsLoading(false);
             setIsError({ status: true, msg: error.message });
-            console.error("Fetch error:", error);
         }
     };
 
@@ -152,7 +150,7 @@ const TcSummaryTab = ({ transcoderData }) => {
 
                     <article className="container-fluid">
                         <article className="row" style={{ display: "flex" }}>
-                            <article className="col-md-2 nodelistheight" id="summary-1 div1" style={{minHeight:'850px',maxHeight:'850px',background:'white'}}>
+                            <article className="col-md-2 nodelistheight" id="summary-1 div1" style={{minHeight:'1112px',maxHeight:'1112px',background:'white'}}>
                                 <article>
 
                                     <article className="" id="div2">

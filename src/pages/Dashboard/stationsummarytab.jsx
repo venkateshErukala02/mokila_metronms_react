@@ -20,7 +20,7 @@ const SnSummaryTab = ({ nodeItemDt }) => {
 
           <article className="container-fluid">
             <article className="row" style={{ display: "flex" }}>
-              <article className="col-md-2" id="summary-1 div1" style={{minHeight:'850px',maxHeight:'850px',background:'white'}}>
+              <article className="col-md-2" id="summary-1 div1" style={{minHeight:'924px',maxHeight:'924px',background:'white'}}>
                 <article>
 
                   <article className="card" id="div2">
@@ -66,7 +66,27 @@ const SnSummaryTab = ({ nodeItemDt }) => {
                             marginRight: "6px",
                           }}
                         />
-                          <h6> Bootloader Version <span>{nodeItemDt.softwareVersion} </span></h6></li>
+                          <h6> Bandwidth <span>{nodeItemDt.bandwidth} MHz </span></h6></li>
+                          <li>  <img
+                          src={bootloader}
+                          alt=""
+                          style={{
+                            width: "35px",
+                            height: "35px",
+                            marginRight: "6px",
+                          }}
+                        />
+                          <h6> Channel <span>{nodeItemDt.channel} ({nodeItemDt.frequecy} MHz)  </span></h6></li>
+                          <li>  <img
+                          src={bootloader}
+                          alt=""
+                          style={{
+                            width: "35px",
+                            height: "35px",
+                            marginRight: "6px",
+                          }}
+                        />
+                          <h6> SSID <span>{nodeItemDt.ssid} </span></h6></li>
                         <li> <i
                           className="serialnumbericon"
                           style={{ marginRight: "6px" }}

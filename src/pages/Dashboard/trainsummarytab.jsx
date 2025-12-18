@@ -57,7 +57,7 @@ const TrainSummaryTab = ({ nodeItemDt }) => {
                           ></i>
                           <h6>Hardware Version <span>{nodeItemDt.hardwareVersion}</span></h6>
                         </li>
-                        <li>  <img
+                         <li>  <img
                           src={bootloader}
                           alt=""
                           style={{
@@ -66,7 +66,27 @@ const TrainSummaryTab = ({ nodeItemDt }) => {
                             marginRight: "6px",
                           }}
                         />
-                          <h6> Bootloader Version <span>{nodeItemDt.softwareVersion} </span></h6></li>
+                          <h6> Bandwidth <span>{nodeItemDt.bandwidth} MHz</span></h6></li>
+                          <li>  <img
+                          src={bootloader}
+                          alt=""
+                          style={{
+                            width: "35px",
+                            height: "35px",
+                            marginRight: "6px",
+                          }}
+                        />
+                          <h6> Channel <span>{nodeItemDt.channel} ({nodeItemDt.frequecy} MHz)  </span></h6></li>
+                          <li>  <img
+                          src={bootloader}
+                          alt=""
+                          style={{
+                            width: "35px",
+                            height: "35px",
+                            marginRight: "6px",
+                          }}
+                        />
+                          <h6> SSID <span>{nodeItemDt.ssid} </span></h6></li>
                         <li> <i
                           className="serialnumbericon"
                           style={{ marginRight: "6px" }}

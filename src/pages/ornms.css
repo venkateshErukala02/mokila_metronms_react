@@ -2662,7 +2662,7 @@ svg *:focus {
   .summarylist{
     list-style: none;
     margin-top: 20px;
-    padding-bottom: 90px;
+    /* padding-bottom: 90px; */
     padding-right: 20px;
   }
   .summarylist>li{
@@ -2670,6 +2670,8 @@ svg *:focus {
     font-size: 20px;
     padding: 15px;
     border-bottom: 1px solid;
+    vertical-align: middle;
+    display: flex;
   }
   .summarylist>li>h6{
     font-size: 14px;
@@ -2698,6 +2700,7 @@ svg *:focus {
 }
   .summarylist>li>h6>span{
     display: block;
+    padding-top: 6px;
   }
    .btngrphopt {
     color: #6c757d !important;
