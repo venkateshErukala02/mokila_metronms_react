@@ -20,7 +20,6 @@ const TranscoderEventLog = ({ currentTab, nodeItemDt }) => {
             let day = String(d.getMonth() + 1).padStart(2, '0');
             return `${y}-${month}-${day}`;
         } catch (error) {
-            console.error('Error formatting date:', error.message);
             return null;
         }
     }

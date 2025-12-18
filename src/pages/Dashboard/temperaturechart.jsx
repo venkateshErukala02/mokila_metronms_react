@@ -92,7 +92,6 @@ const TemperatureChart = ({ graphOption, graphOptionValue }) => {
             }
         } catch (error) {
             setIsError({ status: true, msg: error.message });
-            console.error("Fetch error:", error);
         } finally {
             setIsLoading(false);
         }

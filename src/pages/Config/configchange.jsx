@@ -158,7 +158,6 @@ const ConfigChange = () => {
             });
         }
     } catch (error) {
-        console.error('Error:', error);
         setIsError({
             status: true,
             msg: error.message
@@ -227,7 +226,6 @@ const handleBulkDelete = async () => {
         setSelectedTasks([]);
 
     } catch (error) {
-        console.error("Bulk delete error:", error);
         setIsError({ status: true, msg: error.message });
     } finally {
         setIsLoading(false);

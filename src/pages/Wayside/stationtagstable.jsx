@@ -41,7 +41,6 @@ const StationTagsTable = ({ rdDataRef}) =>{
                 setError(`Error starting discovery: ${errText}`);
             }
         } catch (error) {
-            console.error('Upload Error:', error);
             setError('An error occurred while contacting the server.');
         } finally {
             setLoading(false);

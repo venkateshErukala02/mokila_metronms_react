@@ -42,7 +42,6 @@ const GdChart = ({ getDataStatus }) => {
         setIsLoading(false);
       };
       eventSource.onerror = (error) => {
-        console.error('Error occurred with EventSource:', error);
         setIsLoading(false);
         setIsError({ status: true, msg: "Error fetching data" });
         eventSource.close(); 

@@ -109,7 +109,6 @@ const SectionSubCont=({handleSubContainer,refreshSectionData,mode,section})=>{
                 setIsError('Error starting discovery');
             }
         } catch (error) {
-            console.error('Error:', error);
             setIsError('An error occurred while contacting the server.');
         } finally {
             setIsLoading(false); // Turn off loading state

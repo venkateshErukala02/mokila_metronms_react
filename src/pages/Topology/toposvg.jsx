@@ -46,9 +46,7 @@ const TopoSvgViewer = ({textName,yardfacilitieData,setTrainView,setStationView,s
           setSvgContent(svgText);
         } catch (err) {
           if (err.name === 'AbortError') {
-            console.log('Fetch aborted');
           } else {
-            console.error('Fetch error:', err); 
           }
         }
       };
@@ -209,7 +207,7 @@ useLayoutEffect(() => {
             }
           });
         })
-        .catch(console.error);
+        .catch();
     } else if (currentTextName.data.mode === 'facility') {
       // getStationStatusDt();
       // getTrainData();
@@ -841,7 +839,6 @@ useEffect(() => {
                   setIsError(`Error starting discovery: ${errText}`);
               }
           } catch (error) {
-              console.error('Upload Error:', error);
               setIsError('An error occurred while contacting the server.');
           } finally {
               setIsLoading(false);

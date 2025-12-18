@@ -81,7 +81,6 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
                 setError(`Error starting discovery: ${errText}`);
             }
         } catch (error) {
-            console.error('Upload Error:', error);
             setError('An error occurred while contacting the server.');
         } finally {
             setLoading(false);
@@ -245,7 +244,6 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
                 setError('Error starting discovery');
             }
         } catch (error) {
-            console.error('Error:', error);
             setError('An error occurred while contacting the server.');
         } finally {
             setLoading(false); // Turn off loading state

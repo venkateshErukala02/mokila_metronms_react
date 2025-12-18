@@ -66,7 +66,6 @@ const TranscoderView = () => {
         } catch (error) {
             setIsLoading(false);
             setIsError({ status: true, msg: error.message });
-            console.error("Fetch error:", error);
         }
     };
 

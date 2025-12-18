@@ -126,7 +126,6 @@ const InventRpt = () => {
                 setIsError({ status: true, msg: "Error deleting node" });
             }
         } catch (error) {
-            console.error("Error:", error);
             setIsError({ status: true, msg: "An error occurred while deleting node." });
         } finally {
             setIsLoading(false);

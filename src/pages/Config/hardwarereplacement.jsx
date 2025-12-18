@@ -6,6 +6,7 @@ const HardwareReplacementContainer = () => {
     const [searchNewDeviceValue, setSearchNewDeviceValue] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [success,setSuccess] = useState('');
     const [searchOldDeviceData, setSearchOldDeviceData] = useState([]);
     const [searchNewDeviceData, setSearchNewDeviceData] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
@@ -125,20 +126,48 @@ const HardwareReplacementContainer = () => {
     }
 
      const handleSelectAll = () => {
-        // const allKeys = searchOldDeviceData.map((node) => node.fileName);
-        // if (selectedRows.length === allKeys.length) {
-        //     setSelectedRows([]);
-        // } else {
-        //     setSelectedRows(allKeys);
-        // }
     };
 
      const handleCheckboxChange = (key) => {
         setSelectedRows((prevSelected) =>
-            prevSelected.includes(key)
-                ? prevSelected.filter((rowKey) => rowKey !== key)
-                : [...prevSelected, key]
+        prevSelected.includes(key) ? [] : [key]
         );
+        };
+
+      const handleHardwareReplacement = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError('');
+        setSuccess('');
+
+        try {
+            const username = 'admin';
+            const password = 'admin';
+            const token = btoa(`${username}:${password}`)
+            const response = await fetch(`api/v2/profiles/rephard/${selectedItems[0].id}/?filename=${selectedRows[0]}`, {
+                method: "POST",
+                headers: {
+                    // 'Authorization': `Basic ${token}`,
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (response.ok) {
+                setSuccess('Hardware Replacement upload has started.');
+                alert('Hardware Replacement upload has started.');
+                setSelectedItems([]);
+                setSearchOldDeviceData([]);
+                setAddedItems([]);
+                setSelectedRows([]);
+            } else {
+                const errText = await response.text();
+                setError(`Error starting hardware replacement: ${errText}`);
+            }
+        } catch (error) {
+            setError('An error occurred while contacting the server.');
+        } finally {
+            setLoading(false);
+        }
     };
 
 
@@ -200,6 +229,7 @@ const HardwareReplacementContainer = () => {
                                                         <tr key={event.id}>
                                                             <td style={{ width: '96px' ,textAlign:'center'}}><input type="checkbox" className="incl"
                                                     checked={selectedRows.includes(event.fileName)}
+                                                    disabled={selectedRows.length > 0 && !selectedRows.includes(event.fileName)}
                                                     onChange={() => handleCheckboxChange(event.fileName)}
                                                 /></td>
                                                             <td style={{ width: '150px' }}>{event.ipAddress}</td>
@@ -245,16 +275,19 @@ const HardwareReplacementContainer = () => {
                                         <ul className="searchlist">
                                             {searchNewDeviceData && searchNewDeviceData.map((event) => {
                                                 const isAdded = addedItems.includes(event.id);
-                                                const isChecked = selectedIps.includes(event.id);
+                                                const isAnyIpAdded = addedItems.length > 0;
+                                                 const isDisabled = isAnyIpAdded && !isAdded;
                                                 return (
                                                     <li key={event.id}>
                                                         <article style={{ justifyContent: "space-between", display: 'flex', width: "100%" }}>
                                                             <h5 className="scheduletitle">{event.primaryIP}</h5>
                                                             <button className="addbtn" onClick={() => handleAddToTable(event)}
-                                                                disabled={isAdded}
+                                                                disabled={isDisabled ||  isAdded}
                                                                 style={{
-                                                                    backgroundColor: isAdded ? '#ccc' : '#007bff',
-                                                                    color: isAdded ? '#666' : 'white',
+                                                                    backgroundColor: isAdded ? '#ccc' : isDisabled
+                                                                    ? "#e0e0e0"
+                                                                    : "#007bff",
+                                                                    color: isAdded || isDisabled ? '#666' : 'white',
                                                                     cursor: isAdded ? 'not-allowed' : 'pointer'
                                                                 }}
                                                             >{isAdded ? 'Added' : 'Add'}</button>
@@ -299,7 +332,7 @@ const HardwareReplacementContainer = () => {
                                 </article>
                             </article>
                             <article style={{textAlign:'center'}}>
-                                <button className="searchfirmbtn">Hardware Replacement</button>
+                                <button className="searchfirmbtn" type="button" onClick={handleHardwareReplacement}>Hardware Replacement</button>
                             </article>
                             <article style={{margin:'12px 22px'}}>
                                 <h6 className="notehardpara">Note: </h6>

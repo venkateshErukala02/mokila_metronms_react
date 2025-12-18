@@ -41,9 +41,7 @@ const selectedFileRef = useRef(null);
 
     } catch (err) {
       if (err.name === 'AbortError') {
-        console.log('Fetch aborted');
       } else {
-        console.error('Fetch error:', err);
       }
     }
   };
@@ -302,7 +300,6 @@ const selectedFileRef = useRef(null);
                 setError(`Error starting discovery: ${errText}`);
             }
         } catch (error) {
-            console.error('Upload Error:', error);
             setError('An error occurred while contacting the server.');
         } finally {
             setIsLoading(false);

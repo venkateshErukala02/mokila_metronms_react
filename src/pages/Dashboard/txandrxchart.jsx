@@ -152,7 +152,6 @@ const TxRxDiffchart = ({ graphOption, graphOptionValue,currentTab }) => {
 
             repalceItem(dataNew);
             setIsError({ status: true, msg: error.message });
-            console.error("Fetch error:", error);
         } finally {
             setIsLoading(false);
         }

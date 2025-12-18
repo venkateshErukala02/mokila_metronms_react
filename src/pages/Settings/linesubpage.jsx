@@ -56,7 +56,6 @@ const LineSubCont = ({ handleSubContainer,refreshLineData,mode,line }) => {
                 setError('Error starting discovery');
             }
         } catch (error) {
-            console.error('Error:', error);
             setError('An error occurred while contacting the server.');
         } finally {
             setLoading(false); // Turn off loading state

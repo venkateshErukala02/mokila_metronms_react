@@ -118,7 +118,6 @@ const CpuChart = ({ graphOption,graphOptionValue,currentTab}) => {
       }
     } catch (error) {
       setIsError({ status: true, msg: error.message });
-      console.error("Fetch error:", error);
     } finally {
       setIsLoading(false);
     }

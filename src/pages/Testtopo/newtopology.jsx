@@ -88,7 +88,6 @@ const fetchNodeChildren = async (node) => {
       };
     });
   } catch (err) {
-    console.error("Error fetching children:", err);
     return [];
   }
 };

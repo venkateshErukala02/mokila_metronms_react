@@ -105,7 +105,6 @@ const LatencyChart = ({ graphOption, graphOptionValue ,labelName }) => {
       }
     } catch (error) {
       setIsError({ status: true, msg: error.message });
-      console.error("Fetch error:", error);
     } finally {
       setIsLoading(false);
     }

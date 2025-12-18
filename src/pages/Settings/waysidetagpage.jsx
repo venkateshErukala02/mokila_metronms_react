@@ -149,7 +149,6 @@ const WaysideTagContainer=()=>{
 //                 setIsError(`Error starting discovery: ${errText}`);
 //             }
 //         } catch (error) {
-//             console.error('Upload Error:', error);
 //             setIsError('An error occurred while contacting the server.');
 //         } finally {
 //             setIsLoading(false);
@@ -193,7 +192,6 @@ const WaysideTagContainer=()=>{
                 setIsError(`Error starting discovery: ${errText}`);
             }
         } catch (error) {
-            console.error('Upload Error:', error);
             setIsError('An error occurred while contacting the server.');
         } finally {
             setIsLoading(false);

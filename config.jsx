@@ -24,7 +24,6 @@ const fetchWithAuth = async (endpoint, options = {}) => {
     
     // if (!response.ok) {
     //     if (response.status === 401) {
-    //         console.error("Unauthorized. Redirect to login or handle session expiry.");
     //         // You can clear the token and redirect to login
     //         localStorage.removeItem("authToken");
     //         window.location.href = "/login";

@@ -91,7 +91,6 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
                 setError('Error starting discovery');
             }
         } catch (error) {
-            console.error('Error:', error);
             setError('An error occurred while contacting the server.');
         } finally {
             setLoading(false); 
@@ -236,7 +235,6 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
             setError('Error starting discovery');
         }
     } catch (error) {
-        console.error('Error:', error);
         setError('An error occurred while contacting the server.');
     } finally {
         setLoading(false); 

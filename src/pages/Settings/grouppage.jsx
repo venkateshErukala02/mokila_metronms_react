@@ -107,7 +107,6 @@ const GroupContainer=()=>{
                 setIsError('Error starting discovery');
             }
         } catch (error) {
-            console.error('Error:', error);
             setIsError('An error occurred while contacting the server.');
         } finally {
             setIsLoading(false); 

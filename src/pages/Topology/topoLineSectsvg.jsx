@@ -28,9 +28,7 @@ const LineSvgViewer = ({textName}) => {
           setSvgContent(svgText);
         } catch (err) {
           if (err.name === 'AbortError') {
-            console.log('Fetch aborted');
           } else {
-            console.error('Fetch error:', err);
           }
         }
       };

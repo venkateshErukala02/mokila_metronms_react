@@ -141,7 +141,6 @@ const WaysideTagSubCont = ({ handleSubContainer, refreshTagData, mode, user }) =
                 setError('Error starting discovery');
             }
         } catch (error) {
-            console.error('Error:', error);
             setError('An error occurred while contacting the server.');
         } finally {
             setIsLoading(false); // Turn off loading state

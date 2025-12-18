@@ -169,7 +169,6 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
                 setIsError('Error starting discovery');
             }
         } catch (error) {
-            console.error('Error:', error);
             setIsError('An error occurred while contacting the server.');
         } finally {
             setIsLoading(false); // Turn off loading state
