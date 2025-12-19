@@ -491,8 +491,8 @@ tbody.settingbdtb>tr{width: 100%;font-size: 12px;}
 
 
 thead.yardtb>tr{border-bottom: 2px solid rgb(33 35 39 / 7%);}
-thead.yardtb>tr>th{font-size: 13px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #212327;letter-spacing: 0.6px;width: 100%;}
-
+thead.yardtb>tr>th{font-size: 13px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #212327;letter-spacing: 0.6px;width: 100%;cursor: pointer;}
+thead.yardtb>tr>th>svg{padding-left: 3px;}
 tbody.yardtbbd>tr>td{font-size: 12px;font-family: "Lato-Regular";padding: 6px;color: #50565e;letter-spacing: 0.2px;}
 tbody.yardtbbd>tr:nth-child(odd){        background-color:rgb(229 241 255 / 50%);
 }
@@ -509,7 +509,7 @@ thead.yardtb > tr > th:nth-child(2),
 thead.yardtb > tr > th:nth-child(3),  
 thead.yardtb > tr > th:nth-child(4),  
 thead.yardtb > tr > th:nth-child(5) { 
-    width: 120px; 
+    width: 130px; 
 }
 
 thead.yardtb > tr > th:nth-child(6) { 

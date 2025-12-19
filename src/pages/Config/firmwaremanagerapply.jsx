@@ -264,10 +264,10 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
                                 <label className="settinglabelsub">Device Type</label>
                             <select className="vlaninput" value={deviceType} onChange={(e)=> setDeviceType(e.target.value)}>
                                 <option value="" disabled>Select</option>
-                                {/* <option value="sta">Train Radio</option> */}
+                                <option value="sta">Train Radio</option>
                                 <option value="encoder">Encoder</option>
-                                {/* <option value="transcoder">Transcoder</option> */}
-                                <option value="AP">Station Nodes</option>
+                                <option value="transcoder">Transcoder</option>
+                                <option value="SN">Station Node</option>
                                 <option value="obc">OBC</option>
                                 {/* <option value="CAM">Cameras</option> */}
                             </select>

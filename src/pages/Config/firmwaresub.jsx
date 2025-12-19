@@ -369,7 +369,7 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                                 <option value="sta">Train Radio</option>
                                 <option value="encoder">Encoder</option>
                                 <option value="transcoder">Transcoder</option>
-                                <option value="AP">Station Nodes</option>
+                                <option value="SN">Station Node</option>
                                 <option value="obc">OBC</option>
                                 <option value="CAM">Cameras</option>
                             </select>
@@ -381,7 +381,7 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                                         {versionData && versionData
                                         .filter((value) => value.deviceType === `${deviceType}`)
                                         .map((value,index) =>(
-                                            <option key={index} value={value.fileName}>{value.fileName}({value.version})</option>
+                                            <option key={index} value={value.actualName}>{value.fileName}({value.version})</option>
                                         ))}
                                     </select>
                                 </article>

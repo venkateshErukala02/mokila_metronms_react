@@ -5,7 +5,7 @@ import Eye from '../../assets/img/eye.png';
 
 const ServerConfigContainer = () => {
 
-    const [userFtp, setUserFtp] = useState(false);
+    const [userFtp, setUserFtp] = useState();
     const [serverDropdw, setServerDropdw] = useState(true);
     const [emailDropdw, setEmailDropdw] = useState(true);
     const [eyeTrapHostimgStatus, setEyeTrapHostimgStatus] = useState(false);
@@ -24,9 +24,11 @@ const ServerConfigContainer = () => {
     const [authUserPswd, setAuthUserPswd] = useState('');
     const [serverConfigDt,setServerConfigDt] = useState('');
     const [hostCommunity,setHostCommunity] = useState('');
-    const [serverAddress,setServerAddress] = useState('');
-    const [rootPath,setRootPath] = useState('');
+    const [serverAddress,setServerAddress] = useState();
+    const [rootPath,setRootPath] = useState();
     const [port,setPort] = useState('');
+    const [username,setUsername] = useState('');
+    const [password,setPassword] = useState('');
 
 
     const handleCheckboxChange = () => {
@@ -54,13 +56,9 @@ const ServerConfigContainer = () => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
-            const username = 'admin';
-            const password = 'admin';
-            const token = btoa(`${username}:${password}`)
             const options = {
                 method: "GET",
                 headers: {
-                    'Authorization': `Basic ${token}`,
                     "Content-Type": "application/json",
                 },
 
@@ -75,7 +73,7 @@ const ServerConfigContainer = () => {
                 console.log('eeeeeeeeeeeeeeeeeeeeeeee',data)
                 setHostName(data?.mailHost || '');
                 setFromAddress(data?.fromAddress || '');
-                setSslEnableSel(String(data?.sslEnable));  // Cast to string for select input
+                setSslEnableSel(String(data?.sslEnable));  
                 setTlsEnableSel(String(data?.tlsEnable));
                 setSmptPort(data?.smtpPort || '');
                 setAuthUser(data?.authUser || '');
@@ -95,13 +93,9 @@ const ServerConfigContainer = () => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
-            const username = 'admin';
-            const password = 'admin';
-            const token = btoa(`${username}:${password}`)
             const options = {
                 method: "GET",
                 headers: {
-                    'Authorization': `Basic ${token}`,
                     "Content-Type": "application/json",
                 },
 
@@ -113,7 +107,6 @@ const ServerConfigContainer = () => {
             if (response.ok) {
                 setIsLoading(false);
                 setServerConfigDt(data);
-                console.log('eeeeeeeeeeeeeeeeeeeeeeee',data)
             } else {
                 throw new Error("data not found");
             }
@@ -123,26 +116,38 @@ const ServerConfigContainer = () => {
         }
     };
 
+    const isFormValid = () => {
+    
+    return (
+        serverAddress &&
+        rootPath &&
+        port &&
+        hostCommunity &&
+        (userFtp ? username && password : true) 
+    );
+};
+
        const handleAddServerConfig = async (user) => {
        
         const method = 'POST';
         // const url= isEditMode  ? `rest/users/${user["user-id"]}` :'rest/users';
         const requestBody ={
-            serveraddress:user.serveraddress,
-            tftprootpath:user.tftprootpath,
-            isftp:user.isftp,
-            traphostpwd:user.traphostpwd,
-            tftpport:user.tftpport
+            serveraddress:serverAddress,
+            tftprootpath:rootPath,
+            isftp:userFtp,
+            tftpport:port,
+            traphostpwd:hostCommunity,
+             ...(userFtp && {
+                    username: username,
+                    password: password
+                })
+           
         }
 
         try {
-            const username = 'admin';
-            const password = 'admin';
-            const token = btoa(`${username}:${password}`)
             const response = await fetch(`api/v2/systemprops/update`, {
                 method,
                 headers: {
-                    'Authorization': `Basic ${token}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(requestBody),
@@ -166,7 +171,7 @@ const ServerConfigContainer = () => {
         } catch (error) {
             setIsError('An error occurred while contacting the server.');
         } finally {
-            setIsLoading(false); // Turn off loading state
+            setIsLoading(false); 
         }
 
     }
@@ -196,6 +201,7 @@ const ServerConfigContainer = () => {
         setServerAddress(serverConfigDt.serveraddress || "");
         setRootPath(serverConfigDt.tftprootpath || "");
         setPort(serverConfigDt.tftpport || "");
+        setUserFtp();
     }
 }, [serverConfigDt]);
 
@@ -276,7 +282,8 @@ const ServerConfigContainer = () => {
                                                                     Username
                                                                 </label>
                                                                 <article className="col-sm-4 col-md-4 col-lg-5">
-                                                                    <input type="text" name="" id="userFtp" className="trapinpt"
+                                                                    <input type="text" name="" id="userFtp" className="trapinpt" value={username}
+                                                                    onChange={(e)=> setUsername(e.target.value)}
                                                                     />
                                                                 </article>
                                                             </article>
@@ -285,7 +292,8 @@ const ServerConfigContainer = () => {
                                                                     Password
                                                                 </label>
                                                                 <article className="col-sm-4 col-md-4 col-lg-5">
-                                                                    <input type={eyePasswordimgStatus ? 'text' : 'password'} name="" id="" className="trapinpt" />
+                                                                    <input type={eyePasswordimgStatus ? 'text' : 'password'} name="" id="" className="trapinpt" value={password}
+                                                                    onChange={(e)=> setPassword(e.target.value)} />
                                                                     <img src={eyePasswordimgStatus ? Eye : EyeSlash} alt="" className="eyeslashcl" onClick={() => setEyePasswordimgStatus(!eyePasswordimgStatus)} />
                                                                 </article>
                                                             </article>
@@ -296,7 +304,16 @@ const ServerConfigContainer = () => {
                                                             <label htmlFor="" className="col-4 traplabel">
                                                             </label>
                                                             <article className="col-sm-4 col-md-4 col-lg-5" style={{ textAlign: 'right' }}>
-                                                                <button className="createbtn" style={{ textAlign: 'right' }} type="button" onClick={()=>handleAddServerConfig(serverConfigDt)}>Save</button>
+                                                                <button className={`createbtn ${!isFormValid() ? 'disabled' : ''}`}
+                                                                    style={{
+                                                                        textAlign: 'right',
+                                                                        backgroundColor: !isFormValid() ? '#ccc' : 'rgb(0 111 255)',  
+                                                                        color: !isFormValid() ? '#666' : '#fff',  
+                                                                        border: 'none',
+                                                                        cursor: !isFormValid() ? 'not-allowed' : 'pointer',
+                                                                        opacity: !isFormValid() ? 0.6 : 1  
+                                                                    }} type="button"
+                                                                 disabled={!isFormValid()}  onClick={()=>handleAddServerConfig(serverConfigDt)}>Save</button>
                                                             </article>
                                                         </article>
 
@@ -411,7 +428,7 @@ const ServerConfigContainer = () => {
                                                             <label htmlFor="" className="col-4 traplabel">
                                                             </label>
                                                             <article className="col-sm-4 col-md-4 col-lg-5" style={{ textAlign: 'right' }}>
-                                                                <button className="createbtn" style={{ textAlign: 'right' }}>Save</button>
+                                                                <button type = "button" className="createbtn" style={{ textAlign: 'right' }}>Save</button>
                                                             </article>
                                                         </article>
                                                     </div>

@@ -1,6 +1,7 @@
 import { faL } from "@fortawesome/free-solid-svg-icons";
 import React,{useState,useEffect, useMemo} from "react";
-
+import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const YardTbone=({textName,yardfacilitieData})=>{
     const [isLoading, setIsLoading] = useState(false);
@@ -8,7 +9,7 @@ const YardTbone=({textName,yardfacilitieData})=>{
     const [linkData,setLinkData] = useState({});
     const [sortedData, setSortedData] = useState([]); 
     const [sortOrder, setSortOrder] = useState('asc'); 
-    const [sortField, setSortField] = useState('status');
+    const [sortField, setSortField] = useState('');
 
 
       const getYardLinkData = async (url, nodeId) => {
@@ -46,8 +47,8 @@ const YardTbone=({textName,yardfacilitieData})=>{
         setSortedData([...yardfacilitieData]);
         for (const node of yardfacilitieData) {
             console.log("Looping node:", node);
-            // const url = `api/v2/nodelinks/linkstatstest?nodeId=0`; // test API
-            const url = `api/v2/nodelinks/linkstats?nodeId=${node.nodeId}`; // working API
+            const url = `api/v2/nodelinks/linkstatstest?nodeId=0`; // test API
+            // const url = `api/v2/nodelinks/linkstats?nodeId=${node.nodeId}`; // working API
             await getYardLinkData(url, node.nodeId);
         }
     };
@@ -55,7 +56,7 @@ const YardTbone=({textName,yardfacilitieData})=>{
 }, [yardfacilitieData]);
 
     useEffect(() => {
-        // setDataLoaded(false);
+        setSortField('');
         setSortedData([]);
     }, [textName?.data?.display]);
 
@@ -103,9 +104,15 @@ const YardTbone=({textName,yardfacilitieData})=>{
         return 0;
       }
 
-      if (field === 'connectedTo') {
-        return a.connectedTo.localeCompare(b.connectedTo) * (newSortOrder === 'asc' ? 1 : -1);
+     if (field === 'connectedTo') {
+        const aConnectedCount = (linkData[a.nodeId] || []).length;
+        const bConnectedCount = (linkData[b.nodeId] || []).length;
+        
+        return (aConnectedCount - bConnectedCount) * (newSortOrder === 'asc' ? 1 : -1);
       }
+      if (field === 'systemName') {
+      return a.systemName.localeCompare(b.systemName) * (newSortOrder === 'asc' ? 1 : -1);
+    }
 
       return 0; 
     });
@@ -122,11 +129,23 @@ const YardTbone=({textName,yardfacilitieData})=>{
                         <thead className="yardtb"> 
                             <tr>
                                 <th>Location</th>
-                                <th>System Name</th>
-                                <th onClick={() => handleSort("ipAddress")}>Primary IP</th>
-                                <th onClick={() => handleSort("status")} >Status</th>
+                                <th onClick={() => handleSort("systemName")}>System Name <FontAwesomeIcon 
+                                        icon={sortField === 'systemName' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                                       style={{ color: sortField === 'systemName' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                    /></th>
+                                <th onClick={() => handleSort("ipAddress")}>Primary IP<FontAwesomeIcon 
+                                        icon={sortField === 'ipAddress' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                                       style={{ color: sortField === 'ipAddress' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                    /></th>
+                                <th onClick={() => handleSort("status")} >Status <FontAwesomeIcon 
+                                        icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                                       style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                    /></th>
                             
-                                <th>	Connected cabs </th>
+                                <th onClick={() => handleSort("connectedTo")}>	Connected cabs <FontAwesomeIcon 
+                                        icon={sortField === 'connectedTo' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                                       style={{ color: sortField === 'connectedTo' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                    /></th>
                                 <th style={{paddingLeft:'25px'}}>Cab Info</th>
                             </tr>
                         </thead>
