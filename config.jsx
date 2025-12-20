@@ -2,11 +2,9 @@ const API_BASE_URL = "https://your-api.com";
 
 const getAuthToken = () => {
     return localStorage.getItem("authToken"); // Assuming token is stored in localStorage
-    console.log('toookk',localStorage.getItem("authToken"))
 
 };
 
-console.log('to51552',getAuthToken)
 
 const getAuthHeaders = () => {
     const token = getAuthToken();

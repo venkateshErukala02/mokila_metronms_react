@@ -316,7 +316,6 @@ useEffect(() => {
               setLinkStatDt(data.links)
             } 
       } else if (response.status === 304) {
-        console.log("304 Not Modified – using cached data.");
       } else {
         throw new Error(`Unexpected response: ${response.status}`);
       }

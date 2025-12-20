@@ -19,11 +19,9 @@ const Tree = ({ data,getElementAtEvent,selectedNode,setSelectedNode,isLastChild}
   let url ='api/v2/treeview/regions/2/locations';
 
  const getDataObj=(e)=>{
-  console.log('namee',e.target.value);
   
  }
   const dataName = useSelector((state) => state.stationid.stationid);
-console.log('jsjnjnjsdsnjd',dataName)
 
   
   return (

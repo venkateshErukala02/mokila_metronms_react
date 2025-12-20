@@ -71,7 +71,6 @@ const TcSummaryTab = ({ transcoderData }) => {
 
 
                 setUpTimeData(data);
-                console.log("Fetched server status:", data);
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("Data not found");
@@ -104,7 +103,6 @@ const TcSummaryTab = ({ transcoderData }) => {
 
 
                 setTempData(data);
-                console.log("Fetched server status:", data);
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("Data not found");

@@ -52,8 +52,6 @@ const WaysidePopupTable = ({ currentTagid }) => {
                 setIsLoading(false);
                 // setRdData(data || []);
                 setRdData(Array.isArray(data) ? data : [data])
-                console.log('popoopopo', data);
-                console.log('fghjk', rdData);
                 setIsError({ status: false, msg: '' });
             } else {
                 throw new Error("Data not found");
@@ -144,7 +142,6 @@ const WaysidePopupTable = ({ currentTagid }) => {
         <>
             <article className="row">
                 <article style={{ height: "306px" }}>
-                    {/* <h1>hello</h1> */}
                     <h1 className="topoheading"> {rdData[0]?.tag }</h1>
                     <table className="col-12 border-allsd table-fixed" style={{ height: '0vh' }}>
 

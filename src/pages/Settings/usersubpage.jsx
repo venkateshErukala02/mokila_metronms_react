@@ -225,7 +225,7 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
                     <article >
                         <form action="" style={{ margin: '7px 10px 0 10px' }}>
                             <label className="settinglabelsub">Username</label>
-                            <input type="text" name="" placeholder="" id="" className="settinglabelsubinp"
+                            <input type="text" name="" placeholder=""  className="settinglabelsubinp"
                                 value={userName}
                                 onChange={(e) => setUserName(e.target.value)}
                                 readOnly={!!isEditMode}
@@ -233,7 +233,7 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
                             />
                             <article>
                                 <label className="settinglabelsub">Full Name</label>
-                                <input type="text" name="" placeholder="" id="" className="settinglabelsubinp"
+                                <input type="text" name="" placeholder=""  className="settinglabelsubinp"
                                     value={fullName}
                                     onChange={(e) => setFullName(e.target.value)}
                                     required
@@ -260,7 +260,7 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
                             </article>
                             <article>
                                 <label className="settinglabelsub">Password</label>
-                                <input type={eyePwdimgStatus ? 'text' : 'password'} name="" placeholder="" id="" className="settinglabelsubinp"
+                                <input type={eyePwdimgStatus ? 'text' : 'password'} name="" placeholder=""  className="settinglabelsubinp"
                                     value={password}
                                     required
                                     onChange={(e) => setPassword(e.target.value)}
@@ -270,7 +270,7 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
 
                             <article>
                                 <label className="settinglabelsub">Confirm Password</label>
-                                <input type={eyecfPwdimgStatus ? 'text' : 'password'} name="" placeholder="" id="" className="settinglabelsubinp"
+                                <input type={eyecfPwdimgStatus ? 'text' : 'password'} name="" placeholder=""  className="settinglabelsubinp"
                                     value={confirmPassword}
                                     required
                                     onChange={(e) => setConfirmPassword(e.target.value)}

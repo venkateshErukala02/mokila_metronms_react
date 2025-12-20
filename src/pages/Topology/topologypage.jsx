@@ -50,7 +50,6 @@ const TopoPg = () => {
     
 
     const handleNodeClick = (value) => {
-        console.log('lplplp',value);
         setTextName(value);
         // nodeData
     }
@@ -362,7 +361,6 @@ useEffect(()=>{
     }
 
     if (url) {
-        console.log("Fetching with URL:", url);
         fetchDataRadial(url);
 
         const intervalId = setInterval(()=>{

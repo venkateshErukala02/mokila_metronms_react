@@ -31,7 +31,6 @@ const GroupContainer=()=>{
                 const response = await fetch(url, options);
     //             const text = await response.text();
 
-    // console.log(text)
     //             const data = JSON.parse(text); 
     
     const xmlText = await response.text();

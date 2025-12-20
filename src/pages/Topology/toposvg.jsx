@@ -278,7 +278,6 @@ useEffect(() => {
 
 
 const Callfun=(element,vl)=>{
-      console.log('hello');
       if (element != undefined) {
         element.style.display = vl;
       }
@@ -556,7 +555,6 @@ useEffect(() => {
         }
       }else if (event.type === 'contextmenu' && event.button === 2) { 
         event.preventDefault(); 
-        console.log("Right-click detected");
   
          const clickElement = event.currentTarget;
       const id = clickElement.getAttribute('id');
@@ -564,13 +562,10 @@ useEffect(() => {
         lineIdRef.current = id;
         const existingMenu = document.querySelector(".custom-context-menu");
         if (existingMenu) {
-          console.log("Removing existing menu");
           existingMenu.remove();
         }
   
         const textElement = event.currentTarget;
-        const stationName = 'hello'; 
-        console.log("Station name:", stationName);
   
         const menu = document.createElement("div");
         menu.className = "custom-context-menu";
@@ -686,7 +681,6 @@ useEffect(() => {
         });
       } else if (event.type === 'contextmenu' && event.button === 2) { 
         event.preventDefault(); 
-        console.log("Right-click detected");
   
          const circle = event.currentTarget;
         const id = circle.getAttribute("id");
@@ -695,13 +689,10 @@ useEffect(() => {
   
         const existingMenu = document.querySelector(".custom-context-menu");
         if (existingMenu) {
-          console.log("Removing existing menu");
           existingMenu.remove();
         }
   
         const textElement = event.currentTarget;
-        const stationName = 'hello'; 
-        console.log("Station name:", stationName);
   
         const menu = document.createElement("div");
         menu.className = "custom-context-menu";

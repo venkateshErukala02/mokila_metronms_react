@@ -126,7 +126,6 @@ const staArray = staArrayRaw.sort((a, b) => {
   
 
   const getRadialColor = (value, type) => {
-    console.log('wsdfg', value)
     if (value.down !== null) {
       return value.down > 0 ? 'rgb(243 90 67)' : 'gray';
     } else if (value.up !== null) {
@@ -137,8 +136,6 @@ const staArray = staArrayRaw.sort((a, b) => {
 
   const getClick = (index, item) => {
     dispatch(handleCurrentPie(index)); 
-    console.log('iidd', index);
-    console.log('lplplp', item)
 
     getDataStatus(index, item);
     setActiveChart(index);
@@ -201,7 +198,6 @@ useEffect(() => {
 }, []);
 
         const dataName = useSelector((state) => state.piename.piename);
-         console.log('lplppplplplplppleeeeeeeeeeeee',dataName);
         const getChartClass=(item)=>{
            return item === dataName ? 'active' : '';
         }

@@ -70,7 +70,6 @@ const ServerConfigContainer = () => {
             if (response.ok) {
                 setIsLoading(false);
                 setEmailConfigDt(data);
-                console.log('eeeeeeeeeeeeeeeeeeeeeeee',data)
                 setHostName(data?.mailHost || '');
                 setFromAddress(data?.fromAddress || '');
                 setSslEnableSel(String(data?.sslEnable));  
@@ -238,7 +237,8 @@ const ServerConfigContainer = () => {
                                                                 Trap Host Community
                                                             </label>
                                                             <article className="col-sm-4 col-md-4 col-lg-5">
-                                                                <input type={eyeTrapHostimgStatus ? 'text' : "password"} name="" id="" className="trapinpt" value={hostCommunity} onChange={(e)=> setHostCommunity(e.target.value)}/>
+                                                                <input type={eyeTrapHostimgStatus ? 'text' : "password"} name="" 
+                                                                autocomplete="current-password"  className="trapinpt" value={hostCommunity} onChange={(e)=> setHostCommunity(e.target.value)}/>
                                                                 <img src={eyeTrapHostimgStatus ? Eye : EyeSlash} alt="" className="eyeslashcl" onClick={() => setEyeTrapHostimgStatus(!eyeTrapHostimgStatus)} />
                                                             </article>
                                                         </article>
@@ -247,7 +247,7 @@ const ServerConfigContainer = () => {
                                                                 TFTP/FTP Server Address
                                                             </label>
                                                             <article className="col-sm-4 col-md-4 col-lg-5">
-                                                                <input type="text" name="" id=""  value={serverAddress}className="trapinpt" onChange={(e)=> setServerAddress(e.target.value)} />
+                                                                <input type="text" name=""   value={serverAddress}className="trapinpt" onChange={(e)=> setServerAddress(e.target.value)} />
                                                             </article>
                                                         </article>
                                                         <article className="form-row">
@@ -255,7 +255,7 @@ const ServerConfigContainer = () => {
                                                                 TFTP/FTP Root Path
                                                             </label>
                                                             <article className="col-sm-4 col-md-4 col-lg-5">
-                                                                <input type="text" name="" id="" value={rootPath}className="trapinpt"  onChange={(e)=> setRootPath(e.target.value)}/>
+                                                                <input type="text" name=""  value={rootPath}className="trapinpt"  onChange={(e)=> setRootPath(e.target.value)}/>
                                                             </article>
                                                         </article>
                                                         <article className="form-row">
@@ -263,7 +263,7 @@ const ServerConfigContainer = () => {
                                                                 Port
                                                             </label>
                                                             <article className="col-sm-4 col-md-4 col-lg-5">
-                                                                <input type="text" name="" id="" value={port}className="trapinpt" onChange={(e)=> setPort(e.target.value)}/>
+                                                                <input type="text" name=""  value={port}className="trapinpt" onChange={(e)=> setPort(e.target.value)}/>
                                                             </article>
                                                         </article>
                                                         <article>
@@ -292,7 +292,8 @@ const ServerConfigContainer = () => {
                                                                     Password
                                                                 </label>
                                                                 <article className="col-sm-4 col-md-4 col-lg-5">
-                                                                    <input type={eyePasswordimgStatus ? 'text' : 'password'} name="" id="" className="trapinpt" value={password}
+                                                                    <input type={eyePasswordimgStatus ? 'text' : 'password'} name=""  className="trapinpt" value={password}
+                                                                    autocomplete="new-password"
                                                                     onChange={(e)=> setPassword(e.target.value)} />
                                                                     <img src={eyePasswordimgStatus ? Eye : EyeSlash} alt="" className="eyeslashcl" onClick={() => setEyePasswordimgStatus(!eyePasswordimgStatus)} />
                                                                 </article>
@@ -348,7 +349,7 @@ const ServerConfigContainer = () => {
                                                                     Host
                                                                 </label>
                                                                 <article className="col-sm-4 col-md-4 col-lg-5">
-                                                                    <input type="text" name="" id="" className="trapinpt"
+                                                                    <input type="text" name=""  className="trapinpt"
                                                                     value={hostName}
                                                                     onChange={(e)=> setHostName(e.target.value)}
                                                                     />
@@ -359,7 +360,7 @@ const ServerConfigContainer = () => {
                                                                     From Address
                                                                 </label>
                                                                 <article className="col-sm-4 col-md-4 col-lg-5">
-                                                                    <input type="text" name="" id="" className="trapinpt"
+                                                                    <input type="text" name=""  className="trapinpt"
                                                                     value={fromAddress}
                                                                     onChange={(e)=> setFromAddress(e.target.value)}
                                                                     />
@@ -394,7 +395,7 @@ const ServerConfigContainer = () => {
                                                                     SMTP Port
                                                                 </label>
                                                                 <article className="col-sm-4 col-md-4 col-lg-5">
-                                                                    <input type="text" name="" id="" className="trapinpt"
+                                                                    <input type="text" name=""  className="trapinpt"
                                                                     value={smptPort}
                                                                     onChange={(e)=> setSmptPort(e.target.value)}
                                                                     />
@@ -405,7 +406,7 @@ const ServerConfigContainer = () => {
                                                                     Authenticate User
                                                                 </label>
                                                                 <article className="col-sm-4 col-md-4 col-lg-5">
-                                                                    <input type="text" name="" id="" className="trapinpt" 
+                                                                    <input type="text" name=""  className="trapinpt" 
                                                                     value={authUser}
                                                                     onChange={(e)=> setAuthUser(e.target.value)}
                                                                     />
@@ -416,7 +417,7 @@ const ServerConfigContainer = () => {
                                                                     Authenticate User Password
                                                                 </label>
                                                                 <article className="col-sm-4 col-md-4 col-lg-5">
-                                                                    <input type={eyeAuthPswdimgStatus ? 'text' :'password'} name="" id="" className="trapinpt" 
+                                                                    <input type={eyeAuthPswdimgStatus ? 'text' :'password'} name=""  className="trapinpt" 
                                                                     value={authUserPswd}
                                                                     onChange={(e)=> setAuthUserPswd(e.target.value)}
                                                                     />

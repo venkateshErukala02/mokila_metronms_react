@@ -58,7 +58,6 @@ const TranscoderView = () => {
 
 
                 setTranscoderData(data);
-                console.log("Fetched server status:", data);
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("Data not found");
@@ -71,7 +70,6 @@ const TranscoderView = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            console.log('ppkkpp', localStorage.getItem('nodeId'));
             const nodeId = localStorage.getItem('nodeId');
             let url = `http://${nodeIpaddress}:8084/transcoder/api/v1/config`;
           //let url = 'http://localhost:8980/transcoder/api/v1/config';

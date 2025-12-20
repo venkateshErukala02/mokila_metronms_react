@@ -79,7 +79,6 @@ const TemperatureChart = ({ graphOption, graphOptionValue }) => {
                     setTemperatureData(formatted);
                 }
             } else if (response.status === 304) {
-                console.log("304 Not Modified – using cached data.");
             } else if (response.status === 500) {
                 throw new Error(`Unexpected serverError: ${response.status}`);
             }else if(response.status === 404){
@@ -197,8 +196,8 @@ const TemperatureChart = ({ graphOption, graphOptionValue }) => {
                 {payload.map((entry, index) => (
                     <li
                         key={`item-${index}`}
-                        onMouseEnter={() => console.log("Hover:", entry.value)}
-                        onMouseLeave={() => console.log("Leave:", entry.value)}
+                        onMouseEnter={() => console.log('')}
+                        onMouseLeave={() => console.log('')}
                         style={{ color: 'black', cursor: 'pointer' }}
                     >
                         <span style={{ marginRight: 10, color: '#4fc9e7' }}>●</span> {entry.value} (in &deg;C)

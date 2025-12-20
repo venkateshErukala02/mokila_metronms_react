@@ -96,25 +96,21 @@ const TcEventTab=()=>{
 
         switch (typevalueSel) {
             case 'events':
-                console.log('Fetching data...eer');
                 url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&limit=50&offset=0`;
                 getDataEvntMain(url);
                 break;
 
             case 'syslogd':
-                console.log('Fetching data...ff');
                 url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource%3D%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&limit=50&offset=0`;
                 getDataEvntMain(url);
 
                 break;
             case 'auditlog':
-                console.log('Fetching data...lkkl');
                 url = '/api/v2/audit/list?_s=&limit=50&offset=0&order=desc&orderBy=id';
                 getDataEvntMain(url);
                 break;
 
             default:
-                console.log('Fetching data...eer');
                 url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd&limit=50&offset=0`;
                 getDataEvntMain(url);
                 break;

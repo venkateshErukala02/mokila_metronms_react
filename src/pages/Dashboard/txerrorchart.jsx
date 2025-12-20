@@ -94,7 +94,6 @@ const TxErrorChart = ({ graphOption,graphOptionValue,currentTab}) => {
           setTxErrorDt(formatted);
         }
       } else if (response.status === 304) {
-        console.log("304 Not Modified – using cached data.");
       } else {
         throw new Error(`Unexpected response: ${response.status}`);
       }
@@ -201,8 +200,8 @@ const TxErrorChart = ({ graphOption,graphOptionValue,currentTab}) => {
         return (
           <li
             key={`item-${index}`}
-            onMouseEnter={() => console.log("Hover:", entry.value)}
-            onMouseLeave={() => console.log("Leave:", entry.value)}
+            onMouseEnter={() => console.log('')}
+            onMouseLeave={() => console.log('')}
             style={{ color: itemColor, cursor: 'pointer', margin: '0 10px' }}
           >
             <span style={{ marginRight: 5, color: dotColor }}>●</span> {entry.value}

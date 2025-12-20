@@ -62,7 +62,6 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
             case 'stadown':
             case 'encoderdown':
             case 'iocdown':
-                console.log('Fetching data...', radialData, dname);
                 url = `api/v2//dashboard/filternodesg?filter=productCode&value=${radialData}&offset=${pageSize}&limit=${limitValueSelLabel}&status=${dname}&rd=${radialData}&sort=sysUptime&by=desc&ar=glob`
                 fetchDataRadial(url);
                 break;
@@ -73,19 +72,16 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
             case 'staup':
             case 'encoderup':
             case 'iocup':
-                console.log('Fetching data...', radialData, dname);
                 url = `api/v2//dashboard/filternodesg?filter=productCode&value=${radialData}&offset=${pageSize}&limit=${limitValueSelLabel}&status=${dname}&rd=${radialData}&sort=sysUptime&by=desc&ar=glob`
                 fetchDataRadial(url);
                 break;
             case 'fullradialdown':
             case 'fullradialgood':
-                console.log('Fetching data...', radialData, dname);
                 url = `api/v2//dashboard/filternodesg?filter=ns&value=${dname}&offset=${pageSize}&limit=${limitValueSelLabel}&status=all&rd=ap&sort=sysUptime&by=desc&ar=glob`;
                 fetchDataRadial(url);
                 break;
 
             case 'fullradialall':
-                console.log('Fetching data...', radialData, dname);
                 //   url ='api/v2//dashboard/filternodesg?filter=productCode&value=ap&offset=1&limit=25&status=all&rd=ap&sort=sysUptime&by=desc&ar=glob';
                 url = `api/v2//dashboard/filternodesg?filter=ns&value=all&offset=${pageSize}&limit=${limitValueSelLabel}&status=all&rd=ap&sort=sysUptime&by=desc&ar=glob`;
                 fetchDataRadial(url);
@@ -102,7 +98,6 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
             case 'ioc':
             case 'backhaul':
             case 'ptmp':
-                console.log('Fetching data...', radialData, dname);
                 url = `api/v2//dashboard/filternodesg?filter=productCode&value=${radialData}&offset=${pageSize}&limit=${limitValueSelLabel}&status=down&rd=${radialData}&sort=sysUptime&by=desc&ar=glob`
                 fetchDataRadial(url);
                 break;
@@ -110,29 +105,24 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
 
 
             case 'Down':
-                console.log('Fetching data...', radialData);
                 // url = `api/v2/dashboard/filternodes?filter=radioMode&value=ap&offset=1&limit=${limitValueSelLabel}&status=all&rd=ap&sort=sysUptime&by=desc&ar=glob`;
                 url = 'api/v2//dashboard/filternodesg?filter=ns&value=down&offset=1&limit=25&status=all&rd=encoder&sort=sysUptime&by=desc&ar=glob'
                 fetchDataRadial(url);
                 break;
             case 'line1-sec1':
-                console.log('Fetching data...', radialData);
                 url = `api/v2//dashboard/filternodes?ar=line&facilities=line1-sec1&state=up&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=ipAddress&by=asc`;
                 fetchDataRadial(url);
                 break;
             case 'line1-sec2':
-                console.log('Fetching data...', radialData);
                 url = `api/v2//dashboard/filternodes?ar=line&facilities=line1-sec2&state=up&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=ipAddress&by=asc`
                 fetchDataRadial(url);
                 break;
             case 'line4-sec1':
-                console.log('Fetching data...', radialData);
                 url = `api/v2//dashboard/filternodes?ar=line&facilities=line4-sec1&state=up&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=ipAddress&by=asc`;
                 fetchDataRadial(url);
                 break;
 
             case 'nodeId':
-                console.log('Fetching full radial data...');
                 url = `api/v2//dashboard/filternodesg?filter=productCode&value=ap&offset=${pageSize}&limit=${limitValueSelLabel}&status=all&rd=ap&sort=sysUptime&by=desc&ar=glob`
                 // url = `api/v2/dashboard/filternodes?filter=ns&value=all&offset=1&limit=${limitValueSelLabel}&status=all&rd=ap&sort=sysUptime&by=desc&ar=glob`;
                 fetchDataRadial(url);
@@ -144,7 +134,6 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
             case 'staall':
             case 'encoderall':
             case 'iocall':
-                console.log('Fetching full radial data...');
                 url = `api/v2//dashboard/filternodesg?filter=productCode&value=${radialData}&offset=${pageSize}&limit=${limitValueSelLabel}&status=${dname}&rd=${radialData}&sort=sysUptime&by=desc&ar=glob`;
                 fetchDataRadial(url);
                 break;
@@ -167,7 +156,6 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
 
     useEffect(() => {
         let url = '';
-        console.log('dfghjk', lineInfo);
         switch (lineInfo) {
             case 'line1-sec1':
                 url = `api/v2//dashboard/filternodes?ar=line1-sec1&facilities=${circleId}&state=down&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=ipAddress&by=asc`

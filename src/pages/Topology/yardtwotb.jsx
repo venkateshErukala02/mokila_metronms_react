@@ -32,18 +32,15 @@ if (response.ok) {
     setYrdEventData(data || []);
     setIsLoading(false);
     setIsError({ status: false, msg: "" });
-    console.log('Fetched data:', data);
 } 
 // else {
 //     throw new Error("Data not found");
 // }
 
             // const data = await response.json();
-            // //   console.log('llol',response)
             // if (response.ok) {
             //     setIsLoading(false);
             //     setYrdEventData(data || []);
-            //      console.log('lpll  ',data)
             //     setIsError({ status: false, msg: "" });
             // }
              else {

@@ -101,25 +101,21 @@ const EventMainTB = () => {
         const filterString = filterParts.join(";");
         switch (typevalueSel) {
             case 'events':
-                console.log('Fetching data...eer');
                 url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`
                 getDataEvntMain(url);
                 break;
 
             case 'syslogd':
-                console.log('Fetching data...ff');
                 url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`;
                 getDataEvntMain(url);
 
                 break;
             case 'auditlog':
-                console.log('Fetching data...lkkl');
                 url= `api/v2/audit/list?_s=datentime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`
                 getDataEvntMain(url);
                 break;
 
             default:
-                console.log('Unknown status');
 
                 break;
         }
@@ -282,7 +278,6 @@ const EventMainTB = () => {
                     const id = await handleNodeIp(eventipText);
                          if (id) {
                         // filter  =  filter +'node.id%3D%3D' + `${id}` + ';';
-                        // console.log("okookoo",id);
                         url = `api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;node.id%3D%3D${id};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=0&order=desc&orderBy=id`
                         handleRadialIPa(url);
                          }

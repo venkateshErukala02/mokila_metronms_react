@@ -25,7 +25,6 @@ const ObcNodeView = () => {
   const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
 
   const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress)|| localStorage.getItem('nodeIpaddress');
-  console.log('ghjjjjj', nodeDataId);
 
   const getServerStatusDt = async (url) => {
     setIsLoading(true);
@@ -44,12 +43,10 @@ const ObcNodeView = () => {
       const response = await fetch(url, options);
       const data1 = await response.json();
       const data = await JSON.parse(data1)
-      console.log('lplp',data1);
       
       if (response.ok) {
         setIsLoading(false);
         setNodeItemDt(data);
-        console.log("Fetched server status:", data1);
         setIsError({ status: false, msg: "" });
       } else {
         throw new Error("Data not found");

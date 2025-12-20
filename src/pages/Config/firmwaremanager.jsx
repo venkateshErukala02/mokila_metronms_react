@@ -20,7 +20,6 @@ const FirmwareMng = () => {
 
     const getVersionData = async (url,isInterval = false) => {
          if(previousDataRef.current === ''){
-            console.log('mmmpppp');
             setIsLoading(true);
         }
         setIsError({ status: false, msg: "" });

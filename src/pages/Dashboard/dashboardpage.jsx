@@ -60,7 +60,6 @@ const DashBoardPage = () => {
                     statetwo: nodeDatatwo?.State
                 };
                 setServerStatus(filteredData);
-                console.log('Fetched server status:', data);
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("Data not found");
@@ -101,8 +100,6 @@ const DashBoardPage = () => {
     const getAllRadialData = (value, devicename) => {
         setDname(devicename)
         setRadilData(value)
-        console.log('rrrrrararrara', value);
-        console.log('stststs', devicename)
 
     }
     const handleScopeSel = (e) => {
@@ -120,7 +117,6 @@ const DashBoardPage = () => {
     }, [scopeValueSel]);
 
     const getCircleId = (value, id) => {
-        console.log('adaddw', value)
         setCircleId(id);
         setLineInfo(value)
     }

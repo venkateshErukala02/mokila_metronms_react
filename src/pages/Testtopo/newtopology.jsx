@@ -33,7 +33,6 @@ const NewTopology = () => {
 
 
 const fetchNodeChildren = async (node) => {
-  console.log('kjsfdfsfjk',node)
   let url;
   if (node.text === 'Global') {
     url = 'api/v2/treeview/regions';

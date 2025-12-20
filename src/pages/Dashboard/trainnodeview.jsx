@@ -46,7 +46,6 @@ const TrainNodeView = () => {
 
 
         setNodeItemDt(data);
-        console.log("Fetched server status:", data);
         setIsError({ status: false, msg: "" });
       } else {
         throw new Error("Data not found");

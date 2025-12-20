@@ -169,7 +169,6 @@ const Wayside = () => {
     }
 
     if (url) {
-        console.log("Fetching with URL:", url);
         fetchDataRadial(url);
     }
 }, [circleId, lineId]);
@@ -272,7 +271,6 @@ const Wayside = () => {
                    setStationNamesData([]) 
                 }
                 setStationNamesData(Array.isArray(data) ? data.codes : [data.codes]);
-                console.log('plpplplp',stationNamesData)
                 setError({ status: false, msg: "" });
             } else {
                 throw new Error("data not found");

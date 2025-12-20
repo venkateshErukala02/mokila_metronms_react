@@ -77,7 +77,6 @@ const WaysideTagSubCont = ({ handleSubContainer, refreshTagData, mode, user }) =
                     setStationNamesData([])
                 }
                 setStationNamesData(Array.isArray(data) ? data.codes : [data.codes]);
-                console.log('plpplplp', stationNamesData)
                 setError({ status: false, msg: "" });
             } else {
                 throw new Error("data not found");

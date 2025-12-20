@@ -67,9 +67,7 @@ useEffect(() => {
      if(position === '-'){
       return;
      }
-     console.log("yarditem position: ", yarditem.position); 
     const el = svgRoot.querySelector(`#${position}`);
-     console.log("Element found:", el);  
     if (el){
     const newFill = yarditem.status === "down" ? "red" : "rgb(102, 204, 51)";
       const currentStyle = el.getAttribute("style") || "";

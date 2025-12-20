@@ -102,7 +102,6 @@ const selectedFileRef = useRef(null);
           });
 
           linesData.forEach(( lineObj ) => {
-            console.log(lineObj)
             const lineId = Object.keys(lineObj)[0];     
             const lineStatus = lineObj[lineId];
             const el = svgRoot.querySelector(`[id='${lineId}']`);
@@ -145,7 +144,6 @@ const selectedFileRef = useRef(null);
       }
     }else if (event.type === 'contextmenu' && event.button === 2) { 
       event.preventDefault(); 
-      console.log("Right-click detected");
 
        const clickElement = event.currentTarget;
     const id = clickElement.getAttribute('id');
@@ -153,13 +151,10 @@ const selectedFileRef = useRef(null);
       lineIdRef.current = id;
       const existingMenu = document.querySelector(".custom-context-menu");
       if (existingMenu) {
-        console.log("Removing existing menu");
         existingMenu.remove();
       }
 
       const textElement = event.currentTarget;
-      const stationName = 'hello'; 
-      console.log("Station name:", stationName);
 
       const menu = document.createElement("div");
       menu.className = "custom-context-menu";
@@ -332,7 +327,6 @@ useEffect(() => {
       });
     } else if (event.type === 'contextmenu' && event.button === 2) { 
       event.preventDefault(); 
-      console.log("Right-click detected");
 
        const circle = event.currentTarget;
       const id = circle.getAttribute("id");
@@ -341,13 +335,10 @@ useEffect(() => {
 
       const existingMenu = document.querySelector(".custom-context-menu");
       if (existingMenu) {
-        console.log("Removing existing menu");
         existingMenu.remove();
       }
 
       const textElement = event.currentTarget;
-      const stationName = 'hello'; 
-      console.log("Station name:", stationName);
 
       const menu = document.createElement("div");
       menu.className = "custom-context-menu";

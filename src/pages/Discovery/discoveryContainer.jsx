@@ -45,7 +45,6 @@ const DiscovContai = () => {
                 body: JSON.stringify({ content: discAddValue }),
             });
             const ddtt = response;
-            console.log('reesss', ddtt);
 
             if (response.ok) {
                 alert('Discovery started successfully')

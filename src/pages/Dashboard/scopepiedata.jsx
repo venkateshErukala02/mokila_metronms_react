@@ -34,7 +34,6 @@ const dataString = {
 };
 
 const Tabletwo = ({tabData}) => {
-  console.log('tabletwoDatasss',tabData);
   return (
     <div style={{margin:'3px 14px 0 5px'}}>
       <article className="clearfix border-close">

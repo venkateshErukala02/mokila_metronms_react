@@ -52,7 +52,6 @@ const ObcSummaryTab = ({ nodeItemDt, currentTab }) => {
 
 
         setUpTimeData(data);
-        console.log("Fetched server status:", data);
         setIsError({ status: false, msg: "" });
       } else {
         throw new Error("Data not found");
@@ -95,7 +94,6 @@ const ObcSummaryTab = ({ nodeItemDt, currentTab }) => {
       if (response.ok) {
         setIsLoading(false);
         setDiskData(data);
-        console.log("Fetched server status:", data);
         setIsError({ status: false, msg: "" });
       } else {
         throw new Error("Data not found");

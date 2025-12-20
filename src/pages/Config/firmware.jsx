@@ -23,7 +23,6 @@ const FirmwareContainer = () => {
 
     const getFimwareData = async (url) => {
          if(previousDataRef.current === ''){
-            console.log('mmmpppp');
             setIsLoading(true);
         }
         setIsError({ status: false, msg: "" });

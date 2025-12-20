@@ -119,7 +119,6 @@ const SectionSubCont=({handleSubContainer,refreshSectionData,mode,section})=>{
     
 const handleSelectLine=(e)=>{
     // const selected= JSON.parse(e.target.value);
-    // console.log('dddd',selected);
     // const selectedValue = Number(selected.id);
     // const selectedText = selected.label;
     const selectedValue = Number(e.target.value);

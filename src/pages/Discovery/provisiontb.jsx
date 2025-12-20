@@ -44,9 +44,6 @@ const ProvisionTb = ({ getProviContData }) => {
           setFirmData(data.nodes || []);
           setFirmipText('')
           setIsError({ status: false, msg: "" });
-          console.log("okkoo", data);
-          console.log("gdgd", response);
-          setIsError({ status: false, msg: "" });
         } else {
           throw new Error("data not found");
         }

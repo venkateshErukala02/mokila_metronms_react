@@ -17,7 +17,6 @@ const FacilitySubCont=({handleSubContainer})=>{
 
     const handleUpload = () => {
         if (selectedFile) {
-            console.log("Uploading:", selectedFile.name);
             alert(`Uploading: ${selectedFile.name}`);
             // Handle upload to server here
         } else {

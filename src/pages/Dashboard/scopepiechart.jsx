@@ -141,7 +141,6 @@ const getIndividualfullpieData=(value,item)=>{
   }
   if (valueMap[item]){
     const mappedValue = valueMap[item];
-    console.log('errr',mappedValue)
     getDataStatus(value,mappedValue)
   }
   else if (value === 'fullradial'){

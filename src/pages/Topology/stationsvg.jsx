@@ -145,7 +145,6 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
 
 
     const Callfun = (element, vl) => {
-        console.log('hello');
         if (element != undefined) {
             element.style.display = vl;
         }

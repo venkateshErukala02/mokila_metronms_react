@@ -96,7 +96,6 @@ const LatencyChart = ({ graphOption, graphOptionValue ,labelName }) => {
           setGpItemDt(formatted);
         }
       } else if (response.status === 304) {
-        console.log("304 Not Modified – using cached data.");
       } else if (response.status === 500) {
         throw new Error(`Unexpected serverError: ${response.status}`);
       }
@@ -209,8 +208,8 @@ const LatencyChart = ({ graphOption, graphOptionValue ,labelName }) => {
         {payload.map((entry, index) => (
           <li
             key={`item-${index}`}
-            onMouseEnter={() => console.log("Hover:", entry.value)}
-            onMouseLeave={() => console.log("Leave:", entry.value)}
+            onMouseEnter={() => console.log('')}
+            onMouseLeave={() => console.log('')}
             style={{ color: 'black', cursor: 'pointer' }}
           >
             <span style={{ marginRight: 10, color: '#4fc9e7' }}>●</span> {labelName} {entry.value} (in ms)

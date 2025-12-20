@@ -39,14 +39,12 @@ const YardTbone=({textName,yardfacilitieData})=>{
 
      useEffect(() => {
     const fetchData = async () => {
-        console.log("yardfacilitieData = ", yardfacilitieData);
 
         if (!yardfacilitieData || yardfacilitieData.length === 0) {
             return;
         }
         setSortedData([...yardfacilitieData]);
         for (const node of yardfacilitieData) {
-            console.log("Looping node:", node);
             const url = `api/v2/nodelinks/linkstatstest?nodeId=0`; // test API
             // const url = `api/v2/nodelinks/linkstats?nodeId=${node.nodeId}`; // working API
             await getYardLinkData(url, node.nodeId);

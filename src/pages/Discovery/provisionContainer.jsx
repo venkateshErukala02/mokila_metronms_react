@@ -29,7 +29,6 @@ const ProvisionContainerDis = ({ proviContdata,getCloseProviCont,setIsProvisione
                 body: JSON.stringify(nodeIds),
             });
             const ddtt = response;
-            console.log('reesss', ddtt);
 
             if (response.ok) {
                 setSuccess('Discovery started successfully');

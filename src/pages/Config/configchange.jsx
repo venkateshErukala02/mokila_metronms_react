@@ -38,7 +38,6 @@ const ConfigChange = () => {
         
     const getConfigChangeData = async (url,isInterval = false) => {
         if(previousDataRef.current === ''){
-            console.log('mmmpppp');
             setIsLoading(true);
         }
         setIsError({ status: false, msg: "" });
