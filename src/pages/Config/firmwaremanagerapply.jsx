@@ -168,7 +168,9 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
             useEffect(() => {
                 function handleClickOutside(event) {
                     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                        setSearchBtn(false);
                         setSearchData([]);
+                        setSearchValue('');
                     }
                 }
         
@@ -183,6 +185,7 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
              const handleClearSerch = () => {
                 setSearchBtn(false);
                 setSearchValue('');
+                setSearchData([]);
               }
         
     const handleDateChange=(date)=>{
@@ -322,8 +325,9 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
                                         </article>
                                     </li>
                                 </ul>
-                                {searchBtn && searchData.length === 0 && <article ref={dropdownRef} style={{ maxHeight: '5vh', overflow: 'auto', position: 'absolute', backgroundColor: 'white', zIndex: '99999', width: '236px', left: "0" }} className="scheduletitle">No Data</article>}
-                                {searchData.length > 0 && <article ref={dropdownRef} style={{ maxHeight: '20vh', overflow: 'auto', position: 'absolute', backgroundColor: 'white', zIndex: '99999', width: '236px', left: "0" }}>
+                                {searchBtn && <article ref={dropdownRef}  className="configsearchdropdown">{searchData.length === 0 ? (
+                                        <div style={{ padding: "10px" }}>No Data</div>
+                                    ) : (
                                     <ul className="searchlist">
                                         {searchData && searchData.map((event) => {
                                             const isAdded = addedItems.includes(event.id);
@@ -344,6 +348,7 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
                                             )
                                         })}
                                     </ul>
+                                    )}
                                 </article>}
                             </article>
                             <article className="row border-allsd" style={{ height: '16vh', overflow: 'hidden' }}>

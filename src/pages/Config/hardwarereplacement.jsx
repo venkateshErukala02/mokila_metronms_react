@@ -18,6 +18,23 @@ const HardwareReplacementContainer = () => {
     const dropdownRef = useRef(null);
     const [selectedRows, setSelectedRows] = useState([]);
 
+      useEffect(() => {
+            function handleClickOutside(event) {
+                if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                    setSearchBtn(false);
+                    setSearchNewDeviceValue('');
+                    setSearchNewDeviceData([]);
+                }
+            }
+    
+            document.addEventListener('mousedown', handleClickOutside);
+    
+            return () => {
+                document.removeEventListener('mousedown', handleClickOutside);
+            }
+    
+        }, []);
+
     useEffect(() => {
 
         const handleSearcNewDevicehData = async (searchNewDeviceValue) => {
@@ -91,6 +108,7 @@ const HardwareReplacementContainer = () => {
         setSearchBtn(false);
         setSearchNewDeviceValue('');
         setSearchNewDeviceData([]);
+
     }
 
     const handleAddToTable = (event) => {
@@ -268,10 +286,9 @@ const HardwareReplacementContainer = () => {
                                             </article>
                                         </li>
                                     </ul>
-                                    {searchBtn && searchNewDeviceData.length === 0 && <article ref={dropdownRef} style={{ maxHeight: '5vh', overflow: 'auto', position: 'absolute', backgroundColor: 'white', zIndex: '99999', width: '236px', left: "0" }} className="scheduletitle">No Data</article>}
-                                    {searchNewDeviceData.length > 0 && <article ref={dropdownRef} style={{ maxHeight: '42vh', overflow: 'auto', position: 'absolute', backgroundColor: 'white', zIndex: '99999', width: '236px', left: "0" }}>
-                                        <div style={{ padding: "5px", borderBottom: "1px solid #ccc", display: "flex", alignItems: "center", gap: "8px", justifyContent: "end" }}>
-                                        </div>
+                                    {searchBtn && <article ref={dropdownRef}  className="configsearchdropdown">{searchNewDeviceData.length === 0 ? (
+                                        <div style={{ padding: "10px" }}>No Data</div>
+                                    ) : (
                                         <ul className="searchlist">
                                             {searchNewDeviceData && searchNewDeviceData.map((event) => {
                                                 const isAdded = addedItems.includes(event.id);
@@ -296,6 +313,7 @@ const HardwareReplacementContainer = () => {
                                                 )
                                             })}
                                         </ul>
+                                    )}
                                     </article>}
                                 </article>
                                 <article className="row border-allsd" style={{ height: '28vh', overflow: 'hidden', margin: "22px 0" }}>

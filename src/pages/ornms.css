@@ -3126,6 +3126,22 @@ svg *:focus {
     font-weight: 400;
     letter-spacing: .2px;
 }
+
+.configsearchdropdown{
+    max-height: 42vh;
+    overflow: auto;
+    position: absolute;
+    background-color: white;
+    z-index: 99999;
+    width: 236px;
+    left: 0;
+    font-family: "Lato-Regular";
+    font-size: 15px;
+    margin: 0;
+    color: #50565e;
+    font-weight: 400;
+    letter-spacing: .2px;
+}
 .regionlist{
     display: inline-block;
     margin: 0;
