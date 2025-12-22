@@ -2,6 +2,8 @@ import React,{useState,useEffect} from "react";
 import '../ornms.css'
 import UserSubCont from "./usersubpage";
 import './../Settings/settings.css';
+import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const UserContainer=()=>{
         const [profileStatusCont, setProfileStatusCont] = useState(true);
@@ -11,7 +13,8 @@ const UserContainer=()=>{
         const [isError, setIsError] = useState({ status: false, msg: "" });
         const [mode, setMode] = useState(null); 
         const [editUser, setEditUser] = useState(null);
-
+        const [sortOrder, setSortOrder] = useState('asc');
+        
         const getUserData = async (url) => {
             setIsLoading(true);
             setIsError({ status: false, msg: "" });
@@ -48,7 +51,7 @@ const UserContainer=()=>{
      useEffect(() => {
         const fetchUserData = async()=>{
             // const url = `rest/users/list?limit=${userLimitValueSel}&offset=0&sort=asc`
-            const url='rest/users/list?limit=10&offset=0&sort=asc'
+            const url=`rest/users/list?limit=10&offset=0&sort=${sortOrder}`
             getUserData(url);
         }
 
@@ -58,7 +61,7 @@ const UserContainer=()=>{
 
         return ()=> clearInterval(intervalId);
     
-        }, [userLimitValueSel]);
+        }, [userLimitValueSel,sortOrder]);
 
         const handleUserLimitValue = (event) => {
             setUserLimitValueSel(event.target.value);
@@ -104,7 +107,7 @@ const UserContainer=()=>{
             const text = await response.text();
 
             if (response.ok) {
-                const url='rest/users/list?limit=10&offset=0&sort=asc'
+                const url=`rest/users/list?limit=10&offset=0&sort=${sortOrder}`
                 getUserData(url);
             } else {
                 setIsError('Error starting discovery');
@@ -117,6 +120,9 @@ const UserContainer=()=>{
 
     }
 
+     const handleSort = () => {
+            setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
+    };
 
 
  
@@ -158,7 +164,10 @@ const UserContainer=()=>{
                                 <table className="col-12" style={{ height: '0vh' }}>
                                     <thead className="settingthtb">
                                         <tr>
-                                        <th>Username  </th>
+                                         <th onClick={handleSort}>Username  <FontAwesomeIcon
+                                            icon={sortOrder ? (sortOrder === 'asc' ? faSortUp : faSortDown) : faSort}
+                                            style={{ color: 'black' }}     
+                                            /></th>
                                             <th>Full Name	 </th>
                                             <th>Email </th>
                                             <th>Roles</th>

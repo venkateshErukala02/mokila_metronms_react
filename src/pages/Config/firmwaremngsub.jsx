@@ -174,13 +174,13 @@ const FirmwareMngSubCont = ({ handleSubContainer, refreshLineData, mode, line })
                                         id="hiddenFileInput"
                                         style={{ display: "none" }}
                                     />
-                                    <button onClick={() => document.getElementById("hiddenFileInput").click()} class="attachcl">
-                                        <i class="fa-solid fa-paperclip"></i></button>
+                                    <button type="button" onClick={() => document.getElementById("hiddenFileInput").click()} className="attachcl">
+                                        <i className="fa-solid fa-paperclip"></i></button>
                                 </article>
-                                <hr class="hrnote"></hr>
+                                <hr className="hrnote"></hr>
                                 <center className="d-f">
                                     <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
-                                    <button className="creatsetingbtn" onClick={handleUpload}>
+                                    <button type="button" className="creatsetingbtn" onClick={handleUpload}>
                                         {isEditMode ? 'Update' : 'Upload'}
                                     </button>
                                 </center>

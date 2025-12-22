@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import '../ornms.css'
 import '../Dashboard/dashboard.css';
 import { handleNodeData } from "../Action/action";
+import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 
@@ -17,7 +19,9 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [pageSize, setPageSize] = useState(1);
     const [fromValue, setFromValue] = useState('0');
-
+    const [sortField, setSortField] = useState('sysUptime');
+    const [sortOrder, setSortOrder] = useState('desc');
+    
     const fetchDataRadial = async (url) => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
@@ -47,7 +51,13 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
         }
     };
 
-    const apiStatus = radialData + dname;
+    let apiStatus = '';
+
+    if(dname === undefined){
+       apiStatus =  radialData
+    }else{
+        apiStatus = radialData + dname;
+    }
 
     useEffect(() => {
         const fetchData = () => {
@@ -62,7 +72,7 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
             case 'stadown':
             case 'encoderdown':
             case 'iocdown':
-                url = `api/v2//dashboard/filternodesg?filter=productCode&value=${radialData}&offset=${pageSize}&limit=${limitValueSelLabel}&status=${dname}&rd=${radialData}&sort=sysUptime&by=desc&ar=glob`
+                url = `api/v2//dashboard/filternodesg?filter=productCode&value=${radialData}&offset=${pageSize}&limit=${limitValueSelLabel}&status=${dname}&rd=${radialData}&sort=${sortField}&by=${sortOrder}&ar=glob`
                 fetchDataRadial(url);
                 break;
             case 'apup':
@@ -72,18 +82,18 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
             case 'staup':
             case 'encoderup':
             case 'iocup':
-                url = `api/v2//dashboard/filternodesg?filter=productCode&value=${radialData}&offset=${pageSize}&limit=${limitValueSelLabel}&status=${dname}&rd=${radialData}&sort=sysUptime&by=desc&ar=glob`
+                url = `api/v2//dashboard/filternodesg?filter=productCode&value=${radialData}&offset=${pageSize}&limit=${limitValueSelLabel}&status=${dname}&rd=${radialData}&sort=${sortField}&by=${sortOrder}&ar=glob`
                 fetchDataRadial(url);
                 break;
             case 'fullradialdown':
             case 'fullradialgood':
-                url = `api/v2//dashboard/filternodesg?filter=ns&value=${dname}&offset=${pageSize}&limit=${limitValueSelLabel}&status=all&rd=ap&sort=sysUptime&by=desc&ar=glob`;
+                url = `api/v2//dashboard/filternodesg?filter=ns&value=${dname}&offset=${pageSize}&limit=${limitValueSelLabel}&status=all&rd=ap&sort=${sortField}&by=${sortOrder}&ar=glob`;
                 fetchDataRadial(url);
                 break;
 
             case 'fullradialall':
                 //   url ='api/v2//dashboard/filternodesg?filter=productCode&value=ap&offset=1&limit=25&status=all&rd=ap&sort=sysUptime&by=desc&ar=glob';
-                url = `api/v2//dashboard/filternodesg?filter=ns&value=all&offset=${pageSize}&limit=${limitValueSelLabel}&status=all&rd=ap&sort=sysUptime&by=desc&ar=glob`;
+                url = `api/v2//dashboard/filternodesg?filter=ns&value=all&offset=${pageSize}&limit=${limitValueSelLabel}&status=all&rd=ap&sort=${sortField}&by=${sortOrder}&ar=glob`;
                 fetchDataRadial(url);
                 break;
 
@@ -110,20 +120,20 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
                 fetchDataRadial(url);
                 break;
             case 'line1-sec1':
-                url = `api/v2//dashboard/filternodes?ar=line&facilities=line1-sec1&state=up&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=ipAddress&by=asc`;
+                url = `api/v2//dashboard/filternodes?ar=line&facilities=line1-sec1&state=up&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortField}&by=${sortOrder}`;
                 fetchDataRadial(url);
                 break;
             case 'line1-sec2':
-                url = `api/v2//dashboard/filternodes?ar=line&facilities=line1-sec2&state=up&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=ipAddress&by=asc`
+                url = `api/v2//dashboard/filternodes?ar=line&facilities=line1-sec2&state=up&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortField}&by=${sortOrder}`
                 fetchDataRadial(url);
                 break;
             case 'line4-sec1':
-                url = `api/v2//dashboard/filternodes?ar=line&facilities=line4-sec1&state=up&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=ipAddress&by=asc`;
+                url = `api/v2//dashboard/filternodes?ar=line&facilities=line4-sec1&state=up&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortField}&by=${sortOrder}`;
                 fetchDataRadial(url);
                 break;
 
             case 'nodeId':
-                url = `api/v2//dashboard/filternodesg?filter=productCode&value=ap&offset=${pageSize}&limit=${limitValueSelLabel}&status=all&rd=ap&sort=sysUptime&by=desc&ar=glob`
+                url = `api/v2//dashboard/filternodesg?filter=productCode&value=ap&offset=${pageSize}&limit=${limitValueSelLabel}&status=all&rd=ap&sort=${sortField}&by=${sortOrder}&ar=glob`
                 // url = `api/v2/dashboard/filternodes?filter=ns&value=all&offset=1&limit=${limitValueSelLabel}&status=all&rd=ap&sort=sysUptime&by=desc&ar=glob`;
                 fetchDataRadial(url);
                 break;
@@ -134,12 +144,12 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
             case 'staall':
             case 'encoderall':
             case 'iocall':
-                url = `api/v2//dashboard/filternodesg?filter=productCode&value=${radialData}&offset=${pageSize}&limit=${limitValueSelLabel}&status=${dname}&rd=${radialData}&sort=sysUptime&by=desc&ar=glob`;
+                url = `api/v2//dashboard/filternodesg?filter=productCode&value=${radialData}&offset=${pageSize}&limit=${limitValueSelLabel}&status=${dname}&rd=${radialData}&sort=${sortField}&by=${sortOrder}&ar=glob`;
                 fetchDataRadial(url);
                 break;
 
             default:
-                url = `api/v2//dashboard/filternodesg?filter=productCode&value=ap&offset=${pageSize}&limit=${limitValueSelLabel}&status=all&rd=ap&sort=sysUptime&by=desc&ar=glob`;
+                url = `api/v2//dashboard/filternodesg?filter=productCode&value=ap&offset=${pageSize}&limit=${limitValueSelLabel}&status=all&rd=ap&sort=${sortField}&by=${sortOrder}&ar=glob`;
                 fetchDataRadial(url);
                 break;
         } 
@@ -150,7 +160,7 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
 
         return ()=> clearInterval(intervalId);
 
-    }, [radialData, dname, limitValueSelLabel, pageSize, apiStatus]);
+    }, [radialData, dname, limitValueSelLabel, pageSize, apiStatus,sortOrder]);
 
 
 
@@ -158,15 +168,15 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
         let url = '';
         switch (lineInfo) {
             case 'line1-sec1':
-                url = `api/v2//dashboard/filternodes?ar=line1-sec1&facilities=${circleId}&state=down&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=ipAddress&by=asc`
+                url = `api/v2//dashboard/filternodes?ar=line1-sec1&facilities=${circleId}&state=down&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortOrder}&by=${sortOrder}`
                 fetchDataRadial(url);
                 break;
             case 'line1-sec2':
-                url = `api/v2//dashboard/filternodes?ar=line1-sec2&facilities=${circleId}&state=down&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=ipAddress&by=asc`
+                url = `api/v2//dashboard/filternodes?ar=line1-sec2&facilities=${circleId}&state=down&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortOrder}&by=${sortOrder}`
                 fetchDataRadial(url);
                 break;
             case 'line4-sec1':
-                url = `api/v2//dashboard/filternodes?ar=line4-sec1&facilities=${circleId}&state=down&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=ipAddress&by=asc`
+                url = `api/v2//dashboard/filternodes?ar=line4-sec1&facilities=${circleId}&state=down&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortOrder}&by=${sortOrder}`
                 fetchDataRadial(url);
                 break;
             default:
@@ -286,6 +296,15 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
         }
     }
 
+    const handleSort = (field) => {
+        if (sortField === field) {
+            setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
+        } else {
+            setSortField(field);
+            setSortOrder('asc');
+        }
+    };
+
 
 
     return (
@@ -336,14 +355,38 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
 
                         <thead className="tbtwo">
                             <tr>
-                                <th>System Name</th>
-                                <th>Primary IP</th>
-                                <th>Status</th>
-                                <th>Up Time</th>
-                                <th>Device Type</th>
-                                <th>line</th>
-                                <th>Station</th>
-                                <th>Position</th>
+                                <th onClick={() => handleSort('sysName')}>System Name <FontAwesomeIcon 
+                                    icon={sortField === 'sysName' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                                    style={{ color: sortField === 'sysName' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                /></th>
+                                <th onClick={() => handleSort('ipAddress')}>Primary IP <FontAwesomeIcon 
+                                    icon={sortField === 'ipAddress' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                                    style={{ color: sortField === 'ipAddress' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                /></th>
+                                <th onClick={() => handleSort('status')}>Status <FontAwesomeIcon 
+                                    icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                                    style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                /></th>
+                                <th onClick={() => handleSort('sysUptime')}>Up Time <FontAwesomeIcon 
+                                    icon={sortField === 'sysUptime' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                                    style={{ color: sortField === 'sysUptime' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                /></th>
+                                <th onClick={() => handleSort('productCode')}>Device Type <FontAwesomeIcon 
+                                    icon={sortField === 'productCode' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                                    style={{ color: sortField === 'productCode' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                /></th>
+                                <th onClick={() => handleSort('region')}>line <FontAwesomeIcon 
+                                    icon={sortField === 'region' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                                    style={{ color: sortField === 'region' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                /></th>
+                                <th onClick={() => handleSort('facility')}>Station <FontAwesomeIcon 
+                                    icon={sortField === 'facility' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                                    style={{ color: sortField === 'facility' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                /></th>
+                                <th onClick={() => handleSort('radioMode')}>Position <FontAwesomeIcon 
+                                    icon={sortField === 'radioMode' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                                    style={{ color: sortField === 'radioMode' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                /></th>
                             </tr>
                         </thead>
 

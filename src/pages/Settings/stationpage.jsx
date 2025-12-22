@@ -2,6 +2,8 @@ import React,{useState,useEffect} from "react";
 import '../ornms.css'
 import StationSubCont from "./stationsubpage";
 import './../Settings/settings.css';
+import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const StationContainer=()=>{
         const [profileStatusCont, setProfileStatusCont] = useState(true);
@@ -11,6 +13,8 @@ const StationContainer=()=>{
         const [isError, setIsError] = useState({ status: false, msg: "" });
         const [editStation,setEditStation] = useState(null);
         const [mode,setMode] =  useState(null);
+        const [sortField, setSortField] = useState('name');
+        const [sortOrder, setSortOrder] = useState('asc');
         
         const getStationData = async (url) => {
             setIsLoading(true);
@@ -47,10 +51,10 @@ const StationContainer=()=>{
 
      useEffect(() => {
             // const url = `api/v2/locations?_s=&limit=${locationLimitValueSel}&offset=0&order=asc&orderBy=name`
-            const url='api/v2/facilities?_s=&limit=10&offset=0&order=asc&orderBy=name'
+            const url=`api/v2/facilities?_s=&limit=10&offset=0&order=${sortOrder}&orderBy=${sortField}`
             getStationData(url);
     
-        }, [locationLimitValueSel]);
+        }, [locationLimitValueSel,sortOrder]);
 
         const handleLocationLimitValue = (event) => {
             setLocationLimitValueSel(event.target.value);
@@ -72,6 +76,15 @@ const StationContainer=()=>{
         setMode('edit');
         setProfileStatusCont(true)
     }
+
+    const handleSort = (field) => {
+        if (sortField === field) {
+            setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
+        } else {
+            setSortField(field);
+            setSortOrder('asc');
+        }
+    };
  
     return(
         <>
@@ -111,9 +124,15 @@ const StationContainer=()=>{
                                 <table className="col-12" style={{ height: '0vh' }}>
                                     <thead className="settingthtb">
                                         <tr>
-                                            <th>Station </th>
-                                            <th>Line</th>
-                                            <th>Section</th>
+                                            <th onClick={() => handleSort('name')}>Station <FontAwesomeIcon
+                                            icon={sortField === 'name' ? (sortOrder === 'asc' ?  faSortUp :  faSortDown) : faSort} 
+                                            style={{ color: sortField === 'name' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }}                                   /></th>
+                                            <th onClick={() => handleSort('regionName')}>Line <FontAwesomeIcon
+                                            icon={sortField === 'regionName' ? (sortOrder === 'asc' ?  faSortUp :  faSortDown) : faSort} 
+                                            style={{ color: sortField === 'regionName' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }}                                   /></th>
+                                            <th onClick={() => handleSort('locationName')}>Section <FontAwesomeIcon
+                                            icon={sortField === 'locationName' ? (sortOrder === 'asc' ?  faSortUp :  faSortDown) : faSort} 
+                                            style={{ color: sortField === 'locationName' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }}                                   /></th>
                                             <th>Edit</th>
                                         </tr>
 

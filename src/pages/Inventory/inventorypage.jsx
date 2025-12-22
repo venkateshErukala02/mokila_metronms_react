@@ -3,6 +3,8 @@ import LeftNavList from "../Navbar/leftnavpage";
 import { useSelector } from 'react-redux';
 import '../ornms.css';
 import './../Inventory/inventory.css';
+import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 const InventRpt = () => {
@@ -14,9 +16,10 @@ const InventRpt = () => {
     const [success, setSuccess] = useState('');
     const [selectedRows, setSelectedRows] = useState([]);
     const [pageSize,setPageSize] = useState(1);
-   const [limitValueSel, setLimitValueSel] = useState('');
+    const [limitValueSel, setLimitValueSel] = useState('');
     const [limitValueSelLabel, setLimitValueSelLabel] = useState('50');
-
+    const [sortField, setSortField] = useState('id');
+    const [sortOrder, setSortOrder] = useState('asc');
 
     const getDataInvety = async () => {
         setIsLoading(true);
@@ -25,7 +28,7 @@ const InventRpt = () => {
             const username = 'admin';
             const password = 'admin';
             const token = btoa(`${username}:${password}`)
-            const url = `api/v2/nodes?_s=&limit=${limitValueSelLabel}&offset=${pageSize}&order=asc&orderBy=id`;
+            const url = `api/v2/nodes?_s=&limit=${limitValueSelLabel}&offset=${pageSize}&order=${sortOrder}&orderBy=${sortField}`;
             const options = {
                 method: "GET",
                 headers: {
@@ -54,7 +57,7 @@ const InventRpt = () => {
                 getDataInvety()
             },30000);
           return ()=> clearInterval(intervalId);
-    }, [pageSize,limitValueSelLabel]);
+    }, [pageSize,limitValueSelLabel,sortOrder]);
 
     let activeTrueCount = 0;
     let activeFalseCount = 0;
@@ -186,6 +189,17 @@ const InventRpt = () => {
         setLimitValueSelLabel(label)
     }
 
+
+    const handleSort = (field) => {
+        if (sortField === field) {
+            setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
+        } else {
+            setSortField(field);
+            setSortOrder('asc');
+        }
+    };
+
+
     return (
         <>
             <article className="display-f">
@@ -263,13 +277,34 @@ const InventRpt = () => {
                                                 selectedRows.length === invenData.node.length
                                             }
                                         /></th>
-                                        <th>System Name</th>
-                                        <th>Primary IP</th>
-                                        <th>Up Time</th>
-                                        <th>Device Type</th>
-                                        <th>Line</th>
-                                        <th>Station</th>
-                                        <th>Position</th>
+                                        <th onClick={() => handleSort('sysName')}>System Name <FontAwesomeIcon 
+                                            icon={sortField === 'sysName' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                                            style={{ color: sortField === 'sysName' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                        /></th>
+                                        <th onClick={() => handleSort('label')}>Primary IP <FontAwesomeIcon 
+                                            icon={sortField === 'label' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                                            style={{ color: sortField === 'label' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                        /></th>
+                                        <th onClick={() => handleSort('sysUptime')}>Up Time <FontAwesomeIcon 
+                                            icon={sortField === 'sysUptime' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                                            style={{ color: sortField === 'sysUptime' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                        /></th>
+                                        <th onClick={() => handleSort('productCode')}>Device Type <FontAwesomeIcon 
+                                            icon={sortField === 'productCode' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                                            style={{ color: sortField === 'productCode' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                        /></th>
+                                        <th onClick={() => handleSort('region')}>Line <FontAwesomeIcon 
+                                            icon={sortField === 'region' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                                            style={{ color: sortField === 'region' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                        /></th>
+                                        <th onClick={() => handleSort('facility')}>Station <FontAwesomeIcon 
+                                            icon={sortField === 'facility' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                                            style={{ color: sortField === 'facility' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                        /></th>
+                                        <th onClick={() => handleSort('radioMode')}>Position <FontAwesomeIcon 
+                                            icon={sortField === 'radioMode' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                                            style={{ color: sortField === 'radioMode' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                        /></th>
                                         <th>Action</th>
                                         <th>Delete</th>
                                     </tr>

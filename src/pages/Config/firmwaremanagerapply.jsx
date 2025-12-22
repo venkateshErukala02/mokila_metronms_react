@@ -284,7 +284,7 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
                                 name="" placeholder="" id="" className="settinglabelsubinp" />
                                 </article>
                                 </article>
-                            <hr class=""></hr>
+                            <hr className=""></hr>
                             <article>
                                 <h4 className="scheduletitle">Schedule</h4>
                                 <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Immediate: </label>

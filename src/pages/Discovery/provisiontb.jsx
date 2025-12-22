@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import './../Discovery/discovery.css';
+import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 const ProvisionTb = ({ getProviContData }) => {
@@ -19,6 +21,9 @@ const ProvisionTb = ({ getProviContData }) => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [unprovision, setUnprovisionData] = useState({})
   const [isError, setIsError] = useState({ status: false, msg: "" });
+  const [sortField, setSortField] = useState('');
+  const [sortOrder, setSortOrder] = useState('asc');
+
 
   const handleFirmIP = async () => {
 
@@ -252,22 +257,52 @@ const ProvisionTb = ({ getProviContData }) => {
         <table className="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12 responsive-table" style={{ height: '0vh' }}>
           <thead className="disctb">
             <tr>
-              <th><input className="incl2"
+              <th style={{width:'61px',paddingLeft:'18px'}}><input className="incl2"
                 type="checkbox"
                 onChange={handleSelectAll}
                 checked={selectedRows.length === firmData.length && firmData.length > 0}
 
               /></th>
-              <th>System Name</th>
-              <th>Primary IP</th>
-              <th>MAC Address</th>
-              <th>Serial Number</th>
-              <th>Model Number</th>
-              <th>Firmware</th>
-              <th>Status</th>
-              <th>Uptime</th>
-              <th>Product Code</th>
-              <th>Radio Mode</th>
+              <th>System Name <FontAwesomeIcon 
+                  icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                  style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+              /></th>
+              <th>Primary IP <FontAwesomeIcon 
+                  icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                  style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+              /></th>
+              <th>MAC Address <FontAwesomeIcon 
+                  icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                  style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+              /></th>
+              <th>Serial Number <FontAwesomeIcon 
+                  icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                  style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+              /></th>
+              <th>Model Number <FontAwesomeIcon 
+                  icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                  style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+              /></th>
+              <th style={{paddingLeft:'32px'}}>Firmware <FontAwesomeIcon 
+                  icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                  style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+              /></th>
+              <th style={{paddingLeft:'32px'}}>Status <FontAwesomeIcon 
+                  icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                  style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+              /></th>
+              <th style={{paddingLeft:'22px'}}>Uptime <FontAwesomeIcon 
+                  icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                  style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+              /></th>
+              <th>Product Code <FontAwesomeIcon 
+                  icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                  style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+              /></th>
+              <th>Radio Mode <FontAwesomeIcon 
+                  icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
+                  style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+              /></th>
             </tr>
           </thead>
           <tbody className="discbdtwo">

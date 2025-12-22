@@ -2,6 +2,8 @@ import React,{useState,useEffect,useRef} from "react";
 import '../ornms.css'
 import LineSubCont from "./linesubpage";
 import './../Settings/settings.css'; 
+import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const LineContainer=()=>{
         const [profileStatusCont, setProfileStatusCont] = useState(true);
@@ -11,7 +13,9 @@ const LineContainer=()=>{
         const [isError, setIsError] = useState({ status: false, msg: "" });
         const [editLine,setEditLine] = useState(null);
         const [mode, setMode] = useState(null); 
-        
+        const [sortField, setSortField] = useState('name');
+        const [sortOrder, setSortOrder] = useState('asc');
+
         const getLineData = async (url) => {
             setIsLoading(true);
             setIsError({ status: false, msg: "" });
@@ -47,7 +51,7 @@ const LineContainer=()=>{
 
      useEffect(() => {
         const fetchLinesData = async()=>{
-            const url= 'api/v2/regions?_s=&limit=10&offset=0&order=asc&orderBy=name'
+            const url= `api/v2/regions?_s=&limit=10&offset=0&order=${sortOrder}&orderBy=${sortField}`
             // const url = `api/v2/regions?_s=&limit=${regionLimitValueSel}&offset=0&order=asc&orderBy=name`
            await getLineData(url);
          
@@ -58,7 +62,7 @@ const LineContainer=()=>{
 
         return ()=> clearInterval(intervalId);
     
-        }, [regionLimitValueSel]);
+        }, [regionLimitValueSel,sortOrder]);
 
 
       
@@ -114,7 +118,7 @@ const LineContainer=()=>{
 
             if (response.ok) {
                 // alert("Are you sure you want to delete this firmware?")
-                 let url ='api/v2/regions?_s=&limit=10&offset=0&order=asc&orderBy=name'
+                 let url =`api/v2/regions?_s=&limit=10&offset=0&order=${sortOrder}&orderBy=${sortField}`
             getLineData(url);
             } else {
                 setIsError('Error starting discovery');
@@ -126,6 +130,15 @@ const LineContainer=()=>{
         }
 
     }
+
+    const handleSort = (field) => {
+        if (sortField === field) {
+            setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
+        } else {
+            setSortField(field);
+            setSortOrder('asc');
+        }
+    };
 
  
     return(
@@ -167,7 +180,10 @@ const LineContainer=()=>{
                                 <table className="col-12" style={{ height: '0vh' }}>
                                     <thead className="settingthtb">
                                         <tr>
-                                            <th>Line</th>
+                                            <th onClick={() => handleSort('name')}>Line <FontAwesomeIcon 
+                                                icon={sortField === 'name' ? (sortOrder === 'asc' ?  faSortUp :  faSortDown) : faSort} 
+                                                style={{ color: sortField === 'name' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                            /></th>
                                             <th>Edit</th>
                                             <th>Delete </th>
                                         </tr>

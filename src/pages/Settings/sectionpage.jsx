@@ -2,6 +2,8 @@ import React,{useState,useEffect} from "react";
 import '../ornms.css'
 import SectionSubCont from "./sectionsubpage"; 
 import './../Settings/settings.css';
+import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const SectionContainer=()=>{
         const [profileStatusCont, setProfileStatusCont] = useState(true);
@@ -11,6 +13,8 @@ const SectionContainer=()=>{
         const [isError, setIsError] = useState({ status: false, msg: "" });
         const [editSection,setEditSection] = useState(null); 
         const [mode, setMode] = useState(null); 
+        const [sortField, setSortField] = useState('name');
+        const [sortOrder, setSortOrder] = useState('asc');
         
         const getSectionData = async (url) => {
             setIsLoading(true);
@@ -47,7 +51,7 @@ const SectionContainer=()=>{
 
      useEffect(() => {
         const fetchSectionData=async()=>{
-        const url='api/v2/locations?_s=&limit=10&offset=0&order=asc&orderBy=name'
+        const url=`api/v2/locations?_s=&limit=10&offset=0&order=${sortOrder}&orderBy=${sortField}`
             // const url = `api/v2/cities?_s=&limit=${cityLimitValueSel}&offset=0&order=asc&orderBy=name`
             await getSectionData(url);
         }
@@ -58,7 +62,7 @@ const SectionContainer=()=>{
 
         return ()=> clearInterval(intervalId);
     
-        }, [cityLimitValueSel]);
+        }, [cityLimitValueSel,sortOrder]);
 
         const handleCityLimitValue = (event) => {
             setCityLimitValueSel(event.target.value);
@@ -104,7 +108,7 @@ const SectionContainer=()=>{
             const text = await response.text();
 
             if (response.ok) {
-                const url='api/v2/locations?_s=&limit=10&offset=0&order=asc&orderBy=name'
+                const url=`api/v2/locations?_s=&limit=10&offset=0&order=${sortOrder}&orderBy=${sortField}`
                 getSectionData(url);
             } else {
                 setIsError('Error starting discovery');
@@ -116,6 +120,15 @@ const SectionContainer=()=>{
         }
 
     }
+
+    const handleSort = (field) => {
+        if (sortField === field) {
+            setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
+        } else {
+            setSortField(field);
+            setSortOrder('asc');
+        }
+    };
 
 
     return(
@@ -158,8 +171,14 @@ const SectionContainer=()=>{
                                 <table className="col-12" style={{ height: '0vh' }}>
                                     <thead className="settingthtb">
                                         <tr>
-                                            <th>Section</th>
-                                            <th>Line</th>
+                                            <th onClick={() => handleSort('name')}>Section <FontAwesomeIcon
+                                            icon={sortField === 'name' ? (sortOrder === 'asc' ?  faSortUp :  faSortDown) : faSort} 
+                                            style={{ color: sortField === 'name' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                             /></th>
+                                            <th onClick={() => handleSort('parent')}>Line <FontAwesomeIcon
+                                            icon={sortField === 'parent' ? (sortOrder === 'asc' ?  faSortUp :  faSortDown) : faSort} 
+                                            style={{ color: sortField === 'parent' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
+                                             /></th>
                                             <th>Edit</th>
                                             <th>Delete </th>
                                         </tr>

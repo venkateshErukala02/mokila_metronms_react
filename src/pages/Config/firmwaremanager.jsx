@@ -4,6 +4,8 @@ import './../Settings/settings.css';
 import './../Inventory/inventory.css';
 import FirmwareMngSubCont from "./firmwaremngsub";
 import FirmwareManagerApply from "./firmwaremanagerapply";
+import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const FirmwareMng = () => {
     const [profileStatusCont, setProfileStatusCont] = useState(false);
@@ -17,6 +19,7 @@ const FirmwareMng = () => {
     const [selected, setSelected] = useState('all');
     const [showList, setShowList] = useState(false);
     const previousDataRef = useRef(null);
+    const [sortOrder, setSortOrder] = useState('fileName.asc');
 
     const getVersionData = async (url,isInterval = false) => {
          if(previousDataRef.current === ''){
@@ -74,7 +77,7 @@ const FirmwareMng = () => {
      useEffect(() => {
 
         const fetchIntervalData = () => {
-        const url = 'api/v2/firmware/firmwares?&page=1&limit=50&sort=fileName.asc'
+        const url = `api/v2/firmware/firmwares?&page=1&limit=50&sort=${sortOrder}`
     
         getVersionData(url,true);
         }
@@ -85,7 +88,7 @@ const FirmwareMng = () => {
     
         return () => clearInterval(intervalId);
     
-    }, []);
+    }, [sortOrder]);
 
 
 
@@ -181,6 +184,21 @@ const FirmwareMng = () => {
         }
 
     }
+    const [currentField, currentOrder] = sortOrder?.split('.') || [];
+
+    const handleSort = (field) => {
+        if (!sortOrder) {
+        setSortOrder(`${field}.asc`);
+        return;
+        }
+
+        if (currentField === field) {
+            const nextOrder = currentOrder === 'asc' ? 'desc' : 'asc';
+            setSortOrder(`${field}.${nextOrder}`);
+            } else {
+                setSortOrder(`${field}.asc`);
+            }
+        };
 
     return (
         <>
@@ -221,10 +239,44 @@ const FirmwareMng = () => {
                             <table className="col-12" style={{ height: '0vh' }}>
                                 <thead className="settingthtb">
                                     <tr>
-                                        <th>File Name</th>
-                                        <th>Firmware Version</th>
-                                        <th>Created Time  </th>
-                                        <th>Device Type <button class="glyphicon glyphicon-tasks" style={{backgroundColor:"#f2f2f2",paddingTop:'4px',position:'relative',border:'none',fontSize:'12px'}}  onClick={() => {setShowList(!showList);setSelected('all')}}></button>
+                                        <th onClick={() => handleSort('fileName')}>File Name <FontAwesomeIcon
+                                        icon={
+                                            currentField === 'fileName'
+                                            ? currentOrder === 'asc'
+                                                ? faSortUp
+                                                : faSortDown
+                                            : faSort
+                                        }
+                                        style={{
+                                            color: currentField === 'fileName' ? 'black' : '#D7D7D7'
+                                        }}
+                                        /></th>
+                                        <th onClick={() => handleSort('version')}>Firmware Version <FontAwesomeIcon
+                                        icon={
+                                            currentField === 'version'
+                                            ? currentOrder === 'asc'
+                                                ? faSortUp
+                                                : faSortDown
+                                            : faSort
+                                        }
+                                        style={{
+                                            color: currentField === 'version' ? 'black' : '#D7D7D7'
+                                        }}
+                                        /></th>
+                                        <th onClick={() => handleSort('createdTime')}>Created Time  
+                                            <FontAwesomeIcon
+                                        icon={
+                                            currentField === 'createdTime'
+                                            ? currentOrder === 'asc'
+                                                ? faSortUp
+                                                : faSortDown
+                                            : faSort
+                                        }
+                                        style={{
+                                            color: currentField === 'createdTime' ? 'black' : '#D7D7D7'
+                                        }}
+                                        /></th>
+                                        <th>Device Type <button className="glyphicon glyphicon-tasks" style={{backgroundColor:"#f2f2f2",paddingTop:'4px',position:'relative',border:'none',fontSize:'12px'}}  onClick={() => {setShowList(!showList);setSelected('all')}}></button>
                                         {showList && (  <ul className={profileStatusCont ? 'statuslistfm_sub_cont' : 'statuslistfm' }>
                                         {statuses.map(({ label, value }) => (
                                             <li key={value}>
