@@ -1,10 +1,31 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import './../Discovery/discovery.css';
+import '../ornms.css'
 import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 const ProvisionTb = ({ getProviContData }) => {
+
+          const ALL_COLUMNS = [
+          { key: 'sysName', label: 'System Name' },
+          { key: 'ipAddress', label: 'Primary IP' },
+          { key: 'macaddress', label: 'MAC Address' },
+          { key: 'serialNum', label: 'Serial Number' },
+          { key: 'modelNum', label: 'Model Number' },
+          { key: 'firmware', label: 'Firmware' },
+          { key: 'status', label: 'Status' },
+          { key: 'sysUptime', label: 'Uptime' },
+          { key: 'productCode', label: 'Product Code' },
+          { key: 'radioMode', label: 'Radio Mode' },
+        ];
+        const DEFAULT_COLUMNS = [
+            "sysName",
+            "ipAddress",
+            "status",  
+            "sysUptime",
+            "radioMode",
+            ];
   const [provisionSel, setProvisionSel] = useState('1');
   const [radioSel, setRadioSel] = useState('');
   const [linktypeSel, setLinktypeSel] = useState('');
@@ -23,7 +44,25 @@ const ProvisionTb = ({ getProviContData }) => {
   const [isError, setIsError] = useState({ status: false, msg: "" });
   const [sortField, setSortField] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
+  const [dropDownShow,setDropDownShow] = useState(false);
+  const columnWrapperRef =  useRef(null);
+  const [visibleColumns, setVisibleColumns] = useState(DEFAULT_COLUMNS);
 
+
+   useEffect(()=>{
+        const handleClickOutside=(event)=>{
+            if(columnWrapperRef.current && !columnWrapperRef.current.contains(event.target)){
+                setDropDownShow(false);
+            }
+        }
+           
+                document.addEventListener("click",handleClickOutside,true);
+
+            return ()=>{
+                document.removeEventListener("click",handleClickOutside,true);
+            }
+        
+    },[dropDownShow]);
 
   const handleFirmIP = async () => {
 
@@ -173,6 +212,32 @@ const ProvisionTb = ({ getProviContData }) => {
   }, [unassignLabel, limitValueSelLabel]);
   
 
+   const allSelected = ALL_COLUMNS.every(col =>
+                visibleColumns.includes(col.key)
+                );
+                
+    const handleAddColumn=()=>{
+        setDropDownShow(prev => !prev);
+    }
+
+    const handleSort = (field) => {
+        if (sortField === field) {
+            setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
+        } else {
+            setSortField(field);
+            setSortOrder('asc');
+        }
+    };
+  
+
+            const handleColumnToggle = (key) => {
+            setVisibleColumns(prev =>
+                prev.includes(key)
+                ? prev.filter(col => col !== key)
+                : [...prev, key]
+            );
+            };
+
   return (
 
     <>
@@ -186,51 +251,6 @@ const ProvisionTb = ({ getProviContData }) => {
         </article>
         <article className="col-sm-11 col-md-11 col-lg-11 col-xl-11 col-xxl-11" style={{ float: 'right' }}>
           <article style={{ float: 'right' }}>
-            <article style={{ display: provisionSel === '1' ? 'none' : 'block' }} className="navdisable" >
-              <input type="text" name="" value={firmipText} onChange={(e) => setFirmipText(e.target.value)} placeholder="IP Address / System Name / Serial Number" id="" className="form-controldistwo searchbar" style={{
-                maxWidth: '254px',
-                display: 'inline-block'
-              }} />
-              <button className="clearfix createbtn" onClick={handleFirmIP} style={{ marginLeft: '7px' }}>Search</button>
-              <button className="clearfix createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
-
-              <select className="form-controlfirm" value={provisionSel} onChange={handleProvision} style={{ marginRight: '5px' }} aria-invalid="false">
-                <option value="1" selected="selected" label="Firmware">Firmware</option>
-                <option value="0" label="Provision">Provision</option>
-
-
-              </select>
-              <span className="selectlbl">Radio Mode:
-
-              </span>
-              <select className="form-controlfirm" value={radioSel} onChange={handleRadio} style={{ width: "auto" }} aria-invalid="false">
-                <option value="0" label="All">All</option>
-                <option value="1" selected="selected" label="AP">AP</option>
-                <option value="2" label="SU">SU</option>
-
-              </select>
-              <span className="selectlbl">Link Type:
-
-              </span>
-              <select className="form-controlfirm" value={linktypeSel} onChange={handleLink} style={{ width: "40px" }} aria-invalid="false">
-                <option value="0" label="All">All</option>
-                <option value="1" selected="selected" label="PTP">PTP</option>
-                <option value="2" selected="selected" label="BackHaul">BackHaul</option>
-                <option value="3" selected="selected" label="PTMP">PTMP</option>
-
-              </select>
-
-              <button className="clearfix createbtn" onClick={handleApply} disabled={isLoading || selectedRows.length === 0}>Apply</button>
-              <span className="addcloum" style={{ marginLeft: '5px' }}>Select Columns<span style={{ marginLeft: "7px", marginTop: "2px" }} class="glyphicon glyphicon-tasks"></span>
-
-              </span>
-              <select className="form-controlfirm" value={limitValueSel} onChange={handleLimitValue} style={{ width: "auto" }} aria-invalid="false">
-                <option value="0" label="100">100</option>
-                <option value="1" selected="selected" label="200">200</option>
-                <option value="2" label="300">300</option>
-                <option value="3" label="400">400</option>
-              </select>
-            </article>
             <article style={{ display: provisionSel === '0' ? 'none' : 'block' }} className="navdisable" >
               <input type="text" name="" value={firmipText} onChange={(e) => setFirmipText(e.target.value)} placeholder="IP Address / System Name / Serial Number" id="" className="form-controldistwo searchbar" style={{
                 maxWidth: '254px',
@@ -239,9 +259,43 @@ const ProvisionTb = ({ getProviContData }) => {
               <button className="clearfix createbtn" onClick={handleFirmIP} style={{ marginLeft: '7px' }}>Search</button>
               <button className="clearfix createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
               <button className="clearfix createbtn m-l10">Upgrade</button>
-              <span className="addcloum" style={{ marginLeft: '5px' }}>Select Columns<span style={{ marginLeft: "7px", marginTop: "2px" }} class="glyphicon glyphicon-tasks"></span>
+              <article  style={{display:'inline-block',position:'relative'}}>
+              <span className="addcloum" style={{ marginLeft: '5px' }}>Select Columns   </span><span className="glyphicon glyphicon-tasks" ref={columnWrapperRef} onClick={(e) => { e.stopPropagation(); handleAddColumn()}}></span>
+            
 
-              </span>
+               {dropDownShow && (
+                                    <article className="Addcoldropdownart">
+                                        <ul className="addcollist">
+                                            <li>
+                                        <label>
+                                            <input
+                                            type="checkbox"
+                                            checked={allSelected}
+                                            onChange={(e) =>
+                                                setVisibleColumns(
+                                                e.target.checked ? ALL_COLUMNS.map(c => c.key) : DEFAULT_COLUMNS
+                                                )
+                                            }
+                                            />
+                                            Select All
+                                        </label>
+                                        </li>
+                                        {ALL_COLUMNS.map(col => (
+                                            <li key={col.key}>
+                                            <label>
+                                                <input
+                                                type="checkbox"
+                                                checked={visibleColumns.includes(col.key)}
+                                                onChange={() => handleColumnToggle(col.key)}
+                                                />
+                                                {col.label}
+                                            </label>
+                                            </li>
+                                        ))}
+                                        </ul>
+                                    </article>
+                                    )}
+              </article>
               <select className="form-controlfirm" value={limitValueSel} onChange={handleLimitValue} style={{ width: "auto" }} aria-invalid="false">
                 <option value="0" label="100">100</option>
                 <option value="1" selected="selected" label="200">200</option>
@@ -257,53 +311,39 @@ const ProvisionTb = ({ getProviContData }) => {
         <table className="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12 responsive-table" style={{ height: '0vh' }}>
           <thead className="disctb">
             <tr>
-              <th style={{width:'61px',paddingLeft:'18px'}}><input className="incl2"
+            <th style={{ paddingLeft: '18px' }}>
+              <input
+                className="incl2"
                 type="checkbox"
                 onChange={handleSelectAll}
                 checked={selectedRows.length === firmData.length && firmData.length > 0}
+              />
+            </th>
 
-              /></th>
-              <th>System Name <FontAwesomeIcon 
-                  icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                  style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-              /></th>
-              <th>Primary IP <FontAwesomeIcon 
-                  icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                  style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-              /></th>
-              <th>MAC Address <FontAwesomeIcon 
-                  icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                  style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-              /></th>
-              <th>Serial Number <FontAwesomeIcon 
-                  icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                  style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-              /></th>
-              <th>Model Number <FontAwesomeIcon 
-                  icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                  style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-              /></th>
-              <th style={{paddingLeft:'32px'}}>Firmware <FontAwesomeIcon 
-                  icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                  style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-              /></th>
-              <th style={{paddingLeft:'32px'}}>Status <FontAwesomeIcon 
-                  icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                  style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-              /></th>
-              <th style={{paddingLeft:'22px'}}>Uptime <FontAwesomeIcon 
-                  icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                  style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-              /></th>
-              <th>Product Code <FontAwesomeIcon 
-                  icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                  style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-              /></th>
-              <th>Radio Mode <FontAwesomeIcon 
-                  icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                  style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-              /></th>
-            </tr>
+            {ALL_COLUMNS
+            .filter(col => visibleColumns.includes(col.key))
+            .map((col) => (
+              <th key={col.key} onClick={() => handleSort(col.key)}>
+                {col.label}
+                <FontAwesomeIcon
+                  icon={
+                    sortField === col.key
+                      ? sortOrder === 'asc'
+                        ? faSortDown
+                        : faSortUp
+                      : faSort
+                  }
+                  style={{
+                    color:
+                      sortField === col.key
+                        ? 'black'
+                        : '#D7D7D7',
+                    paddingLeft: col.key === 'firmware' || col.key === 'status' || col.key === 'uptime' ? '0px' : undefined
+                  }}
+                />
+              </th>
+            ))}
+          </tr>
           </thead>
           <tbody className="discbdtwo">
             {isLoading && (
@@ -347,25 +387,23 @@ const ProvisionTb = ({ getProviContData }) => {
                   }
 
                   return filteredData.map((node) => (
-                    <tr key={node.ipAddress}>
-                      <td>
-                        <input
-                          type="checkbox"
-                          checked={selectedRows.includes(node.ipAddress)}
-                  onChange={() => handleCheckboxChange(node.ipAddress)}
-                        />
+                  <tr key={node.ipAddress}>
+                    <td style={{ paddingLeft: '18px' }}>
+                      <input
+                        type="checkbox"
+                        checked={selectedRows.includes(node.ipAddress)}
+                        onChange={() => handleCheckboxChange(node.ipAddress)}
+                      />
+                    </td>
+
+                    {ALL_COLUMNS
+                    .filter(col => visibleColumns.includes(col.key))
+                    .map((col) => (
+                      <td key={col.key}>
+                        {node[col.key]}
                       </td>
-                      <td>{node.sysName}</td>
-                      <td>{node.ipAddress}</td>
-                      <td>{node.macaddress}</td>
-                      <td>{node.serialNum}</td>
-                      <td>{node.modelNum}</td>
-                      <td>{node.firmware}</td>
-                      <td>{node.status}</td>
-                      <td>{node.sysUptime}</td>
-                      <td>{node.productCode}</td>
-                      <td>{node.radioMode}</td>
-                    </tr>
+                    ))}
+                  </tr>
                   ));
                 })()}
               </>

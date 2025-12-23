@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import '../ornms.css'
@@ -10,7 +10,30 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
-    const [rdData, setRdData] = useState('');
+
+      const ALL_COLUMNS = [
+        { key: "sysName", label: "System Name", sortable: true },
+        { key: "ipAddress", label: "Primary IP", sortable: true },
+        { key: "macaddress", label: "MAC Address", sortable: true },
+        { key: "serialNum", label: "Serial Number", sortable: true },
+        { key: "status", label: "Status", sortable: true },
+        { key: "sysUptime", label: "Up Time", sortable: true },
+        { key: "productCode", label: "Device Type", sortable: true },
+        { key: "region", label: "Line", sortable: true },
+        { key: "location", label: "Station", sortable: true },
+        { key: "radioMode", label: "Position", sortable: true }
+        ];
+        const DEFAULT_COLUMNS = [
+            "sysName",
+            "ipAddress",
+            "status",  
+            "sysUptime",
+            "region",
+            "location",
+            "radioMode",
+            ];
+
+    const [rdData, setRdData] = useState([]);
     const [searchBtn, setSearchBtn] = useState(false);
     const [radialipText, setRadialipText] = useState('');
     const [limitValueSel, setLimitValueSel] = useState('1');
@@ -21,7 +44,25 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
     const [fromValue, setFromValue] = useState('0');
     const [sortField, setSortField] = useState('sysUptime');
     const [sortOrder, setSortOrder] = useState('desc');
-    
+    const [dropDownShow,setDropDownShow] = useState(false);
+    const dropdownRef =  useRef(null);
+    const [visibleColumns, setVisibleColumns] = useState(DEFAULT_COLUMNS);
+
+    useEffect(()=>{
+        const handleClickOutside=(event)=>{
+            if(dropdownRef.current && !dropdownRef.current.contains(event.target)){
+                setDropDownShow(false);
+            }
+        }
+
+                document.addEventListener("click",handleClickOutside);
+
+            return ()=>{
+                document.removeEventListener("click",handleClickOutside);
+            }
+        
+    },[dropDownShow]);
+
     const fetchDataRadial = async (url) => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
@@ -305,7 +346,24 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
         }
     };
 
+    const handleAddColumn=()=>{
+        setDropDownShow(prev => !prev);
+    }
 
+
+  
+
+            const handleColumnToggle = (key) => {
+            setVisibleColumns(prev =>
+                prev.includes(key)
+                ? prev.filter(col => col !== key)
+                : [...prev, key]
+            );
+            };
+
+            const allSelected = ALL_COLUMNS.every(col =>
+                visibleColumns.includes(col.key)
+                );
 
     return (
         <>
@@ -333,8 +391,42 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
                                 <button className="clearfix createbtn" onClick={handleClearSerch} style={{ marginLeft: '7px', display: searchBtn ? 'inline-block' : 'none' }}> Clear Search</button>
 
                             </li>
-                            <li>
-                                <label htmlFor="" className="addcloum">Add Columns  <span className="glyphicon glyphicon-tasks"></span></label>
+                            <li style={{position:'relative'}}>
+                                <label htmlFor="" className="addcloum">Add Columns  <span className="glyphicon glyphicon-tasks" ref={dropdownRef}  onClick={(e) =>{ e.stopPropagation(); handleAddColumn()}}></span></label>
+
+                              {dropDownShow && (
+                                    <article className="Addcoldropdownart">
+                                        <ul className="addcollist">
+                                            <li>
+                                        <label>
+                                            <input
+                                            type="checkbox"
+                                            checked={allSelected}
+                                            onChange={(e) =>
+                                                setVisibleColumns(
+                                                e.target.checked ? ALL_COLUMNS.map(c => c.key) : DEFAULT_COLUMNS
+                                                )
+                                            }
+                                            />
+                                            Select All
+                                        </label>
+                                        </li>
+                                        {ALL_COLUMNS.map(col => (
+                                            <li key={col.key}>
+                                            <label>
+                                                <input
+                                                type="checkbox"
+                                                checked={visibleColumns.includes(col.key)}
+                                                onChange={() => handleColumnToggle(col.key)}
+                                                />
+                                                {col.label}
+                                            </label>
+                                            </li>
+                                        ))}
+                                        </ul>
+                                    </article>
+                                    )}
+
 
                                 <select className="form-controll1" value={limitValueSel} onChange={handleLimitValue} style={{ width: 'auto' }} aria-invalid="false">
                                     <option value="0" label="25" defaultValue={25}>25</option>
@@ -353,43 +445,28 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
                 <article style={{ height: "43vh", overflowY: 'auto', overflowX: 'clip' }}>
                     <table className="col-12 border-allsd table-fixed" style={{ height: '0vh' }}>
 
-                        <thead className="tbtwo">
+                      <thead className="tbtwo">
                             <tr>
-                                <th onClick={() => handleSort('sysName')}>System Name <FontAwesomeIcon 
-                                    icon={sortField === 'sysName' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                                    style={{ color: sortField === 'sysName' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-                                /></th>
-                                <th onClick={() => handleSort('ipAddress')}>Primary IP <FontAwesomeIcon 
-                                    icon={sortField === 'ipAddress' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                                    style={{ color: sortField === 'ipAddress' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-                                /></th>
-                                <th onClick={() => handleSort('status')}>Status <FontAwesomeIcon 
-                                    icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                                    style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-                                /></th>
-                                <th onClick={() => handleSort('sysUptime')}>Up Time <FontAwesomeIcon 
-                                    icon={sortField === 'sysUptime' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                                    style={{ color: sortField === 'sysUptime' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-                                /></th>
-                                <th onClick={() => handleSort('productCode')}>Device Type <FontAwesomeIcon 
-                                    icon={sortField === 'productCode' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                                    style={{ color: sortField === 'productCode' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-                                /></th>
-                                <th onClick={() => handleSort('region')}>line <FontAwesomeIcon 
-                                    icon={sortField === 'region' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                                    style={{ color: sortField === 'region' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-                                /></th>
-                                <th onClick={() => handleSort('facility')}>Station <FontAwesomeIcon 
-                                    icon={sortField === 'facility' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                                    style={{ color: sortField === 'facility' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-                                /></th>
-                                <th onClick={() => handleSort('radioMode')}>Position <FontAwesomeIcon 
-                                    icon={sortField === 'radioMode' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                                    style={{ color: sortField === 'radioMode' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-                                /></th>
+                                {ALL_COLUMNS.filter(col => visibleColumns.includes(col.key)).map(col => (
+                                <th key={col.key} onClick={() => handleSort(col.key)}>
+                                    {col.label}
+                                    <FontAwesomeIcon
+                                    icon={
+                                        sortField === col.key
+                                        ? sortOrder === "asc"
+                                            ? faSortDown
+                                            : faSortUp
+                                        : faSort
+                                    }
+                                    style={{
+                                        color:
+                                        sortField === col.key ? "black" : "#D7D7D7"
+                                    }}
+                                    />
+                                </th>
+                                ))}
                             </tr>
-                        </thead>
-
+                            </thead>
                         <tbody className="tbbdtwo">
                             {isLoading && (
                                 <tr>
@@ -419,17 +496,27 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
                                 !isError.status &&
                                 rdData.length > 0 &&
                                 rdData.map((node, index) => (
-                                    <tr key={index}>
-                                        <td><a href={`http://${node.ipAddress}`} target="_blank">{node.sysName}</a></td>
-                                        <td className="highlightText" onClick={() => handleRowClick(node)} >{node.ipAddress}</td>
-                                        <td>{node.status}</td>
-                                        <td>{node.sysUptime}</td>
-                                        <td>{node.productCode}</td>
-                                        <td>{node.region}</td>
-                                        <td>{node.location}</td>
-                                        <td>{node.radioMode}</td>
-                                    </tr>
+                                <tr key={index}>
+                                {ALL_COLUMNS.filter(col => visibleColumns.includes(col.key)).map(col => (
+                                    <td key={col.key}>
+                                    {col.key === "sysName" ? (
+                                        <a href={`http://${node.ipAddress}`} target="_blank" rel="noreferrer">
+                                        {node[col.key]}
+                                        </a>
+                                    ) : col.key === "ipAddress" ? (
+                                        <span
+                                        className="highlightText"
+                                        onClick={() => handleRowClick(node)}
+                                        >
+                                        {node[col.key]}
+                                        </span>
+                                    ) : (
+                                        node[col.key]
+                                    )}
+                                    </td>
                                 ))}
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </article>

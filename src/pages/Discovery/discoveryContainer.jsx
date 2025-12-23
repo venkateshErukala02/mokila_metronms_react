@@ -22,7 +22,7 @@ const DiscovContai = () => {
 
 
     const handleAddStart = async () => {
-        const url = 'api/v2/api/v2//discovery/specificdisc'
+        const url = 'api/v2/discovery/specificdisc'
 
         if (discAddValue.trim() === '') {
             setError('Please enter a valid IP Address');
@@ -42,7 +42,7 @@ const DiscovContai = () => {
                     'Content-Type': 'application/json',
 
                 },
-                body: JSON.stringify({ content: discAddValue }),
+                body: JSON.stringify({ content: discAddValue,location : "Default",retries : "1",timeout : "2000" }),
             });
             const ddtt = response;
 
