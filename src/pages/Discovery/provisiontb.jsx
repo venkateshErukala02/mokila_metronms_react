@@ -47,7 +47,7 @@ const ProvisionTb = ({ getProviContData }) => {
   const [dropDownShow,setDropDownShow] = useState(false);
   const columnWrapperRef =  useRef(null);
   const [visibleColumns, setVisibleColumns] = useState(DEFAULT_COLUMNS);
-
+  const firstLoadRef = useRef(true);
 
    useEffect(()=>{
         const handleClickOutside=(event)=>{
@@ -56,10 +56,10 @@ const ProvisionTb = ({ getProviContData }) => {
             }
         }
            
-                document.addEventListener("click",handleClickOutside,true);
+                document.addEventListener("click",handleClickOutside);
 
             return ()=>{
-                document.removeEventListener("click",handleClickOutside,true);
+                document.removeEventListener("click",handleClickOutside);
             }
         
     },[dropDownShow]);
@@ -72,7 +72,7 @@ const ProvisionTb = ({ getProviContData }) => {
 
     } else {
       setSearchBtn(true)
-
+      setIsLoading(true); 
 
       try {
         const response = await fetch(`api/v2/nodes/search?_s=sysName==${firmipText}*,label==${firmipText},assetRecord.serialNumber==${firmipText}&limit=100&offset=0&order=asc`, {
@@ -84,7 +84,6 @@ const ProvisionTb = ({ getProviContData }) => {
         const data = await response.json();
 
         if (response.ok) {
-          setIsLoading(false);
           setFirmData(data.nodes || []);
           setFirmipText('')
           setIsError({ status: false, msg: "" });
@@ -95,7 +94,9 @@ const ProvisionTb = ({ getProviContData }) => {
       } catch (error) {
         setIsLoading(false);
         setIsError({ status: true, msg: error.message });
-      }
+      }finally {
+        setIsLoading(false);       
+     }
     }
 
   }
@@ -177,6 +178,9 @@ const ProvisionTb = ({ getProviContData }) => {
   };
 
   const getDataUnprovisiontbData = async (url) => {
+    if (firstLoadRef.current) {
+    setIsLoading(true);
+    }
     setIsError({ status: false, msg: "" });
     try {
 
@@ -186,16 +190,19 @@ const ProvisionTb = ({ getProviContData }) => {
       const response = await fetch(url, options);
       const data = await response.json();
       if (response.ok) {
-        setIsLoading(false);
-        setFirmData(data);
+        setFirmData(data);  
         setIsError({ status: false, msg: "" });
       } else {
         throw new Error("data not found");
       }
     } catch (error) {
-      setIsLoading(false);
       setIsError({ status: true, msg: error.message });
+    }finally {
+      if (firstLoadRef.current) {
+      setIsLoading(false);
+      firstLoadRef.current = false;
     }
+  }
   };
 
   useEffect(() => {
@@ -204,6 +211,8 @@ const ProvisionTb = ({ getProviContData }) => {
   
     const url = `api/v2/discovery/showunprovisioned?show=${show}&ofs=0&limit=${limit}&sort=sysUptime&by=desc`;
   
+    getDataUnprovisiontbData(url);
+
     const intervalId = setInterval(() => {
       getDataUnprovisiontbData(url);
   }, 2000); 
@@ -238,6 +247,8 @@ const ProvisionTb = ({ getProviContData }) => {
             );
             };
 
+
+
   return (
 
     <>
@@ -259,12 +270,12 @@ const ProvisionTb = ({ getProviContData }) => {
               <button className="clearfix createbtn" onClick={handleFirmIP} style={{ marginLeft: '7px' }}>Search</button>
               <button className="clearfix createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
               <button className="clearfix createbtn m-l10">Upgrade</button>
-              <article  style={{display:'inline-block',position:'relative'}}>
-              <span className="addcloum" style={{ marginLeft: '5px' }}>Select Columns   </span><span className="glyphicon glyphicon-tasks" ref={columnWrapperRef} onClick={(e) => { e.stopPropagation(); handleAddColumn()}}></span>
+              <article  style={{display:'inline-block',position:'relative'}} ref={columnWrapperRef} >
+              <span className="addcloum" style={{ marginLeft: '5px' }}>Select Columns   </span><span className="glyphicon glyphicon-tasks" onClick={(e) => { e.stopPropagation(); handleAddColumn()}}></span>
             
 
                {dropDownShow && (
-                                    <article className="Addcoldropdownart">
+                                    <article className="Addcoldropdownart" onClick={(e) => e.stopPropagation()} >
                                         <ul className="addcollist">
                                             <li>
                                         <label>
@@ -354,14 +365,14 @@ const ProvisionTb = ({ getProviContData }) => {
               </tr>
             )}
 
-            {isError.status && (
+            {!isLoading && !firstLoadRef.current  && firmData.length === 0 && (
               <tr>
                 <td colSpan="12" style={{ textAlign: "center", fontWeight: 'bolder' }}>
                   No Data Available
                 </td>
               </tr>
             )}
-            {!isLoading && !isError.status && (
+            {!isLoading && (
               <>
                 {(() => {
                   const filteredData = firmData
@@ -375,16 +386,6 @@ const ProvisionTb = ({ getProviContData }) => {
                       labelRadio.toUpperCase() === "ALL" || 
                       node.radioMode === labelRadio.toUpperCase()
                     );
-
-                  if (filteredData.length === 0) {
-                    return (
-                      <tr>
-                        <td colSpan="11" style={{ textAlign: "center" }}>
-                          No data available
-                        </td>
-                      </tr>
-                    );
-                  }
 
                   return filteredData.map((node) => (
                   <tr key={node.ipAddress}>

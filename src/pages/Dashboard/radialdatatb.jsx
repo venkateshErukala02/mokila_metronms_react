@@ -47,6 +47,7 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
     const [dropDownShow,setDropDownShow] = useState(false);
     const dropdownRef =  useRef(null);
     const [visibleColumns, setVisibleColumns] = useState(DEFAULT_COLUMNS);
+    const firstLoadRef = useRef(true);
 
     useEffect(()=>{
         const handleClickOutside=(event)=>{
@@ -64,7 +65,9 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
     },[dropDownShow]);
 
     const fetchDataRadial = async (url) => {
-        setIsLoading(true);
+        if (firstLoadRef.current) {
+            setIsLoading(true);
+            }
         setIsError({ status: false, msg: "" });
         try {
             const username = 'admin';
@@ -80,7 +83,6 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
             const response = await fetch(url, options);
             const data = await response.json();
             if (response.ok) {
-                setIsLoading(false);
                 setRdData(data.nodes || []);
                 setIsError({ status: false, msg: "" });
             } else {
@@ -89,7 +91,12 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
         } catch (error) {
             setIsLoading(false);
             setIsError({ status: true, msg: error.message });
+        }finally {
+            if (firstLoadRef.current) {
+            setIsLoading(false);
+            firstLoadRef.current = false;
         }
+  }
     };
 
     let apiStatus = '';
@@ -391,11 +398,11 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
                                 <button className="clearfix createbtn" onClick={handleClearSerch} style={{ marginLeft: '7px', display: searchBtn ? 'inline-block' : 'none' }}> Clear Search</button>
 
                             </li>
-                            <li style={{position:'relative'}}>
-                                <label htmlFor="" className="addcloum">Add Columns  <span className="glyphicon glyphicon-tasks" ref={dropdownRef}  onClick={(e) =>{ e.stopPropagation(); handleAddColumn()}}></span></label>
+                            <li style={{position:'relative'}} ref={dropdownRef} >
+                                <label htmlFor="" className="addcloum">Add Columns  <span className="glyphicon glyphicon-tasks"  onClick={(e) =>{ e.stopPropagation(); handleAddColumn()}}></span></label>
 
                               {dropDownShow && (
-                                    <article className="Addcoldropdownart">
+                                    <article className="Addcoldropdownart" onClick={(e) => e.stopPropagation()}>
                                         <ul className="addcollist">
                                             <li>
                                         <label>
@@ -484,7 +491,7 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
                                 </tr>
                             )}
 
-                            {!isLoading && !isError.status && rdData.length === 0 && (
+                            {!isLoading && !firstLoadRef.current  && rdData.length === 0 &&  (
                                 <tr>
                                     <td colSpan="8" style={{ textAlign: "center" }}>
                                         No Data Available

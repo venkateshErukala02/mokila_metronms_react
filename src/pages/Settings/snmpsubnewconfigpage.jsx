@@ -5,6 +5,15 @@ import './../Settings/settings.css';
 
 const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mode})=>{
 
+    const [isLoading, setIsLoading] = useState(false);
+    const [isError, setIsError] = useState({ status: false, msg: "" });
+    const [securityName,setSecurityName] = useState('roV3user');
+    const [securityLevel,setSecurityLevel] = useState('authPriv');
+    const [authPassphrase,setAuthPassphrase] = useState('');
+    const [authProtocol,setAuthProtocol] = useState('SHA');
+    const [privacyPassphrase,setPrivacyPassphrase] = useState('');
+    const [privacyProtocol,setPrivacyProtocol] = useState('AES');
+
     const isEditMode =  mode === 'edit';
 
             const [beginIp,setBeginIp] =  useState('');
@@ -39,6 +48,64 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
   }
 
 
+  const handleAddSnmpConfig = async () => {
+        const requestBody = isEditMode ? {
+        //    comments: comment,
+        //     name : groupName,
+        //     user: selectedUsers
+        }: snmpVersValueSel === 'v2c' ? {
+           
+            version: snmpVersValueSel,
+            securityName: "roV3user",
+            securityLevel: "3",
+            authProtocol: "SHA",
+            privProtocol: "AES",
+            begin: beginIp,
+            end: endIp,
+            readCommunity: readCommunity,
+            writeCommunity: writeCommunity
+            }: {
+                version: snmpVersValueSel,
+                securityName: "roV3user",
+                securityLevel: "3",
+                authProtocol: "SHA",
+                privProtocol: "AES",
+                begin: beginIp,
+                end: endIp,
+                authPassPhrase: authPassphrase,
+                privPassPhrase: privacyPassphrase
+            }
+
+        const method = isEditMode ? '' :'POST';
+        const url= isEditMode ? 'api/v2/nodelinks/udefinition' :'api/v2/nodelinks/udefinition';
+
+        try {
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(requestBody),
+            });
+            if (response.ok) {
+                handleSubNewconfigContainer();
+                if(refreshSnmpData) refreshSnmpData();
+                setBeginIp('');
+                setEndIp('');
+                setReadCommunity('');
+                setWriteCommunity('');
+            } else {
+                setIsError('Error starting discovery');
+            }
+        } catch (error) {
+            setIsError('An error occurred while contacting the server.');
+        } finally {
+            setIsLoading(false); 
+        }
+
+    }
+
+
     return(
 
         <>
@@ -59,7 +126,7 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
                                     </label>
                                     <article>
                                         <select className="vlaninput" value={snmpVersValueSel} onChange={handleSnmpVersion}>
-                                        <option value="v1" label="SNMPv1">SNMPv1</option>
+                                        <option value="v1" label="SNMPv1">SNMPv3</option>
                                             <option value="v2c" selected label="SNMPv1-v2c">SNMPv1-v2c</option>
                                         </select>
 
@@ -82,7 +149,7 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
                                 />
                                 </article>
                                 
-                                <article>
+                               {snmpVersValueSel === "v2c" ? (<article> <article>
                                 <label className="settinglabelsub">{isEditMode ? 'Read Password' : 'Read Community'}
                                 </label>
                                 <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" 
@@ -96,12 +163,54 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
                                 value={writeCommunity}
                                 onChange={(e)=> setWriteCommunity(e.target.value)}
                                 />
+                                </article> </article> ) : (
+                                    <article>
+                                    <article>
+                                <label className="settinglabelsub">Security Name</label>
+                                <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" 
+                                value={securityName}
+                                />
                                 </article>
+                                <article>
+                                <label className="settinglabelsub">Security Level</label>
+                                <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" 
+                                value={securityLevel}
+                                />
+                                </article>
+                                 <article>
+                                <label className="settinglabelsub">Auth Passphrase</label>
+                                <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" 
+                                value={authPassphrase}
+                                onChange={(e)=> setAuthPassphrase(e.target.value)}
+                                />
+                                </article>
+                                 <article>
+                                <label className="settinglabelsub">Auth Protocol</label>
+                                <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" 
+                                value={authProtocol}
+                                />
+                                </article>
+                                 <article>
+                                <label className="settinglabelsub">Privacy Passphrase</label>
+                                <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" 
+                                value={privacyPassphrase}
+                                onChange={(e)=> setPrivacyPassphrase(e.target.value)}
+                                />
+                                </article>
+                                 <article>
+                                <label className="settinglabelsub">Privacy Protocol</label>
+                                <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" 
+                                value={privacyProtocol}
+                                />
+                                </article>
+                                    </article>
+                                ) } 
+                              
 
                                 <hr className="hrnote" />
                                 <center className="d-f">
-                                    <button className="cancelbtn" onClick={handleProfileNewconfigContclose}>Cancle</button>
-                                    <button className="creatsetingbtn" onClick=''>
+                                    <button className="cancelbtn" type="button" onClick={handleProfileNewconfigContclose}>Cancle</button>
+                                    <button className="creatsetingbtn" type="button" onClick={handleAddSnmpConfig}>
                                       {isEditMode ? 'Update' : 'Create'}
                                         </button>
                                 </center>
