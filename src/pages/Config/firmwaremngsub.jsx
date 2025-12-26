@@ -106,8 +106,8 @@ const FirmwareMngSubCont = ({ handleSubContainer, refreshLineData, mode, line })
             });
 
             if (response.ok) {
-                setSuccess('File upload has started.');
-                alert('Firmware upload has started.')
+                setSuccess('File upload is started.');
+                alert('Firmware upload is started.')
                 handleProfileContclose();
                 if (refreshLineData) refreshLineData();
                 setSelectedFile(null);

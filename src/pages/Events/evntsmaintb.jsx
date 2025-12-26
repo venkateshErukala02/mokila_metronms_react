@@ -27,6 +27,7 @@ const EventMainTB = () => {
     const nodeIdRef = useRef(null);
     const [showEventPopup,setShowEventPopup] = useState(false);
     const [eventpopupData,setEventpopupData] = useState([]);
+
     const getDataEvntMain = async (url) => {
        if(eventipText === ''){
         setIsLoading(true);
@@ -87,6 +88,8 @@ const EventMainTB = () => {
     };
 
     useEffect(() => {
+
+        if (searchBtn) return;
         let url = '';
 
         let filterParts = [
@@ -119,7 +122,7 @@ const EventMainTB = () => {
 
                 break;
         }
-    }, [typevalueSel, pageSize, eventmainLimitLabelSel,selectedDuration,eventmainSeverityValueSel]);
+    }, [typevalueSel, pageSize, eventmainLimitLabelSel,selectedDuration,eventmainSeverityValueSel,searchBtn]);
 
 
     const handleNodeIp = async (eventipText) => {

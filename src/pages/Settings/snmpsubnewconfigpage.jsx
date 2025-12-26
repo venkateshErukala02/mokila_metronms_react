@@ -20,8 +20,8 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
             const [endIp,setEndIp] = useState('');
             const [readCommunity,setReadCommunity] = useState('');
             const [writeCommunity,setWriteCommunity] =  useState('');
-            const [snmpVersValueSel,setSnmpVersValueSel] = useState();
-            const [snmpVersLabelSel, setSnmpVersLabelSel] =  useState('');
+            const [snmpVersValueSel,setSnmpVersValueSel] = useState('v2c');
+            const [snmpVersLabelSel, setSnmpVersLabelSel] =  useState('SNMPv1-v2c');
     
 
     const handleProfileNewconfigContclose=()=>{
@@ -30,6 +30,8 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
 
   useEffect(()=>{
     if(isEditMode && Snmp){
+            setSnmpVersValueSel('v2c');
+            setSnmpVersLabelSel('SNMPv1-v2c');
             setBeginIp(Snmp.begin || '');
             setEndIp(Snmp.end || '');
             setWriteCommunity(Snmp.writeCommunity || '');
@@ -126,7 +128,7 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
                                     </label>
                                     <article>
                                         <select className="vlaninput" value={snmpVersValueSel} onChange={handleSnmpVersion}>
-                                        <option value="v1" label="SNMPv1">SNMPv3</option>
+                                        <option value="v1" label="SNMPv3">SNMPv3</option>
                                             <option value="v2c" selected label="SNMPv1-v2c">SNMPv1-v2c</option>
                                         </select>
 

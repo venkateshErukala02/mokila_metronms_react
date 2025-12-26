@@ -12,18 +12,18 @@ const ThresholdContainer=()=>{
         const [isError, setIsError] = useState({ status: false, msg: "" });
         const [editThreshold,setEditThreshold] = useState({item: null,index: null});
         const [mode,setMode]  = useState(null);
-        
+        const [reloadTable,setReloadTable] = useState(0);
+        // const [reloadConfigDt,setReloadConfigDt] = useState([]);
+        const[reloadConfig,setReloadConfig] =  useState();
+
+
         const getThresholdData = async (url) => {
             setIsLoading(true);
             setIsError({ status: false, msg: "" });
             try {
-                const username = 'admin';
-                const password = 'admin';
-                const token = btoa(`${username}:${password}`)
                 const options = {
                     method: "GET",
                     headers: {
-                        'Authorization': `Basic ${token}`,
                         "Content-Type": "application/json",
                     },
     
@@ -51,7 +51,7 @@ const ThresholdContainer=()=>{
             const url='api/v2/threshold/list'
             getThresholdData(url);
     
-        }, []);
+        }, [reloadTable]);
 
         const handleThresholdLimitValue = (event) => {
             setThresholdLimitValueSel(event.target.value);
@@ -68,6 +68,42 @@ const ThresholdContainer=()=>{
         setProfileStatusCont(true);
     }
 
+    const handleReloadTable=()=>{
+        setReloadTable(prev => prev + 1);
+    }
+        
+        const handleReloadConfig=()=>{
+            const url='api/v2/threshold/reload'
+            getReloadConfigData(url);
+        }
+
+        const getReloadConfigData = async (url) => {
+                // setIsLoading(true);
+                // setIsError({ status: false, msg: "" });
+                try {
+                    const options = {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+        
+                    };
+                    const response = await fetch(url, options);
+        
+                    const data = await response.json();
+        
+                    if (response.ok) {
+                        setIsLoading(false);
+                        // setReload();
+                        // setIsError({ status: false, msg: "" });
+                    } else {
+                        throw new Error("data not found");
+                    }
+                } catch (error) {
+                    // setIsLoading(false);
+                    // setIsError({ status: true, msg: error.message });
+                }
+            };
 
  
     return(
@@ -78,12 +114,12 @@ const ThresholdContainer=()=>{
                             <article className="row custom-row border-tlr">
                                 <article className="col-8">
                                     <article className="p-lr">
-                                    <button className="clearfix createbtn">Refresh Table</button></article>
+                                    <button className="clearfix createbtn" type="button" onClick={handleReloadTable}>Refresh Table</button></article>
                                 </article>
                                 <article className="col-4">
                                     <article className="p-lr" style={{ float: 'right' }}>
                                       
-                                   <button className="clearfix createbtn">Reload Configuration</button>
+                                   <button className="clearfix createbtn" type="button" onClick={handleReloadConfig} >Reload Configuration</button>
 
                                     </article>
                                 </article>

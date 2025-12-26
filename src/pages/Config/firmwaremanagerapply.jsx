@@ -221,7 +221,7 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
         });
         if (response.ok) {
             // setSuccess('Discovery started successfully');
-            alert('Discovery started successfully')
+            alert('Firmware started successfully')
             handleProfileContclose();
             setSelectedFile(null);
             setDeviceType('');

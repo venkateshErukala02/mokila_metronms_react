@@ -108,6 +108,7 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
     }
 
     useEffect(() => {
+        if (searchBtn) return; 
         const fetchData = () => {
         let url = '';
 
@@ -208,11 +209,12 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
 
         return ()=> clearInterval(intervalId);
 
-    }, [radialData, dname, limitValueSelLabel, pageSize, apiStatus,sortOrder]);
+    }, [radialData, dname, limitValueSelLabel, pageSize, apiStatus,sortOrder,searchBtn]);
 
 
 
     useEffect(() => {
+        if (searchBtn) return; 
         let url = '';
         switch (lineInfo) {
             case 'line1-sec1':
@@ -231,7 +233,7 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
                 break;
         }
 
-    }, [circleId, lineInfo, pageSize, limitValueSelLabel])
+    }, [circleId, lineInfo, pageSize, limitValueSelLabel,searchBtn])
 
 
     const handleRadialIP = async (url) => {
@@ -285,10 +287,10 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
 
     }, [limitValueSelLabel]);
 
-    const handleClearSerch = () => {
+    const handleClearSearch = () => {
         setSearchBtn(false);
         setRadialipText('');
-        setRdData([])
+        setPageSize(1); 
     }
 
 
@@ -395,7 +397,7 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
                                 }}
 
                                     style={{ marginLeft: '7px' }}>Search</button>
-                                <button className="clearfix createbtn" onClick={handleClearSerch} style={{ marginLeft: '7px', display: searchBtn ? 'inline-block' : 'none' }}> Clear Search</button>
+                                <button className="clearfix createbtn" onClick={handleClearSearch} style={{ marginLeft: '7px', display: searchBtn ? 'inline-block' : 'none' }}> Clear Search</button>
 
                             </li>
                             <li style={{position:'relative'}} ref={dropdownRef} >

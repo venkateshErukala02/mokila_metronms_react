@@ -20,6 +20,48 @@ const InventRpt = () => {
     const [limitValueSelLabel, setLimitValueSelLabel] = useState('50');
     const [sortField, setSortField] = useState('id');
     const [sortOrder, setSortOrder] = useState('asc');
+    const [searchText,setSearchText] = useState('');
+    const [searchTrigger, setSearchTrigger] = useState(0);
+    const [searchData, setSearchData] = useState('');
+    const [searchBtn, setSearchBtn] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+
+        useEffect(() => {
+            if (!searchText.trim()) return;
+            handleSearchData(searchText);
+        }, [searchTrigger]);
+
+
+
+      
+
+        const handleSearchData = async (searchText) => {
+
+                try {
+                    const response = await fetch(`api/v2/nodes?_s=assetRecord.serialNumber==${searchText},label==${searchText},sysName==${searchText}&limit=25&offset=0&order=asc&orderBy=id`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        setInvenData(data || []);
+                        setError({ status: false, msg: "" });
+                    } else {
+                        throw new Error("data not found");
+                    }
+
+                } catch (error) {
+                    setError({ status: true, msg: error.message });
+                }finally {
+                    setLoading(false);
+                }
+
+        }
+
 
     const getDataInvety = async () => {
         setIsLoading(true);
@@ -52,12 +94,13 @@ const InventRpt = () => {
     };
 
     useEffect(() => {
+        if (searchBtn) return;
         getDataInvety();
             const intervalId = setInterval(()=>{
                 getDataInvety()
             },30000);
           return ()=> clearInterval(intervalId);
-    }, [pageSize,limitValueSelLabel,sortOrder]);
+    }, [pageSize,limitValueSelLabel,sortOrder,searchBtn]);
 
     let activeTrueCount = 0;
     let activeFalseCount = 0;
@@ -199,6 +242,26 @@ const InventRpt = () => {
         }
     };
 
+    const handleSearchClick = (e) => {
+        e.preventDefault();
+        if (!searchText.trim()) {
+            alert("Please enter a search term");
+
+        } else {
+            setSearchBtn(true);
+            setSearchTrigger(prev => prev + 1);
+        }
+    }
+
+
+    const handleClearSearch = () => {
+        setSearchBtn(false);
+        setSearchText('');
+        setInvenData([]);
+        getDataInvety();
+      }
+
+      const nodes = Array.isArray(invenData.node) ? invenData.node : [];
 
     return (
         <>
@@ -222,8 +285,9 @@ const InventRpt = () => {
                                 <span className="totalcl" style={{ marginLeft: '10px' }}>Total: <span>{invenData.totalCount}</span></span>
                                 <span className="totalcl">Good: <span>{activeTrueCount}</span></span>
                                 <span className="totalcl">Down: <span>{activeFalseCount}</span></span>
-                                <input type="text" style={{ marginRight: '10px' }} name="" placeholder="IP Address / System Name / Serial Number" id="" className="form-controlinventory" />
-                                <button className="clearfix createbtn">Search</button>
+                                <input type="text" style={{ marginRight: '10px' }} name="" placeholder="IP Address / System Name / Serial Number" id="" value={searchText} onChange={(e)=> setSearchText(e.target.value)} className="form-controlinventory" />
+                                <button className="clearfix createbtn" type="button" onClick={handleSearchClick}>Search</button>
+                                <button className="clearfix createbtn" type="button" onClick={handleClearSearch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
 
                             </article>
                             <article className="col-md-5">
@@ -310,8 +374,8 @@ const InventRpt = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="inventbdtb">
-                                    {Array.isArray(invenData.node) && invenData.node.length > 0 ? (
-                                        invenData.node.map((event) => (
+                                    {nodes.length > 0 ? (
+                                        nodes.map((event) => (
                                             <tr key={event.id} style={{ textAlign: 'center' }}>
                                                 <td><input type="checkbox" className="incl"
                                                     checked={selectedRows.includes(event.ipConfig.ipAddress)}
