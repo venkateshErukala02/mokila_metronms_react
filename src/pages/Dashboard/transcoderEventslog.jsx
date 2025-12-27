@@ -178,13 +178,13 @@ useEffect(() => {
                         />
 
                     </article>
-                    <button class="clearfix createbtn" style={{ marginLeft: '10px' }}
+                    <button className="clearfix createbtn" style={{ marginLeft: '10px' }}
                         onClick={() => {
                             handleSearch(searchText, selectedDate)
                         }
                         }
                     >Search</button>
-                    {(searchText !== '' || search !== '') && (<button class="clearfix createbtn" style={{ marginLeft: '10px' }}
+                    {(searchText !== '' || search !== '') && (<button className="clearfix createbtn" style={{ marginLeft: '10px' }}
                         onClick={handleClearSearch}
                     >Clear Search</button>)}
                 </>

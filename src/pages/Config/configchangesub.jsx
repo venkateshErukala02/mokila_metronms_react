@@ -401,7 +401,7 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                                 </div>
                             </article>
                             <article style={{position:'relative'}}>
-                            <hr class=""></hr>
+                            <hr></hr>
                             <p className="firmwarenote">Note:</p>
                             <article>
                                 <h4 className="scheduletitle">Schedule</h4>

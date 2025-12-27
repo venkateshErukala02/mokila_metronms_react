@@ -57,7 +57,7 @@ const FacilitySubCont=({handleSubContainer})=>{
                                 <article>
                                     <label className="vlanlabel">Region</label>
                                     <article>
-                                        <select class=""  className="vlaninput">
+                                        <select  className="vlaninput">
                                             <option value="-1" selected="selected" label="All">All</option>
                                             <option value="1" label="AP">PTP</option>
                                             <option value="2" label="SU">BackHaul</option>
@@ -69,7 +69,7 @@ const FacilitySubCont=({handleSubContainer})=>{
                                 <article>
                                     <label className="vlanlabel">Select City</label>
                                     <article>
-                                        <select class=""  className="vlaninput">
+                                        <select  className="vlaninput">
                                             <option value="-1" selected="selected" label="All">All</option>
                                             <option value="1" label="AP">PTP</option>
                                             <option value="2" label="SU">BackHaul</option>
@@ -82,7 +82,7 @@ const FacilitySubCont=({handleSubContainer})=>{
                                 <article>
                                     <label className="vlanlabel">Select Location</label>
                                     <article>
-                                        <select class=""  className="vlaninput">
+                                        <select   className="vlaninput">
                                             <option value="-1" selected="selected" label="All">All</option>
                                             
                                         </select>
@@ -125,10 +125,10 @@ const FacilitySubCont=({handleSubContainer})=>{
                                 id="hiddenFileInput"
                                 style={{ display: "none" }}
                             />
-                                     <button onClick={() => document.getElementById("hiddenFileInput").click()} class="attachcl">
-                                <i class="fa-solid fa-paperclip"></i></button>
-                            <button onClick={handleUpload} class="uploadcl"><i class="fa-solid fa-upload"></i></button>
-                            <button onClick={downloadSampleCSV} class="createbtn">Sample.csv<i class="fa fa-file-text" aria-hidden="true"></i></button>
+                                     <button type="button" onClick={() => document.getElementById("hiddenFileInput").click()} className="attachcl">
+                                <i className="fa-solid fa-paperclip"></i></button>
+                            <button type="button" onClick={handleUpload} className="uploadcl"><i className="fa-solid fa-upload"></i></button>
+                            <button type="button" onClick={downloadSampleCSV} className="createbtn">Sample.csv<i className="fa fa-file-text" aria-hidden="true"></i></button>
 
                                 </article>
                                 </article>

@@ -291,7 +291,7 @@ const ObcEventTab=({nodeItemDt})=>{
                             className="myDatepickercl" />
 
                             </article>
-                             <button class="clearfix createbtn" style={{marginLeft:'10px'}} onClick={()=>{
+                             <button className="clearfix createbtn" style={{marginLeft:'10px'}} onClick={()=>{
                         setDate(selectedDate)
                     }
                     }>Search</button>

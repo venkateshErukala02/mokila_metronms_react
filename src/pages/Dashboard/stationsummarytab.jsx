@@ -26,9 +26,9 @@ const SnSummaryTab = ({ nodeItemDt }) => {
                   <article className="card" id="div2">
                     <article style={{ margin: "auto", textAlign: 'center' }}>
                       <img className="nodeimg" src={nodeimage} alt="node" />
-                      <label class="summarymode"> {nodeItemDt.nodeDesc}</label>
-                      <label class="summarymode" style={{ display: 'block' }}> {nodeItemDt.station} ({nodeItemDt.systemName})</label>
-                      <label class="summarysytem"><i class="fas fa-arrow-up fa-1x ng-scope "></i>{nodeItemDt.uptime}</label>
+                      <label className="summarymode"> {nodeItemDt.nodeDesc}</label>
+                      <label className="summarymode" style={{ display: 'block' }}> {nodeItemDt.station} ({nodeItemDt.systemName})</label>
+                      <label className="summarysytem"><i className="fas fa-arrow-up fa-1x ng-scope "></i>{nodeItemDt.uptime}</label>
                     </article>
                     <article style={{ margin: "auto" }}>
                       <article>

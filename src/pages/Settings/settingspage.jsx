@@ -109,7 +109,7 @@ const SettPage = () => {
                                         <li onClick={() => SelectSettingCont('lines')}><img src={LinesIcon} alt="line"/> Lines</li>
                                         <li onClick={() => SelectSettingCont('sections')}><img src={SectionIcon} alt="section"/> Sections</li>
                                         <li onClick={() => SelectSettingCont('stations')}><img src={StationIcon} alt="station"/> Stations</li>
-                                        <li onClick={() => SelectSettingCont('waysidetags')}><i class="fa-solid fa-tag "></i> Wayside Tags</li>
+                                        <li onClick={() => SelectSettingCont('waysidetags')}><i className="fa-solid fa-tag "></i> Wayside Tags</li>
                                         <li onClick={() => SelectSettingCont('users')}><img src={UsersIcon} alt="user"/> Users</li>
                                         <li onClick={() => SelectSettingCont('groups')}><img src={GroupsIcon} alt="group"/> Groups</li>
                                         <li onClick={() => SelectSettingCont('threshold')}><img src={ThresholdIcon} alt="threshold"/> Threshold</li>

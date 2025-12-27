@@ -154,10 +154,10 @@ const TcSummaryTab = ({ transcoderData }) => {
                                     <article className="" id="div2">
                                         <article style={{ margin: "auto", textAlign: 'center' }}>
                                             <img className="nodeimg" src={transcoderImage} alt="transcoderImage" width="210px" height="190px" />
-                                            <label class="summarymode"> {transcoderData?.System?.ser}</label>
-                                            <label class="summarymode" style={{ display: 'block' }}> {nodeLocation} ({transcoderData?.System?.sysname})</label>
-                                            <label class="summarysytem"><i class="fas fa-arrow-up fa-1x ng-scope "></i>{upTimeData}</label>
-                                            <label class="summarymode" style={{ display: 'block',marginTop:'7px' }}>Temperature:{tempData.temp}</label>
+                                            <label className="summarymode"> {transcoderData?.System?.ser}</label>
+                                            <label className="summarymode" style={{ display: 'block' }}> {nodeLocation} ({transcoderData?.System?.sysname})</label>
+                                            <label className="summarysytem"><i className="fas fa-arrow-up fa-1x ng-scope "></i>{upTimeData}</label>
+                                            <label className="summarymode" style={{ display: 'block',marginTop:'7px' }}>Temperature:{tempData.temp}</label>
                                         </article>
                                         <article style={{ margin: "auto" }}>
                                             <article>
@@ -218,25 +218,25 @@ const TcSummaryTab = ({ transcoderData }) => {
                                                 <h1 className="quadhead">Quad</h1>
                                                 < article className="">
                                                     <article className="card-sub">
-                                                        <article class="form-row"><label for="" class="col-4 quadlis">Bitrate</label><article class="col-sm-4 col-md-4 col-lg-5 quadlisvalue">
+                                                        <article className="form-row"><label for="" className="col-4 quadlis">Bitrate</label><article className="col-sm-4 col-md-4 col-lg-5 quadlisvalue">
                                                             <input type="text" className="transcoderinput" value={bitRate}
                                                             onChange={(e)=> setBitRate(e.target.value)}
                                                             />
                                                         </article>
                                                         </article>
-                                                        <article class="form-row"><label for="" class="col-4 quadlis">Profile</label><article class="col-sm-4 col-md-4 col-lg-5 quadlisvalue">
+                                                        <article className="form-row"><label for="" className="col-4 quadlis">Profile</label><article className="col-sm-4 col-md-4 col-lg-5 quadlisvalue">
                                                             <input type="text" className="transcoderinput" value={profile} 
                                                             onChange={(e)=> setProfile(e.target.value)}
                                                             />
                                                         </article>
                                                         </article>
-                                                        <article class="form-row"><label for="" class="col-4 quadlis">Xpos</label><article class="col-sm-4 col-md-4 col-lg-5 quadlisvalue">
+                                                        <article className="form-row"><label for="" className="col-4 quadlis">Xpos</label><article className="col-sm-4 col-md-4 col-lg-5 quadlisvalue">
                                                             <input type="text" className="transcoderinput" value={xpos} 
                                                             onChange={(e)=> setXpos(e.target.value)}
                                                             />
                                                         </article>
                                                         </article>
-                                                        <article class="form-row"><label for="" class="col-4 quadlis">Ypos</label><article class="col-sm-4 col-md-4 col-lg-5 quadlisvalue">
+                                                        <article className="form-row"><label for="" className="col-4 quadlis">Ypos</label><article className="col-sm-4 col-md-4 col-lg-5 quadlisvalue">
                                                             <input type="text" className="transcoderinput" value={ypos} 
                                                             onChange={(e)=> setYpos(e.target.value)}
                                                             />
@@ -267,25 +267,25 @@ const TcSummaryTab = ({ transcoderData }) => {
                                                 <h1 className="quadhead">RSTPURL</h1>
                                                 < article className="">
                                                     <article className="card-sub">
-                                                        <article class="form-row"><label for="" class="col-3 quadlis">Cam1URL</label><article class="col-sm-9 col-md-9 col-lg-9 quadlisvalue">
+                                                        <article className="form-row"><label for="" className="col-3 quadlis">Cam1URL</label><article className="col-sm-9 col-md-9 col-lg-9 quadlisvalue">
                                                                  <input type="text" className="transcoderinput" value={camone}
                                                                  onChange={(e)=> setCamone(e.target.value)}
                                                                  />
                                                         </article>
                                                         </article>
-                                                        <article class="form-row"><label for="" class="col-3 quadlis">Cam2URL</label><article class="col-sm-9 col-md-9 col-lg-9 quadlisvalue">
+                                                        <article className="form-row"><label for="" className="col-3 quadlis">Cam2URL</label><article className="col-sm-9 col-md-9 col-lg-9 quadlisvalue">
                                                             <input type="text" className="transcoderinput" value={camtwo} 
                                                             onChange={(e)=> setCamtwo(e.target.value)}
                                                             />
                                                         </article>
                                                         </article>
-                                                        <article class="form-row"><label for="" class="col-3 quadlis">Cam3URL</label><article class="col-sm-9 col-md-9 col-lg-9 quadlisvalue">
+                                                        <article className="form-row"><label for="" className="col-3 quadlis">Cam3URL</label><article className="col-sm-9 col-md-9 col-lg-9 quadlisvalue">
                                                             <input type="text" className="transcoderinput" value={camthree}
                                                             onChange={(e)=> setCamthree(e.target.value)}
                                                             />
                                                         </article>
                                                         </article>
-                                                        <article class="form-row"><label for="" class="col-3 quadlis">Cam4URL</label><article class="col-sm-9 col-md-9 col-lg-9 quadlisvalue">
+                                                        <article className="form-row"><label for="" className="col-3 quadlis">Cam4URL</label><article className="col-sm-9 col-md-9 col-lg-9 quadlisvalue">
                                                             <input type="text" className="transcoderinput" value={camfour} 
                                                             onChange={(e)=> setCamfour(e.target.value)}
                                                             />

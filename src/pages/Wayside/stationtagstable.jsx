@@ -98,7 +98,7 @@ const StationTagsTable = ({ rdDataRef}) =>{
                                 <th>TagId</th>
                                 <th>Direction</th>
                                 <th>Position</th>
-                                <th style={{width:'132px'}}>(Work <i class="fa-solid fa-arrow-up" style={{color:""}}></i> ,Def <i class="fa-solid fa-arrow-down" style={{color:""}}></i>)</th>
+                                <th style={{width:'132px'}}>(Work <i className="fa-solid fa-arrow-up" style={{color:""}}></i> ,Def <i className="fa-solid fa-arrow-down" style={{color:""}}></i>)</th>
                                 <th>Delete</th>                               
                             </tr>
                         </thead>
@@ -141,8 +141,8 @@ const StationTagsTable = ({ rdDataRef}) =>{
                                         <td style={{padding:"4px 6px"}}>{value.tag}</td>
                                         <td style={{padding:"4px 6px"}}>{value.direction}</td>
                                         <td style={{padding:"4px 6px"}} className="">{value.position}</td>
-                                        <td style={{padding:"4px 48px"}}>{value.status === 'down' ? (<i class="fa-solid fa-arrow-down" style={{color:"red"}}></i> ): (<i class="fa-solid fa-arrow-up" style={{color:"green"}}></i>)}</td>
-                                        <td><i class="fa fa-trash" style={{cursor:'pointer'}}  onClick={()=>handleDeleteTag(value)}></i></td>
+                                        <td style={{padding:"4px 48px"}}>{value.status === 'down' ? (<i className="fa-solid fa-arrow-down" style={{color:"red"}}></i> ): (<i className="fa-solid fa-arrow-up" style={{color:"green"}}></i>)}</td>
+                                        <td><i className="fa fa-trash" style={{cursor:'pointer'}}  onClick={()=>handleDeleteTag(value)}></i></td>
                                     </tr>
                                 ))                                     
                                 )}

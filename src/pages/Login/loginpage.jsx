@@ -22,12 +22,12 @@ const Login = ()=>{
                <ul className="clearfix formli">
                 <li>
                     
-                    <div class="box-8">
+                    <div className="box-8">
                      <input type="text" className="form-control searchbar" placeholder="Username"/>
                     </div>
                 </li>
                 <li>
-                    <div class="box-8">
+                    <div className="box-8">
                      <input type="text" className="form-control searchbar" placeholder="Password" />
                     </div>
                 </li>

@@ -411,24 +411,24 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                                 </article>
                             </article>}
                             <article style={{ position: 'relative' }}>
-                                <label class="radiolabelcl">
+                                <label className="radiolabelcl">
                                     <input type="radio" name="role"
                                         value='fileupload'
                                         checked={role === 'fileupload'}
                                         onChange={() => setRole('fileupload')}
 
                                     />
-                                    <span class="checking"></span>
-                                    <span class="labeltext">File Upload</span>
+                                    <span className="checking"></span>
+                                    <span className="labeltext">File Upload</span>
                                 </label>
-                                <label class="radiolabelcl">
+                                <label className="radiolabelcl">
                                     <input type="radio" name="role"
                                         value='devicelist'
                                         checked={role === 'devicelist'}
                                         onChange={() => setRole('devicelist')}
                                     />
-                                    <span class="checking"></span>
-                                    <span class="labeltext">Device List</span>
+                                    <span className="checking"></span>
+                                    <span className="labeltext">Device List</span>
                                 </label>
                             </article>
                             <hr />
@@ -445,11 +445,11 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                                         id="hiddenFileInput"
                                         style={{ display: "none" }}
                                     />
-                                    <button onClick={() => document.getElementById("hiddenFileInput").click()} class="attachcl">
-                                        <i class="fa-solid fa-paperclip"></i></button>
-                                    <button onClick={downloadSampleCSV} class="createbtn">Sample.csv<i class="fa fa-file-text" aria-hidden="true"></i></button>
+                                    <button onClick={() => document.getElementById("hiddenFileInput").click()} className="attachcl">
+                                        <i className="fa-solid fa-paperclip"></i></button>
+                                    <button onClick={downloadSampleCSV} className="createbtn">Sample.csv<i className="fa fa-file-text" aria-hidden="true"></i></button>
                                 </article>
-                                <hr class="hrnote"></hr>
+                                <hr className="hrnote"></hr>
                                 <center className="d-f">
                                     <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
                                     <button type="button" className="creatsetingbtn" onClick={handleUpload}>

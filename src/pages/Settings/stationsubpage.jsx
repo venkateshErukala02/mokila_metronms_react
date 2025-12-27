@@ -318,8 +318,8 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
 
                                 />
                           {isEditMode &&   <article>
-                            <p class="notepara">Note:</p>
-                            <ul class="clearfix notelist"><li>Special characters single quote(') and space are not allowed</li><li>A maximum of 32 characters can be added</li></ul>
+                            <p className="notepara">Note:</p>
+                            <ul className="clearfix notelist"><li>Special characters single quote(') and space are not allowed</li><li>A maximum of 32 characters can be added</li></ul>
                             </article>} 
 
                                 <article className="uploadcont">
@@ -343,10 +343,10 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
                                 id="hiddenFileInput"
                                 style={{ display: "none" }}
                             />
-                                     <button onClick={() => document.getElementById("hiddenFileInput").click()} class="attachcl">
-                                <i class="fa-solid fa-paperclip"></i></button>
-                            <button type="button" onClick={handleUpload} className="uploadcl"><i class="fa-solid fa-upload"></i></button>
-                            <button type="button" onClick={downloadSampleCSV} className="createbtn">Sample.csv<i class="fa fa-file-text" aria-hidden="true"></i></button>
+                                     <button type="button" onClick={() => document.getElementById("hiddenFileInput").click()} className="attachcl">
+                                <i className="fa-solid fa-paperclip"></i></button>
+                            <button type="button" onClick={handleUpload} className="uploadcl"><i className="fa-solid fa-upload"></i></button>
+                            <button type="button" onClick={downloadSampleCSV} className="createbtn">Sample.csv<i className="fa fa-file-text" aria-hidden="true"></i></button>
 
                                 </article>} 
                                 </article>

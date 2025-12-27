@@ -312,34 +312,34 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
 </article> */}
 
                             <article style={{ position: 'relative' }}>
-                                <label class="radiolabelcl">
+                                <label className="radiolabelcl">
                                     <input type="radio" name="role"
                                         value='ROLE_READONLY'
                                         checked={role === 'ROLE_READONLY'}
                                         onChange={() => setRole('ROLE_READONLY')}
 
                                     />
-                                    <span class="checking"></span>
-                                    <span class="labeltext">Read Only</span>
+                                    <span className="checking"></span>
+                                    <span className="labeltext">Read Only</span>
                                 </label>
-                                <label class="radiolabelcl">
+                                <label className="radiolabelcl">
                                     <input type="radio" name="role"
                                         value='ROLE_ADMIN'
                                         checked={role === 'ROLE_ADMIN'}
                                         onChange={() => setRole('ROLE_ADMIN')}
                                     />
-                                    <span class="checking"></span>
-                                    <span class="labeltext">Admin</span>
+                                    <span className="checking"></span>
+                                    <span className="labeltext">Admin</span>
                                 </label>
-                                <label class="radiolabelcl">
+                                <label className="radiolabelcl">
                                     <input type="radio" name="role"
                                         value='BULK'
                                         checked={role === 'BULK'}
                                         onChange={() => setRole('BULK')}
 
                                     />
-                                    <span class="checking"></span>
-                                    <span class="labeltext">Bulk</span>
+                                    <span className="checking"></span>
+                                    <span className="labeltext">Bulk</span>
                                 </label>
                             </article>
 

@@ -374,7 +374,7 @@ const EventMainTB = () => {
                         <button className="clearfix numcl"><span>{pageSize}</span></button>
                         <button className="clearfix arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
                         <span className="eventscp">Scope : </span>
-                        <span className="eventgolcl" onClick={toggleDropdown} >Golbal <span class="fa fa-chevron-down highlightText v-align-tt iconsy"></span></span>
+                        <span className="eventgolcl" onClick={toggleDropdown} >Golbal <span className="fa fa-chevron-down highlightText v-align-tt iconsy"></span></span>
 
                         <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="IP Address " id="" className="form-controlevents" />
                         <button className="clearfix createbtn" onClick={() => { handleRadialIP();}} >Search</button>

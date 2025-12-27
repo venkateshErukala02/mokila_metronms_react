@@ -70,7 +70,7 @@ const Navbar = () => {
     <section className="container-fluid">
         <article className="row navheader" id='landpage' style={{position:"relative"}}> 
             <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
-            <a  onClick={handleToggle}><i class="fas fa-2x fa-bars accentColor" style={{paddingTop:'10px',paddingLeft:'10px'}}></i></a>
+            <a  onClick={handleToggle}><i className="fas fa-2x fa-bars accentColor" style={{paddingTop:'10px',paddingLeft:'10px'}}></i></a>
            <img src={logo} alt="logo" />
             </article>
             <article className="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xxl-5">

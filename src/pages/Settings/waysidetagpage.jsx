@@ -238,17 +238,17 @@ const WaysideTagContainer=()=>{
                                         id="hiddenFileInput"
                                         style={{ display: "none" }}
                                     />
-                                    <button onClick={() => document.getElementById("hiddenFileInput").click()} class="attachcl-wayside-setting">
-                                        <i class="fa-solid fa-paperclip"></i></button>
-                                    <button onClick={handleUpload} class="uploadcl-wayside-setting"><i class="fa-solid fa-upload"></i></button>
+                                    <button type="button" onClick={() => document.getElementById("hiddenFileInput").click()} className="attachcl-wayside-setting">
+                                        <i className="fa-solid fa-paperclip"></i></button>
+                                    <button type="button" onClick={handleUpload} className="uploadcl-wayside-setting"><i className="fa-solid fa-upload"></i></button>
                                        </article>
                             <article className="row custom-row border-tlr">
                                 <article className="col-8">
-                                    <button className="clearfix arrowlf" onClick={handleDecrement}>
+                                    <button type="button" className="clearfix arrowlf" onClick={handleDecrement}>
                                         <i className="fa-solid fa-arrow-left"></i>
                                     </button>
-                                    <button className="clearfix numcl"><span>{pageCount}</span></button>
-                                    <button className="clearfix arrowlf" onClick={handleIncrement}><i className="fa-solid fa-arrow-right"></i></button>
+                                    <button type="button" className="clearfix numcl"><span>{pageCount}</span></button>
+                                    <button type="button" className="clearfix arrowlf" onClick={handleIncrement}><i className="fa-solid fa-arrow-right"></i></button>
                                 </article>
                                 <article className="col-4">
                                     <article style={{ float: 'right'}}>

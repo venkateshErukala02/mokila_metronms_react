@@ -57,7 +57,7 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt})=>{
                                 <article>
                                     <label className="vlanlabel">Initial Delay</label>
                                     <article>
-                                        <select class=""  className="vlaninput">
+                                        <select  className="vlaninput">
                                       <option value="0" selected label="0s">0s</option>
                                       <option value="1" label="1s">1s</option>
                                       <option value="2" label="2s">2s</option>

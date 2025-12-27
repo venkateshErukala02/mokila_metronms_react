@@ -86,10 +86,10 @@ const ProvisionFileUp = () => {
                     id="hiddenFileInput"
                     style={{ display: "none" }}
                 />
-                <button onClick={() => document.getElementById("hiddenFileInput").click()} class="attachcl">
-                    <i class="fa-solid fa-paperclip"></i></button>
-                <button onClick={handleUpload} class="uploadcl"><i class="fa-solid fa-upload"></i></button>
-                <button onClick={downloadSampleCSV} class="createbtn">Sample.csv<i class="fa fa-file-text" aria-hidden="true"></i></button>
+                <button onClick={() => document.getElementById("hiddenFileInput").click()} className="attachcl">
+                    <i className="fa-solid fa-paperclip"></i></button>
+                <button onClick={handleUpload} className="uploadcl"><i className="fa-solid fa-upload"></i></button>
+                <button onClick={downloadSampleCSV} className="createbtn">Sample.csv<i className="fa fa-file-text" aria-hidden="true"></i></button>
 
             </article>
         </div>

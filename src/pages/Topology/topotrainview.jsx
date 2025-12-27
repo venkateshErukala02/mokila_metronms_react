@@ -360,7 +360,7 @@ useEffect(() => {
                                     <option value="2" label="45">45</option>
                                 </select>
                                 <article className="trainsel">
-                                <label for="" class="selectlbl">Select Section :</label>
+                                <label for="" className="selectlbl">Select Section :</label>
                                 <select className="form-controll1" value={trainValueSel} onChange={handleTrains} style={{ width: "auto", display: 'inline-block' }} aria-invalid="false">
                                     <option value="2" label="Select" disabled>Select</option>
                                     <option value="11" label="Mainline">Mainline</option>

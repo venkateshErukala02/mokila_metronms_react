@@ -367,9 +367,9 @@ useEffect(() => {
                                                 id="hiddenFileInput"
                                                 style={{ display: "none" }}
                                             />
-                                            <button onClick={() => document.getElementById("hiddenFileInput").click()} class="attachcl">
-                                                <i class="fa-solid fa-paperclip"></i></button>
-                                            <button onClick={handleUpload} class="uploadcl"><i class="fa-solid fa-upload"></i></button>
+                                            <button type="button" onClick={() => document.getElementById("hiddenFileInput").click()} className="attachcl">
+                                                <i className="fa-solid fa-paperclip"></i></button>
+                                            <button type="button" onClick={handleUpload} className="uploadcl"><i className="fa-solid fa-upload"></i></button>
                                             
 
                                         </article>)}

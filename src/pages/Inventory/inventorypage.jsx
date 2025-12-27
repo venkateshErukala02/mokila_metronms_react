@@ -339,7 +339,7 @@ const InventRpt = () => {
                                 <button className="clearfix numcl"><span>{pageSize}</span></button>
                                 <button className="clearfix arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
                                 <span className="eventscp">Scope : </span>
-                                <span className="eventgolcl" onClick={toggleDropdown}  >Golbal <span class="fa fa-chevron-down highlightText v-align-tt iconsy"></span></span>
+                                <span className="eventgolcl" onClick={toggleDropdown}  >Golbal <span className="fa fa-chevron-down highlightText v-align-tt iconsy"></span></span>
 
                                 <span className="totalcl" style={{ marginLeft: '10px' }}>Total: <span>{invenData.totalCount}</span></span>
                                 <span className="totalcl">Good: <span>{activeTrueCount}</span></span>

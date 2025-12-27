@@ -345,21 +345,21 @@ const NotificationContainer=()=>{
                                         <tr key={item.id}>
                                              <td>{item.name}</td>
                                             <td>{item.uei}</td>
-                                            <td><><label class="radiolabelnotifipg">
+                                            <td><><label className="radiolabelnotifipg">
                                         <input type="radio" 
                                         checked={item.status === 'off'}
                                         onChange={() => handleToggleStatus(item)}
                                     />
-                                    <span class="notifichecking"></span>
-                                    <span class="labeltext">off</span>
+                                    <span className="notifichecking"></span>
+                                    <span className="labeltext">off</span>
                                 </label></> <>
-                                <label class="radiolabelnotifipg">
+                                <label className="radiolabelnotifipg">
                                     <input type="radio" 
                                         onChange={() => handleToggleStatus(item)}
                                         checked={item.status === 'on'}
                                         />
-                                    <span class="notifichecking"></span>
-                                    <span class="labeltext">on</span>
+                                    <span className="notifichecking"></span>
+                                    <span className="labeltext">on</span>
                                 </label></> </td>
                                             <td><i className="fas fa-edit" onClick={()=> handleEditSnmpDt(item)}></i></td>
                                             <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" 
