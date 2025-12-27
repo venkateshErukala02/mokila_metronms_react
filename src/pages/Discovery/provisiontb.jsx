@@ -85,7 +85,6 @@ const ProvisionTb = ({ getProviContData }) => {
 
         if (response.ok) {
           setFirmData(data.nodes || []);
-          setFirmipText('')
           setIsError({ status: false, msg: "" });
         } else {
           throw new Error("data not found");
@@ -206,6 +205,7 @@ const ProvisionTb = ({ getProviContData }) => {
   };
 
   useEffect(() => {
+    if(searchBtn) return;
     let show = unassignLabel || 'none';
     let limit = limitValueSelLabel || '100';
   
@@ -218,7 +218,7 @@ const ProvisionTb = ({ getProviContData }) => {
   }, 2000); 
 
   return () => clearInterval(intervalId);
-  }, [unassignLabel, limitValueSelLabel]);
+  }, [unassignLabel, limitValueSelLabel,searchBtn]);
   
 
    const allSelected = ALL_COLUMNS.every(col =>

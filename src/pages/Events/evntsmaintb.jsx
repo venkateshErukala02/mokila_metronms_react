@@ -494,7 +494,7 @@ const EventMainTB = () => {
                                 {Array.isArray(eventmainData) && eventmainData?.length > 0 ? (
                                     eventmainData.map((event) => (
                                         <tr key={event.id} onClick={()=>handleEventPopup(event)}>
-                                            <td><i className={getCategoryClass(event.severity)}></i>{event.ipAddress ? event.ipAddress : event.host}</td>
+                                            <td><i className={getCategoryClass(event.severity)}></i>{event.nodeLabel ? event.nodeLabel : event.host}</td>
                                             <td>{formatTime(event.time)}</td>
                                             <td>{event.severity}</td>
                                             <td>{event.logMessage}</td>
@@ -548,11 +548,39 @@ const EventMainTB = () => {
                                 <article className="evntdetailtitle">
                                     Event details
                                 </article>
-                                <h1>Event Id:{eventpopupData.id}</h1>
-                                <h2>Event Time: {new Date(eventpopupData.createTime).toLocaleString()}</h2>
-                                <h3>Sevirity: {eventpopupData.severity}</h3>
-                                <span>{eventpopupData.description}</span>
-                                <hr />
+                                <article style={{fontSize:'15px',padding:'15px 14px 0 14px'}}>
+                                    <fieldset className="ip-fieldset">
+                                        {/* <legend>{eventpopupData.nodeLabel}</legend> */}
+                                    <h4>{eventpopupData.nodeLabel}</h4>
+                                    <article className="col-12 row">
+                                <div className="col-3">
+                                    <label className="eventpopuplabel">Event Id:</label>
+                                </div>
+                                <div className="col-9 eventpopuplabel">
+                                    {eventpopupData.id}
+                                </div>
+                                </article>
+
+                                <article className="col-12 row">
+                                <div className="col-3">
+                                    <label className="eventpopuplabel">Event Time:</label>
+                                </div>
+                                <div className="col-9 eventpopuplabel">
+                                    {new Date(eventpopupData.createTime).toLocaleString()}
+                                </div>
+                                </article>
+
+                                <article className="col-12 row">
+                                <div className="col-3">
+                                    <label className="eventpopuplabel">Severity:</label>
+                                </div>
+                                <div className="col-9 eventpopuplabel">
+                                    {eventpopupData.severity}
+                                </div>
+                                </article>
+                                <p className="eventpopupdescrpt">{eventpopupData.description}</p>
+                                </fieldset>
+                                </article>
                                 <article style={{textAlign:'center'}}>
                                     <button className="createbtn" type="button" onClick={handleEventPopupClose}>Close</button>
                                 </article>

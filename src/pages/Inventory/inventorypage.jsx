@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import LeftNavList from "../Navbar/leftnavpage";
 import { useSelector } from 'react-redux';
 import '../ornms.css';
@@ -8,6 +8,27 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 const InventRpt = () => {
+
+     const ALL_COLUMNS = [
+          { key: 'sysName', label: 'System Name' },
+          { key: 'label', label: 'Primary IP' },
+          { key: 'macAddress', label: 'MAC Address' },
+          { key: 'serialNum', label: 'Serial Number' },
+          { key: 'sysUptime', label: 'Uptime' },
+          { key: 'deviceType', label: 'Device Type' },
+          { key: 'region', label: 'Line' },      
+          { key: 'facility', label: 'Station' },
+          { key: 'radioMode', label: 'Position' },
+        ];
+        const DEFAULT_COLUMNS = [
+            "sysName",
+            "label",
+            "sysUptime",  
+            "deviceType",
+            "region",
+            "facility",
+            "radioMode",
+            ];
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const isVisible = useSelector(state => state.visibility.isVisible);
     const [invenData, setInvenData] = useState([]);
@@ -26,15 +47,46 @@ const InventRpt = () => {
     const [searchBtn, setSearchBtn] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [dropDownShow,setDropDownShow] = useState(false);
+    const columnWrapperRef =  useRef(null);
+    const [visibleColumns, setVisibleColumns] = useState(DEFAULT_COLUMNS);
+
+
+    useEffect(()=>{
+        const handleClickOutside=(event)=>{
+            if(columnWrapperRef.current && !columnWrapperRef.current.contains(event.target)){
+                setDropDownShow(false);
+            }
+        }
+           
+                document.addEventListener("click",handleClickOutside);
+
+            return ()=>{
+                document.removeEventListener("click",handleClickOutside);
+            }
+        
+    },[dropDownShow]);
 
         useEffect(() => {
             if (!searchText.trim()) return;
             handleSearchData(searchText);
         }, [searchTrigger]);
 
+        const allSelected = ALL_COLUMNS.every(col =>
+                visibleColumns.includes(col.key)
+                );
 
+        const handleAddColumn=()=>{
+            setDropDownShow(prev => !prev);
+        }
 
-      
+         const handleColumnToggle = (key) => {
+            setVisibleColumns(prev =>
+                prev.includes(key)
+                ? prev.filter(col => col !== key)
+                : [...prev, key]
+            );
+        };
 
         const handleSearchData = async (searchText) => {
 
@@ -63,18 +115,25 @@ const InventRpt = () => {
         }
 
 
-    const getDataInvety = async () => {
+    const getDataInvety = async (productCode) => {
+        const fieldMappings = {
+            // primaryIP: ipConfig.primaryIP,
+             deviceType: 'productCode',
+            // region: config.region,
+            // facility: config.facility,
+            // radioMode: config.radioMode,
+         };
+
+         const fieldToUse =   fieldMappings[sortField] !== undefined
+                            ? fieldMappings[sortField]
+                            : sortField;
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
-            const username = 'admin';
-            const password = 'admin';
-            const token = btoa(`${username}:${password}`)
-            const url = `api/v2/nodes?_s=&limit=${limitValueSelLabel}&offset=${pageSize}&order=${sortOrder}&orderBy=${sortField}`;
+            const url = `api/v2/nodes?_s=&limit=${limitValueSelLabel}&offset=${pageSize}&order=${sortOrder}&orderBy=${fieldToUse}`;
             const options = {
                 method: "GET",
                 headers: {
-                    'Authorization': `Basic ${token}`,
                     "Content-Type": "application/json",
                 },
             };
@@ -295,7 +354,39 @@ const InventRpt = () => {
                                     <ul className="inventorylist">
 
                                         <li>
-                                            <label htmlFor="" className="selectlbl">Select Columns  <span style={{ marginTop: '2px' }} className="glyphicon glyphicon-tasks"></span></label>
+                                            <label style={{position:'relative'}} ref={columnWrapperRef} htmlFor="" className="selectlbl">Select Columns  <span style={{ marginTop: '2px' }} className="glyphicon glyphicon-tasks" onClick={(e) => { e.stopPropagation(); handleAddColumn()}}></span></label>
+                                             {dropDownShow && (
+                                    <article className="Addcoldropdownartinvent" onClick={(e) => e.stopPropagation()} >
+                                        <ul className="addcollist">
+                                            <li>
+                                        <label>
+                                            <input
+                                            type="checkbox"
+                                            checked={allSelected}
+                                            onChange={(e) =>
+                                                setVisibleColumns(
+                                                e.target.checked ? ALL_COLUMNS.map(c => c.key) : DEFAULT_COLUMNS
+                                                )
+                                            }
+                                            />
+                                            Select All
+                                        </label>
+                                        </li>
+                                        {ALL_COLUMNS.map(col => (
+                                            <li key={col.key}>
+                                            <label>
+                                                <input
+                                                type="checkbox"
+                                                checked={visibleColumns.includes(col.key)}
+                                                onChange={() => handleColumnToggle(col.key)}
+                                                />
+                                                {col.label}
+                                            </label>
+                                            </li>
+                                        ))}
+                                        </ul>
+                                    </article>
+                                    )}
                                         </li>
                                         <li>
                                             <button className="clearfix createbtn" onClick={handleBulkDelete}>Delete
@@ -332,66 +423,66 @@ const InventRpt = () => {
                         <article className="row border-lr" style={{height:'80vh'}}>
                             <table className="col-md-12" style={{ height: '0vh' }}>
                                 <thead className="inventthtb">
-                                    <tr style={{ textAlign: 'center' }}>
-                                        <th><input type="checkbox" className="incl"
+                                     <tr>
+                                        <th style={{ paddingLeft: '18px' }}>
+                                        <input
+                                            className="incl2"
+                                            type="checkbox"
                                             onChange={handleSelectAll}
-                                            checked={
-                                                Array.isArray(invenData.node) &&
-                                                invenData.node.length > 0 &&
-                                                selectedRows.length === invenData.node.length
+                                            checked={selectedRows.length === invenData?.node?.length && invenData?.node?.length > 0}
+                                        />
+                                        </th>
+
+                                        {ALL_COLUMNS
+                                        .filter(col => visibleColumns.includes(col.key))
+                                        .map((col) => (
+                                        <th key={col.key} onClick={() => handleSort(col.key)}>
+                                            {col.label}
+                                            <FontAwesomeIcon
+                                            icon={
+                                                sortField === col.key
+                                                ? sortOrder === 'asc'
+                                                    ? faSortDown
+                                                    : faSortUp
+                                                : faSort
                                             }
-                                        /></th>
-                                        <th onClick={() => handleSort('sysName')}>System Name <FontAwesomeIcon 
-                                            icon={sortField === 'sysName' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                                            style={{ color: sortField === 'sysName' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-                                        /></th>
-                                        <th onClick={() => handleSort('label')}>Primary IP <FontAwesomeIcon 
-                                            icon={sortField === 'label' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                                            style={{ color: sortField === 'label' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-                                        /></th>
-                                        <th onClick={() => handleSort('sysUptime')}>Up Time <FontAwesomeIcon 
-                                            icon={sortField === 'sysUptime' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                                            style={{ color: sortField === 'sysUptime' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-                                        /></th>
-                                        <th onClick={() => handleSort('productCode')}>Device Type <FontAwesomeIcon 
-                                            icon={sortField === 'productCode' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                                            style={{ color: sortField === 'productCode' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-                                        /></th>
-                                        <th onClick={() => handleSort('region')}>Line <FontAwesomeIcon 
-                                            icon={sortField === 'region' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                                            style={{ color: sortField === 'region' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-                                        /></th>
-                                        <th onClick={() => handleSort('facility')}>Station <FontAwesomeIcon 
-                                            icon={sortField === 'facility' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                                            style={{ color: sortField === 'facility' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-                                        /></th>
-                                        <th onClick={() => handleSort('radioMode')}>Position <FontAwesomeIcon 
-                                            icon={sortField === 'radioMode' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                                            style={{ color: sortField === 'radioMode' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-                                        /></th>
+                                            style={{
+                                                color:
+                                                sortField === col.key
+                                                    ? 'black'
+                                                    : '#D7D7D7',
+                                                paddingLeft: col.key === 'firmware' || col.key === 'status' || col.key === 'uptime' ? '0px' : undefined
+                                            }}
+                                            />
+                                        </th>
+                                        ))}
                                         <th>Action</th>
                                         <th>Delete</th>
                                     </tr>
+
                                 </thead>
                                 <tbody className="inventbdtb">
                                     {nodes.length > 0 ? (
-                                        nodes.map((event) => (
-                                            <tr key={event.id} style={{ textAlign: 'center' }}>
-                                                <td><input type="checkbox" className="incl"
-                                                    checked={selectedRows.includes(event.ipConfig.ipAddress)}
-                                                    onChange={() => handleCheckboxChange(event.ipConfig.ipAddress)}
-                                                /></td>
-                                                <td style={{ width: "px" }}>{event.sysName}</td>
-                                                <td style={{ width: 'px' }}>{event.ipConfig.ipAddress}</td>
-                                                <td style={{ width: '' }}>{formatTime(event.sysUptime)}</td>
-                                                <td style={{ width: '' }}>{event.deviceType}</td>
-                                                <td style={{ width: '' }}>{event.region}</td>
-                                                <td style={{ width: '' }}>{event.facility}</td>
-                                                <td style={{ width: '' }}>{event.radioMode}</td>
-                                                <td><i className="fa fa-sync"></i></td>
-                                                <td><i className="fa fa-trash" onClick={handleBulkDelete} ></i></td>
+                                        nodes.map((node) => (
+                                           <tr key={node.ipAddress}>
+                                            <td style={{ paddingLeft: '18px' }}>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedRows.includes(node.ipAddress)}
+                                                onChange={() => handleCheckboxChange(node.ipAddress)}
+                                            />
+                                            </td>
 
-                                            </tr>
+                                            {ALL_COLUMNS
+                                            .filter(col => visibleColumns.includes(col.key))
+                                            .map((col) => (
+                                            <td key={col.key}>
+                                                {node[col.key]}
+                                            </td>
+                                            ))}
+                                            <td><i className="fa fa-sync"></i></td>
+                                            <td><i className="fa fa-trash" onClick={handleBulkDelete} ></i></td>
+                                        </tr>
                                         ))
                                     ) : (
                                         <tr>
@@ -401,9 +492,6 @@ const InventRpt = () => {
                                 </tbody>
                             </table>
                         </article>
-
-
-
                     </article>
                     </article>
                 </article>

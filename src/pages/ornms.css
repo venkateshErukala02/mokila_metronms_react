@@ -267,7 +267,7 @@ article.row {
 
 .fa-file-text{margin-left: 5px;}
 .tbone>tr>td:last-child {
-    font-size: 11px;
+    font-size: 12.5px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -2962,6 +2962,17 @@ svg *:focus {
     overflow: auto;
 }
 
+.Addcoldropdownartinvent{
+   background-color: #fff;
+    height: 150px;
+    left: 318px;
+    position: absolute;
+    top: 29px;
+    width: 177px;
+    z-index: 9999;
+    overflow: auto;
+}
+
 .addcollist{
     list-style: none;
     padding: 12px 16px;
@@ -3023,13 +3034,41 @@ svg *:focus {
 .eventboxstyle{
     background-color: white;
     border-radius: 10px;
-    height: 32vh;
+    height: 36vh;
     width: 500px;
-    padding: 10px;
 }
+
+.ip-fieldset {
+  border: 1px solid #ccc;
+  padding: 12px;
+  position: relative;
+  margin-bottom: 13px;
+}
+
+.ip-fieldset>h4 {
+  font-weight: 600;
+  padding: 0 8px;
+  background: white;
+  width: 127px;
+  position: absolute;
+  bottom: 211px;
+}
+
 .evntdetailtitle{
     padding: 15px 10px;
     font-size: 15px;
+    background: #cccccc;
+}
+
+.eventpopupdescrpt{
+    font-size: 13px;
+    font-weight: bold;
+    color: #495057;
+    margin-top: 32px;
+}
+.eventpopuplabel{
+    font-size: 14px;
+    font-weight: normal;
 }
 
 .special-svg circle:hover {
