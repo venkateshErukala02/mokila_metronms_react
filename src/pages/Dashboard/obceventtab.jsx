@@ -228,22 +228,22 @@ const ObcEventTab=({nodeItemDt})=>{
             <article className="row border-tlr custom-row">
                 <article className="col-sm-4 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
                     <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block' ,float:'left'}}>
-                        <button className="clearfix arrowlf">
+                        <button type="button" className="arrowlf">
                             <i className="fa-solid fa-arrow-left"></i>
                         </button>
-                        <button className="clearfix numcl"><span>1</span></button>
-                        <button className="clearfix arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                        <button type="button" className="numcl"><span>1</span></button>
+                        <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
              
                     </article>
                     <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
-                        <button className="clearfix arrowlf">
+                        <button type="button" className="arrowlf">
                             <i className="fa-solid fa-arrow-left"></i>
                         </button>
-                        <button className="clearfix numcl"><span>1</span></button>
-                        <button className="clearfix arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                        <button type="button" className="numcl"><span>1</span></button>
+                        <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
 
                         <input type="text" style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="IP Address " id="" className="form-contltranscd-evnt" />
-                        <button className="clearfix createbtn">Search</button>
+                        <button type="button" className="createbtn">Search</button>
                     </article>
 
                 </article>
@@ -291,7 +291,7 @@ const ObcEventTab=({nodeItemDt})=>{
                             className="myDatepickercl" />
 
                             </article>
-                             <button className="clearfix createbtn" style={{marginLeft:'10px'}} onClick={()=>{
+                             <button type="button" className="createbtn" style={{marginLeft:'10px'}} onClick={()=>{
                         setDate(selectedDate)
                     }
                     }>Search</button>

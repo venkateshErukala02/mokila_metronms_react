@@ -100,12 +100,12 @@ const SnmpContainer=()=>{
                             <article className="row custom-row border-tlr">
                                 <article className="col-8 ">
                                    <article className="p-lr">
-                                   <button className="clearfix createbtn" onClick={()=>getSnmpData(SNMP_URL)}>Reload</button>
+                                   <button type="button" className="createbtn" onClick={()=>getSnmpData(SNMP_URL)}>Reload</button>
                                    </article>
                                 </article>
                                 <article className="col-4">
                                     <article className="p-lr" style={{ float: 'right' }}>
-                                    <button className="clearfix createbtn" onClick={handleProfileContopen}>Create</button>
+                                    <button type="button" className="createbtn" onClick={handleProfileContopen}>Create</button>
                                     </article>
                                 </article>
                             </article>

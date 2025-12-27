@@ -79,20 +79,20 @@ const ConfigPage = () => {
                         <h1 className="settingtitle">Settings</h1>
                         <article className="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2">
                             <article>
-                                <ul className="clearfix list-pn proflist">
-                                    <li><a href="" className="clearfix profilel new" onClick={(e) => {showDropdown('firmware', e);SelectSettingCont('firmwareManager')}}><i className="fa fa-lg fa-cog"></i>Firmware</a>
-                                        <ul className="clearfix profsublist list-pn" id="firmware" style={{ display: 'none' }}>
+                                <ul className="list-pn proflist">
+                                    <li><a href="" className="profilel new" onClick={(e) => {showDropdown('firmware', e);SelectSettingCont('firmwareManager')}}><i className="fa fa-lg fa-cog"></i>Firmware</a>
+                                        <ul className="profsublist list-pn" id="firmware" style={{ display: 'none' }}>
                                             <li onClick={() => SelectSettingCont('firmwareManager')}><img src={LinesIcon} alt="line" />Firmware Manager</li>
                                         </ul>
                                     </li>
-                                    <li><a href="" className="clearfix profilel new" onClick={(e) => {showDropdown('bulk', e);SelectSettingCont('configchange')}}><i className="fa fa-lg fa-cog"></i>Bulk</a>
-                                        <ul className="clearfix profsublist list-pn" id="bulk" style={{ display: 'none' }}>
+                                    <li><a href="" className="profilel new" onClick={(e) => {showDropdown('bulk', e);SelectSettingCont('configchange')}}><i className="fa fa-lg fa-cog"></i>Bulk</a>
+                                        <ul className="profsublist list-pn" id="bulk" style={{ display: 'none' }}>
                                             <li onClick={() => SelectSettingCont('configchange')}><img src={LinesIcon} alt="line" />Config Change</li>
                                             <li onClick={() => SelectSettingCont('firmware')}><img src={SectionIcon} alt="section" /> Firmware</li>
                                         </ul>
                                     </li>
-                                    <li><a href="" className="clearfix profilel new" onClick={(e) => {showDropdown('provisioning', e);SelectSettingCont('HardwareReplacement')}}><i className="fa fa-lg fa-cog"></i>Provisioning</a>
-                                        <ul className="clearfix profsublist list-pn" id="provisioning" style={{ display: 'none' }}>
+                                    <li><a href="" className="profilel new" onClick={(e) => {showDropdown('provisioning', e);SelectSettingCont('HardwareReplacement')}}><i className="fa fa-lg fa-cog"></i>Provisioning</a>
+                                        <ul className="profsublist list-pn" id="provisioning" style={{ display: 'none' }}>
                                             <li onClick={() => SelectSettingCont('HardwareReplacement')}><img src={LinesIcon} alt="line" />Hardware Replacement</li>
                                         </ul>
                                     </li>

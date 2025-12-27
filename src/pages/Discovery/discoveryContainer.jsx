@@ -185,41 +185,41 @@ const DiscovContai = () => {
         <>
             <article className="dicovercont">
                 <h1 className="discoveryheading">Discovery</h1>
-                <article className="clearfix ipaddcont">
-                    <ul className="clearfix discovlist">
+                <article className="ipaddcont">
+                    <ul className="discovlist">
                         <li><button className={activeCont === 'Address' ? 'active' : ''} onClick={() => handleActiveCont('Address')}>IP Address</button></li>
                         <li><button className={activeCont === 'Range' ? 'active' : ''} onClick={() => handleActiveCont('Range')}>IP Range</button></li>
                         <li><button className={activeCont === 'Upload' ? 'active' : ''} onClick={() => handleActiveCont('Upload')}>File Upload</button></li>
                     </ul>
-                    {activeCont === 'Address' && (<article className="clearfix specicont">
-                        <ul className="clearfix ipaddlistone">
+                    {activeCont === 'Address' && (<article className="specicont">
+                        <ul className="ipaddlistone">
                             <li>
                                 <input
                                     type="text"
-                                    className="clearfix form-controldis searchbar"
+                                    className="form-controldis searchbar"
                                     placeholder="Specific IP Address"
                                     value={discAddValue}
                                     onChange={(e) => setDiscAddValue(e.target.value)}
                                 />
                             </li>
                             <li>
-                                <button className="clearfix startdbtn" onClick={handleAddStart} disabled={loading}>
+                                <button type="button" className="startdbtn" onClick={handleAddStart} disabled={loading}>
                                     {loading ? 'Starting...' : 'Start'}
                                 </button>
                             </li>
                             <li>
-                                <button className="clearfix resetbtn" onClick={handleAddReset}>
+                                <button type="button" className="resetbtn" onClick={handleAddReset}>
                                     Reset
                                 </button>
                             </li>
                         </ul>
                     </article>)}
-                    {activeCont === 'Range' && (<article className="clearfix speciconttwo">
-                        <ul className="clearfix ipaddlisttwo" >
+                    {activeCont === 'Range' && (<article className="speciconttwo">
+                        <ul className="ipaddlisttwo" >
                             <li>
                                 <input
                                     type="text"
-                                    className="clearfix form-controldis searchbar"
+                                    className="form-controldis searchbar"
                                     placeholder="IP Range Begin"
                                     value={ipbeginValue}
                                     onChange={(e) => setIpbeginValue(e.target.value)} 
@@ -228,19 +228,19 @@ const DiscovContai = () => {
                             <li>
                                 <input
                                     type="text"
-                                    className="clearfix form-controldis searchbar"
+                                    className="form-controldis searchbar"
                                     placeholder={isByMask ? "Subnet Mask" : "IP Range End"}
                                     value={ipendValue}
                                     onChange={(e) => setIpEndValue(e.target.value)} 
                                 />
                             </li>
                             <li>
-                                <button className="clearfix startdbtn" onClick={handleIpAddStart} disabled={loading}>
+                                <button type="button" className="startdbtn" onClick={handleIpAddStart} disabled={loading}>
                                     Start
                                 </button>
                             </li>
                             <li>
-                                <button className="clearfix resetbtn" onClick={handleIpAddReset}>
+                                <button type="button" className="resetbtn" onClick={handleIpAddReset}>
                                     Reset
                                 </button>
                             </li>
@@ -253,7 +253,7 @@ const DiscovContai = () => {
                     </article>
 
                     )}
-                    {activeCont === 'Upload' && (<article className="clearfix specicontupload">
+                    {activeCont === 'Upload' && (<article className="specicontupload">
 
                         <article className="regioncont">
                             <label htmlFor="" className="disfilelabel" style={{ marginBottom: '1px' }}>Select your file</label>

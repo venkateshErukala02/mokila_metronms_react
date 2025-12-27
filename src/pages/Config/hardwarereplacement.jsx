@@ -281,7 +281,7 @@ const HardwareReplacementContainer = () => {
                                                     className="searchIpinput"
                                                 />
                                                 <button type="button" className="searchfirmbtn" onClick={handleNewDeviceSearchClick}>Search</button>
-                                                <button className="clearfix createbtn" type="button" onClick={handleClearSearch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
+                                                <button className="createbtn" type="button" onClick={handleClearSearch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
 
                                             </article>
                                         </li>

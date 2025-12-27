@@ -140,11 +140,11 @@ const Tableone = () => {
             <h1 className="eventheading">Events</h1>
             <article className="row">
                 <article className="col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
-                    <button className="clearfix arrowlf" onClick={handleDecrementOffset}>
+                    <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
                         <i className="fa-solid fa-arrow-left"></i>
                     </button>
-                    <button className="clearfix numcl"><span>{pageSize}</span></button>
-                    <button className="clearfix arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
+                    <button type="button" className="numcl"><span>{pageSize}</span></button>
+                    <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
                 </article>
                 <article className="col-sm-9 col-md-9 col-lg-9 col-xl-9 col-xxl-9" style={{ float: 'right' }}>
                     <article style={{ float: 'right' }}>
@@ -200,7 +200,7 @@ const Tableone = () => {
 
                         </tr>
                     </thead>
-                    <tbody className="clearfix tbone">
+                    <tbody className="tbone">
                         {isError.status && (
                             <tr>
                                 <td colSpan="12" style={{ textAlign: "center", color: "red" }}>

@@ -445,7 +445,7 @@ useEffect(()=>{
                         <article className="systemcont">
                             <article className="row">
                                 <article className="col-6">
-                                    <input type="text" className="clearfix form-controltopo" placeholder="IP Address" />
+                                    <input type="text" className="form-controltopo" placeholder="IP Address" />
                                 </article>
                                 <article className="col-6">
                                     <article style={{float:'right'}}>
@@ -467,7 +467,7 @@ useEffect(()=>{
                     <article className="">
                                     <article className="row border-b" style={{position:'relative'}}>
                                         <article className="col-6">
-                        <ul className="clearfix linklist">
+                        <ul className="linklist">
                             <li>
                             <button onClick={()=>{ handleStationVwVisible(); handleLinkView();}}  className={selectedTab === 'linkview' ? 'active' : ''}>
                                     {getTabLabel(textName)}
@@ -500,8 +500,9 @@ useEffect(()=>{
                         <div className="popupBoxStyle">
                             <WaysidePopupTable currentTagid={currentTagid} />
                             <button
+                            type="button"
                             onClick={() => setShowPopup(false)}
-                            className="clearfix createbtn"
+                            className="createbtn"
                             style={{ marginTop: '20px', float: 'right' }}
                             >
                             Close

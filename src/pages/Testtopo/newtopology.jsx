@@ -334,7 +334,7 @@ const handleToggle = async (nodeDatum) => {
           </article>
           <article className="col-sm-7">
             <article className="border-allsd" style={{ margin: '5px' }}>
-              <ul className="clearfix linklist border-b">
+              <ul className="linklist border-b">
                 <li><button>Link View</button></li>
                 <li><button>Network View</button></li>
               </ul>

@@ -240,21 +240,21 @@ const handleBulkDelete = async () => {
                     <article className="" style={{ height: '90vh' }}>
                         <article className="row custom-row border-tlr">
                             <article className="col-8">
-                                <button className="clearfix arrowlf">
+                                <button className="arrowlf">
                                     <i className="fa-solid fa-arrow-left"></i>
                                 </button>
-                                <button className="clearfix numcl"><span>1</span></button>
-                                <button className="clearfix arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                                <button className="numcl"><span>1</span></button>
+                                <button className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
                             </article>
                             <article className="col-4">
                                 <article style={{ float: 'right' }}>
                                     <ul className="setttinglist">
                                          <li>
-                                            <button className="clearfix createbtn" disabled={selectedTasks.length === 0}
+                                            <button className="createbtn" disabled={selectedTasks.length === 0}
                                             onClick={handleBulkDelete}>Delete Selected</button>
                                         </li>
                                         <li>
-                                            <button className="clearfix createbtn" onClick={handleProfileContopen}>New Task</button>
+                                            <button className="createbtn" onClick={handleProfileContopen}>New Task</button>
 
                                         </li>
 

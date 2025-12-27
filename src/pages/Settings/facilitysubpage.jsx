@@ -49,7 +49,7 @@ const FacilitySubCont=({handleSubContainer})=>{
                                 <span><i className="fa fa-close noticlose" onClick={handleProfileContclose} role="button"></i></span>
                             </article>
                         </article>
-                        <article className="clearfix border-allsd" style={{margin:'0 0 0 5px'}}>
+                        <article className="border-allsd" style={{margin:'0 0 0 5px'}}>
                             <article >
                                 <form action="" style={{margin: '7px 10px 0 10px'}}>
                                 <label className="settinglabelsub">Facility Name</label>
@@ -99,7 +99,7 @@ const FacilitySubCont=({handleSubContainer})=>{
 
                                 <article className="uploadcont">
                                 <p className="notepara">Note:</p>
-                                <ul className="clearfix notelist">
+                                <ul className="notelist">
                                     <li>
                                         Only Alphanumeric characters, hyphen and underscore are allowed
                                     </li>

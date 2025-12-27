@@ -254,11 +254,11 @@ const ProvisionTb = ({ getProviContData }) => {
     <>
       <article className="row custom-row border-tlr" style={{ margin: '5px 0px 0 5px' }}>
         <article className="col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1">
-          <button className="clearfix arrowlf">
+          <button type="button" className="arrowlf">
             <i className="fa-solid fa-arrow-left"></i>
           </button>
-          <button className="clearfix numcl"><span>1</span></button>
-          <button className="clearfix arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+          <button type="button" className="numcl"><span>1</span></button>
+          <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
         </article>
         <article className="col-sm-11 col-md-11 col-lg-11 col-xl-11 col-xxl-11" style={{ float: 'right' }}>
           <article style={{ float: 'right' }}>
@@ -267,9 +267,9 @@ const ProvisionTb = ({ getProviContData }) => {
                 maxWidth: '254px',
                 display: 'inline-block'
               }} />
-              <button className="clearfix createbtn" onClick={handleFirmIP} style={{ marginLeft: '7px' }}>Search</button>
-              <button className="clearfix createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
-              <button className="clearfix createbtn m-l10">Upgrade</button>
+              <button type="button" className="createbtn" onClick={handleFirmIP} style={{ marginLeft: '7px' }}>Search</button>
+              <button type="button" className="createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
+              <button type="button" className="createbtn m-l10">Upgrade</button>
               <article  style={{display:'inline-block',position:'relative'}} ref={columnWrapperRef} >
               <span className="addcloum" style={{ marginLeft: '5px' }}>Select Columns   </span><span className="glyphicon glyphicon-tasks" onClick={(e) => { e.stopPropagation(); handleAddColumn()}}></span>
             

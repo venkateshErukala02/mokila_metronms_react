@@ -193,7 +193,7 @@ useEffect(() => {
 
 return (
   <>
-    <div className='clearfix scopecontt' style={{ position: "relative" }} ref={chartContainerRef}>
+    <div className='scopecontt' style={{ position: "relative" }} ref={chartContainerRef}>
       {/* <article className={`radialchartcont ${activeChart===true ? "active" : ""}`}  */}
       <article className={`radialchartcont ${getChartClass()}`} 
 

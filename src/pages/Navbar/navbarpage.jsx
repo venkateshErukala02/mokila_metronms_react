@@ -74,7 +74,7 @@ const Navbar = () => {
            <img src={logo} alt="logo" />
             </article>
             <article className="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xxl-5">
-            <ul className="clearfix navlistone" style={{marginTop:'15px'}}>
+            <ul className="navlistone" style={{marginTop:'15px'}}>
                     <li>
                         <h6>Memory: <span>{userData.freeMemory} MB ({userData.totalMemory} MB) </span></h6>
                     </li>
@@ -90,7 +90,7 @@ const Navbar = () => {
                 </ul>
             </article>
             <article className="col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1">
-            <ul className="clearfix navlisttwo">
+            <ul className="navlisttwo">
                     <li>
                         <h6>admin</h6>
                     </li>

@@ -392,7 +392,7 @@ useEffect(() => {
 
                         </tr>
                     </thead>
-                    <tbody className="clearfix traintbone">
+                    <tbody className="traintbone">
 
 
                     {isLoading && (
@@ -486,7 +486,7 @@ useEffect(() => {
 
                         </tr>
                     </thead>
-                    <tbody className="clearfix traintbone">
+                    <tbody className="traintbone">
 
 
                     {isLoading && (
@@ -579,7 +579,7 @@ useEffect(() => {
 
                         </tr>
                     </thead>
-                    <tbody className="clearfix traintbone">
+                    <tbody className="traintbone">
 
 
                     {isLoading && (

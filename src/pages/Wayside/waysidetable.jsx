@@ -202,11 +202,11 @@ useEffect(() => {
             <article className="">
                 <article className="row border-lrr piechtcont">
                     <article className="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2">
-                        <button className="clearfix arrowlf">
+                        <button type="button" className="arrowlf">
                             <i className="fa-solid fa-arrow-left"></i>
                         </button>
-                        <button className="clearfix numcl"><span>1</span></button>
-                        <button className="clearfix arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                        <button type="button" className="numcl"><span>1</span></button>
+                        <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
 
 
                     </article>

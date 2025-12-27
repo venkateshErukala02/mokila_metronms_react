@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import '../ornms.css';
 import './../Topology/topology.css';
 
@@ -258,7 +258,7 @@ const  MapLat = ({ mapValue }) => {
                 referrerPolicy="no-referrer-when-downgrade"
                 src={iframeSrc}  
             ></iframe>
-           {mapValue == '192.168.1.41'? <article className="clearfix maptt" style={{position:'absolute',top:'60px',right:'0'}}>
+           {mapValue == '192.168.1.41'? <article className="maptt" style={{position:'absolute',top:'60px',right:'0'}}>
                 <table>
                     <tbody>
                         <tr>
@@ -270,7 +270,7 @@ const  MapLat = ({ mapValue }) => {
                         <tr><td style={{ textAlign: 'left' }}><a href="http://192.168.1.10" target="_blank" style={{ color: 'blue', fontWeight: '500' }}>{link.ipAddress}</a>&nbsp;&nbsp;{link.localCustName}</td><td><span style={{ fontWeight: '400', fontStyle: 'normal', textAlign: 'left' }}></span></td><td></td></tr><tr><td style={{ textAlign: 'left' }}><span style={{ fontWeight: '400', fontStyle: 'normal', textAlign: 'left' }}><b>SNR: L </b>{link.localSNRA1}<b>-</b>{link.localSNRA2}<b> : R </b>{link.remoteSNRA1}<b>-</b>{link.remoteSNRA2}</span></td>
                             <td style={{ textAlign: 'left' }}><span style={{ fontWeight: '400', fontStyle: 'normal', textAlign: 'left', paddingLeft: '10px' }}><b> Link Id : </b>{link.localLinkId}</span></td><td><span style={{ fontWeight: '400', fontStyle: 'normal', textAlign: 'left', paddingLeft: "10px" }}>{link.distance}</span></td></tr></tbody></table>
             </article> :''} 
-            {mapValue == '192.168.1.42'? <article className="clearfix maptt" style={{position:'absolute',top:'60px',right:'0'}}>
+            {mapValue == '192.168.1.42'? <article className="maptt" style={{position:'absolute',top:'60px',right:'0'}}>
                 <table>
                     <tbody>
                         <tr>

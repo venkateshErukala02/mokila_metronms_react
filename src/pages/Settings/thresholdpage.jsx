@@ -114,12 +114,12 @@ const ThresholdContainer=()=>{
                             <article className="row custom-row border-tlr">
                                 <article className="col-8">
                                     <article className="p-lr">
-                                    <button className="clearfix createbtn" type="button" onClick={handleReloadTable}>Refresh Table</button></article>
+                                    <button className="createbtn" type="button" onClick={handleReloadTable}>Refresh Table</button></article>
                                 </article>
                                 <article className="col-4">
                                     <article className="p-lr" style={{ float: 'right' }}>
                                       
-                                   <button className="clearfix createbtn" type="button" onClick={handleReloadConfig} >Reload Configuration</button>
+                                   <button className="createbtn" type="button" onClick={handleReloadConfig} >Reload Configuration</button>
 
                                     </article>
                                 </article>

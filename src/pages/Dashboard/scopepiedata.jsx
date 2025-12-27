@@ -36,29 +36,29 @@ const dataString = {
 const Tabletwo = ({tabData}) => {
   return (
     <div style={{margin:'3px 14px 0 5px'}}>
-      <article className="clearfix border-close">
-              <article className="clearfix right-block-1">
-                <article className="clearfix">
-                  <button className="clearfix arrowlf">
+      <article className="border-close">
+              <article className="right-block-1">
+                <article>
+                  <button type="button" className="arrowlf">
                     <i className="fa-solid fa-arrow-left"></i>
                   </button>
-                  <button className="clearfix numcl"><span>1</span></button>
-                  <button className="clearfix arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                  <button type="button" className="numcl"><span>1</span></button>
+                  <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
                 </article>
               </article>
-              <article className="clearfix right-block-2" style={{marginLeft:"49%"}}>
-                <ul  className="clearfix sellist">
+              <article className="right-block-2" style={{marginLeft:"49%"}}>
+                <ul  className="sellist">
                   <li>
                   <input type="text" name="" placeholder="IP Address / System Name / Serial Number" id="" className="form-control searchbar" />
 
                   </li>
                   <li>
-                  <button className="clearfix createbtn">Search</button>
+                  <button type="button" className="createbtn">Search</button>
 
                   </li>
                   <li>
                   <span className="addcllo">Add Columns 
-                  <button className="clearfix taskbtn" onclick=""><span
+                  <button type="button" className="taskbtn" onclick=""><span
                         className="glyphicon glyphicon-tasks"></span></button>
                         </span>
                 <select className="selecl" value="select" style={{width:"auto",marginLeft:'10px'}} aria-invalid="false">
@@ -73,9 +73,9 @@ const Tabletwo = ({tabData}) => {
 
               </article>
             </article>
-      <article className="clearfix tableart">
+      <article className="tableart">
       <table border="1" className="tabletwocl">
-        <thead className="clearfix tbtwo">
+        <thead className="tbtwo">
           <tr style={{ backgroundColor: '#ffffff00' }}>
             <th>System Name</th>
             <th>Primary IP</th>
@@ -87,7 +87,7 @@ const Tabletwo = ({tabData}) => {
             <th>Uptime</th>
           </tr>
         </thead>
-        <tbody className="clearfix tbdata">
+        <tbody className="tbdata">
           {dataString.nodes.map((node, index) => (
             <tr key={index}>
               <td>{node.sysName}</td>

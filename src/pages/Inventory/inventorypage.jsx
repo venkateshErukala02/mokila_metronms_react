@@ -333,11 +333,11 @@ const InventRpt = () => {
 
                         <article className="row custom-row border-allsd">
                             <article className="col-md-7">
-                                <button className="clearfix arrowlf" onClick={handleDecrementOffset}>
+                                <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
                                     <i className="fa-solid fa-arrow-left"></i>
                                 </button>
-                                <button className="clearfix numcl"><span>{pageSize}</span></button>
-                                <button className="clearfix arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
+                                <button type="button" className="numcl"><span>{pageSize}</span></button>
+                                <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
                                 <span className="eventscp">Scope : </span>
                                 <span className="eventgolcl" onClick={toggleDropdown}  >Golbal <span className="fa fa-chevron-down highlightText v-align-tt iconsy"></span></span>
 
@@ -345,8 +345,8 @@ const InventRpt = () => {
                                 <span className="totalcl">Good: <span>{activeTrueCount}</span></span>
                                 <span className="totalcl">Down: <span>{activeFalseCount}</span></span>
                                 <input type="text" style={{ marginRight: '10px' }} name="" placeholder="IP Address / System Name / Serial Number" id="" value={searchText} onChange={(e)=> setSearchText(e.target.value)} className="form-controlinventory" />
-                                <button className="clearfix createbtn" type="button" onClick={handleSearchClick}>Search</button>
-                                <button className="clearfix createbtn" type="button" onClick={handleClearSearch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
+                                <button type="button" className="createbtn" onClick={handleSearchClick}>Search</button>
+                                <button className="createbtn" type="button" onClick={handleClearSearch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
 
                             </article>
                             <article className="col-md-5">
@@ -389,19 +389,19 @@ const InventRpt = () => {
                                     )}
                                         </li>
                                         <li>
-                                            <button className="clearfix createbtn" onClick={handleBulkDelete}>Delete
+                                            <button type="button" className="createbtn" onClick={handleBulkDelete}>Delete
                                                 <i className="fa fa-trash" aria-hidden="true"></i>
                                             </button>
 
                                         </li>
                                         <li>
-                                            <button className="clearfix createbtn">Inventory Report
+                                            <button type="button" className="createbtn">Inventory Report
                                                 <i className="fa fa-file-text" aria-hidden="true"></i>
                                             </button>
 
                                         </li>
                                         <li>
-                                            <button className="clearfix createbtn">Node Report
+                                            <button type="button" className="createbtn">Node Report
                                                 <span className="fa fa-file-pdf-o"></span>
                                             </button>
 

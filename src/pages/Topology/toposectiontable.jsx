@@ -83,11 +83,11 @@ const TopoSectionTable=({textName})=>{
         <article className="piechtcont">
                 <article className="row border-lrr">
                     <article className="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2">
-                        <button className="clearfix arrowlf">
+                        <button type="button" className="arrowlf">
                             <i className="fa-solid fa-arrow-left"></i>
                         </button>
-                        <button className="clearfix numcl"><span>1</span></button>
-                        <button className="clearfix arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                        <button type="button" className="numcl"><span>1</span></button>
+                        <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
 
 
                     </article>
@@ -95,13 +95,13 @@ const TopoSectionTable=({textName})=>{
                         <ul className="searchdashlist">
                             <li>
                                 <input name="" value={lineipText} onChange={(e) => setLineipText(e.target.value)} placeholder="IP Address / System Name / Serial Number" id="" className="form-control1 searchbar1" />
-                                <button className="clearfix createbtn" onClick={() => {
+                                <button type="button" className="createbtn" onClick={() => {
                                     // const url = `api/v2/nodes/search?_s=assetRecord.serialNumber==${radialipText},sysName==${radialipText},label==${radialipText}&limit=${limitValueSelLabel}&offset=0&order=asc`;
                                     // handleRadialIP(url);
                                 }}
 
                                     style={{ marginLeft: '7px' }}>Search</button>
-                                <button className="clearfix createbtn" onClick={handleClearSerch} style={{ marginLeft: '7px', display: searchBtn ? 'inline-block' : 'none' }}> Clear Search</button>
+                                <button type="button" className="createbtn" onClick={handleClearSerch} style={{ marginLeft: '7px', display: searchBtn ? 'inline-block' : 'none' }}> Clear Search</button>
 
                             </li>
                             <li>

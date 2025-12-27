@@ -58,11 +58,11 @@ const SummaryTable=()=>{
         <>
          <article className="row border-tlr custom-row" style={{ margin: '5px 0px 0 5px' }}>
               <article className="col-5">
-                <button className="clearfix arrowlf">
+                <button type="button" className="arrowlf">
                   <i className="fa-solid fa-arrow-left"></i>
                 </button>
-                <button className="clearfix numcl"><span>1</span></button>
-                <button className="clearfix arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                <button type="button" className="numcl"><span>1</span></button>
+                <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
               </article>
               <article className="col-7">
                 <article style={{ float: 'right' }}>
@@ -75,7 +75,7 @@ const SummaryTable=()=>{
                 </article>
               </article>
             </article>
-            <article className="clearfix border-allsd summarytbscroll" style={{margin: '0px 0px 0px 5px'}}>
+            <article className="border-allsd summarytbscroll" style={{margin: '0px 0px 0px 5px'}}>
               <article className="row">
                 <table className="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
                   <thead className="distbtwo tableheadpost">

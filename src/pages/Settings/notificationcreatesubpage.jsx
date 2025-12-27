@@ -124,7 +124,7 @@ useEffect(()=>{
                                 <span><i className="fa fa-close noticlose" onClick={handleProfileContclose} role="button"></i></span>
                             </article>
                         </article>
-                        <article className="clearfix border-allsd" style={{margin:'0 0 0 5px'}}>
+                        <article className="border-allsd" style={{margin:'0 0 0 5px'}}>
                             <article >
                                 <form action="" style={{margin: '7px 10px 0 10px'}}>
                                 <label className="settinglabelsub">Name</label>
@@ -206,7 +206,7 @@ useEffect(()=>{
                                {!isEditMode && <article>
                                 <p className="notepara">Special Values:</p>
                                 <hr className="hrnote" />
-                                <ul className="clearfix notelist">
+                                <ul className="notelist">
                                     <li>
                                     %noticeid% : Notification ID number
                                     </li>

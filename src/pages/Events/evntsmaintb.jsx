@@ -368,30 +368,30 @@ const EventMainTB = () => {
             <article className="row border-tlr custom-row">
                 <article className="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xxl-5">
                     <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block' }}>
-                        <button className="clearfix arrowlf" onClick={handleDecrementOffset}>
+                        <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
                             <i className="fa-solid fa-arrow-left"></i>
                         </button>
-                        <button className="clearfix numcl"><span>{pageSize}</span></button>
-                        <button className="clearfix arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
+                        <button type="button" className="numcl"><span>{pageSize}</span></button>
+                        <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
                         <span className="eventscp">Scope : </span>
                         <span className="eventgolcl" onClick={toggleDropdown} >Golbal <span className="fa fa-chevron-down highlightText v-align-tt iconsy"></span></span>
 
                         <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="IP Address " id="" className="form-controlevents" />
-                        <button className="clearfix createbtn" onClick={() => { handleRadialIP();}} >Search</button>
-                        <button className="clearfix createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
+                        <button type="button" className="createbtn" onClick={() => { handleRadialIP();}} >Search</button>
+                        <button type="button" className="createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
 
 
                     </article>
                     <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
-                        <button className="clearfix arrowlf" onClick={handleDecrementOffset}>
+                        <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
                             <i className="fa-solid fa-arrow-left"></i>
                         </button>
-                        <button className="clearfix numcl"><span>{pageSize}</span></button>
-                        <button className="clearfix arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
+                        <button type="button" className="numcl"><span>{pageSize}</span></button>
+                        <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
 
                          <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="IP Address " id="" className="form-controlevents" />
-                        <button className="clearfix createbtn" onClick={() => { handleRadialIP();}} >Search</button>
-                        <button className="clearfix createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
+                        <button type="button" className="createbtn" onClick={() => { handleRadialIP();}} >Search</button>
+                        <button type="button" className="createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
                     </article>
 
                 </article>
@@ -594,7 +594,7 @@ const EventMainTB = () => {
                     <button type="button" className="closebtn" onClick={toggleDropdown}>X</button>
                 </article>
                 <article>
-                    <ul className="clearfix globli">
+                    <ul className="globli">
                         <li>
                             <label className="labglo">Global
                                 <input type="radio" value="Global" className="radinp" aria-checked="true" />

@@ -316,24 +316,24 @@ useEffect(() => {
                                 </select>
                                 <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} tagTypeValue={tagTypeValue} />
                                   <article className="tagupload-container">
-                                        <ul className="clearfix discovlist" style={{paddingBottom:'40px'}}>
+                                        <ul className="discovlist" style={{paddingBottom:'40px'}}>
                         <li><button className={activeCont === 'Address' ? 'active' : ''} onClick={() => handleActiveCont('Address')}> Add Tag</button></li>
                         <li><button className={activeCont === 'Upload' ? 'active' : ''} onClick={() => handleActiveCont('Upload')}>Tag Upload</button></li>
                     </ul>
                     {activeCont === 'Address' && ( 
                         <article className="regioncontw">
-                                            <ul className="clearfix ipaddlistone">
+                                            <ul className="ipaddlistone">
                             <li>
                                 <input
                                     type="text"
-                                    className="clearfix form-controldis searchbar"
+                                    className="form-controldis searchbar"
                                     placeholder="Specific Tag"
                                     value={discAddValue}
                                     onChange={(e) => setDiscAddValue(e.target.value)}
                                 />
                             </li>
                              <li>
-                               <select name="name" id="name" value={westSideView} onChange={handleWestside} className="clearfix form-controldis searchbar">
+                               <select name="name" id="name" value={westSideView} onChange={handleWestside} className="form-controldis searchbar">
                                     {stationNamesData.length !== 0 && stationNamesData[0].map((station,index) => {
                                         const dataNw = Object.keys(station);
                                         const staionNametitle = dataNw[0];
@@ -345,10 +345,10 @@ useEffect(() => {
                             </li>
                         </ul>
                         <article style={{justifyContent:'center',display:'flex',marginTop:"10px"}}>
-                                <button className="clearfix tagsubmit-button" onClick={handleUpload} disabled={isLoading}>
+                                <button type="button" className="tagsubmit-button" onClick={handleUpload} disabled={isLoading}>
                                     {isLoading ? 'Submiting...' : 'Submit'}
                                 </button>
-                                <button className="clearfix resetbtn" onClick={handleAddReset}>
+                                <button type="button" className="resetbtn" onClick={handleAddReset}>
                                     Reset
                                 </button>
 
@@ -379,7 +379,7 @@ useEffect(() => {
                         <article className="col-sm-9 col-md-9 col-lg-9 col-xl-9 col-xxl-9">
                            
                                 <article className="border-allsd">
-                                    <ul className="clearfix linklist border-b">
+                                    <ul className="linklist border-b">
                                         <li><button onClick=''>{getTabLabel(westSideView)}{stationTagview && (<span> - Station Tags<button onClick={handleStationTabview}>x</button></span>)}
                                             {lineTagview && (<span> - Line Tags<button onClick={handleStationTabview}>x</button></span>)}
                                         </button></li>
@@ -394,7 +394,7 @@ useEffect(() => {
                         <div className="popupStyle">
                             <div className="popupBoxStyle">
                                 <WaysidePopupTable currentTagid={currentTagid} />
-                                <button onClick={() => setShowPopup(false)} className="clearfix createbtn" style={{ marginTop: '20px', float: "right" }}>Close</button>
+                                <button type="button" onClick={() => setShowPopup(false)} className="createbtn" style={{ marginTop: '20px', float: "right" }}>Close</button>
                             </div>
                         </div>
                     )}

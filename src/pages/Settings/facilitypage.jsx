@@ -76,23 +76,23 @@ const FacilityContainer=()=>{
                         <article className="" style={{ height: '90vh' }}>
                             <article className="row custom-row border-tlr">
                                 <article className="col-8">
-                                    <button className="clearfix arrowlf">
+                                    <button type="button" className="arrowlf">
                                         <i className="fa-solid fa-arrow-left"></i>
                                     </button>
-                                    <button className="clearfix numcl"><span>1</span></button>
-                                    <button className="clearfix arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                                    <button type="button" className="numcl"><span>1</span></button>
+                                    <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
                                     <input type="text" style={{ marginRight: '10px' }} name="" placeholder="Search Region" id="" className="form-controlstting" />
-                                    <button className="clearfix createbtn">Search</button>
+                                    <button type="button" className="createbtn">Search</button>
                                 </article>
                                 <article className="col-4">
                                     <article style={{ float: 'right' }}>
                                         <ul className="setttinglist">
                                             <li>
-                                                <button className="clearfix createbtn">Export</button>
+                                                <button type="button" className="createbtn">Export</button>
 
                                             </li>
                                             <li>
-                                                <button className="clearfix createbtn" onClick={handleProfileContopen}>Create</button>
+                                                <button type="button" className="createbtn" onClick={handleProfileContopen}>Create</button>
 
                                             </li>
 

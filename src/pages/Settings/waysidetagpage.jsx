@@ -244,18 +244,18 @@ const WaysideTagContainer=()=>{
                                        </article>
                             <article className="row custom-row border-tlr">
                                 <article className="col-8">
-                                    <button type="button" className="clearfix arrowlf" onClick={handleDecrement}>
+                                    <button type="button" className="arrowlf" onClick={handleDecrement}>
                                         <i className="fa-solid fa-arrow-left"></i>
                                     </button>
-                                    <button type="button" className="clearfix numcl"><span>{pageCount}</span></button>
-                                    <button type="button" className="clearfix arrowlf" onClick={handleIncrement}><i className="fa-solid fa-arrow-right"></i></button>
+                                    <button type="button" className="numcl"><span>{pageCount}</span></button>
+                                    <button type="button" className="arrowlf" onClick={handleIncrement}><i className="fa-solid fa-arrow-right"></i></button>
                                 </article>
                                 <article className="col-4">
                                     <article style={{ float: 'right'}}>
                                         <ul className="setttinglist">
                                             <li>
                                                  <input type="text" style={{ marginRight: '10px' }} name="" placeholder="Tag Number" id="" className="form-controlinventory" />
-                                <button className="clearfix createbtn">Search</button>
+                                <button type="button" className="createbtn">Search</button>
 
                                             </li>
 

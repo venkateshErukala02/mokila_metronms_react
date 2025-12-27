@@ -285,18 +285,18 @@ const NotificationContainer=()=>{
                             <article className="row custom-row border-tlr">
                                 <article className="col-8">
                                    <article className="p-lr">
-                                   <button className="clearfix createbtn" type="button" onClick={handleDisableNotificationStatus}>{disableNotifiBtnStatus === true ? ("Disable Notification") : ("Enable Notification")}</button>
+                                   <button className="createbtn" type="button" onClick={handleDisableNotificationStatus}>{disableNotifiBtnStatus === true ? ("Disable Notification") : ("Enable Notification")}</button>
                                    </article>
                                 </article>
                                 <article className="col-4">
                                     <article style={{ float: 'right' }}>
                                         <ul className="setttinglist">
                                             <li>
-                                                <button className="clearfix createbtn"  onClick={()=>handleNotfiSubCont('createNotification')}>Create Notification</button>
+                                                <button type="button" className="createbtn"  onClick={()=>handleNotfiSubCont('createNotification')}>Create Notification</button>
 
                                             </li>
                                             <li>
-                                                <button className="clearfix createbtn" onClick={()=>handleNotfiSubCont('createNotificationpath')}>Create Destination Path</button>
+                                                <button type="button" className="createbtn" onClick={()=>handleNotfiSubCont('createNotificationpath')}>Create Destination Path</button>
                                             </li>
 
                                            

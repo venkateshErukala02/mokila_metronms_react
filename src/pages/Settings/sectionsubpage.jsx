@@ -150,7 +150,7 @@ useEffect(()=>{
                                 <span><i className="fa fa-close noticlose" onClick={handleProfileContclose} role="button"></i></span>
                             </article>
                         </article>
-                        <article className="clearfix border-allsd" style={{margin:'0 0 0 5px'}}>
+                        <article className="border-allsd" style={{margin:'0 0 0 5px'}}>
                             <article >
                                 <form action="" style={{margin: '7px 15px 0 10px'}}>
                                 <label className="settinglabelsub">Section Name</label>
@@ -173,7 +173,7 @@ useEffect(()=>{
 
                                 <article className="uploadcont">
                                 <p className="notepara">Note:</p>
-                                <ul className="clearfix notelist">
+                                <ul className="notelist">
                                     <li>
                                     Special characters single quote(') and space are not allowed
                                     </li>

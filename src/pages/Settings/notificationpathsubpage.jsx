@@ -25,7 +25,7 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt})=>{
                                 <span><i className="fa fa-close noticlose" onClick={handleProfileContclose} role="button"></i></span>
                             </article>
                         </article>
-                        <article className="clearfix border-allsd" style={{margin:'0 0 0 5px'}}>
+                        <article className="border-allsd" style={{margin:'0 0 0 5px'}}>
                             <article >
                                 <form action="" style={{margin: '7px 10px 0 10px'}}>
                                 <label className="settinglabelsub">Modify Path</label>

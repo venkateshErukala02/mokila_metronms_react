@@ -122,7 +122,7 @@ const TrainLogs = ({ trainId }) => {
 
                                     </tr>
                                 </thead>
-                                <tbody className="clearfix tbone">
+                                <tbody className="tbone">
 
 
                                     {isLoading && (

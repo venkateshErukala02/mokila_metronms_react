@@ -279,7 +279,7 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
                                 <span><i className="fa fa-close noticlose" onClick={handleProfileContclose} role="button"></i></span>
                             </article>
                         </article>
-                        <article className="clearfix border-allsd" style={{margin:'0 0 0 5px'}}>
+                        <article className="border-allsd" style={{margin:'0 0 0 5px'}}>
                             <article >
                                 <form action="" style={{margin: '7px 10px 0 10px'}}>
                                 <label className="settinglabelsub">Station Name</label>
@@ -319,7 +319,7 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
                                 />
                           {isEditMode &&   <article>
                             <p className="notepara">Note:</p>
-                            <ul className="clearfix notelist"><li>Special characters single quote(') and space are not allowed</li><li>A maximum of 32 characters can be added</li></ul>
+                            <ul className="notelist"><li>Special characters single quote(') and space are not allowed</li><li>A maximum of 32 characters can be added</li></ul>
                             </article>} 
 
                                 <article className="uploadcont">

@@ -214,7 +214,7 @@ const DashBoardPage = () => {
                         <button type="button" className="closebtn" onClick={toggleDropdown}>X</button>
                     </article>
                     <article className=''>
-                        <ul className="clearfix globli">
+                        <ul className="globli">
                             <li>
                                 <label className="labglo">Global
                                     <input type="radio" value="Global" className="radinp" aria-checked="true" />

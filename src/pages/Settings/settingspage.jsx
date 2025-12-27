@@ -103,9 +103,9 @@ const SettPage = () => {
                     <h1 className="settingtitle">Settings</h1>
                     <article className="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2">
                         <article>
-                            <ul className="clearfix list-pn proflist">
-                                <li><a href="" className="clearfix profilel new" onClick={(e) => showDropdown('profile',e)}><i className="fa fa-lg fa-cog"></i>Settings</a>
-                                    <ul className="clearfix profsublist list-pn" id="vlan" style={{ display: 'block' }}>
+                            <ul className="list-pn proflist">
+                                <li><a href="" className="profilel new" onClick={(e) => showDropdown('profile',e)}><i className="fa fa-lg fa-cog"></i>Settings</a>
+                                    <ul className="profsublist list-pn" id="vlan" style={{ display: 'block' }}>
                                         <li onClick={() => SelectSettingCont('lines')}><img src={LinesIcon} alt="line"/> Lines</li>
                                         <li onClick={() => SelectSettingCont('sections')}><img src={SectionIcon} alt="section"/> Sections</li>
                                         <li onClick={() => SelectSettingCont('stations')}><img src={StationIcon} alt="station"/> Stations</li>
