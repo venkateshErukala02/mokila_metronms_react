@@ -2951,6 +2951,78 @@ svg *:focus {
   height: 400px;
 }
 
+.confirmdeletepopup{
+    position: fixed;
+    background-color: rgba(0,0,0,0.5);
+    width: 100Vh;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.confirmdeletepopupboxstyle{
+    background: #fff;
+    border-radius: 8px;
+    height: 143px;
+    padding: 5px 10px;
+    width: 762px;
+}
+
+.confirmmsgsuccess{
+    background-color: rgba(0,0,0,0.5);
+    width: 100Vh;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.confirmmsgsuccessboxstyle{
+    background: #fff;
+    border-radius: 8px;
+    height: 143px;
+    padding: 5px 10px;
+    width: 500px;
+}
+
+.f-r{
+    float: right;
+}
+
+.confirmdeletetitle{
+    font-size: 20px;
+    padding: 23px;
+}
+
+.confirmdeletebtn{
+    padding: 12px 32px;
+    font-size: 14px;
+    color: rgb(63,81,181);
+    background: white;
+    border: 0;
+    cursor: pointer;
+    overflow: hidden;
+    transition: box-shadow .4s cubic-bezier(.25,.8,.25,1),background-color .4s cubic-bezier(.25,.8,.25,1);
+    text-transform: uppercase;
+    letter-spacing: .010em;
+}
+
+.confirmdeletebtnyes{
+     background-color: rgba(158,158,158,0.2);
+     margin-left: 8px;
+}
+
+.confirmdeletebtn:hover{
+    background-color: rgba(158,158,158,0.2);
+}
+
 .Addcoldropdownart{
    background-color: #fff;
     height: 150px;
@@ -3034,7 +3106,7 @@ svg *:focus {
 .eventboxstyle{
     background-color: white;
     border-radius: 10px;
-    height: 36vh;
+    height: auto;
     width: 500px;
 }
 
@@ -3050,8 +3122,7 @@ svg *:focus {
   padding: 0 8px;
   background: white;
   width: 127px;
-  position: absolute;
-  bottom: 211px;
+  transform: translateY(-21px);
 }
 
 .evntdetailtitle{

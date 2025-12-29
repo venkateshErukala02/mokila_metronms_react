@@ -106,7 +106,7 @@ const ObcSummaryTab = ({ nodeItemDt, currentTab }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      let url = `http://localhost:8084/${currentTab}/api/v1/disk`;
+      let url = `http://${nodeIpaddress}:8084/${currentTab}/api/v1/disk`;
       await getDiskData(url);
     };
     fetchData();

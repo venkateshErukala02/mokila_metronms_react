@@ -20,6 +20,8 @@ const FirmwareMng = () => {
     const [showList, setShowList] = useState(false);
     const previousDataRef = useRef(null);
     const [sortOrder, setSortOrder] = useState('fileName.asc');
+    const [showConfirmDeletePopupStatus, setShowConfirmDeletePopupStatus] = useState(false);
+    const [firmwareToDelete, setFirmwareToDelete] = useState(null);
 
     const getVersionData = async (url,isInterval = false) => {
          if(previousDataRef.current === ''){
@@ -141,18 +143,17 @@ const FirmwareMng = () => {
         ) || [];
 
 
-           const handleDeleteFirmMng = async (item) => {
+           const handleConfirmDeleteFirmware = async () => {
+            if (!firmwareToDelete) return;
        
         const method = 'POST';
         // const url= isEditMode  ? `rest/users/${user["user-id"]}` :'rest/users';
-        const confirmDel = window.confirm("Are you sure you want to delete this firmware?");
-        if (!confirmDel) return;
     
         try {
             const username = 'admin';
             const password = 'admin';
             const token = btoa(`${username}:${password}`)
-            const response = await fetch(`api/v2/firmware/delete?firmware=${item.version}_${item.fileName}`, {
+            const response = await fetch(`api/v2/firmware/delete?firmware=${firmwareToDelete.actualName}`, {
                 method,
                 headers: {
                     'Authorization': `Basic ${token}`,
@@ -165,6 +166,9 @@ const FirmwareMng = () => {
             const text = await response.text();
 
             if (response.ok) {
+                setShowConfirmDeletePopupStatus(false);
+                setFirmwareToDelete(null);
+                getVersionData('api/v2/firmware/firmwares?&page=1&limit=50&sort=fileName.asc')
                 // alert("Are you sure you want to delete this firmware?")
                 // if(refreshUserData) refreshUserData();
             //    setUserName('');
@@ -199,6 +203,18 @@ const FirmwareMng = () => {
                 setSortOrder(`${field}.asc`);
             }
         };
+
+        const handleClosePopup = () => {
+            setShowConfirmDeletePopupStatus(false);
+            setFirmwareToDelete(null);
+        };
+
+        const handleOpenDeletePopup = (item) => {
+            setFirmwareToDelete(item);
+            setShowConfirmDeletePopupStatus(true);
+        };
+
+
 
     return (
         <>
@@ -329,12 +345,23 @@ const FirmwareMng = () => {
                                             <td>{formatDate(item.createdTime)}</td>
                                             <td>{item.deviceType}</td>
                                             <td><i className="fas fa-edit" onClick={() => handleEditLineDt(item)}></i></td>
-                                            <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" onClick={()=>handleDeleteFirmMng(item)}></i></td>
+                                            <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" onClick={()=>handleOpenDeletePopup(item)}></i></td>
                                         </tr>
                                     ))}
 
                                 </tbody>
                             </table>
+                            {showConfirmDeletePopupStatus && <>
+                            <article className="confirmdeletepopup">
+                                <article className="confirmdeletepopupboxstyle">
+                                <h1 className="confirmdeletetitle">Are you sure you want to delete this firmware?</h1>
+                                <article className="f-r">
+                                <button className="confirmdeletebtn" type="button" onClick={handleClosePopup}>NO</button>
+                                <button className="confirmdeletebtn confirmdeletebtnyes" type="button" onClick={handleConfirmDeleteFirmware}>YES</button>
+                                </article>
+                                </article>
+                            </article>
+                            </>}
                         </article>
                     </article>
                 </article>

@@ -50,7 +50,8 @@ const InventRpt = () => {
     const [dropDownShow,setDropDownShow] = useState(false);
     const columnWrapperRef =  useRef(null);
     const [visibleColumns, setVisibleColumns] = useState(DEFAULT_COLUMNS);
-
+    const firstLoadRef = useRef(true);
+    const [showConfirmDeletePopupStatus,setShowConfirmDeletePopupStatus] = useState(false);
 
     useEffect(()=>{
         const handleClickOutside=(event)=>{
@@ -127,7 +128,9 @@ const InventRpt = () => {
          const fieldToUse =   fieldMappings[sortField] !== undefined
                             ? fieldMappings[sortField]
                             : sortField;
-        setIsLoading(true);
+        if (firstLoadRef.current) {
+            setIsLoading(true);
+            }
         setIsError({ status: false, msg: "" });
         try {
             const url = `api/v2/nodes?_s=&limit=${limitValueSelLabel}&offset=${pageSize}&order=${sortOrder}&orderBy=${fieldToUse}`;
@@ -140,7 +143,6 @@ const InventRpt = () => {
             const response = await fetch(url, options);
             const data = await response.json();
             if (response.ok) {
-                setIsLoading(false);
                 setInvenData(data);
                 setIsError({ status: false, msg: "" });
             } else {
@@ -149,6 +151,11 @@ const InventRpt = () => {
         } catch (error) {
             setIsLoading(false);
             setIsError({ status: true, msg: error.message });
+        }finally {
+            if (firstLoadRef.current) {
+            setIsLoading(false);
+            firstLoadRef.current = false;
+        }
         }
     };
 
@@ -184,22 +191,25 @@ const InventRpt = () => {
     };
 
     const getNodeIdsBySelectedIPs = () => {
-        if (!Array.isArray(invenData.node)) return [];
-        return invenData.node
-            .filter((node) => selectedRows.includes(node.ipConfig.ipAddress))
-            .map((node) => node.id);
+        // if (!Array.isArray(invenData.node)) return [];
+        // return invenData.node
+        //     .filter((node) => selectedRows.includes(node.ipConfig.ipAddress))
+        //     .map((node) => node.id);
+         return selectedRows;
     };
 
 
-    const handleBulkDelete = async () => {
-
-
-        const idsToDelete = getNodeIdsBySelectedIPs();
-
-        if (idsToDelete.length === 0) {
+    const handleBulkDelete = () => {
+        if (selectedRows.length === 0) {
             alert("No rows selected to delete.");
             return;
         }
+        setShowConfirmDeletePopupStatus(true);
+    };
+
+    const handleConfirmDelete = async () => {
+
+        const idsToDelete = selectedRows;
 
         const bodyData = new URLSearchParams();
         idsToDelete.forEach((id) => {
@@ -218,15 +228,16 @@ const InventRpt = () => {
 
             if (response.ok) {
                 setSuccess("Node deleted successfully");
-                alert('Node deleted successfully');
-                const updatedNodes = invenData.node.filter(node => node.id !== idsToDelete);
+                // alert('Node deleted successfully');
+                setShowConfirmDeletePopupStatus(false);
+                const updatedNodes = invenData.node.filter(node =>  !idsToDelete.includes(node.id));
                 setInvenData(prev => ({
                     ...prev,
                     node: updatedNodes,
                     totalCount: updatedNodes.length
                 }));
-                setSelectedRows([])
-
+                setSelectedRows([]);
+                getDataInvety();
             } else {
                 setIsError({ status: true, msg: "Error deleting node" });
             }
@@ -242,19 +253,20 @@ const InventRpt = () => {
 
 
     const handleSelectAll = () => {
-        const allKeys = invenData.node.map((node) => node.ipConfig.ipAddress);
-        if (selectedRows.length === invenData.node.length) {
+         if (!Array.isArray(invenData.node)) return;
+        const allIds = invenData.node.map(node => node.id);
+       if (selectedRows.length === allIds.length) {
             setSelectedRows([]);
         } else {
-            setSelectedRows(allKeys);
+            setSelectedRows(allIds);
         }
     };
 
-    const handleCheckboxChange = (key) => {
+    const handleCheckboxChange = (id) => {
         setSelectedRows((prevSelected) =>
-            prevSelected.includes(key)
-                ? prevSelected.filter((rowKey) => rowKey !== key)
-                : [...prevSelected, key]
+            prevSelected.includes(id)
+                ? prevSelected.filter((item) => item !== id)
+                : [...prevSelected, id]
         );
     };
 
@@ -321,6 +333,10 @@ const InventRpt = () => {
       }
 
       const nodes = Array.isArray(invenData.node) ? invenData.node : [];
+
+      const handleClosePopup=()=>{
+        setShowConfirmDeletePopupStatus(false);
+      }
 
     return (
         <>
@@ -462,14 +478,40 @@ const InventRpt = () => {
 
                                 </thead>
                                 <tbody className="inventbdtb">
-                                    {nodes.length > 0 ? (
+
+                                         {isLoading && (
+                                <tr>
+                                    <td colSpan="8" style={{ textAlign: "center" }}>
+                                        Loading...
+                                    </td>
+                                </tr>
+                            )}
+
+                            {isError.status && (
+                                <tr>
+                                    <td colSpan="8" style={{ textAlign: "center", color: "red" }}>
+                                        {isError.msg}
+                                    </td>
+                                </tr>
+                            )}
+
+                            {!isLoading && !firstLoadRef.current  && nodes.length === 0 &&  (
+                                <tr>
+                                    <td colSpan="8" style={{ textAlign: "center" }}>
+                                        No Data Available
+                                    </td>
+                                </tr>
+                            )}
+
+                                    {!isLoading &&
+                                    !isError.status && nodes.length > 0 ? (
                                         nodes.map((node) => (
                                            <tr key={node.ipAddress}>
                                             <td style={{ paddingLeft: '18px' }}>
                                             <input
                                                 type="checkbox"
-                                                checked={selectedRows.includes(node.ipAddress)}
-                                                onChange={() => handleCheckboxChange(node.ipAddress)}
+                                                checked={selectedRows.includes(node.id)}
+                                                onChange={() => handleCheckboxChange(node.id)}
                                             />
                                             </td>
 
@@ -491,6 +533,28 @@ const InventRpt = () => {
                                     )}
                                 </tbody>
                             </table>
+                            {showConfirmDeletePopupStatus && <>
+                            <article className="confirmdeletepopup">
+                                <article className="confirmdeletepopupboxstyle">
+                                <h1 className="confirmdeletetitle">All the device data will be lost. Are you sure you want to delete the device?</h1>
+                                <article className="f-r">
+                                <button className="confirmdeletebtn" type="button" onClick={handleClosePopup}>NO</button>
+                                <button className="confirmdeletebtn confirmdeletebtnyes" type="button" onClick={handleConfirmDelete}>YES</button>
+                                </article>
+                                </article>
+                            </article>
+                            </>}
+                             {/* {showSuccessPopupStatus && <>
+                            <article className="confirmmsgsuccess">
+                                <article className="confirmmsgsuccessboxstyle">
+                                <h1 className="confirmdeletetitle">Success</h1>
+                                <p>Node Deleted successfully.</p>
+                                <article className="f-r">
+                                <button className="confirmdeletebtn confirmdeletebtnyes" type="button" onClick={handleClosePopup}>ok</button>                                
+                                </article>
+                                </article>
+                            </article>
+                            </>} */}
                         </article>
                     </article>
                     </article>

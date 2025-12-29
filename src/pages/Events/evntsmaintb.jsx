@@ -581,7 +581,7 @@ const EventMainTB = () => {
                                 <p className="eventpopupdescrpt">{eventpopupData.description}</p>
                                 </fieldset>
                                 </article>
-                                <article style={{textAlign:'center'}}>
+                                <article style={{textAlign:'center',marginBottom:'12px'}}>
                                     <button className="createbtn" type="button" onClick={handleEventPopupClose}>Close</button>
                                 </article>
                             </article>

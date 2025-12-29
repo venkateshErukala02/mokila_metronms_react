@@ -186,7 +186,7 @@ const WaysidePopupTable = ({ currentTagid }) => {
                                     rowNode.times && rowNode.times.length > 0 ? (
                                     rowNode.times.map((timeNode, timeIndex) => (
                                         <tr key={`${rowIndex}-${timeIndex}`}>
-                                        <td><a href={`http://localhost:8980/metronms/api/v2/wayside/tagfile/${timeNode.cab}?file=${timeNode.file}`} target="_blank">{timeNode.cab}</a></td>
+                                        <td><a href={`api/v2/wayside/tagfile/${timeNode.cab}?file=${timeNode.file}`} target="_blank">{timeNode.cab}</a></td>
                                         <td>{timeNode.time}</td>
                                         </tr>
                                     ))

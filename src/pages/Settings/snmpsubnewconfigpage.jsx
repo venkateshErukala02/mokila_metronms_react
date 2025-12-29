@@ -8,11 +8,15 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [securityName,setSecurityName] = useState('roV3user');
-    const [securityLevel,setSecurityLevel] = useState('authPriv');
     const [authPassphrase,setAuthPassphrase] = useState('');
-    const [authProtocol,setAuthProtocol] = useState('SHA');
     const [privacyPassphrase,setPrivacyPassphrase] = useState('');
-    const [privacyProtocol,setPrivacyProtocol] = useState('AES');
+    const [securityLevelValue,setSecurityLevelValue] = useState('2');
+    const [securityLevelLabel,setSecurityLevelLabel] = useState('AuthPriv');
+    const [authProtocolValue,setAuthProtocolValue] = useState('3');
+    const [authProtocolLabel,setAuthProtocolLabel] = useState('AES-128');
+    const [privacyProtocolValue,setPrivacyProtocolValue] = useState('3');
+    const [privacyProtocolLabel,setPrivacyProtocolLabel] = useState('SHA');
+
 
     const isEditMode =  mode === 'edit';
 
@@ -49,6 +53,20 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
     setSnmpVersLabelSel(e.target.options[e.target.selectedIndex].text);
   }
 
+  const handleSecurityLevel =(e)=>{
+    setSecurityLevelValue(e.target.value);
+    setSecurityLevelLabel(e.target.options[e.target.selectedIndex].text);
+  }
+
+  const handleAuthProtocol=(e)=>{
+    setAuthProtocolValue(e.target.value);
+    setAuthProtocolLabel(e.target.options[e.target.selectedIndex].text);
+  }
+
+  const handlePrivacyProtocol=(e)=>{
+    setPrivacyProtocolValue(e.target.value);
+    setPrivacyProtocolLabel(e.target.options[e.target.selectedIndex].text);
+  }
 
   const handleAddSnmpConfig = async () => {
         const requestBody = isEditMode ? {
@@ -128,7 +146,7 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
                                     </label>
                                     <article>
                                         <select className="vlaninput" value={snmpVersValueSel} onChange={handleSnmpVersion}>
-                                        <option value="v1" label="SNMPv3">SNMPv3</option>
+                                        <option value="v3" label="SNMPv3">SNMPv3</option>
                                             <option value="v2c" selected label="SNMPv1-v2c">SNMPv1-v2c</option>
                                         </select>
 
@@ -175,9 +193,17 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
                                 </article>
                                 <article>
                                 <label className="settinglabelsub">Security Level</label>
-                                <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" 
-                                value={securityLevel}
-                                />
+                                <select className="vlaninput" value={securityLevelValue} onChange={handleSecurityLevel}>
+                                        <option value="3" label="AuthNoPriv">AuthNoPriv</option>
+                                            <option value="2" selected label="AuthPriv">AuthPriv</option>
+                                        </select>
+                                </article>
+                                 <article>
+                                <label className="settinglabelsub">Auth Protocol</label>                    
+                                <select className="vlaninput" value={authProtocolValue} onChange={handleAuthProtocol}>
+                                        <option value="2" label="DES">DES</option>
+                                            <option value="3" selected label="AES-128">AES-128</option>
+                                        </select>
                                 </article>
                                  <article>
                                 <label className="settinglabelsub">Auth Passphrase</label>
@@ -185,24 +211,19 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
                                 value={authPassphrase}
                                 onChange={(e)=> setAuthPassphrase(e.target.value)}
                                 />
-                                </article>
+                                </article>                                
                                  <article>
-                                <label className="settinglabelsub">Auth Protocol</label>
-                                <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" 
-                                value={authProtocol}
-                                />
+                                <label className="settinglabelsub">Privacy Protocol</label>                        
+                                <select className="vlaninput" value={privacyProtocolValue} onChange={handlePrivacyProtocol}>
+                                        <option value="2" label="MD5">MD5</option>
+                                            <option value="3" selected label="SHA">SHA</option>
+                                        </select>
                                 </article>
                                  <article>
                                 <label className="settinglabelsub">Privacy Passphrase</label>
                                 <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" 
                                 value={privacyPassphrase}
                                 onChange={(e)=> setPrivacyPassphrase(e.target.value)}
-                                />
-                                </article>
-                                 <article>
-                                <label className="settinglabelsub">Privacy Protocol</label>
-                                <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" 
-                                value={privacyProtocol}
                                 />
                                 </article>
                                     </article>
