@@ -7,7 +7,7 @@ const ServerConfigContainer = () => {
 
     const [userFtp, setUserFtp] = useState();
     const [serverDropdw, setServerDropdw] = useState(true);
-    const [emailDropdw, setEmailDropdw] = useState(true);
+    const [emailDropdw, setEmailDropdw] = useState(false);
     const [eyeTrapHostimgStatus, setEyeTrapHostimgStatus] = useState(false);
     const [eyePasswordimgStatus, setEyePasswordimgStatus] = useState(false);
     const [eyeAuthPswdimgStatus, setEyeAuthPswdimgStatus] = useState(false);
@@ -29,7 +29,10 @@ const ServerConfigContainer = () => {
     const [port,setPort] = useState('');
     const [username,setUsername] = useState('');
     const [password,setPassword] = useState('');
-
+    const [sslEnableValueSel,setSslEnableValueSel] = useState(true);
+    const [sslEnableLabelSel,setSslEnableLabelSel] =  useState('')
+    const [tlsEnableValueSel,setTlsEnableValueSel] = useState(false);
+    const [tlsEnableLabelSel,setTlsEnableLabelSel] = useState('')
 
     const handleCheckboxChange = () => {
         setUserFtp(!userFtp)
@@ -117,14 +120,24 @@ const ServerConfigContainer = () => {
 
     const isFormValid = () => {
     
-    return (
-        serverAddress &&
-        rootPath &&
-        port &&
-        hostCommunity &&
-        (userFtp ? username && password : true) 
-    );
-};
+        return (
+            serverAddress &&
+            rootPath &&
+            port &&
+            hostCommunity &&
+            (userFtp ? username && password : true) 
+        );
+    };
+
+    const isEmailFormValid = () =>{
+        return (
+            hostName &&
+            fromAddress &&
+            smptPort && 
+            authUser &&
+            authUserPswd
+        )
+    }
 
        const handleAddServerConfig = async (user) => {
        
@@ -175,6 +188,52 @@ const ServerConfigContainer = () => {
 
     }
 
+     const handleAddEmailConfig = async (user) => {
+       
+        const method = 'POST';
+        const requestBody ={
+            authPwd : authUserPswd,
+            authenticateUser : authUser,
+            fromAddress : fromAddress,
+            mailHost : hostName,
+            smtpPort : smptPort,
+            sslEnable : sslEnableValueSel,
+            tlsEnable : tlsEnableValueSel,
+        }
+
+        try {
+            const response = await fetch(`api/v2/systemprops/update`, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody),
+            });
+
+            const text = await response.text();
+
+            if (response.ok) {
+                alert('Server Configuration Added successfully')
+                // if(refreshUserData) refreshUserData();
+            //    setUserName('');
+            //    setFullName('');
+            //    setEmail('');
+            //    setPassword('');
+            //    setConfirmPassword('');
+            //    setLineNameSele(-1);
+            //    setRole('ROLE_READONLY');
+            } else {
+                setIsError('Error starting discovery');
+            }
+        } catch (error) {
+            setIsError('An error occurred while contacting the server.');
+        } finally {
+            setIsLoading(false); 
+        }
+
+    }
+
+
 
  useEffect(() => {
         const url='api/v2/systemprops/list?limit=0'
@@ -187,11 +246,13 @@ const ServerConfigContainer = () => {
 
 
     const handleSslEnable=(e)=>{
-        setSslEnableSel(e.target.value);
+        setSslEnableValueSel(e.target.value);
+        setSslEnableLabelSel(e.target.options[e.target.selectedIndex].label)
     }
 
     const handleTlsEnable=(e)=>{
-        setTlsEnableSel(e.target.value);
+        setTlsEnableValueSel(e.target.value);
+        setTlsEnableLabelSel(e.target.options[e.target.selectedIndex].label);
     }
 
     useEffect(() => {
@@ -371,7 +432,7 @@ const ServerConfigContainer = () => {
                                                                     SSL Enable
                                                                 </label>
                                                                 <article className="col-sm-4 col-md-4 col-lg-5">
-                                                                    <select className="trapsel" style={{ width: "50%" }} aria-invalid="false" value={sslEnableSel} onChange={handleSslEnable}>
+                                                                    <select className="trapsel" style={{ width: "50%" }} aria-invalid="false" value={sslEnableValueSel} onChange={handleSslEnable}>
                                                                         <option value="true">Enable</option>
                                                                         <option value="false">Disable</option>
                                                                     </select>
@@ -382,7 +443,7 @@ const ServerConfigContainer = () => {
                                                                     TLS Enable
                                                                 </label>
                                                                 <article className="col-sm-4 col-md-4 col-lg-5">
-                                                                    <select className="trapsel" style={{ width: "50%" }} aria-invalid="false" value={tlsEnableSel} onChange={handleTlsEnable}>
+                                                                    <select className="trapsel" style={{ width: "50%" }} aria-invalid="false" value={tlsEnableValueSel} onChange={handleTlsEnable}>
                                                                         <option value="true">Enable</option>
                                                                         <option value="false">Disable</option>
                                                                     </select>
@@ -429,7 +490,17 @@ const ServerConfigContainer = () => {
                                                             <label htmlFor="" className="col-4 traplabel">
                                                             </label>
                                                             <article className="col-sm-4 col-md-4 col-lg-5" style={{ textAlign: 'right' }}>
-                                                                <button type = "button" className="createbtn" style={{ textAlign: 'right' }}>Save</button>
+                                                                <button type = "button" className="createbtn" 
+                                                                style={{
+                                                                        textAlign: 'right',
+                                                                        backgroundColor: !isEmailFormValid() ? '#ccc' : 'rgb(0 111 255)',  
+                                                                        color: !isEmailFormValid() ? '#666' : '#fff',  
+                                                                        border: 'none',
+                                                                        cursor: !isEmailFormValid() ? 'not-allowed' : 'pointer',
+                                                                        opacity: !isEmailFormValid() ? 0.6 : 1  
+                                                                    }} 
+                                                                disabled ={!isEmailFormValid()}
+                                                                onClick={handleAddEmailConfig}>Save</button>
                                                             </article>
                                                         </article>
                                                     </div>

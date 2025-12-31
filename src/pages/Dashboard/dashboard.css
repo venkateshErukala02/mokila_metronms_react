@@ -65,14 +65,20 @@ article.row {
 /* ----------------------------------------------------------------- */
 
 .tbone>tr{margin: 2px 0;display: inline-table;}
-.tbone>tr>td{font-size: 12.5px;font-family: "Lato-Regular";color: #50565e;padding: 0px;margin: 5px;letter-spacing: 0.1px;}
-.tbone>tr{border: 1px solid rgb(33 35 39 / 7%);background-color: rgb(229 241 255 / 50%);}
+.tbone>tr>td{font-size: 12.5px;font-family: "Arial";color: #000000de;padding: 3px;margin: 5px;letter-spacing: 0.1px;}
+.tbone>tr{border: 1px solid rgb(33 35 39 / 7%);background-color: rgb(229 241 255 / 50%);border-radius: 4px;}
+
+
+.tbone { 
+  border-collapse: separate;
+  border-spacing: 0 2px; 
+ }
 
 
 thead.tbtwo>tr{border-bottom: 2px solid rgb(33 35 39 / 7%);}
-thead.tbtwo>tr>th{font-size: 12.5px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #212327;letter-spacing: 0.6px;}
+thead.tbtwo>tr>th{font-size: 12.5px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #000000de;letter-spacing: 0.6px;}
 
-tbody.tbbdtwo>tr>td{font-size: 13px;font-family: "Lato-Regular";padding: 6px;color: #50565e;letter-spacing: 0.2px; white-space: nowrap;
+tbody.tbbdtwo>tr>td{font-size: 13px;font-family: "Lato-Regular";padding: 6px;color: #000000de;letter-spacing: 0.2px; white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;}
 tbody.tbbdtwo>tr:nth-child(odd){        background-color:rgb(229 241 255 / 50%);

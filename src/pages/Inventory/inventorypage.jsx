@@ -98,6 +98,12 @@ const InventRpt = () => {
                             "Content-Type": "application/json",
                         },
                     });
+
+                      if (response.status === 204) {
+                            setIsLoading(false);
+                            setInvenData([]);
+                            return;
+                        }
                     const data = await response.json();
 
                     if (response.ok) {
@@ -481,7 +487,7 @@ const InventRpt = () => {
 
                                          {isLoading && (
                                 <tr>
-                                    <td colSpan="8" style={{ textAlign: "center" }}>
+                                    <td colSpan="12" style={{ textAlign: "center" }}>
                                         Loading...
                                     </td>
                                 </tr>
@@ -489,7 +495,7 @@ const InventRpt = () => {
 
                             {isError.status && (
                                 <tr>
-                                    <td colSpan="8" style={{ textAlign: "center", color: "red" }}>
+                                    <td colSpan="12" style={{ textAlign: "center", color: "red" }}>
                                         {isError.msg}
                                     </td>
                                 </tr>
@@ -497,7 +503,7 @@ const InventRpt = () => {
 
                             {!isLoading && !firstLoadRef.current  && nodes.length === 0 &&  (
                                 <tr>
-                                    <td colSpan="8" style={{ textAlign: "center" }}>
+                                    <td colSpan="12" style={{ textAlign: "center" }}>
                                         No Data Available
                                     </td>
                                 </tr>
@@ -528,7 +534,7 @@ const InventRpt = () => {
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan="12" className="datacl centered-text">No Data</td>
+                                            {/* <td colSpan="12" className="datacl centered-text">No Data</td> */}
                                         </tr>
                                     )}
                                 </tbody>
@@ -545,7 +551,7 @@ const InventRpt = () => {
                             </article>
                             </>}
                              {/* {showSuccessPopupStatus && <>
-                            <article className="confirmmsgsuccess">
+                             <article className="confirmmsgsuccess">
                                 <article className="confirmmsgsuccessboxstyle">
                                 <h1 className="confirmdeletetitle">Success</h1>
                                 <p>Node Deleted successfully.</p>

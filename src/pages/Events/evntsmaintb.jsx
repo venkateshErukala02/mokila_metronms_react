@@ -27,6 +27,28 @@ const EventMainTB = () => {
     const nodeIdRef = useRef(null);
     const [showEventPopup,setShowEventPopup] = useState(false);
     const [eventpopupData,setEventpopupData] = useState([]);
+    const popupRef = useRef(null);
+
+
+
+    useEffect(() => {
+    const handleClickOutside = (event) => {
+        if (
+            showEventPopup &&
+            popupRef.current &&
+            !popupRef.current.contains(event.target)
+        ) {
+            setShowEventPopup(false);
+        }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+    };
+}, [showEventPopup]);
+
 
     const getDataEvntMain = async (url) => {
        if(eventipText === ''){
@@ -475,7 +497,6 @@ const EventMainTB = () => {
                         <table className="col-12">
                             <thead className="eventsthtb">
                                 <tr>
-
                                     <th>IP Address</th>
                                     <th>Time</th>
                                     <th>Severity</th>
@@ -542,7 +563,7 @@ const EventMainTB = () => {
                 </article>)}
 
               {showEventPopup  && <article className="eventpopupcont">
-                    <article className="eventboxstyle">
+                    <article className="eventboxstyle" ref={popupRef}>
                         {eventpopupData &&(
                             <article>
                                 <article className="evntdetailtitle">

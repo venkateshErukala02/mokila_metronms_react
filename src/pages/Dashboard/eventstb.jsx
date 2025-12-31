@@ -214,13 +214,28 @@ const Tableone = () => {
                                 No Data Available
                             </tr>
                         )}
-                        {eventData.event && eventData.event.map((event, index) => (
-                            <tr key={index} className="col-12">
+                        {eventData.event && eventData.event.map((event, index) => {
+
+                             const severityClass =
+                                event.severity === "CRITICAL"
+                                ? "severity-critical"
+                                : event.severity === "MAJOR"
+                                ? "severity-major": event.severity === "MINOR"
+                                ? "severity-minor": event.severity === "WARNING"
+                                ? "severity-warning": event.severity === "NORMAL"
+                                ? "severity-normal": event.severity === "CLEARED"
+                                ? "severity-cleared" : event.severity === "INDETERMINATE"
+                                ? "severity-indeterminate" : ""
+
+
+                        return (
+                            <tr key={index} className={`col-12 ${severityClass}`}>
                                 <td className="col-2">{event.host}</td>
                                 <td className="col-4" >{formatDate(event.createTime)}</td>
                                 <td className="col-5">{event.logMessage}</td>
                             </tr>
-                        ))}
+                                );
+                        })}
                     </tbody>
                 </table>
             </article>

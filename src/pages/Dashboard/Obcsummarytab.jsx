@@ -71,7 +71,11 @@ const ObcSummaryTab = ({ nodeItemDt, currentTab }) => {
       await getServerStatusDt(url);
     };
     fetchData();
-  }, []);
+
+    const intervalId = setInterval(fetchData, 30000);
+
+  return () => clearInterval(intervalId);
+  }, [nodeIpaddress, currentTab]);
 
 
   const getDiskData = async (url) => {
@@ -110,7 +114,11 @@ const ObcSummaryTab = ({ nodeItemDt, currentTab }) => {
       await getDiskData(url);
     };
     fetchData();
-  }, []);
+
+    const intervalId = setInterval(fetchData, 30000);
+
+  return () => clearInterval(intervalId);
+  }, [nodeIpaddress, currentTab]);
 
 
   const renderCurrentObcsubTab = (value) => {
