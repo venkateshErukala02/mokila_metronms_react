@@ -2963,6 +2963,11 @@ svg *:focus {
 
 .myDatepickercl{
     font-size: 13px;
+    font-size: 13px;
+    width: 246px;
+    height: 37px;
+    border: 1px solid #dddfe2;
+    border-radius: 6px;
 }
 .card {
     border: none !important;

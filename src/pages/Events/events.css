@@ -94,6 +94,10 @@ tbody.eventstbdtb>tr{width: 100%;font-size: 12px;}
     font-weight: 900;
     letter-spacing: 1px;
     padding: 7px;
+    border: 1px solid rgb(33 35 39 / 7%);
+    margin: 0;
+    margin-top: 8px;
+    border-bottom: 0;
 }
 .arrowlf {
     border: none;
@@ -212,3 +216,10 @@ tbody.eventstbdtb>tr{width: 100%;font-size: 12px;}
         padding-left: 5px;
         float: inline-end;
     }
+
+.exportcabcolheight{
+    height: 93vh;
+}
+.labelaligncl{
+    margin-top: 12px;
+}
