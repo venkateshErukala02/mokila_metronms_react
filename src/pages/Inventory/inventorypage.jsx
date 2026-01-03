@@ -444,7 +444,7 @@ const InventRpt = () => {
 
                         <article className="row border-lr" style={{height:'80vh'}}>
                             <table className="col-md-12" style={{ height: '0vh' }}>
-                                <thead className="inventthtb">
+                                <thead className="inventthtb tableheadpostion">
                                      <tr>
                                         <th style={{ paddingLeft: '18px' }}>
                                         <input

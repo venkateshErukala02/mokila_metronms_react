@@ -16,6 +16,8 @@ const NotificationContainer=()=>{
         const [notificationEventDt,setNotificationEventDt] = useState('');
         const [notificationPathDt,setNotificationPathDt]= useState(null);
         const [disableNotifiBtnStatus,setDisableNotifiBtnStatus] = useState(true);
+        const [addPopup,setAddPopup] = useState(false);
+        const [addEscaltPopup,setAddEscaltPopup] = useState(false);
 
         const getNotificatioData = async (url) => {
             setIsLoading(true);
@@ -150,6 +152,21 @@ const NotificationContainer=()=>{
         setNotifiContStatus(null);
     }
 
+    const handleAddTarget=()=>{
+        setAddPopup(true);
+    }
+
+    const handleAddTargetClose=()=>{
+        setAddPopup(false);
+    }
+
+    const handleAddEscalationTarget=()=>{
+        setAddEscaltPopup(true);
+    }
+    const handleAddEscaltTargetClose=()=>{
+        setAddEscaltPopup(false);
+    }
+
     const handleEditSnmpDt=(item)=>{
         setEditNotification(item);
         setMode('edit');
@@ -173,6 +190,8 @@ const NotificationContainer=()=>{
                 return <NotificationPathSubCont
                  handleSubContainer={handleSubContainer}
                  notificationPathDt={notificationPathDt}
+                 handleAddTarget={handleAddTarget}
+                 handleAddEscalationTarget={handleAddEscalationTarget}
                  
                  />
             break;
@@ -371,6 +390,110 @@ const NotificationContainer=()=>{
                                        
                                     </tbody>
                                 </table>
+                               {addPopup &&  <article className="addtargetpopup">
+                                    <article className="addtargetpopupboxstyle">
+                                        <article className="targetcont">
+                                            <h2 className="targettitle">Target</h2>
+                                        </article>
+                                        <article className="targetart">
+                                            <h3 className="initialtitle">Initial Delay</h3>
+                                            <hr />
+                                    <select  className="selectsecinput">
+                                      <option value="0" selected label="0s">0s</option>
+                                      <option value="1" label="1s">1s</option>
+                                      <option value="2" label="2s">2s</option>
+                                      <option value="3" label="5s">5s</option>
+                                      <option value="4" label="10s">10s</option>
+                                      <option value="5" label="15s">15s</option>
+                                      <option value="6" label="30s">30s</option>
+                                      <option value="7" label="1m">1m</option>
+                                      <option value="8" label="2m">2m</option>
+                                      <option value="9" label="5m">5m</option>
+                                      <option value="10" label="10m">10m</option>
+                                      <option value="11" label="15m">15m</option>
+                                      <option value="12" label="30m">30m</option>
+                                      <option value="13" label="1h">1h</option>
+                                      <option value="14" label="2h">2h</option>
+                                      <option value="15" label="3h">3h</option>
+                                      <option value="16" label="6h">6h</option>
+                                      <option value="17" label="12h">12h</option>
+                                      <option value="18" label="1d">1d</option>
+                                        </select>
+                                             <h3 className="usertitle">Users</h3>
+                                            <hr />
+
+                                            <select size="5"
+                                     className="selectsecinput">
+                                      <option value="admin" label="admin">admin</option>
+                                      <option value="rtc" label="rtc">rtc</option>
+                                      </select>
+                                        </article>
+                                        <hr />
+                                        <article className="f-r" style={{padding:'0px 14px'}}>
+                                            <button className="createbtn" type="button" style={{marginRight:'12px'}}>Add</button>
+                                            <button className="createbtn" type="button" onClick={handleAddTargetClose}>Close</button>
+                                        </article>
+                                    </article>
+                                </article> }
+
+                                {addEscaltPopup &&  <article className="addescalttargetpopup">
+                                    <article className="addescalttargetpopupboxstyle">
+                                        <article className="targetcont">
+                                            <h2 className="targettitle">Target</h2>
+                                        </article>
+                                        <article className="targetart">
+                                            <h3 className="initialtitle">Initial Delay</h3>
+                                            <hr />
+                                    <select  className="selectsecinput">
+                                      <option value="0" selected label="0s">0s</option>
+                                      <option value="1" label="1s">1s</option>
+                                      <option value="2" label="2s">2s</option>
+                                      <option value="3" label="5s">5s</option>
+                                      <option value="4" label="10s">10s</option>
+                                      <option value="5" label="15s">15s</option>
+                                      <option value="6" label="30s">30s</option>
+                                      <option value="7" label="1m">1m</option>
+                                      <option value="8" label="2m">2m</option>
+                                      <option value="9" label="5m">5m</option>
+                                      <option value="10" label="10m">10m</option>
+                                      <option value="11" label="15m">15m</option>
+                                      <option value="12" label="30m">30m</option>
+                                      <option value="13" label="1h">1h</option>
+                                      <option value="14" label="2h">2h</option>
+                                      <option value="15" label="3h">3h</option>
+                                      <option value="16" label="6h">6h</option>
+                                      <option value="17" label="12h">12h</option>
+                                      <option value="18" label="1d">1d</option>
+                                        </select>
+                                        <article className="row">
+                                            <article className="col-6 userart">
+                                             <h3 className="usertitle">Users</h3>
+                                            <hr />
+
+                                            <select size="5"
+                                     className="selectsecinput selectsecaddescltinput">
+                                      <option value="admin" label="admin">admin</option>
+                                      <option value="rtc" label="rtc">rtc</option>
+                                      </select>
+                                      </article>
+                                      <article className="col-6 userart">
+                                        <h3 className="usertitle">Groups</h3>
+                                            <hr />
+                                            <select size="5"
+                                     className="selectsecinput selectsecaddescltinput">
+                                      <option value="admin" label="admin">admin</option>
+                                      <option value="rtc" label="rtc">rtc</option>
+                                      </select>
+                                      </article>
+                                      </article>
+                                        </article>
+                                        <hr />
+                                        <article className="f-r" style={{padding:'0px 14px'}}>
+                                            <button className="createbtn" type="button" style={{marginRight:'12px'}}>Add</button>
+                                            <button className="createbtn" type="button" onClick={handleAddEscaltTargetClose}>Close</button>
+                                        </article>
+                                    </article>
+                                </article> }
                             </article>
                         </article>
                     </article>

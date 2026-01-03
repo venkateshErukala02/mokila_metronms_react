@@ -78,7 +78,7 @@ const SummaryTable=()=>{
             <article className="border-allsd summarytbscroll" style={{margin: '0px 0px 0px 5px'}}>
               <article className="row">
                 <table className="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-                  <thead className="distbtwo tableheadpost">
+                  <thead className="distbtwo tableheadpostion"> 
                     <tr>
                       <th>Time</th>
                       <th>Start</th>

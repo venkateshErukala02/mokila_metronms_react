@@ -448,13 +448,13 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
 
                     </article>
                 </article>
-                <hr className="dashbdhr" />
             </article>
+            <article className="border-allsd" style={{ height: "43vh", overflowY: 'auto', overflowX: 'clip' }}>
             <article className="row">
-                <article style={{ height: "43vh", overflowY: 'auto', overflowX: 'clip' }}>
-                    <table className="col-12 border-allsd table-fixed" style={{ height: '0vh' }}>
+                <article>
+                    <table className="col-12 table-fixed" style={{ height: '0vh' }}>
 
-                      <thead className="tbtwo">
+                      <thead className="tbtwo tableheadpostion">
                             <tr>
                                 {ALL_COLUMNS.filter(col => visibleColumns.includes(col.key)).map(col => (
                                 <th key={col.key} onClick={() => handleSort(col.key)}>
@@ -529,6 +529,7 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
                         </tbody>
                     </table>
                 </article>
+            </article>
             </article>
         </>
     )

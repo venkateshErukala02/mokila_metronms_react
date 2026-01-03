@@ -1977,7 +1977,7 @@ min-width: 205px;
     border-top: 0;
 }
 
-.tableheadpost{
+.tableheadpostion{
     position: sticky;
     top: 0;
     background-color: white;
@@ -3015,6 +3015,49 @@ svg *:focus {
     width: 762px;
 }
 
+.addtargetpopup{
+    position: fixed;
+    width: 100vh;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    background-color: rgba(0,0,0,0.5);
+    top: 0;
+    left: 0;
+    z-index: 999;
+}
+
+.addtargetpopupboxstyle{
+    background-color: white;
+    width: 320px;
+    border-radius: 5px;
+    height: 350px;
+
+}
+
+
+.addescalttargetpopup{
+    position: fixed;
+    width: 100vh;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    background-color: rgba(0,0,0,0.5);
+    top: 0;
+    left: 0;
+    z-index: 999;
+}
+
+.addescalttargetpopupboxstyle{
+    background-color: white;
+    width: 606px;
+    border-radius: 5px;
+    height: 347px;
+
+}
+
 .confirmmsgsuccess{
     background-color: rgba(0,0,0,0.5);
     width: 100Vh;
@@ -3748,6 +3791,81 @@ svg *:focus {
 .severity-indeterminate {
   border-left: 5px solid #7bb918 !important;
 }
+
+.targetcont{
+    background: #006fff;
+    color: white;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+.targettitle{
+    padding: 8px;
+    margin: 0;
+    font-family: 'Lato-Regular';
+}
+.targetart{
+    padding: 8px 12px;
+}
+
+.initialtitle{
+    font-size: 18px;
+    color: #666666;
+    font-family: 'Lato-Regular';
+    margin: 0;
+}
+
+.usertitle{
+    font-size: 18px;
+    color: #666666;
+    padding-top: 12px;
+    font-family: 'Lato-Regular';
+    margin: 0;
+}
+
+.selectsecinput {
+    background-color: initial;
+    border: 1px solid #dddfe2;
+    border-radius: 5px;
+    color: #1d2129;
+    font-family: system-ui;
+    margin-top: 0!important;
+    min-height: 28px;
+    padding: 0 0 0 10px;
+    width: 58%;
+    margin: 11px 64px;
+    font-family: 'Lato-Regular';
+    font-size: 13px;
+}
+
+.selectsecinput>option{
+    margin: 8px;
+}
+.userart{
+    padding: 0 12px !important;
+    display: block;
+}
+
+
+.selectsecaddescltinput {
+    margin: 11px 45px;
+    width: 72%;
+}
+
+.provisionselinput {
+    background-color: initial;
+    border: 1px solid #dddfe2;
+    border-radius: 5px;
+    color: #1d2129;
+    font-family: system-ui;
+    margin-top: 0!important;
+    min-height: 21px;
+    padding: 0 0 0 10px;
+    width: 100%;
+    font-size: 11px;
+    display: inline-block;
+}
+
 
  /* width={700} height={240} */
 

@@ -26,6 +26,12 @@ const ProvisionTb = ({ getProviContData }) => {
             "sysUptime",
             "radioMode",
             ];
+
+            const ALL_LINES = [
+          { key: 'line1-sec1', label: 'Line1-Section1' },
+          { key: 'line1-sec2', label: 'Line1-Section2' },
+          { key: 'line4-sec1', label: 'Line4' },
+            ]
   const [provisionSel, setProvisionSel] = useState('1');
   const [radioSel, setRadioSel] = useState('');
   const [linktypeSel, setLinktypeSel] = useState('');
@@ -48,6 +54,19 @@ const ProvisionTb = ({ getProviContData }) => {
   const columnWrapperRef =  useRef(null);
   const [visibleColumns, setVisibleColumns] = useState(DEFAULT_COLUMNS);
   const firstLoadRef = useRef(true);
+  const [lineNameSel,setLineNameSel] = useState('');
+  const [stationData,setStationData] = useState([]);
+  const [stationNameSel,setStationNameSel] = useState('');
+  const [positionNameSel,setPositionNameSel] = useState('');
+
+   useEffect(()=>{
+          if(lineNameSel && lineNameSel !== ''){
+              const url=`api/v2/treeview/regions/${lineNameSel}/stations`;
+  
+              getSelStationData(url);
+          }
+         
+      },[lineNameSel])
 
    useEffect(()=>{
         const handleClickOutside=(event)=>{
@@ -63,6 +82,40 @@ const ProvisionTb = ({ getProviContData }) => {
             }
         
     },[dropDownShow]);
+
+
+     const getSelStationData = async (url) => {
+        setIsLoading(true);
+        setIsError({ status: false, msg: "" });
+        try {
+            const username = 'admin';
+                const password = 'admin';
+                const token = btoa(`${username}:${password}`)
+            const options = {
+                method: "GET",
+                headers: {
+                    'Authorization': `Basic ${token}`,
+                    "Content-Type": "application/json",
+                },
+          
+
+            };
+            const response = await fetch(url, options);
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setIsLoading(false);
+                setStationData(data);
+                setIsError({ status: false, msg: "" });
+            } else {
+                throw new Error("data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message });
+        }
+    };
 
   const handleFirmIP = async () => {
 
@@ -248,6 +301,17 @@ const ProvisionTb = ({ getProviContData }) => {
             };
 
 
+            const handleSelectLine=(e)=>{
+                setLineNameSel(e.target.value);
+            }
+
+            const handleSelectStation=(e)=>{
+              setStationNameSel(e.target.value);
+            }
+
+            const handleSelectPosition=(e)=>{
+                setPositionNameSel(e.target.value);
+            }
 
   return (
 
@@ -354,6 +418,19 @@ const ProvisionTb = ({ getProviContData }) => {
                 />
               </th>
             ))}
+
+            <th style={{ paddingLeft: '18px' }}>
+             Line
+            </th>
+            <th style={{ paddingLeft: '18px' }}>
+             Station
+            </th>
+            <th style={{ paddingLeft: '18px' }}>
+             Position
+            </th>
+            <th>
+             
+            </th>
           </tr>
           </thead>
           <tbody className="discbdtwo">
@@ -404,6 +481,42 @@ const ProvisionTb = ({ getProviContData }) => {
                         {node[col.key]}
                       </td>
                     ))}
+                     <td style={{ paddingLeft: '18px' }}>
+                       <select className="provisionselinput" defaultValue={-1} value={lineNameSel} onChange={handleSelectLine}>
+                      <option value="-1" defaultValue>Select</option>
+                      {ALL_LINES && ALL_LINES.map((item,index)=>(
+                          <option value={item.key} key={index}>{item.label}</option>
+                      ))}
+                  </select>
+                    </td>
+                     <td style={{ paddingLeft: '18px' }}>
+                       <select className="provisionselinput" defaultValue={-1} value={stationNameSel} onChange={handleSelectStation}>
+                        <option value="-1" defaultValue disabled>Select</option>
+                        {stationData && stationData.map((item,index)=>(
+                            <option value={item.value} key={index}>{item.display}</option>
+                        ))}
+                    </select>
+                    </td>
+                     <td style={{ paddingLeft: '18px' }}>
+                       <select className="provisionselinput" defaultValue={-1} value={positionNameSel} onChange={handleSelectPosition}>
+                      <option value="-1" defaultValue disabled>Select</option>
+                      <option value="SBSE" label="SN-SBSE">SN-SBSE</option>
+                      <option value="SBNE" label="SN-SBNE">SN-SBNE</option>
+                      <option value="NBSE" label="SN-NBSE">SN-NBSE</option>
+                      <option value="NBNE" label="SN-NBNE">SN-NBNE</option>
+                      <option value="SBC1" label="CAM1-SB">CAM1-SB</option>
+                      <option value="SBC2" label="CAM2-SB">CAM2-SB</option>
+                      <option value="SBC3" label="CAM3-SB">CAM3-SB</option>
+                      <option value="SBC4" label="CAM4-SB">CAM4-SB</option>
+                      <option value="NBC1" label="CAM1-NB">CAM1-NB</option>
+                      <option value="NBC2" label="CAM2-NB">CAM2-NB</option>
+                      <option value="NBC3" label="CAM3-NB">CAM3-NB</option>
+                      <option value="NBC4" label="CAM4-NB">CAM4-NB</option>
+                      <option value="SBTC" label="Transcoder-SB">Transcoder-SB</option><option value="NBTC" label="Transcoder-NB">Transcoder-NB</option><option value="SBE" label="Encoder-SB">Encoder-SB</option><option value="NBE" label="Encoder-NB">Encoder-NB</option></select>
+                    </td>
+                     <td style={{ paddingLeft: '18px' }}>
+                      <button type="button" className="createbtn">Save</button>
+                    </td>
                   </tr>
                   ));
                 })()}

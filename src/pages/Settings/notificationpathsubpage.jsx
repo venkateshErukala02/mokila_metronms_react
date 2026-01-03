@@ -3,11 +3,20 @@ import '../ornms.css'
 import './../Settings/settings.css';
  
 
-const NotificationPathSubCont=({handleSubContainer,notificationPathDt})=>{
+const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddTarget,handleAddEscalationTarget})=>{
     
 
     const handleProfileContclose=()=>{
         handleSubContainer()
+    }
+
+
+    const handleAdd=()=>{
+        handleAddTarget()
+    }
+
+    const handleAddEscalation=()=>{
+        handleAddEscalationTarget()
     }
 
 
@@ -57,7 +66,7 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt})=>{
                                 <article>
                                     <label className="vlanlabel">Initial Delay</label>
                                     <article>
-                                        <select  className="vlaninput">
+                                    <select  className="vlaninput">
                                       <option value="0" selected label="0s">0s</option>
                                       <option value="1" label="1s">1s</option>
                                       <option value="2" label="2s">2s</option>
@@ -85,11 +94,11 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt})=>{
                                 <label className="settinglabelsub">Initail Target:</label>
                                 <select className="form-control notificform" style={{ height: '50px' }} size="4">
                                                 </select>
-                                <button className="escalatebtn">Add</button>
+                                <button type="button" className="escalatebtn" onClick={handleAdd}>Add</button>
                                 </article>
                                 <article>
                                 <label className="vlanlabel">Add Escalation</label>
-                                    <button className="escalatebtn">
+                                    <button type="button" className="escalatebtn" onClick={handleAddEscalation}>
                                         Add Escalation
                                     </button>
                                 </article>
