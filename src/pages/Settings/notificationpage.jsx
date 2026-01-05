@@ -18,6 +18,56 @@ const NotificationContainer=()=>{
         const [disableNotifiBtnStatus,setDisableNotifiBtnStatus] = useState(true);
         const [addPopup,setAddPopup] = useState(false);
         const [addEscaltPopup,setAddEscaltPopup] = useState(false);
+        const [selectedUser, setSelectedUser] = useState("");
+        const [selectedAddUsers, setSelectedAddUsers] = useState([]);
+        const [escalations, setEscalations] = useState([]);
+        const [selectedEscUsers, setSelectedEscUsers] = useState([]);
+        const [selectedEscGroups, setSelectedEscGroups] = useState([]);
+        const [editMode,setEditMode] = useState(false);
+        const [name,setName] = useState("");
+        const [initialDelayProp,setInitialDelayProp] = useState("");
+        const [notifiGroupUserData,setNotifiGroupUserData] = useState("");
+
+
+         useEffect(() => {                  
+            const url='api/v2/eventnotice/ugrlist?_s=&limit=10&offset=0&order=asc&orderBy=name';
+
+            getNotificationGroupUserDt(url);
+            getNotifiStatus();
+    
+        }, []);
+
+          const getNotificationGroupUserDt = async (url) => {
+            setIsLoading(true);
+            // setIsError({ status: false, msg: "" });
+            try {
+                const username = 'admin';
+                const password = 'admin';
+                const token = btoa(`${username}:${password}`)
+                const options = {
+                    method: "GET",
+                    headers: {
+                        'Authorization': `Basic ${token}`,
+                        "Content-Type": "application/json",
+                    },
+    
+                };
+                const response = await fetch(url, options);
+    
+                const data = await response.json();
+    
+                if (response.ok) {
+                    setIsLoading(false);
+                    setNotifiGroupUserData(data);
+                    // setIsError({ status: false, msg: "" });
+                } else {
+                    throw new Error("data not found");
+                }
+            } catch (error) {
+                setIsLoading(false);
+                // setIsError({ status: true, msg: error.message });
+            }
+        };
 
         const getNotificatioData = async (url) => {
             setIsLoading(true);
@@ -150,6 +200,12 @@ const NotificationContainer=()=>{
 
     const handleSubContainer=()=>{
         setNotifiContStatus(null);
+        setSelectedUser("");
+        setSelectedAddUsers([]);
+        setEscalations([]);
+        setSelectedEscUsers([]);
+        setSelectedEscGroups([]);
+
     }
 
     const handleAddTarget=()=>{
@@ -157,6 +213,13 @@ const NotificationContainer=()=>{
     }
 
     const handleAddTargetClose=()=>{
+        setAddPopup(false);
+    }
+
+    const handleAddTargetUsers=()=>{
+        if (!selectedUser) return;
+
+        setSelectedAddUsers(prev => [...prev, selectedUser]);
         setAddPopup(false);
     }
 
@@ -174,6 +237,52 @@ const NotificationContainer=()=>{
 
     }
 
+ const handleEditDestination = (path) => {
+
+    const data = notificationPathDt.find(p => p.name === path);
+    if (!data) return;
+
+    setName(data.name);
+
+    if (Array.isArray(data.initialTargets)) {
+        const users = data.initialTargets.map(target => target.name);
+        setSelectedAddUsers(users);
+    } else {
+        setSelectedAddUsers([]);
+    }
+
+    if (Array.isArray(data.escalations)) {
+        const esc = data.escalations.map(e => {
+            const users = [];
+            const groups = [];
+
+            e.targets.forEach(t => {
+                if ((t.name)) {
+                    groups.push(t.name);
+                } else {
+                    users.push(t.name);
+                }
+            });
+
+            return {
+                delay: e.delay,
+                users,
+                groups
+            };
+        });
+
+        setEscalations(esc);
+    } else {
+        setEscalations([]);
+    }
+
+    setInitialDelayProp(data.initialDelay ?? "0s");
+
+    setEditMode(true);
+    setNotifiContStatus('createNotificationpath');
+};
+
+
 
     const renderNotificationSubCont=()=>{
         switch (notifiContStatus) {
@@ -190,9 +299,14 @@ const NotificationContainer=()=>{
                 return <NotificationPathSubCont
                  handleSubContainer={handleSubContainer}
                  notificationPathDt={notificationPathDt}
+                 selectedAddUsers={selectedAddUsers}
+                 escalations={escalations}
                  handleAddTarget={handleAddTarget}
                  handleAddEscalationTarget={handleAddEscalationTarget}
-                 
+                 handleEditDestination={handleEditDestination}
+                 editMode={editMode}
+                 name={name}
+                 initialDelayProp={initialDelayProp}
                  />
             break;
             default:
@@ -236,16 +350,47 @@ const NotificationContainer=()=>{
 
     }
 
+     const getNotifiStatus = async () => {
+            setIsLoading(true);
+            // setIsError({ status: false, msg: "" });
+            try {
+                const username = 'admin';
+                const password = 'admin';
+                const token = btoa(`${username}:${password}`)
+                const options = {
+                    method: "GET",
+                    headers: {
+                        'Authorization': `Basic ${token}`,
+                        "Content-Type": "application/json",
+                    },
+    
+                };
+                const response = await fetch('api/v2/eventnotice/status?_s=&limit=10&offset=0&order=asc&orderBy=name', options);
+    
+                const data = await response.json();
+    
+                if (response.ok) {
+                    setIsLoading(false);
+                    setNotificatioData(data);
+                    // setIsError({ status: false, msg: "" });
+                } else {
+                    throw new Error("data not found");
+                }
+            } catch (error) {
+                setIsLoading(false);
+                // setIsError({ status: true, msg: error.message });
+            }
+        };
+
         const handleDisableNotificationStatus = () => {
             setDisableNotifiBtnStatus(prev => {
                 const nextStatus = !prev;
-
                 const url = nextStatus
                 ? "api/v2/eventnotice/notice/On"
                 : "api/v2/eventnotice/notice/Off";
 
                 handleDisableNotification(url);
-
+                getNotifiStatus()
                 return nextStatus;
             });
         };
@@ -295,6 +440,23 @@ const NotificationContainer=()=>{
             console.error(error);
             }
         };
+
+
+        const handleAddEscalation = () => {
+            if (selectedEscUsers.length === 0 && selectedEscGroups.length === 0) return;
+
+            setEscalations(prev => [
+                ...prev,
+                {
+                users: selectedEscUsers,
+                groups: selectedEscGroups
+                }
+            ]);
+
+            setSelectedEscUsers([]);
+            setSelectedEscGroups([]);
+            setAddEscaltPopup(false);
+            };
 
     return(
         <>
@@ -360,7 +522,7 @@ const NotificationContainer=()=>{
                                             </td>
                                         </tr>
                                     )}
-                                    {notificationData && notificationData.map((item) => (
+                                    {notificationData && notificationData?.map((item) => (
                                         <tr key={item.id}>
                                              <td>{item.name}</td>
                                             <td>{item.uei}</td>
@@ -423,14 +585,14 @@ const NotificationContainer=()=>{
                                             <hr />
 
                                             <select size="5"
-                                     className="selectsecinput">
-                                      <option value="admin" label="admin">admin</option>
-                                      <option value="rtc" label="rtc">rtc</option>
+                                     className="selectsecinput" value={selectedUser}onChange={(e) => setSelectedUser(e.target.value)}>
+                                      {notifiGroupUserData && notifiGroupUserData?.users?.map((item)=>
+                                                <option value={item} label={item}>{item}</option> )}
                                       </select>
                                         </article>
                                         <hr />
                                         <article className="f-r" style={{padding:'0px 14px'}}>
-                                            <button className="createbtn" type="button" style={{marginRight:'12px'}}>Add</button>
+                                            <button className="createbtn" type="button" style={{marginRight:'12px'}} onClick={handleAddTargetUsers}>Add</button>
                                             <button className="createbtn" type="button" onClick={handleAddTargetClose}>Close</button>
                                         </article>
                                     </article>
@@ -470,26 +632,38 @@ const NotificationContainer=()=>{
                                              <h3 className="usertitle">Users</h3>
                                             <hr />
 
-                                            <select size="5"
+                                            <select size="5"  value={selectedEscUsers}
+                                             multiple
+                                            onChange={(e) =>
+                                                setSelectedEscUsers(
+                                                Array.from(e.target.selectedOptions, o => o.value)
+                                                )
+                                            }
                                      className="selectsecinput selectsecaddescltinput">
-                                      <option value="admin" label="admin">admin</option>
-                                      <option value="rtc" label="rtc">rtc</option>
+                                      {notifiGroupUserData && notifiGroupUserData?.users?.map((item)=>
+                                                <option value={item} label={item}>{item}</option> )}
                                       </select>
                                       </article>
                                       <article className="col-6 userart">
                                         <h3 className="usertitle">Groups</h3>
                                             <hr />
-                                            <select size="5"
+                                            <select size="5" value={selectedEscGroups}
+                                             multiple
+                                            onChange={(e) =>
+                                                setSelectedEscGroups(
+                                                Array.from(e.target.selectedOptions, o => o.value)
+                                                )
+                                            }
                                      className="selectsecinput selectsecaddescltinput">
-                                      <option value="admin" label="admin">admin</option>
-                                      <option value="rtc" label="rtc">rtc</option>
+                                        {notifiGroupUserData && notifiGroupUserData?.groups?.map((item)=>
+                                                <option value={item} label={item}>{item}</option> )}
                                       </select>
                                       </article>
                                       </article>
                                         </article>
                                         <hr />
                                         <article className="f-r" style={{padding:'0px 14px'}}>
-                                            <button className="createbtn" type="button" style={{marginRight:'12px'}}>Add</button>
+                                            <button className="createbtn" type="button" style={{marginRight:'12px'}} onClick={handleAddEscalation}>Add</button>
                                             <button className="createbtn" type="button" onClick={handleAddEscaltTargetClose}>Close</button>
                                         </article>
                                     </article>

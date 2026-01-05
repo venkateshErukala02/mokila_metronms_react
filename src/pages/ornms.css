@@ -3857,7 +3857,7 @@ svg *:focus {
     border: 1px solid #dddfe2;
     border-radius: 5px;
     color: #1d2129;
-    font-family: system-ui;
+    font-family: 'Lato-Regular';
     margin-top: 0!important;
     min-height: 21px;
     padding: 0 0 0 10px;
@@ -3865,7 +3865,11 @@ svg *:focus {
     font-size: 11px;
     display: inline-block;
 }
-
+.notificform>option{
+    font-size: 12px;
+    font-family: 'Lato-Regular';
+    padding-bottom: 1px;
+}
 
  /* width={700} height={240} */
 

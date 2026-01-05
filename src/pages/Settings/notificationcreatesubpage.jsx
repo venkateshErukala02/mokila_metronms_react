@@ -198,7 +198,7 @@ useEffect(()=>{
                                 
                                 <hr className="hrnote" />
                                 <center className="d-f">
-                                        <button className="cancelbtn">Cancle</button>
+                                        <button className="cancelbtn" type="button" onClick={handleProfileContclose}>Cancle</button>
                                         <button className="creatsetingbtn" onClick={handleAddNotification}>
                                             {isEditMode ? 'Update' : 'Create'}
                                             </button>
