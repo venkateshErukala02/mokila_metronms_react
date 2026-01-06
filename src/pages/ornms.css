@@ -337,6 +337,37 @@ tbody.tbbdtwo>tr>td>a{
 }
 
 
+/* ----------------------------------------------------------------- */
+
+
+/* thead.encodertbtwo>tr{border-bottom: 2px solid rgb(33 35 39 / 7%);} */
+thead.encodertbtwo>tr>th{font-size: 13.5px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #212327;letter-spacing: 0.6px;border: 1px solid #181616;}
+
+tbody.encodertbbdtwo>tr>td{font-size: 13px;font-family: "Lato-Regular";padding: 6px;color: #000000de;letter-spacing: 0.2px;text-align: left;border: 1px solid #181616;}
+tbody.encodertbbdtwo>tr:nth-child(odd){        background-color: white;
+}
+.encodertbbdtwo{border-bottom: 1px solid rgb(33 35 39 / 7%);}
+tbody.encodertbbdtwo>tr:nth-child(even){        background-color:white;
+}
+tbody.encodertbbdtwo>tr{border-bottom: 1px solid rgb(33 35 39 / 7%);}
+
+
+.encodertbbdtwo>tr:last-child{border-bottom: none;}
+tbody.encodertbbdtwo>tr>td>a{
+    text-decoration: none;
+    color: #000000DE;
+}
+
+
+.encodertbtwo th:nth-child(1) { width: 10%; }
+.encodertbtwo th:nth-child(2) { width: 10%; }
+.encodertbtwo th:nth-child(3) { width: 10%; }
+.encodertbbdtwo th:nth-child(1) { width: 10%; }
+.encodertbbdtwo th:nth-child(2) { width: 10%; }
+.encodertbbdtwo th:nth-child(3) { width: 10%; }
+
+
+
 /* --------------------------------- */
 
 
@@ -3870,6 +3901,7 @@ svg *:focus {
     font-family: 'Lato-Regular';
     padding-bottom: 1px;
 }
+
 
  /* width={700} height={240} */
 

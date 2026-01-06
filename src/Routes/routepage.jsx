@@ -15,6 +15,7 @@ import TrainNodeView from '../pages/Dashboard/trainnodeview';
 import ObcNodeView from '../pages/Dashboard/obcnodeview';
 import Wayside from '../pages/Wayside/wayside';
 import ConfigPage from '../pages/Config/configpage';
+import EncoderNodeView from '../pages/Dashboard/encodernodeview';
 
 
 const RoutesPage = () => {
@@ -27,6 +28,7 @@ const RoutesPage = () => {
             <Route path="/transcoder-view" element={<TranscoderView />} />
             <Route path="/TR-view" element={<TrainNodeView />} />
             <Route path="/obc-view" element={<ObcNodeView />} />
+            <Route path="/encoder-view" element={<EncoderNodeView />} />
             <Route exact path="/Discovery" element={<DiscovPag />} />
             <Route  exact path="/Topology" element={<TopoPg />} />
             <Route  exact path="/Wayside" element={<Wayside />} />

@@ -12,7 +12,10 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
     const [localName,setLocalName] = useState("");
 
     const handleProfileContclose=()=>{
-        handleSubContainer()
+        handleSubContainer();
+        setLocalName("");
+        setInitialDelay("");
+        setPath("");
     }
 
 
@@ -27,6 +30,34 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
     const handleEditNotifiConfig=()=>{
         handleEditDestination(path)
     }
+
+    const handleDeletePath = async () => {
+            setLoading(true);
+            setError({ status: false, msg: "" }); 
+            try {
+                const options = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+    
+                };
+                const response = await fetch(`api/v2/eventnotice/path/delete/${path}`, options);
+    
+                const data = await response.json();
+    
+                if (response.ok) {
+                    handleProfileContclose();
+                    setLoading(false);
+                    setError({ status: false, msg: "" });
+                } else {
+                    throw new Error("data not found");
+                }
+            } catch (error) {
+                setLoading(false);
+                setError({ status: true, msg: error.message });
+            }
+        };
 
 
 
@@ -77,11 +108,11 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
             escalations: escalationTargets,
             initialDelay:"0s",
             initialTargets: initialDelay,
-            name: name,
+            name: localName,
             
         };
         const method = editMode ? 'POST' : 'POST';
-        const url = editMode ? '    api/v2/eventnotice/path/add' :'api/v2/eventnotice/path/add'
+        const url = editMode ? 'api/v2/eventnotice/path/add' :'api/v2/eventnotice/path/add'
         try {
             const username = 'admin';
             const password = 'admin';
@@ -149,7 +180,7 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
                                 </article>
                                   <article style={{padding:'15px 0'}}>
                                   <center>
-                                        <button className="cancelbtn" type="button">Delete</button>
+                                        <button className="cancelbtn" type="button" onClick={handleDeletePath}>Delete</button>
                                         <button className="creatsetingbtn" type="button" onClick={handleEditNotifiConfig}>Edit</button>
                                 </center>
                                 </article>

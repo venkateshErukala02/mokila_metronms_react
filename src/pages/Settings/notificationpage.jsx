@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect, useRef} from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
 import NotificationSubCont from "./notificationcreatesubpage";
@@ -27,6 +27,7 @@ const NotificationContainer=()=>{
         const [name,setName] = useState("");
         const [initialDelayProp,setInitialDelayProp] = useState("");
         const [notifiGroupUserData,setNotifiGroupUserData] = useState("");
+        const firstLoadRef = useRef(true);
 
 
          useEffect(() => {                  
@@ -70,8 +71,9 @@ const NotificationContainer=()=>{
         };
 
         const getNotificatioData = async (url) => {
+             if (firstLoadRef.current) {
             setIsLoading(true);
-            // setIsError({ status: false, msg: "" });
+            }
             try {
                 const username = 'admin';
                 const password = 'admin';
@@ -89,7 +91,6 @@ const NotificationContainer=()=>{
                 const data = await response.json();
     
                 if (response.ok) {
-                    setIsLoading(false);
                     setNotificatioData(data);
                     // setIsError({ status: false, msg: "" });
                 } else {
@@ -98,7 +99,12 @@ const NotificationContainer=()=>{
             } catch (error) {
                 setIsLoading(false);
                 // setIsError({ status: true, msg: error.message });
-            }
+            }finally {
+                if (firstLoadRef.current) {
+                    setIsLoading(false);
+                    firstLoadRef.current = false;
+                }
+             }
         };
 
 
@@ -205,6 +211,8 @@ const NotificationContainer=()=>{
         setEscalations([]);
         setSelectedEscUsers([]);
         setSelectedEscGroups([]);
+        setName("");
+        setInitialDelayProp("");
 
     }
 
@@ -515,14 +523,14 @@ const NotificationContainer=()=>{
                                         </tr>
                                     )}
 
-                                    {!isLoading && !isError.status && (!notificationData || notificationData.length === 0) && (
+                                     {!isLoading && !firstLoadRef.current  && notificationData.length === 0 &&  (
                                         <tr>
                                             <td colSpan="12" style={{ textAlign: "center" }}>
                                                 No Data Available
                                             </td>
                                         </tr>
                                     )}
-                                    {notificationData && notificationData?.map((item) => (
+                                    {Array.isArray(notificationData) && notificationData?.map((item) => (
                                         <tr key={item.id}>
                                              <td>{item.name}</td>
                                             <td>{item.uei}</td>
