@@ -22,7 +22,25 @@ const FirmwareMng = () => {
     const [sortOrder, setSortOrder] = useState('fileName.asc');
     const [showConfirmDeletePopupStatus, setShowConfirmDeletePopupStatus] = useState(false);
     const [firmwareToDelete, setFirmwareToDelete] = useState(null);
+    const columnWrapperRef =  useRef(null);
 
+
+       useEffect(()=>{
+        const handleClickOutside=(event)=>{
+            if(columnWrapperRef.current && !columnWrapperRef.current.contains(event.target)){
+                setShowList(false);
+            }
+        }
+           
+                document.addEventListener("click",handleClickOutside);
+
+            return ()=>{
+                document.removeEventListener("click",handleClickOutside);
+            }
+        
+    },[showList]);
+
+    
     const getVersionData = async (url,isInterval = false) => {
          if(previousDataRef.current === ''){
             setIsLoading(true);
@@ -292,15 +310,16 @@ const FirmwareMng = () => {
                                             color: currentField === 'createdTime' ? 'black' : '#D7D7D7'
                                         }}
                                         /></th>
-                                        <th>Device Type <button className="glyphicon glyphicon-tasks" style={{backgroundColor:"#f2f2f2",paddingTop:'4px',position:'relative',border:'none',fontSize:'12px'}}  onClick={() => {setShowList(!showList);setSelected('all')}}></button>
+                                        <th>Device Type <button className="glyphicon glyphicon-tasks" style={{backgroundColor:"#f2f2f2",paddingTop:'4px',position:'relative',border:'none',fontSize:'12px'}}  ref={columnWrapperRef}  onClick={() => {setShowList(!showList);setSelected('all')}}></button>
                                         {showList && (  <ul className={profileStatusCont ? 'statuslistfm_sub_cont' : 'statuslistfm' }>
-                                        {statuses.map(({ label, value }) => (
+                                        {statuses.map(({ label, value }) => ( 
                                             <li key={value}>
                                             <label>
                                                 <input
                                                 type="checkbox"
                                                 className="incl"
                                                 checked={selected === value}
+                                                onClick={(e) => e.stopPropagation()}
                                                 onChange={() => handleChange(value)}
                                                 />
                                                 {label}

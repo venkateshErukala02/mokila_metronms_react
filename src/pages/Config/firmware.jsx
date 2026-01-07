@@ -20,6 +20,24 @@ const FirmwareContainer = () => {
     const [firmpopupData,setFirmpopupData] = useState([]);
     const [selectedTasks, setSelectedTasks] = useState([]);
     const previousDataRef = useRef(null);
+    const columnWrapperRef =  useRef(null);
+
+
+        useEffect(()=>{
+        const handleClickOutside=(event)=>{
+            if(columnWrapperRef.current && !columnWrapperRef.current.contains(event.target)){
+                setShowList(false);
+            }
+        }
+           
+                document.addEventListener("click",handleClickOutside);
+
+            return ()=>{
+                document.removeEventListener("click",handleClickOutside);
+            }
+        
+    },[showList]);
+
 
     const getFimwareData = async (url) => {
          if(previousDataRef.current === ''){
@@ -284,7 +302,7 @@ const handleBulkDelete = async () => {
                                         <th>Task ID</th>
                                         <th>Task Name</th>
                                         <th>Scheduled Time</th>
-                                        <th>Status <button className="glyphicon glyphicon-tasks configchangeicon" onClick={() => {setShowList(!showList);setSelected(4)}}></button>
+                                        <th>Status <button className="glyphicon glyphicon-tasks configchangeicon" ref={columnWrapperRef} onClick={() => {setShowList(!showList);setSelected(4)}}></button>
                                         {showList && (  <ul className={profileStatusCont ? 'statuslist_sub_cont' : 'statuslist'}>
                                         {statuses.map(({ label, value }) => (
                                             <li key={value}>
@@ -293,6 +311,7 @@ const handleBulkDelete = async () => {
                                                 type="checkbox"
                                                 className="incl"
                                                 checked={selected === value}
+                                                onClick={(e) => e.stopPropagation()}
                                                 onChange={() => handleChange(value)}
                                                 />
                                                 {label}

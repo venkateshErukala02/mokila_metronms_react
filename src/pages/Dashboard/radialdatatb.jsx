@@ -519,7 +519,12 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
                                         >
                                         {node[col.key]}
                                         </span>
-                                    ) : (
+                                    ) : col.key === "status" ? (
+                                        <span style={{fontWeight:'bold'}}
+                                        >
+                                        {node[col.key]}
+                                        </span>
+                                         ) :(
                                         node[col.key]
                                     )}
                                     </td>

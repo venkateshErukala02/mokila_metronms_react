@@ -259,7 +259,7 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
                                 <article style={{padding:'15px 0'}}>
                                 <center className="d-f">
                                         <button className="cancelbtn" type="button" onClick={handleProfileContclose}>Cancle</button>
-                                        <button className="creatsetingbtn" type="buttton" onClick={handleCreateDestinPath}>Create</button>
+                                        <button className="creatsetingbtn" type="buttton" onClick={handleCreateDestinPath}>{editMode ? 'Update' : 'Create'}</button>
                                 </center>
                                 </article>
                                

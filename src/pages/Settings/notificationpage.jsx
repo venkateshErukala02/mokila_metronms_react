@@ -9,6 +9,7 @@ const NotificationContainer=()=>{
         const [profileStatusCont, setProfileStatusCont] = useState(true);
         const [notifiContStatus,setNotifiContStatus] = useState('CreateNotification')
         const [notificationData, setNotificatioData] = useState([]);
+        const [notificationStatus, setNotificationStatus] = useState(null);
         const [isLoading, setIsLoading] = useState(false);
         const [isError, setIsError] = useState({ status: false, msg: "" });
         const [editNotification,setEditNotification] = useState(null);
@@ -27,7 +28,6 @@ const NotificationContainer=()=>{
         const [name,setName] = useState("");
         const [initialDelayProp,setInitialDelayProp] = useState("");
         const [notifiGroupUserData,setNotifiGroupUserData] = useState("");
-        const firstLoadRef = useRef(true);
 
 
          useEffect(() => {                  
@@ -71,9 +71,7 @@ const NotificationContainer=()=>{
         };
 
         const getNotificatioData = async (url) => {
-             if (firstLoadRef.current) {
             setIsLoading(true);
-            }
             try {
                 const username = 'admin';
                 const password = 'admin';
@@ -97,13 +95,9 @@ const NotificationContainer=()=>{
                     throw new Error("data not found");
                 }
             } catch (error) {
-                setIsLoading(false);
                 // setIsError({ status: true, msg: error.message });
             }finally {
-                if (firstLoadRef.current) {
                     setIsLoading(false);
-                    firstLoadRef.current = false;
-                }
              }
         };
 
@@ -379,7 +373,7 @@ const NotificationContainer=()=>{
     
                 if (response.ok) {
                     setIsLoading(false);
-                    setNotificatioData(data);
+                    setNotificationStatus(data);
                     // setIsError({ status: false, msg: "" });
                 } else {
                     throw new Error("data not found");
@@ -523,14 +517,14 @@ const NotificationContainer=()=>{
                                         </tr>
                                     )}
 
-                                     {!isLoading && !firstLoadRef.current  && notificationData.length === 0 &&  (
+                                    {!isLoading && Array.isArray(notificationData) && notificationData.length === 0 && (
                                         <tr>
                                             <td colSpan="12" style={{ textAlign: "center" }}>
-                                                No Data Available
+                                            No Data Available
                                             </td>
                                         </tr>
-                                    )}
-                                    {Array.isArray(notificationData) && notificationData?.map((item) => (
+                                        )}
+                                    {Array.isArray(notificationData) && notificationData.map((item) => (
                                         <tr key={item.id}>
                                              <td>{item.name}</td>
                                             <td>{item.uei}</td>

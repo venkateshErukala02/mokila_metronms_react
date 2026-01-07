@@ -64,9 +64,9 @@ article.row {
 
 
 thead.eventsthtb>tr{border-bottom: 2px solid rgb(33 35 39 / 7%);}
-thead.eventsthtb>tr>th{font-size: 12.5px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #212327;letter-spacing: 0.6px;}
+thead.eventsthtb>tr>th{font-size: 13px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #000000de;letter-spacing: 0.6px;}
 
-tbody.eventstbdtb>tr>td{font-size: 12px;font-family: "Lato-Regular";padding: 6px;letter-spacing: 0.2px;color: #50565e;padding-left: 0;}
+tbody.eventstbdtb>tr>td{font-size: 13px;font-family: "Arial";padding: 4px 6px 4px 0;color: #000000de;padding-left: 0;}
 tbody.eventstbdtb>tr:nth-child(odd){        background-color: rgb(229 241 255 / 50%);
 }
 .eventstbdtb{border-bottom: 1px solid rgb(33 35 39 / 7%);}

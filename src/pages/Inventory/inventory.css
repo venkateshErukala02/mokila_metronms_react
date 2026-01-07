@@ -64,9 +64,9 @@ article.row {
 
 .border-lr{border-left: 1px solid rgb(33 35 39 / 7%);border-right: 1px solid rgb(33 35 39 / 7%);height: 100vh;border-bottom: 1px solid rgb(33 35 39 / 7%);}
 thead.inventthtb>tr{border-bottom: 2px solid rgb(33 35 39 / 7%);}
-thead.inventthtb>tr>th{font-size: 12.5px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #212327;letter-spacing: 0.6px;}
+thead.inventthtb>tr>th{font-size: 13px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #000000de;letter-spacing: 0.6px;cursor: pointer;}
 
-tbody.inventbdtb>tr>td{font-size: 12px;font-family: "Lato-Regular";padding: 6px;letter-spacing: 0.2px;color: #50565e;}
+tbody.inventbdtb>tr>td{font-size: 12px;font-family: "Lato-Regular";padding: 6px;color: #000000de;}
 tbody.inventbdtb>tr:nth-child(odd){        background-color: rgb(229 241 255 / 50%);
 }
 .inventbdtb{border-bottom: 1px solid rgb(33 35 39 / 7%);}
@@ -195,6 +195,7 @@ tbody.inventbdtb>tr{border-bottom: 1px solid rgb(33 35 39 / 7%);}
     display: inline-block;
     font-size: 11px;
     /* vertical-align: text-top; */
+    cursor: pointer;
 }
 .glyphicon {
     position: relative;
@@ -206,6 +207,7 @@ tbody.inventbdtb>tr{border-bottom: 1px solid rgb(33 35 39 / 7%);}
     line-height: 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    cursor: pointer;
 }
 .createbtn {
     background-color: #006fff;

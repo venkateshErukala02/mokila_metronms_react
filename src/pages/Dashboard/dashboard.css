@@ -65,7 +65,7 @@ article.row {
 /* ----------------------------------------------------------------- */
 
 .tbone>tr{margin: 2px 0;display: inline-table;}
-.tbone>tr>td{font-size: 12.5px;font-family: "Arial";color: #000000de;padding: 3px;margin: 5px;letter-spacing: 0.1px;}
+.tbone>tr>td{font-size: 13px;font-family: "Arial";color: #000000de;padding: 3px;margin: 5px;letter-spacing: 0.1px;}
 .tbone>tr{border: 1px solid rgb(33 35 39 / 7%);background-color: rgb(229 241 255 / 50%);border-radius: 4px;}
 
 
@@ -76,9 +76,9 @@ article.row {
 
 
 thead.tbtwo>tr{border-bottom: 2px solid rgb(33 35 39 / 7%);}
-thead.tbtwo>tr>th{font-size: 12.5px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #000000de;letter-spacing: 0.6px;}
+thead.tbtwo>tr>th{font-size: 13px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #000000de;letter-spacing: 0.6px;cursor: pointer;}
 
-tbody.tbbdtwo>tr>td{font-size: 13px;font-family: "Lato-Regular";padding: 6px;color: #000000de;letter-spacing: 0.2px; white-space: nowrap;
+tbody.tbbdtwo>tr>td{font-size: 12px;font-family: "Lato-Regular";padding: 6px;color: #000000de; white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;}
 tbody.tbbdtwo>tr:nth-child(odd){        background-color:rgb(229 241 255 / 50%);
@@ -87,7 +87,6 @@ tbody.tbbdtwo>tr:nth-child(even){        background-color:white;
 }
 .tbbdtwo{border-bottom: 1px solid rgb(33 35 39 / 7%);}
 tbody.tbbdtwo>tr{border-bottom: 1px solid rgb(33 35 39 / 7%);}
-
 
 .tbbdtwo>tr:last-child{border-bottom: none;}
 
@@ -135,11 +134,11 @@ thead.failtagthtb > tr {
 }
 
 thead.failtagthtb > tr > th {
-  font-size: 12.5px;
+  font-size: 13px;
   font-family: "Lato-Regular";
   font-weight: 900;
   padding: 7px;
-  color: #212327;
+  color: #000000de;
   letter-spacing: 0.6px;
   text-align: left;
 }
@@ -149,11 +148,10 @@ article[style*="43vh"] {
 }
 
 tbody.failtagtbbd > tr > td {
-  font-size: 13px;
+  font-size: 12px;
   font-family: "Lato-Regular";
   padding: 6px;
-  color: #50565e;
-  letter-spacing: 0.2px;
+  color: #000000de;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -455,4 +453,5 @@ tbody.failtagtbbd > tr:last-child {
     display: inline-block;
     font-size: 11px;
     vertical-align: text-top;
+    cursor: pointer;
 }

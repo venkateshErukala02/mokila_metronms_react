@@ -18,6 +18,7 @@ const ConfigChange = () => {
     const [selectedTasks, setSelectedTasks] = useState([]);
     const [showPopup,setShowPopup] = useState(false);
     const [configpopupData,setConfigpopupData] = useState([]);
+    const columnWrapperRef =  useRef(null);
 
     const statuses = [
         { label: "All", value: 4 },
@@ -26,6 +27,22 @@ const ConfigChange = () => {
         { label: "Successful", value: 2 },
         { label: "Failed", value: 3 },
     ];
+
+       useEffect(()=>{
+        const handleClickOutside=(event)=>{
+            if(columnWrapperRef.current && !columnWrapperRef.current.contains(event.target)){
+                setShowList(false);
+            }
+        }
+           
+                document.addEventListener("click",handleClickOutside);
+
+            return ()=>{
+                document.removeEventListener("click",handleClickOutside);
+            }
+        
+    },[showList]);
+
 
     const handleChange = (value) => {
         setSelected(value); 
@@ -283,7 +300,7 @@ const handleBulkDelete = async () => {
                                         <th>Task Name</th>
                                         <th>Scheduled Time</th>
                                         <th>Status
-                                            <button className="glyphicon glyphicon-tasks configchangeicon"  onClick={() => {setShowList(!showList);setSelected(4)}}></button>
+                                            <button className="glyphicon glyphicon-tasks configchangeicon"  onClick={() => {setShowList(!showList);setSelected(4)}} ref={columnWrapperRef}></button>
                                         {showList && (  <ul className={profileStatusCont ? 'configchngstatuslist_sub_cont' : 'configchngstatuslist'}>
                                         {statuses.map(({ label, value }) => (
                                             <li key={value}>
@@ -292,6 +309,7 @@ const handleBulkDelete = async () => {
                                                 type="checkbox"
                                                 className="incl"
                                                 checked={selected === value}
+                                                onClick={(e) => e.stopPropagation()}
                                                 onChange={() => handleChange(value)}
                                                 />
                                                 {label}

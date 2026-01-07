@@ -115,14 +115,15 @@ const visibleData = pieData.filter(item => activeItems[item.name]);
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const entry = payload[0];
+    const fill = entry.payload.fill;
     const name = entry.name;
     const value = entry.value;
 
     const displayName = legendLabels[name] || name;
 
     return (
-      <div style={{ backgroundColor: '#222', color: '#fff', padding: '8px', borderRadius: '5px' }}>
-        <p style={{ margin: 0 }}><strong>{displayName}: {value}</strong></p>
+      <div className='scopecharttootltipart'>
+        <button style={{backgroundColor: fill}} className='scopecharttooltipbtn'></button><p className='scopecharttooltippara'><strong>{displayName}: {value}</strong></p>
       </div>
     );
   }

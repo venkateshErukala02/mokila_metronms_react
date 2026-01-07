@@ -56,7 +56,7 @@ const validateEmail = (email) => {
 
     };
 
-    const method = isEditMode ? 'PUT' :'POST';
+    const method = isEditMode ? 'POST' :'POST';
     const url= isEditMode ? 'api/v2/eventnotice/add' :'api/v2/eventnotice/add';
 
     try {
@@ -73,7 +73,6 @@ const validateEmail = (email) => {
         });
         if (response.ok) {
             // setSuccess('Discovery started successfully');
-            alert('Discovery started successfully')
             handleProfileContclose();
             // if(refreshSectionData) refreshSectionData();
             // setSectionName('')
