@@ -18,7 +18,7 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
     const [isImmediate,setIsImmediate] = useState(true);
     const [deviceType,setDeviceType] = useState('');
     const [searchValue, setSearchValue] = useState('');
-    const [searchData, setSearchData] = useState('');
+    const [searchData, setSearchData] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
     const [addedItems, setAddedItems] = useState([]);
     const [searchBtn, setSearchBtn] = useState(false);
@@ -100,7 +100,7 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
 
     useEffect(() => {
         if (isEditMode && version) {
-            setFileName(version.fileName || '');
+            setFileName(version.actualName || '');
             setDeviceType(version.deviceType || '');
         } else {
             setFileName('');
@@ -156,13 +156,13 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
         
             const handleAddToTable = (event) => {
         
-                if (!addedItems.includes(event.id)) {
-                    setAddedItems([...addedItems, event.id])
-                }
-        
-                if (!selectedItems.some(item => item.id === event.id)) {
-                    setSelectedItems([...selectedItems, event])
-                }
+                setAddedItems(prev =>
+                    prev.includes(event.id) ? prev : [...prev, event.id]
+                );
+
+                setSelectedItems(prev =>
+                    prev.some(item => item.id === event.id) ? prev : [...prev, event]
+                );
             };
         
             useEffect(() => {
@@ -244,6 +244,28 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
     }
 
 }
+
+const allAdded =
+    Array.isArray(searchData) &&
+    searchData.length > 0 &&
+    searchData.every(item => addedItems.includes(item.id));
+
+const handleAddAll = () => {
+    if (!Array.isArray(searchData)) return;
+
+    const allIds = searchData.map(item => item.id);
+
+    setAddedItems(prev => {
+        const merged = new Set([...prev, ...allIds]);
+        return Array.from(merged);
+    });
+
+    setSelectedItems(prev => {
+        const existingIds = new Set(prev.map(item => item.id));
+        const newItems = searchData.filter(item => !existingIds.has(item.id));
+        return [...prev, ...newItems];
+    });
+};
 
 
 
@@ -329,8 +351,27 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
                                         <div style={{ padding: "10px" }}>No Data</div>
                                     ) : (
                                     <ul className="searchlist">
+                                         {searchData?.length > 0 && (
+                                            <li>
+                                                <article style={{ display: 'flex', justifyContent: 'end', width: '100%' }}>
+                                                    {/* <h5 className="scheduletitle">Add All Results</h5> */}
+                                                    <button
+                                                        className="addbtn"
+                                                        onClick={handleAddAll}
+                                                        disabled={allAdded}
+                                                        style={{
+                                                            backgroundColor: allAdded ? '#ccc' : '#28a745',
+                                                            color: allAdded ? '#666' : 'white',
+                                                            cursor: allAdded ? 'not-allowed' : 'pointer'
+                                                        }}
+                                                    >
+                                                        {allAdded ? 'Added' : 'Add All'}
+                                                    </button>
+                                                </article>
+                                            </li>
+                                        )}
                                         {searchData && searchData.map((event) => {
-                                            const isAdded = addedItems.includes(event.id);
+                                            const isAdded = addedItems.includes(event.id) || allAdded;
                                             return (
                                                 <li key={event.id}>
                                                     <article style={{ justifyContent: "space-between", display: 'flex', width: "100%" }}>
@@ -386,7 +427,7 @@ const FirmwareManagerApply = ({ handleSubContainer, refreshLineData, mode, versi
 
                             <center style={{ marginTop: '16px', marginBottom: '16px' }}>
                                 <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
-                                <button type="button" className="creatsetingbtn" onClick={handleApplyFirmware}>Apply</button>
+                                <button type="button" className="creatsetingbtn" onClick={handleApplyFirmware} disabled={selectedItems.length === 0}>Apply</button>
                             </center>
                                 </article>
                         </form>

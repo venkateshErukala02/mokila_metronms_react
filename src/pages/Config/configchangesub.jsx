@@ -19,7 +19,7 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
     const [selectedDate, setSelectedDate] = useState('');
     const [isImmediate, setIsImmediate] = useState(true)
     const [searchValue, setSearchValue] = useState('');
-    const [searchData, setSearchData] = useState('');
+    const [searchData, setSearchData] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
     const [addedItems, setAddedItems] = useState([]);
     const [searchBtn, setSearchBtn] = useState(false);
@@ -115,13 +115,13 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
 
     const handleAddToTable = (event) => {
 
-        if (!addedItems.includes(event.id)) {
-            setAddedItems((prevAddedItems) => [...prevAddedItems, event.id]);
-        }
+        setAddedItems(prev =>
+            prev.includes(event.id) ? prev : [...prev, event.id]
+        );
 
-        if (!selectedItems.some(item => item.id === event.id)) {
-            setSelectedItems((prevSelectedItems) => [...prevSelectedItems, event]);
-        }
+        setSelectedItems(prev =>
+            prev.some(item => item.id === event.id) ? prev : [...prev, event]
+        );
     };
 
     useEffect(() => {
@@ -289,6 +289,30 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
             setTimestamp(timestamp);        
         };
 
+
+const allAdded =
+    Array.isArray(searchData) &&
+    searchData.length > 0 &&
+    searchData.every(item => addedItems.includes(item.id));
+
+const handleAddAll = () => {
+    if (!Array.isArray(searchData)) return;
+
+    const allIds = searchData.map(item => item.id);
+
+    setAddedItems(prev => {
+        const merged = new Set([...prev, ...allIds]);
+        return Array.from(merged);
+    });
+
+    setSelectedItems(prev => {
+        const existingIds = new Set(prev.map(item => item.id));
+        const newItems = searchData.filter(item => !existingIds.has(item.id));
+        return [...prev, ...newItems];
+    });
+};
+
+
     return (
 
         <>
@@ -447,6 +471,25 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                                         <div style={{ padding: "10px" }}>No Data</div>
                                     ) : (
                                     <ul className="searchlist">
+                                          {searchData?.length > 0 && (
+                                            <li>
+                                                <article style={{ display: 'flex', justifyContent: 'end', width: '100%' }}>
+                                                    {/* <h5 className="scheduletitle">Add All Results</h5> */}
+                                                    <button
+                                                        className="addbtn"
+                                                        onClick={handleAddAll}
+                                                        disabled={allAdded}
+                                                        style={{
+                                                            backgroundColor: allAdded ? '#ccc' : '#28a745',
+                                                            color: allAdded ? '#666' : 'white',
+                                                            cursor: allAdded ? 'not-allowed' : 'pointer'
+                                                        }}
+                                                    >
+                                                        {allAdded ? 'Added' : 'Add All'}
+                                                    </button>
+                                                </article>
+                                            </li>
+                                        )}
                                         {searchData && searchData.map((event) => {
                                             const isAdded = addedItems.includes(event.id);
                                             return (

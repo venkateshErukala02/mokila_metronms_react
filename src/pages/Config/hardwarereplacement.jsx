@@ -17,6 +17,17 @@ const HardwareReplacementContainer = () => {
     const [selectedIps, setSelectedIps] = useState([]);
     const dropdownRef = useRef(null);
     const [selectedRows, setSelectedRows] = useState([]);
+    const [showUploadStatus,setShowUploadStatus] = useState(false);
+    const [statusData,setStatusData] = useState([]);
+    const statusTimeoutRef = useRef(null);
+
+    useEffect(() => {
+        return () => {
+            if (statusTimeoutRef.current) {
+                clearTimeout(statusTimeoutRef.current);
+            }
+        };
+    }, []);
 
       useEffect(() => {
             function handleClickOutside(event) {
@@ -125,7 +136,7 @@ const HardwareReplacementContainer = () => {
     const handleOldDeviceSearchClick = (e) => {
         e.preventDefault();
         if (!searchOldDeviceValue.trim()) {
-            alert("Please enter a search term");
+            alert("Please enter a valid search IP");
 
         } else {
             setSearchOldDeviceTrigger(prev => prev + 1);
@@ -152,6 +163,46 @@ const HardwareReplacementContainer = () => {
         );
         };
 
+         const handleHardwareReplacementStatus = async () => {
+            setLoading(true);
+            setError('');
+            setSuccess('');
+
+        try {
+            const response = await fetch(`api/v2/profiles/rephard/status/${selectedItems[0].id}/?filename=${selectedRows[0]}`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            });
+                const data = await response.json();
+            if (response.ok) {
+                setStatusData(data);
+                setShowUploadStatus(true);
+
+                const pollCodes = [1, 2, 3, 5,7];
+
+            if (pollCodes.includes(data.code)) {
+                if (statusTimeoutRef.current) {
+                    clearTimeout(statusTimeoutRef.current);
+                }
+
+                statusTimeoutRef.current = setTimeout(() => {
+                    handleHardwareReplacementStatus();
+                }, 10000);
+            }
+
+            } else {
+                const errText = await response.text();
+                setError(`Error starting hardware replacement: ${errText}`);
+            }
+        } catch (error) {
+            setError('An error occurred while contacting the server.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
       const handleHardwareReplacement = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -159,13 +210,9 @@ const HardwareReplacementContainer = () => {
         setSuccess('');
 
         try {
-            const username = 'admin';
-            const password = 'admin';
-            const token = btoa(`${username}:${password}`)
             const response = await fetch(`api/v2/profiles/rephard/${selectedItems[0].id}/?filename=${selectedRows[0]}`, {
                 method: "POST",
                 headers: {
-                    // 'Authorization': `Basic ${token}`,
                     'Content-Type': 'application/json'
                 },
             });
@@ -173,6 +220,7 @@ const HardwareReplacementContainer = () => {
             if (response.ok) {
                 setSuccess('Hardware Replacement upload has started.');
                 alert('Hardware Replacement upload has started.');
+                handleHardwareReplacementStatus();
                 setSelectedItems([]);
                 setSearchOldDeviceData([]);
                 setAddedItems([]);
@@ -188,6 +236,10 @@ const HardwareReplacementContainer = () => {
         }
     };
 
+
+    const handleClosePopup=()=>{
+        setShowUploadStatus(false);
+      }
 
 
     return (
@@ -362,6 +414,16 @@ const HardwareReplacementContainer = () => {
                             </article>
                         </article>
                     </article>
+                    {showUploadStatus && <>
+                            <article className="hardwarestatuspopup">
+                                <article className="hardwarestatusboxstyle">
+                                <h1 className="hardwarestatustitle">{statusData?.reason}</h1>
+                                <article className="f-r">
+                                <button className="confirmdeletebtn" type="button" onClick={handleClosePopup}>Close</button>
+                                </article>
+                                </article>
+                            </article>
+                            </>}
                 </article>
                 <article className="col-1"></article>
 

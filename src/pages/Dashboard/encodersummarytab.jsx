@@ -306,7 +306,9 @@ const EncoderSummaryTab = ({currentTab }) => {
                                 </tr>
                             </tbody>
                             </table>    
-
+                          <article>
+                            {/* <EncoderTxChart nodeItemDt={nodeItemDt} graphOption={'live'}/> */}
+                          </article>
                         </article>
                     </article>
                   </article>

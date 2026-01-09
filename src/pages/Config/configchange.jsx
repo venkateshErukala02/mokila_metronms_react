@@ -248,7 +248,8 @@ const handleBulkDelete = async () => {
     }
 };
 
-
+    const formatDateTime = (dateTime) =>
+        dateTime ? dateTime.split('.')[0] : '';
 
     return (
         <>
@@ -357,7 +358,7 @@ const handleBulkDelete = async () => {
                                             /></td>
                                             <td>{item.taskId}</td>
                                             <td>{item.task}</td>
-                                            <td>{item.dateNTime}</td>
+                                            <td>{formatDateTime(item.dateNTime)}</td>
                                             <td>{item.status}</td>
                                             <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" onClick={() => handleDeleteConfigChange(item)}></i></td>
                                         </tr>
