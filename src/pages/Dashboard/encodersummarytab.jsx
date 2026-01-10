@@ -1,16 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import nodeimage from "../../assets/img/suinodeview.png";
 import obcimage from '../../assets/img/obcimg1.png'
-import radioimage from "../../assets/img/radiomode.png";
-import ptmplinkimage from "../../assets/img/PTMPlink.png";
-import bootloader from "../../assets/img/bootloader.png";
-import NetworkMonitoringDashboard from "./nodeviewchart";
-import TranscoderDashboard from "./transcoderdashboard";
-import ObcGraphs from "./obcgraphs";
-import TranscoderObcSubview from "./obcviewsubtabs/transcoderview";
-import StationradioObcSubview from "./obcviewsubtabs/stationradioview";
-import TrainradioObcSubview from "./obcviewsubtabs/trainradioview";
+import EncoderTxChart from "./encodertxrxgraph";
 
 
 const EncoderSummaryTab = ({currentTab }) => {
@@ -20,6 +11,8 @@ const EncoderSummaryTab = ({currentTab }) => {
   const [diskData, setDiskData] = useState("");
   const [currentObcsubTab, setCurrentObcsubTab] = useState('obc')
   const [nodeItemDt, setNodeItemDt] = useState([]);
+  const [graphOption, setGraphOption] = useState('live');
+  const [graphOptionValue, setGraphOptionValue] = useState('1l');
 
   const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress) || localStorage.getItem('nodeIpaddress');
 
@@ -166,30 +159,16 @@ const EncoderSummaryTab = ({currentTab }) => {
   }, [nodeIpaddress, currentTab]);
 
 
-  const renderCurrentObcsubTab = (value) => {
-    switch (value) {
-      case 'obc':
-        return <ObcGraphs />
-        break;
-      case 'transcoder':
-         return <TranscoderObcSubview />
-        break;
-      case 'stationradio':
-         return <StationradioObcSubview />
-        break;
-      case 'trainradio':
-        return <TrainradioObcSubview />
-        break
-      default:
-        break;
-    }
-  }
 
 
   const handleRowClick = (value) => {
     setCurrentObcsubTab(value);
   }
 
+ const handleGraphopt = (value, numb) => {
+    setGraphOption(value);
+    setGraphOptionValue(numb);
+  }
 
   return (
     <>
@@ -236,27 +215,7 @@ const EncoderSummaryTab = ({currentTab }) => {
                           <h6>EthernetMAC<span> {nodeItemDt.ethernetMAC}</span></h6></li>
                         <li>
                           <h6>SoftwareVersion<span> {nodeItemDt.softwareVersion}</span></h6></li>
-                        {/* <li>
-                          <h6> Free
-                            <span>
-                              {diskData.free}
-                            </span>
-                          </h6>
-                        </li>
-                        <li>
-                          <h6> Used
-                            <span>
-                              {diskData.used}
-                            </span>
-                          </h6>
-                        </li>
-                        <li>
-                          <h6> Percentage
-                            <span>
-                              {diskData.percentage}
-                            </span>
-                          </h6>
-                        </li> */}
+                       
                       </ul>
                     </article>
                   </article>
@@ -274,6 +233,7 @@ const EncoderSummaryTab = ({currentTab }) => {
                   <article style={{padding:'15px'}}>
                     <article className="row">
                         <article className="col-md-12">
+                          <article className="col-12" style={{justifyContent:'center',display:'flex'}}>
                             <table className="col-6 w-full table-fixed border-allsd">
                             <thead className="encodertbtwo">
                                 <tr>
@@ -306,8 +266,26 @@ const EncoderSummaryTab = ({currentTab }) => {
                                 </tr>
                             </tbody>
                             </table>    
+                            </article>
                           <article>
-                            {/* <EncoderTxChart nodeItemDt={nodeItemDt} graphOption={'live'}/> */}
+                            <article style={{marginTop:'36px',textAlign:'center'}}><div className="btn-group" data-toggle="buttons" style={{ marginLeft: '100px', marginBottom: '10px' }}>
+                <label className={`btngrphopt ${graphOption === 'live' ? 'active' : ''}`} onClick={() => handleGraphopt('live','1l')} role="button" tabindex="0">
+
+                  Live
+                </label>
+                <label className={`btngrphopt ${graphOption === 'onehour' ? 'active' : ''}`} onClick={() => handleGraphopt('onehour', '1h')} role="button" tabindex="0">
+                  1 Hour </label>
+                <label className={`btngrphopt ${graphOption === 'oneday' ? 'active' : ''}`} onClick={() => handleGraphopt('oneday', '1d')} role="button" tabindex="0">
+                  1 Day </label>
+                <label className={`btngrphopt ${graphOption === 'oneweek' ? 'active' : ''}`} onClick={() => handleGraphopt('oneweek', '1w')} role="button" tabindex="0">
+                  1 Week </label>
+                <label className={`btngrphopt ${graphOption === 'onemonth' ? 'active' : ''}`} onClick={() => handleGraphopt('onemonth', '1m')} role="button" tabindex="0">
+                  1 Month </label>
+              </div></article>
+                            <article>
+                              <EncoderTxChart graphOption={graphOption} graphOptionValue={graphOptionValue}/>
+                            </article>
+
                           </article>
                         </article>
                     </article>

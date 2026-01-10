@@ -20,6 +20,22 @@ const HardwareReplacementContainer = () => {
     const [showUploadStatus,setShowUploadStatus] = useState(false);
     const [statusData,setStatusData] = useState([]);
     const statusTimeoutRef = useRef(null);
+    const [timeLeft, setTimeLeft] = useState(30);
+
+  
+        useEffect(() => {
+            const timer = setInterval(() => {
+            setTimeLeft((prevTime) => {
+                if (prevTime <= 1) {
+                return 30; 
+                }
+                return prevTime - 1;
+            });
+            }, 1000);
+
+            return () => clearInterval(timer);
+        }, []);
+
 
     useEffect(() => {
         return () => {
@@ -187,10 +203,12 @@ const HardwareReplacementContainer = () => {
                     clearTimeout(statusTimeoutRef.current);
                 }
 
+                startCountdown(); 
+
                 statusTimeoutRef.current = setTimeout(() => {
                     handleHardwareReplacementStatus();
-                }, 10000);
-            }
+                }, 30000);
+                }
 
             } else {
                 const errText = await response.text();
@@ -240,6 +258,23 @@ const HardwareReplacementContainer = () => {
     const handleClosePopup=()=>{
         setShowUploadStatus(false);
       }
+
+      
+const startCountdown = () => {
+  setTimeLeft(30);
+
+  const countdown = setInterval(() => {
+        setTimeLeft(prev => {
+        if (prev <= 1) {
+            clearInterval(countdown);
+            return 30;
+        }
+        return prev - 1;
+        });
+    }, 1000);
+    };
+
+
 
 
     return (
@@ -401,7 +436,10 @@ const HardwareReplacementContainer = () => {
                                     </div>
                                 </article>
                             </article>
-                            <article style={{textAlign:'center'}}>
+                            {showUploadStatus && <article style={{textAlign:'center'}}>
+                                 <h4 className="hardwaresttitle"><strong>Status: </strong> {statusData?.reason} <span>(Refreshing status in {timeLeft} secs..)</span></h4>
+                                </article>}
+                            <article style={{textAlign:'center'}}>                              
                                 <button className="searchfirmbtn" type="button" onClick={handleHardwareReplacement}>Hardware Replacement</button>
                             </article>
                             <article style={{margin:'12px 22px'}}>
@@ -414,16 +452,6 @@ const HardwareReplacementContainer = () => {
                             </article>
                         </article>
                     </article>
-                    {showUploadStatus && <>
-                            <article className="hardwarestatuspopup">
-                                <article className="hardwarestatusboxstyle">
-                                <h1 className="hardwarestatustitle">{statusData?.reason}</h1>
-                                <article className="f-r">
-                                <button className="confirmdeletebtn" type="button" onClick={handleClosePopup}>Close</button>
-                                </article>
-                                </article>
-                            </article>
-                            </>}
                 </article>
                 <article className="col-1"></article>
 
