@@ -77,7 +77,7 @@ const StationNodesvgTable=({textName,yardfacilitieData})=>{
                                 </tr>
                             )}
 
-                            {!isLoading && !isError.status && yardfacilitieData.length === 0 && (
+                            {!isLoading && !isError.status && yardfacilitieData?.length === 0 && (
                                 <tr>
                                     <td colSpan="8" style={{ textAlign: "center" }}>
                                         No Data Available
@@ -87,7 +87,7 @@ const StationNodesvgTable=({textName,yardfacilitieData})=>{
 
                             {!isLoading &&
                                 !isError.status &&
-                                yardfacilitieData.length > 0 &&
+                                yardfacilitieData?.length > 0 &&
                                 yardfacilitieData.map((node, index) => (
                                     <tr key={index}>
                                         <td>{node.systemName}</td>

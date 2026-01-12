@@ -21,20 +21,19 @@ const HardwareReplacementContainer = () => {
     const [statusData,setStatusData] = useState([]);
     const statusTimeoutRef = useRef(null);
     const [timeLeft, setTimeLeft] = useState(30);
-
+    const countdownRef = useRef(null);
   
-        useEffect(() => {
-            const timer = setInterval(() => {
-            setTimeLeft((prevTime) => {
-                if (prevTime <= 1) {
-                return 30; 
-                }
-                return prevTime - 1;
-            });
-            }, 1000);
+   useEffect(() => {
+        return () => {
+            if (countdownRef.current) {
+            clearInterval(countdownRef.current);
+            }
+            if (statusTimeoutRef.current) {
+            clearTimeout(statusTimeoutRef.current);
+            }
+        };
+    }, []);
 
-            return () => clearInterval(timer);
-        }, []);
 
 
     useEffect(() => {
@@ -259,20 +258,23 @@ const HardwareReplacementContainer = () => {
         setShowUploadStatus(false);
       }
 
-      
-const startCountdown = () => {
+ const startCountdown = () => {
+  if (countdownRef.current) {
+    clearInterval(countdownRef.current);
+  }
+
   setTimeLeft(30);
 
-  const countdown = setInterval(() => {
-        setTimeLeft(prev => {
-        if (prev <= 1) {
-            clearInterval(countdown);
-            return 30;
-        }
-        return prev - 1;
-        });
-    }, 1000);
-    };
+  countdownRef.current = setInterval(() => {
+    setTimeLeft(prev => {
+      if (prev <= 1) {
+        clearInterval(countdownRef.current);
+        return 0;
+      }
+      return prev - 1;
+    });
+  }, 1000);
+};
 
 
 

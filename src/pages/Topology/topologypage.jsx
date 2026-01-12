@@ -522,6 +522,9 @@ useEffect(()=>{
                             <h1 className="mapheading">{getNodeLabel(textName)}</h1>
                             )}
                         </article>
+                        <article className="col-9" style={{justifyContent:'end',display:'flex'}}>
+                          {trainLabelDiply ?    <button className="createbtn" type="button" onClick={handleTrainVwTab}>Back</button> :''}
+                        </article>
                         </article>
                     )}
                     <hr className="topohr" />
