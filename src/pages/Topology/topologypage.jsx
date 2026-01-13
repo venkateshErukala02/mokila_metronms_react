@@ -197,7 +197,7 @@ useEffect(()=>{
     }
 
 
-     const getNodeLabel = (node) => {
+    const getNodeLabel = (node) => {
     const mode = node.data?.mode;
   
     if (mode === "region" || mode === "location") {
@@ -206,7 +206,9 @@ useEffect(()=>{
       return `Yard- ${node.text}` || "Unnamed Facility";
     }else if (mode === "facility" && (node.text === "Finch trail track" || node.text === "VMC trail track" || node.text === 'Carhouse')) {
       return `${node.text}` || "Unnamed Facility";
-    }else if (mode === "facility" || node.data?.parent === "yard_1") {
+    }else if (stationTagview === true) {
+        return `Station- ${circleId}`;
+    }else if ( mode === "facility" || node.data?.parent === "yard_1") {
       return `Station- ${node.text}` || "Unnamed Facility";
     } else {
       return node.data?.display || node.text || "Unknown";
@@ -226,9 +228,9 @@ useEffect(()=>{
         return (
       <span>
             Link View - {textName.data.display}
-        <span onClick={(e)=>{ 
+        {/* <span onClick={(e)=>{ 
             e.stopPropagation();
-            handleStationTabview();}} style={{ marginLeft: '8px', cursor: 'pointer' }}>x</span>
+            handleStationTabview();}} style={{ marginLeft: '8px', cursor: 'pointer' }}>x</span> */}
       </span>
     );
     } else if(mode === "facility"){
@@ -254,18 +256,18 @@ useEffect(()=>{
          return (
       <span>
         Link View - Station Tag
-        <span onClick={(e)=>{ 
+        {/* <span onClick={(e)=>{ 
             e.stopPropagation();
-            handleStationTabview();}} style={{ marginLeft: '8px', cursor: 'pointer' }}>x</span>
+            handleStationTabview();}} style={{ marginLeft: '8px', cursor: 'pointer' }}>x</span> */}
       </span>
    ) }
    else if (lineTagview === true){
          return (
       <span>
         Link View - Line Tag
-        <span onClick={(e)=>{ 
+        {/* <span onClick={(e)=>{ 
             e.stopPropagation();
-            handleStationTabview();}} style={{ marginLeft: '8px', cursor: 'pointer' }}>x</span>
+            handleStationTabview();}} style={{ marginLeft: '8px', cursor: 'pointer' }}>x</span> */}
       </span>
    ) } 
    else {
@@ -288,6 +290,7 @@ useEffect(()=>{
         setTrainView(false);
         setStationView(true);
         setTrainLabelDiply(false);
+        setStationTagview(false);
     }
 
     const handleStationVwVisible=()=>{
@@ -304,6 +307,7 @@ useEffect(()=>{
         setStationTagview(true);
         setStationCount(prev => !prev);
         setStationView(false);
+        setTextName('');
 
     }
     const getLineId = (id) => {
@@ -474,7 +478,9 @@ useEffect(()=>{
                                 </button>
                             </li>
 
-                           {trainLabelDiply ?  <li><a onClick={handleTrainVwTab}>{trainId}</a><button onClick={handleTrainVwVisible}>x</button></li> : '' }
+                           {trainLabelDiply ?  <li><a onClick={handleTrainVwTab}>{trainId}</a>
+                           <button onClick={handleTrainVwVisible}>x</button>
+                           </li> : '' }
                            <li>
                             <button onClick={handleTagTableView}  className={selectedTab === 'tagtable' ? 'active' : ''}>
                                     Tag Table
@@ -513,17 +519,49 @@ useEffect(()=>{
                     </>
                 ) : (
                     <>
-                    {['facility', 'location', 'region'].includes(textName?.data?.mode) && (
-                        <article className="row">
-                        <article className="col-3">
+                    {(textName === '' && stationTagview === true) &&(
+                            <>
+                            <article className="row">
+                        <article className="col-4">
                             {trainView === true ? (
                             <h1 className="mapheading">Train View : {trainId}</h1>
                             ) : (
-                            <h1 className="mapheading">{getNodeLabel(textName)}</h1>
+                                <>
+                            <h1 className="mapheading"> {rdDataRef.current?.[0]?.station && `Station - ${rdDataRef.current[0].station}`}</h1>
+                            </>
                             )}
                         </article>
-                        <article className="col-9" style={{justifyContent:'end',display:'flex'}}>
-                          {trainLabelDiply ?    <button className="createbtn" type="button" onClick={handleTrainVwTab}>Back</button> :''}
+                        <article className="col-8" style={{justifyContent:'end',display:'flex',paddingTop:'6px',paddingRight:'8px'}}>
+                          {trainView === true ? (
+                           ''
+                            ) : (
+                                <>
+                              {stationView === false ? <button className="createbtn" type="button" onClick={handleTrainVwVisible}>Back</button> : ''}
+                            </>
+                            )}
+                        </article>
+                        </article>
+                            </>
+                    )}
+                    {(['facility', 'location', 'region'].includes(textName?.data?.mode)) && (
+                        <article className="row">
+                        <article className="col-4">
+                            {trainView === true ? (
+                            <h1 className="mapheading">Train View : {trainId}</h1>
+                            ) : (
+                                <>
+                            <h1 className="mapheading">{getNodeLabel(textName)}</h1>
+                            </>
+                            )}
+                        </article>
+                        <article className="col-8" style={{justifyContent:'end',display:'flex',paddingTop:'6px',paddingRight:'8px'}}>
+                          {trainView === true ? (
+                           ''
+                            ) : (
+                                <>
+                              {stationView === false ? <button className="createbtn" type="button" onClick={handleTrainVwVisible}>Back</button> : ''}
+                            </>
+                            )}
                         </article>
                         </article>
                     )}

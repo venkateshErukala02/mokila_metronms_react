@@ -286,7 +286,7 @@ const Callfun=(element,vl)=>{
 
 
 useEffect(() => {
-  if (!svgContent || textName.data?.mode === 'facility') {
+  if (!svgContent || textName?.data?.mode === 'facility') {
 
   const svgRoot = svgContainerRef.current;
   if (!svgRoot) return;
@@ -676,7 +676,7 @@ useEffect(() => {
           const s = text.id.replace("_txt", "");
           if (s === circleId) {
             // getCurrentId(circleId);
-            setStationTagview(true)
+           setStationTagview?.(true);
           }
         });
       } else if (event.type === 'contextmenu' && event.button === 2) { 
