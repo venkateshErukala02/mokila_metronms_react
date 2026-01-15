@@ -47,7 +47,8 @@ const TopoPg = () => {
     const isVisible = useSelector(state => state.visibility.isVisible);
     const [timeLeft, setTimeLeft] = useState(30);
     const [yardfacilitieData, setYardfacilitieData] = useState([]);
-    
+    const [selectedTreeNodeId, setSelectedTreeNodeId] = useState({});
+    const [uniquefacilitieData,setUniquefacilitieData] = useState([]);
 
     const handleNodeClick = (value) => {
         setTextName(value);
@@ -62,6 +63,13 @@ const [stationView,setStationView]= useState(true);
 const [trainLabelDiply,setTrainLabelDiply] = useState(false);
 const [trainId,setTrainId] = useState('');
 
+useEffect(()=>{
+        if (!circleId) return;
+        let url= `api/v2/facilities?_s=uniqueName==${circleId}`;
+        getUniquefacilitieData(url);
+
+    },[circleId]);
+
 useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => {
@@ -74,6 +82,32 @@ useEffect(() => {
 
     return () => clearInterval(timer);
   }, []);
+
+
+    const getUniquefacilitieData = async (url) => {
+    setIsLoading(true);
+    setIsError({ status: false, msg: "" });
+    try {
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                'Authorization': `Basic ${btoa('admin:admin')}`
+            }
+        });
+        const data = await response.json();
+        if (response.ok) {
+            setUniquefacilitieData(data || []);
+            setIsError({ status: false, msg: "" });
+        } else {
+            throw new Error("Data not found");
+        }
+    } catch (error) {
+        setIsError({ status: true, msg: error.message });
+    } finally {
+        setIsLoading(false);
+    }
+};
+ 
 
   const getYardfacilitieData = async (url) => {
     setIsLoading(true);
@@ -304,6 +338,8 @@ useEffect(()=>{
 
     const getCircleId = (id) => {
         setCircleId(id);
+        setSelectedTreeNodeId({ id: id,
+            path: ["global", "region", "location"]}); 
         setStationTagview(true);
         setStationCount(prev => !prev);
         setStationView(false);
@@ -460,7 +496,7 @@ useEffect(()=>{
                         </article>
                         <hr  className="hrll" style={{marginBottom:'0px'}}/>
                         <article>
-                        <TreeList getElementAtEvent={handleNodeClick} />
+                        <TreeList getElementAtEvent={handleNodeClick} selectedNodeId={selectedTreeNodeId} circleId={circleId}/>
                             </article>
                             <article>
                             </article>

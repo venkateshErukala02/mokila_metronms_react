@@ -48,30 +48,29 @@ const Tree = ({ data,getElementAtEvent,selectedNode,setSelectedNode,isLastChild}
 
 
 const TreeNode = ({ node, selectedNode, setSelectedNode,getElementAtEvent,isLastChild,dataName }) => {
-  const [childVisible, setChildVisibility] = useState(
-  selectedNode?.text === dataName
-);
+//   const [childVisible, setChildVisibility] = useState(
+//   selectedNode?.text === dataName
+// );
+const [childVisible, setChildVisible] = useState(false);
 
+useEffect(() => {
+    // Expand if this node is the selected one
+    if (selectedNode?.data?.id === node.data?.id) {
+      setChildVisible(true);
+    }
+  }, [selectedNode, node]);
 
   if (node.data?.mode === 'sta') {
     return null;
   }
 
-
-  let children = [];
-
-  const hasChild = node.children ? true : false;
+  // let children = [];
 
  
-  
 
-  if(Array.isArray(node.children)){
-    children = node;
-  }else if(node.children && Array.isArray(node.children.nodes)){
-    children = node.children.nodes;
-  }
+ if (node.data?.mode === 'sta') return null;
 
- 
+  const hasChild = Array.isArray(node.children) && node.children.length > 0;
 
   const getNodeLabel = (node) => {
     const mode = node.data?.mode;
@@ -120,72 +119,125 @@ const TreeNode = ({ node, selectedNode, setSelectedNode,getElementAtEvent,isLast
 
   
   return (
-    <li
-      className={`d-tree-node border-0 ${!isLastChild ? 'line-hegt':''}`}
-      onClick={(e) => {
-        e.stopPropagation();
-        setSelectedNode(node);
-        getElementAtEvent(node);
-        // setChildVisibility((v) => !v)
-      }}
-      style={{
-        marginLeft: selectedNode === node.label ==='Golbal' ? "0px" : "0px",
-        // cursor: "pointer",
-      }}
-    >
-      <div className="d-flex" style={{marginLeft:'0px'}} onClick={() => setChildVisibility((v) => !v)}>
-        {hasChild && (
-          <div
-             className={`d-inline d-tree-toggler ${childVisible ? "active" : ""}`} 
-             onClick={(e) => {
-    e.stopPropagation();
-    if (dataName === selectedNode?.text) {
-      setChildVisibility((v) => !v);
-    }
-  }} 
-            >
-            {/* <FontAwesomeIcon icon="caret-right" /> */}
-          </div>
-        )}
+//     <li
+//       className={`d-tree-node border-0 ${!isLastChild ? 'line-hegt':''}`}
+//       onClick={(e) => {
+//         e.stopPropagation();
+//         setSelectedNode(node);
+//         getElementAtEvent(node);
+//         // setChildVisibility((v) => !v)
+//       }}
+//       style={{
+//         marginLeft: selectedNode === node.label ==='Golbal' ? "0px" : "0px",
+//         // cursor: "pointer",
+//       }}
+//     >
+//       <div className="d-flex" style={{marginLeft:'0px'}} onClick={() => setChildVisibility((v) => !v)}>
+//         {hasChild && (
+//           <div
+//              className={`d-inline d-tree-toggler ${childVisible ? "active" : ""}`} 
+//              onClick={(e) => {
+//     e.stopPropagation();
+//     if (dataName === selectedNode?.text) {
+//       setChildVisibility((v) => !v);
+//     }
+//   }} 
+//             >
+//             {/* <FontAwesomeIcon icon="caret-right" /> */}
+//           </div>
+//         )}
 
-        <div className={`col d-tree-head globhee1 ${selectedNode?.text === node.text ? "" : ""}`} style={{
-        // backgroundColor: selectedNode === node.text ? "#beebff" : "white",marginBottom:'3px',
-        //  color: selectedNode?.text === node.text ? "red" : "black",
-        cursor: "pointer",
-      }}>
-          <i className="arrowopen1"></i>
-          <span className={`${selectedNode?.text === node.text ? "selected" : ""}`}>
-  <i className={`mr-5 ${getIconClass(node)}`}> </i>
-            {getNodeLabel(node)}
-          </span>
+//         <div className={`col d-tree-head globhee1 ${selectedNode?.text === node.text ? "" : ""}`} style={{
+//         // backgroundColor: selectedNode === node.text ? "#beebff" : "white",marginBottom:'3px',
+//         //  color: selectedNode?.text === node.text ? "red" : "black",
+//         cursor: "pointer",
+//       }}>
+//           <i className="arrowopen1"></i>
+//           <span className={`${selectedNode?.text === node.text ? "selected" : ""}`}>
+//   <i className={`mr-5 ${getIconClass(node)}`}> </i>
+//             {getNodeLabel(node)}
+//           </span>
         
          
         
 
+//       {hasChild && childVisible && (
+//         <div className="d-tree-content default-line">
+//         {/* //  <div className="d-tree-content default-line"> */}
+
+//           <ul className="d-flex d-tree-container flex-column neecl">
+//             {Array.isArray(node.children) &&node.children.map((child,index) => ( 
+//               <TreeNode
+//               // parent ={children}
+//                 key={child.label ? child.label : child.text}
+//                 node={child}
+//                 selectedNode={selectedNode}
+//                 setSelectedNode={setSelectedNode}
+//                 getElementAtEvent={getElementAtEvent}
+//                 isLastChild={index === node.children.length - 1}
+//                 // parent={node}
+//                 dataName={dataName}
+//               />
+//             ))}
+//           </ul>
+//         </div>
+//       )}
+
+// </div>
+//       </div>
+//     </li>
+
+ <li className={`d-tree-node border-0 ${!isLastChild ? 'line-hegt' : ''}`} style={{
+         marginLeft: selectedNode === node.label ==='Golbal' ? "0px" : "0px",
+         // cursor: "pointer",
+       }}
+       
+>
+      <div className="d-flex" style={{ marginLeft: '0px', cursor: "pointer" }}>
+
+        {/* Toggle button */}
+        {hasChild && (
+          <div
+            className={`d-tree-toggler ${childVisible ? "active" : ""}`}
+            onClick={(e) => { e.stopPropagation(); setChildVisible(v => !v); }}
+          />
+        )}
+
+        {/* Node label */}
+        <div
+          className={`d-tree-head globhee1 ${selectedNode?.data?.id === node.data?.id ? "selected" : ""}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            setSelectedNode(node);
+            getElementAtEvent(node);
+            setChildVisible(true); // optionally expand when selected
+          }}
+        >
+          <i className="arrowopen1"></i>
+          <span className={`${selectedNode?.text === node.text ? "selected" : ""}`}></span>
+          <i className={`mr-5 ${getIconClass(node)}`}></i>
+          {getNodeLabel(node)}
+        </div>
+      </div>
+
+      {/* Children */}
       {hasChild && childVisible && (
         <div className="d-tree-content default-line">
-        {/* //  <div className="d-tree-content default-line"> */}
-
-          <ul className="d-flex d-tree-container flex-column neecl">
-            {Array.isArray(node.children) &&node.children.map((child,index) => ( 
-              <TreeNode
-              // parent ={children}
-                key={child.label ? child.label : child.text}
-                node={child}
-                selectedNode={selectedNode}
-                setSelectedNode={setSelectedNode}
-                getElementAtEvent={getElementAtEvent}
-                isLastChild={index === node.children.length - 1}
-                // parent={node}
-                dataName={dataName}
-              />
-            ))}
-          </ul>
+        <ul className="d-flex d-tree-container flex-column neecl" style={{ paddingLeft: '20px' }}>
+          {node.children.map((child, index) => (
+            <TreeNode
+              key={child.label || child.text}
+              node={child}
+              selectedNode={selectedNode}
+              setSelectedNode={setSelectedNode}
+              getElementAtEvent={getElementAtEvent}
+              isLastChild={index === node.children.length - 1}
+              dataName={dataName}
+            />
+          ))}
+        </ul>
         </div>
       )}
-
-</div>
-      </div>
     </li>
   );
 };
