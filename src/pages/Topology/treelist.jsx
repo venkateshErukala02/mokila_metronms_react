@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Tree from '../Topology/tree';
-import './../Topology/topology.css';
+import './../Topology/topology.css'; 
 
 
 
@@ -23,7 +23,12 @@ const TreeList = ({ getElementAtEvent,selectedNodeId,circleId }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState({ status: false, msg: "" });
   const [uniquefacilitieData,setUniquefacilitieData] = useState([]);
-
+  const hasExpandedRef = useRef(false);
+  const [regionId, setRegionId] = useState(null);
+  const [locationId, setLocationId] = useState(null);
+  const [regionName,setRegionName] = useState(null);
+  const [locationName,setLocationName] = useState(null);
+  const [stationName,setStationName] = useState(null);
 
   useEffect(()=>{
         if (!circleId) return;
@@ -32,31 +37,123 @@ const TreeList = ({ getElementAtEvent,selectedNodeId,circleId }) => {
 
     },[circleId]);
 
-  useEffect(() => {
-  if (!uniquefacilitieData || !selectedNodeId) return;
+//   useEffect(() => {
+//   if (!uniquefacilitieData || !selectedNodeId) return;
+
+//   const expandByMode = async () => {
+//     let currentNode = [{
+//       key: "0",
+//       text: "Global",
+//       data: {mode: "global", display: "Global", id: 0, type: "region"},
+//       selected: "",
+//       icon: "globimg",
+//       children: [
+      
+//       ],
+//     }]; // Global
+//     setSelectedNode(currentNode);
+
+//     for (const mode of ["global","region", "location"]) {
+//       await getDatanodesLine(getUrl(currentNode));
+//       currentNode = currentNode.children.find(n => n.data.mode === mode);
+//       setSelectedNode(currentNode);
+//     }
+//   };
+
+//   expandByMode();
+// }, [uniquefacilitieData,selectedNodeId]);
+
+
+useEffect(() => {
+  if (!regionId || !locationId || !regionName || !locationName || !stationName) return;
+  if (!selectedNodeId) return;
+  if (hasExpandedRef.current) return;
 
   const expandByMode = async () => {
-    let currentNode = [{
-      key: "0",
-      text: "Global",
-      data: {mode: "global", display: "Global", id: 0, type: "region"},
-      selected: "",
-      icon: "globimg",
-      children: [
-      
-      ],
-    }]; // Global
+    let currentNode = treeData[0]; // Global
     setSelectedNode(currentNode);
 
-    for (const mode of ["global","region", "location"]) {
-      await getDatanodesLine(getUrl(currentNode));
-      currentNode = currentNode.children.find(n => n.data.mode === mode);
+    for (const mode of ["region", "location"]) {
+      const children = await getDatanodesLine(
+        getUrl(currentNode),
+        currentNode
+      );
+
+      const matchingNode = children.find(n => {
+        if (mode === "region" && n.text === regionName) {
+          return true;
+        }
+        if (mode === "location" && n.text === locationName) {
+          return true;
+        }
+        return false;
+      });
+
+      if (!matchingNode) break;
+
+
+      if (mode === "region") {
+        if (currentNode.text === "line1") {
+          const line1Sections = children.filter(n => n.text.includes("line1-sec"));
+          // Ensure expanding sections only within line1
+          const section1Node = line1Sections.find(n => n.text === "line1-sec1");
+          const section2Node = line1Sections.find(n => n.text === "line1-sec2");
+
+          // Expand section1 if it's line1-sec1
+          if (currentNode.text === "line1-sec1" && section1Node) {
+            currentNode = section1Node;
+            setSelectedNode(currentNode);
+          }
+
+          // Expand section2 if it's line1-sec2
+          if (currentNode.text === "line1-sec2" && section2Node) {
+            currentNode = section2Node;
+            setSelectedNode(currentNode);
+          }
+        }
+
+        // Handling for line4, which only has section line1-sec1
+        if (currentNode.text === "line4") {
+          const sectionNode = children.find(n => n.text === "line1-sec1");
+          if (currentNode.text === "line1-sec1" && sectionNode) {
+            currentNode = sectionNode;
+            setSelectedNode(currentNode);
+          }
+        }
+      }
+
+      // Handling for location mode
+      if (mode === "location") {
+         const sections = await getDatanodesLine(getUrl(currentNode), currentNode);
+
+    // Only find the section that matches locationName
+    const targetSection = sections.find(n => n.text === locationName);
+
+    if (targetSection) {
+      currentNode = targetSection;
+      setSelectedNode(currentNode);
+        const facilities = await getDatanodesLine(getUrl(currentNode), currentNode)
+      const stationNode = facilities.find(f => f.text === stationName);
+        if (!stationNode) return;
+
+        currentNode = stationNode;
+        setSelectedNode(currentNode);
+        return;
+      }
+    
+
+      }
+
+      currentNode = matchingNode;
       setSelectedNode(currentNode);
     }
+    hasExpandedRef.current = true;
   };
 
   expandByMode();
-}, [uniquefacilitieData,selectedNodeId]);
+}, [regionId, locationId, selectedNodeId, regionName, locationName,stationName]);
+
+
 
  const getUniquefacilitieData = async (url) => {
     setIsLoading(true);
@@ -71,6 +168,13 @@ const TreeList = ({ getElementAtEvent,selectedNodeId,circleId }) => {
         const data = await response.json();
         if (response.ok) {
             setUniquefacilitieData(data || []);
+
+            const facility = data?.facility?.[0];
+              setRegionId(facility?.regionId || null);
+              setLocationId(facility?.locationId || null);
+              setRegionName(facility?.regionName || null);
+              setLocationName(facility?.locationName || null);
+              setStationName(facility?.name || null)
             setIsError({ status: false, msg: "" });
         } else {
             throw new Error("Data not found");
@@ -84,9 +188,6 @@ const TreeList = ({ getElementAtEvent,selectedNodeId,circleId }) => {
 
 const getUrl = (node) => {
   // Ensure that selectedUniqueId and its properties are defined
-  const regionId = uniquefacilitieData.facility?.[0]?.regionId;
-  const locationId = uniquefacilitieData.facility?.[0]?.locationId;
-  console.log('lplpl',uniquefacilitieData);
 
   switch (node?.data?.mode) {
     case "global": 
@@ -166,31 +267,58 @@ const getUrl = (node) => {
 //   }
 // };
 
-useEffect(() => {
-  if (!selectedNodeId?.id || !selectedNodeId?.path?.length) return;
+// useEffect(() => {
+//   // if (!selectedNodeId?.id || !selectedNodeId?.path?.length) return;
+//   if (hasExpandedRef.current) return;
+//   const expandPath = async () => {
+//     let currentNode = treeData[0]; // Global
+//     setSelectedNode(currentNode);
 
-  const expandPath = async () => {
-    let currentNode = treeData[0]; // Global
-    setSelectedNode(currentNode);
+//     for (const modeOrId of selectedNodeId.path.slice(1)) {
+//       // load children and get them directly
+//       const children = await getDatanodesLine(getUrl(currentNode), currentNode);
 
-    for (const modeOrId of selectedNodeId.path.slice(1)) {
-      // load children and get them directly
-      const children = await getDatanodesLine(getUrl(currentNode), currentNode);
+//       // find next node in the path from loaded children
+//       const nextNode = children.find(
+//         n => n.data.mode === modeOrId || n.data.id === selectedNodeId.id
+//       );
 
-      // find next node in the path from loaded children
-      const nextNode = children.find(
-        n => n.data.mode === modeOrId || n.data.id === selectedNodeId.id
-      );
+//       if (!nextNode) break;
 
-      if (!nextNode) break;
+//       currentNode = nextNode;
+//       setSelectedNode(currentNode);
+//     }
+//   };
 
-      currentNode = nextNode;
-      setSelectedNode(currentNode);
-    }
-  };
+//   expandPath();
+// }, [selectedNodeId]);
 
-  expandPath();
-}, [selectedNodeId]);
+
+// useEffect(() => {
+//   if (!selectedNodeId?.path?.length) return;
+//   if (hasExpandedRef.current) return;
+
+//   const expandPath = async () => {
+//     let currentNode = treeData[0];
+//     setSelectedNode(currentNode);
+
+//     for (const modeOrId of selectedNodeId.path.slice(1)) {
+//       const children = await getDatanodesLine(getUrl(currentNode), currentNode);
+//       const nextNode = children.find(
+//         n => n.data.mode === modeOrId || n.data.id === selectedNodeId.id
+//       );
+//       if (!nextNode) break;
+
+//       currentNode = nextNode;
+//       setSelectedNode(currentNode);
+//     }
+
+//     hasExpandedRef.current = true; // 🔐 HARD STOP
+//   };
+
+//   expandPath();
+// }, [selectedNodeId, regionId, locationId]);
+
 
 // Immutable attachChildren function
 const attachChildren = (nodes, targetNode, children) => {
@@ -266,6 +394,14 @@ const getDatanodesLine = async (url, targetNode) => {
     console.warn("targetNode is undefined. Aborting getDatanodesLine.");
     return [];
   }
+
+
+   const existingNode = findNodeById(treeData, targetNode.data.id);
+  if (existingNode && existingNode.children && existingNode.children.length > 0) {
+    console.log("Data already fetched for this node.");
+    return existingNode.children;
+  }
+
   setIsLoading(true);
   try {
     const headers = new Headers();
@@ -280,7 +416,6 @@ const getDatanodesLine = async (url, targetNode) => {
 
     // Use the immutable attachChildren
     setTreeData(prev => attachChildren(prev, targetNode, children));
-    setUniquefacilitieData([]);
     return children; // ✅ return the loaded children
   } catch (err) {
     setIsError({ status: true, msg: err.message });
@@ -413,6 +548,7 @@ const findNodeById = (nodes, id) => {
 
 useEffect(() => {
   if (!selectedNode) return;
+  // if (!hasExpandedRef.current) return;
 
   const expandSelectedNode = async () => {
     // Find the node inside the treeData
@@ -442,7 +578,7 @@ useEffect(() => {
   };
 
   expandSelectedNode();
-}, [selectedNode, treeData]);
+}, [selectedNode]);
 
 
   return (

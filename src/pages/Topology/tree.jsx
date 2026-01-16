@@ -117,6 +117,13 @@ useEffect(() => {
 
   }
 
+   const handleNodeClick = (e) => {
+    e.stopPropagation(); // Prevent event bubbling
+    setChildVisible(prevState => !prevState); // Toggle the visibility of children
+    setSelectedNode(node); // Update the selected node state
+    getElementAtEvent(node); // Call the function passed as prop
+  };
+
   
   return (
 //     <li
@@ -191,6 +198,10 @@ useEffect(() => {
          marginLeft: selectedNode === node.label ==='Golbal' ? "0px" : "0px",
          // cursor: "pointer",
        }}
+       onClick={(e) => {
+        e.stopPropagation();
+        setChildVisible((v) => !v);
+      }}
        
 >
       <div className="d-flex" style={{ marginLeft: '0px', cursor: "pointer" }}>
@@ -199,19 +210,15 @@ useEffect(() => {
         {hasChild && (
           <div
             className={`d-tree-toggler ${childVisible ? "active" : ""}`}
-            onClick={(e) => { e.stopPropagation(); setChildVisible(v => !v); }}
+            onClick={(e) => { e.stopPropagation();
+             setChildVisible(prevState => !prevState); }}
           />
         )}
 
         {/* Node label */}
         <div
           className={`d-tree-head globhee1 ${selectedNode?.data?.id === node.data?.id ? "selected" : ""}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            setSelectedNode(node);
-            getElementAtEvent(node);
-            setChildVisible(true); // optionally expand when selected
-          }}
+          onClick={handleNodeClick}
         >
           <i className="arrowopen1"></i>
           <span className={`${selectedNode?.text === node.text ? "selected" : ""}`}></span>
