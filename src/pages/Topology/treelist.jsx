@@ -4,12 +4,12 @@ import './../Topology/topology.css';
 
 
 
-const TreeList = ({ getElementAtEvent,selectedNodeId,circleId }) => {
+const TreeList = ({ getElementAtEvent,selectedNodeId,circleId,onStationResolved }) => {
   const [nodeData, setNodeData] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   const [treeData, setTreeData] = useState([
     {
-      key: "0",
+      key: "0", 
       text: "Global",
       data: {mode: "global", display: "Global", id: 0, type: "region"},
       selected: "",
@@ -135,7 +135,7 @@ useEffect(() => {
         const facilities = await getDatanodesLine(getUrl(currentNode), currentNode)
       const stationNode = facilities.find(f => f.text === stationName);
         if (!stationNode) return;
-
+        onStationResolved?.(stationNode); 
         currentNode = stationNode;
         setSelectedNode(currentNode);
         return;

@@ -49,6 +49,7 @@ const TopoPg = () => {
     const [yardfacilitieData, setYardfacilitieData] = useState([]);
     const [selectedTreeNodeId, setSelectedTreeNodeId] = useState({});
     const [uniquefacilitieData,setUniquefacilitieData] = useState([]);
+    const [stationNode, setStationNode] = useState(null);
 
     const handleNodeClick = (value) => {
         setTextName(value);
@@ -62,6 +63,11 @@ const [trainView,setTrainView]= useState(false);
 const [stationView,setStationView]= useState(true);
 const [trainLabelDiply,setTrainLabelDiply] = useState(false);
 const [trainId,setTrainId] = useState('');
+
+useEffect(()=>{
+    if (!stationNode) return;
+    // setTextName(stationNode);
+},[stationNode]);
 
 useEffect(()=>{
         if (!circleId) return;
@@ -217,13 +223,13 @@ useEffect(()=>{
      const renderTagView = (stationTagview, lineTagview) => {
         if (stationTagview) {
             return <>
-                <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}/>
-              <StationNodeTableView  textName={textName} rdDataRef={rdDataRef} />
+                <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview} stationNode={stationNode}/>
+              <StationNodeTableView yardfacilitieData={yardfacilitieData}  textName={textName} rdDataRef={rdDataRef} stationNode={stationNode} />
             </>
         } else if (lineTagview) {
             return <>
-               <LineTagSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef}  setStationTagview={setStationTagview} setLineTagview={setLineTagview}/>
-              <StationNodeTableView  textName={textName} rdDataRef={rdDataRef} />
+               <LineTagSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef}  setStationTagview={setStationTagview} setLineTagview={setLineTagview} stationNode={stationNode}/>
+              <StationNodeTableView yardfacilitieData={yardfacilitieData}  textName={textName} rdDataRef={rdDataRef} stationNode={stationNode} />
             </>;
         } else {
             return null;
@@ -240,9 +246,11 @@ useEffect(()=>{
       return `Yard- ${node.text}` || "Unnamed Facility";
     }else if (mode === "facility" && (node.text === "Finch trail track" || node.text === "VMC trail track" || node.text === 'Carhouse')) {
       return `${node.text}` || "Unnamed Facility";
-    }else if (stationTagview === true) {
-        return `Station- ${circleId}`;
-    }else if ( mode === "facility" || node.data?.parent === "yard_1") {
+    }
+    // else if (stationTagview === true) {
+    //     return `Station- ${circleId}`;
+    // }
+    else if ( mode === "facility" || node.data?.parent === "yard_1") {
       return `Station- ${node.text}` || "Unnamed Facility";
     } else {
       return node.data?.display || node.text || "Unknown";
@@ -286,15 +294,16 @@ useEffect(()=>{
       return textName.data?.display || "Unnamed Yard";
     }else if (mode === 'global') {
       return "Link View"; 
-    }else if (stationTagview === true){
-         return (
-      <span>
-        Link View - Station Tag
-        {/* <span onClick={(e)=>{ 
-            e.stopPropagation();
-            handleStationTabview();}} style={{ marginLeft: '8px', cursor: 'pointer' }}>x</span> */}
-      </span>
-   ) }
+    }
+//     else if (stationTagview === true){
+//          return (
+//       <span>
+//         Link View - Station Tag
+//         {/* <span onClick={(e)=>{ 
+//             e.stopPropagation();
+//             handleStationTabview();}} style={{ marginLeft: '8px', cursor: 'pointer' }}>x</span> */}
+//       </span>
+//    ) }
    else if (lineTagview === true){
          return (
       <span>
@@ -496,7 +505,7 @@ useEffect(()=>{
                         </article>
                         <hr  className="hrll" style={{marginBottom:'0px'}}/>
                         <article>
-                        <TreeList getElementAtEvent={handleNodeClick} selectedNodeId={selectedTreeNodeId} circleId={circleId}/>
+                        <TreeList getElementAtEvent={handleNodeClick} selectedNodeId={selectedTreeNodeId} circleId={circleId} onStationResolved={setStationNode}/>
                             </article>
                             <article>
                             </article>
@@ -563,7 +572,7 @@ useEffect(()=>{
                             <h1 className="mapheading">Train View : {trainId}</h1>
                             ) : (
                                 <>
-                            <h1 className="mapheading"> {rdDataRef.current?.[0]?.station && `Station - ${rdDataRef.current[0].station}`}</h1>
+                            <h1 className="mapheading"> {rdDataRef.current?.[0]?.station && `Station- ${rdDataRef.current[0].station}`}</h1>
                             </>
                             )}
                         </article>
