@@ -50,6 +50,7 @@ const TopoPg = () => {
     const [selectedTreeNodeId, setSelectedTreeNodeId] = useState({});
     const [uniquefacilitieData,setUniquefacilitieData] = useState([]);
     const [stationNode, setStationNode] = useState(null);
+    const previousViewRef = useRef(null);
 
     const handleNodeClick = (value) => {
         setTextName(value);
@@ -67,6 +68,7 @@ const [trainId,setTrainId] = useState('');
 useEffect(()=>{
     if (!stationNode) return;
     // setTextName(stationNode);
+     goToStationView(stationNode);
 },[stationNode]);
 
 useEffect(()=>{
@@ -163,11 +165,18 @@ useEffect(()=>{
                 return  <>   <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId}/>
                             <TopoSectionTable  textName={textName}/> </>
                     break;
-            case 'line4-sec1':
+            case 'line1':
                 return  <>   <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId}/>
-                            <TopoSectionTable  textName={textName}/> </>
+                            </>
                     break;
-    
+            case 'line4':
+                return  <>   <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId}/>
+                           </>
+                    break;
+            case 'Global':
+                return  <>   <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId}/>
+                             </>
+                    break;
             default:
                 return <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId}/>
                 break;
@@ -196,7 +205,7 @@ useEffect(()=>{
                         </>
                     )
                 }else{
-                    return ( <> <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}/>
+                    return ( <> <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView}/>
               <StationNodeTableView  yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} />
                       </> );
                 }
@@ -223,7 +232,7 @@ useEffect(()=>{
      const renderTagView = (stationTagview, lineTagview) => {
         if (stationTagview) {
             return <>
-                <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview} stationNode={stationNode}/>
+                <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview} stationNode={stationNode}  goToStationView={goToStationView}/>
               <StationNodeTableView yardfacilitieData={yardfacilitieData}  textName={textName} rdDataRef={rdDataRef} stationNode={stationNode} />
             </>
         } else if (lineTagview) {
@@ -330,11 +339,42 @@ useEffect(()=>{
     }
 
     const handleTrainVwVisible=()=>{
-        setTrainView(false);
-        setStationView(true);
-        setTrainLabelDiply(false);
-        setStationTagview(false);
-    }
+    if (!previousViewRef.current) return;
+
+  const prev = previousViewRef.current;
+
+    setTextName(prev.textName);
+    setStationView(prev.stationView);
+    setStationTagview(prev.stationTagview);
+    setLineTagview(prev.lineTagview);
+    setTrainView(prev.trainView);
+
+    previousViewRef.current = null;
+    return;
+  }
+        // setTrainView(false);
+        // setStationView(true);
+        // setTrainLabelDiply(false);  
+        // setStationTagview(false);
+        // setLineTagview(false);
+    // }
+
+    const goToStationView = (stationNode) => {
+  if (!previousViewRef.current) {
+    previousViewRef.current = {
+      textName,
+      stationView,
+      stationTagview,
+      lineTagview,
+      trainView,
+    };
+  }
+  setTextName(stationNode);
+  setStationView(true);
+  setStationTagview(false);
+  setLineTagview(false);
+  setTrainView(false);
+};
 
     const handleStationVwVisible=()=>{
         setTrainView(false);
@@ -346,13 +386,22 @@ useEffect(()=>{
     }
 
     const getCircleId = (id) => {
+          if (!previousViewRef.current) {
+    previousViewRef.current = {
+      textName,
+      stationView,
+      stationTagview,
+      lineTagview,
+      trainView,
+    };
+  }
         setCircleId(id);
         setSelectedTreeNodeId({ id: id,
             path: ["global", "region", "location"]}); 
         setStationTagview(true);
         setStationCount(prev => !prev);
         setStationView(false);
-        setTextName('');
+        // setTextName('');
 
     }
     const getLineId = (id) => {
@@ -456,7 +505,7 @@ useEffect(()=>{
         setSelectedTab('linkview');
     }
 
-
+    const canGoBack = Boolean(previousViewRef.current);
 
 
 
@@ -581,7 +630,13 @@ useEffect(()=>{
                            ''
                             ) : (
                                 <>
-                              {stationView === false ? <button className="createbtn" type="button" onClick={handleTrainVwVisible}>Back</button> : ''}
+                              {/* {stationView === false ? <button className="createbtn" type="button" onClick={handleTrainVwVisible}>Back</button> : ''} */}
+                              {canGoBack && (
+  <button className="createbtn" onClick={handleTrainVwVisible}>
+    Back
+  </button>
+)}
+
                             </>
                             )}
                         </article>
@@ -604,7 +659,13 @@ useEffect(()=>{
                            ''
                             ) : (
                                 <>
-                              {stationView === false ? <button className="createbtn" type="button" onClick={handleTrainVwVisible}>Back</button> : ''}
+                              {/* {stationView === false ? <button className="createbtn" type="button" onClick={handleTrainVwVisible}>Back</button> : ''} */}
+                              {canGoBack && (
+  <button className="createbtn" onClick={handleTrainVwVisible}>
+    Back
+  </button>
+)}
+
                             </>
                             )}
                         </article>

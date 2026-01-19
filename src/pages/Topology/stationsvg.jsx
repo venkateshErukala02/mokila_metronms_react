@@ -3,7 +3,7 @@ import { useLayoutEffect } from 'react';
 import '../ornms.css'
  
 
-const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply, setTrainId ,rdDataRef,trainView,trainId,stationNode}) => {
+const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply, setTrainId ,rdDataRef,trainView,trainId,stationNode,goToStationView }) => {
     const [trainData, setTrainData] = useState('')
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [isLoading, setIsLoading] = useState(false);
@@ -18,6 +18,13 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
                         ? textName
                         : stationNode;
 
+
+                        useEffect(() => {
+  if (!stationNode) return;
+  if (!textName?.data) {
+    goToStationView(stationNode);
+  }
+}, [stationNode]);
 
     const getTrainData = async () => {
         setIsLoading(true);
