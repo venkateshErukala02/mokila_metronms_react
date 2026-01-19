@@ -4,7 +4,7 @@ import './../Topology/topology.css';
 
 
 
-const TreeList = ({ getElementAtEvent,selectedNodeId,circleId,onStationResolved }) => {
+const TreeList = ({ getElementAtEvent,selectedNodeId,circleId,onStationResolved ,selectedTreeNodeId,selectedPrevNodeId,prevIdActive}) => {
   const [nodeData, setNodeData] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   const [treeData, setTreeData] = useState([
@@ -29,6 +29,21 @@ const TreeList = ({ getElementAtEvent,selectedNodeId,circleId,onStationResolved 
   const [regionName,setRegionName] = useState(null);
   const [locationName,setLocationName] = useState(null);
   const [stationName,setStationName] = useState(null);
+
+
+
+  useEffect(() => {
+  if (!selectedTreeNodeId?.id) return;
+
+  // Find the node in treeData by ID
+  const node = findNodeById(treeData, selectedTreeNodeId.id);
+  if (node) {
+    setSelectedNode(node); // update internal state
+  }
+}, [selectedTreeNodeId, treeData]);
+
+
+
 
   useEffect(()=>{
         if (!circleId) return;
@@ -594,7 +609,11 @@ useEffect(() => {
                     setSelectedNode(node); 
                   }}
                   isLastChild
-                selectedNode={selectedNode}  getElementAtEvent={getElementAtEvent} />
+                selectedNode={selectedNode}  getElementAtEvent={getElementAtEvent} 
+                selectedNodeId={selectedTreeNodeId} 
+                selectedPrevNodeId={selectedPrevNodeId}
+                prevIdActive={prevIdActive}
+                />
               </div>
             </div>
           </p>

@@ -10,7 +10,7 @@ const getElementAtEvent =(value)=>{
 
 }
 
-const Tree = ({ data,getElementAtEvent,selectedNode,setSelectedNode,isLastChild}) => {
+const Tree = ({ data,getElementAtEvent,selectedNode,setSelectedNode,isLastChild,selectedTreeNodeId,selectedPrevNodeId,prevIdActive}) => {
   const [selectedParent, setSelectedParent] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState({ status: false, msg: "" });
@@ -38,6 +38,9 @@ const Tree = ({ data,getElementAtEvent,selectedNode,setSelectedNode,isLastChild}
             getElementAtEvent={getElementAtEvent}
             isLastChild={index === data.length - 1}
             dataName={dataName}
+             selectedTreeNodeId={selectedTreeNodeId}
+             selectedPrevNodeId={selectedPrevNodeId}
+             prevIdActive={prevIdActive}
             // parentNode={}
           />
         ))}
@@ -47,7 +50,7 @@ const Tree = ({ data,getElementAtEvent,selectedNode,setSelectedNode,isLastChild}
 };
 
 
-const TreeNode = ({ node, selectedNode, setSelectedNode,getElementAtEvent,isLastChild,dataName }) => {
+const TreeNode = ({ node, selectedNode, setSelectedNode,getElementAtEvent,isLastChild,dataName,selectedTreeNodeId,selectedPrevNodeId,prevIdActive }) => {
 //   const [childVisible, setChildVisibility] = useState(
 //   selectedNode?.text === dataName
 // );
@@ -55,7 +58,7 @@ const [childVisible, setChildVisible] = useState(false);
 
 useEffect(() => {
     // Expand if this node is the selected one
-    if (selectedNode?.data?.id === node.data?.id) {
+    if (selectedNode?.data?.id === node.data?.id || selectedTreeNodeId?.id === node.data?.id) {
       setChildVisible(true);
     }
   }, [selectedNode, node]);
@@ -123,6 +126,11 @@ useEffect(() => {
     setSelectedNode(node); // Update the selected node state
     getElementAtEvent(node); // Call the function passed as prop
   };
+
+const isSelected = prevIdActive
+  ? selectedPrevNodeId?.id === node.data?.id
+  : selectedNode?.data?.id === node.data?.id;
+
 
   
   return (
@@ -217,11 +225,13 @@ useEffect(() => {
 
         {/* Node label */}
         <div
-          className={`d-tree-head globhee1 ${selectedNode?.data?.id === node.data?.id ? "selected" : ""}`}
+          className={`d-tree-head globhee1 ${isSelected ? "selected" : ""}`}
           onClick={handleNodeClick}
         >
           <i className="arrowopen1"></i>
           <span className={`${selectedNode?.text === node.text ? "selected" : ""}`}></span>
+          {/* <span style={{ fontWeight: (isSelected ? 'bold' : 'normal')  }}>
+            </span> */}
           <i className={`mr-5 ${getIconClass(node)}`}></i>
           {getNodeLabel(node)}
         </div>
@@ -240,6 +250,9 @@ useEffect(() => {
               getElementAtEvent={getElementAtEvent}
               isLastChild={index === node.children.length - 1}
               dataName={dataName}
+              selectedTreeNodeId={selectedTreeNodeId}
+              selectedPrevNodeId={selectedPrevNodeId}
+              prevIdActive={prevIdActive}
             />
           ))}
         </ul>

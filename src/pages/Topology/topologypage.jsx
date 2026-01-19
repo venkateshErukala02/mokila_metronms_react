@@ -50,11 +50,20 @@ const TopoPg = () => {
     const [selectedTreeNodeId, setSelectedTreeNodeId] = useState({});
     const [uniquefacilitieData,setUniquefacilitieData] = useState([]);
     const [stationNode, setStationNode] = useState(null);
+    const [selectedPrevNodeId,setSelectedPrevNodeId] = useState({});
+    const [prevIdActive,setPrevIdActive] = useState(false);
     const previousViewRef = useRef(null);
+    const textNameChangedRef = useRef(false);
 
     const handleNodeClick = (value) => {
+        textNameChangedRef.current = true;  
         setTextName(value);
         // nodeData
+         setSelectedPrevNodeId({
+        id: value.data?.id,         
+        path: value.path || [],      
+    });
+    setPrevIdActive(false);
     }
 
 
@@ -348,7 +357,8 @@ useEffect(()=>{
     setStationTagview(prev.stationTagview);
     setLineTagview(prev.lineTagview);
     setTrainView(prev.trainView);
-
+    setSelectedTreeNodeId(prev.selectedTreeNodeId);
+    setPrevIdActive(true);
     previousViewRef.current = null;
     return;
   }
@@ -367,8 +377,11 @@ useEffect(()=>{
       stationTagview,
       lineTagview,
       trainView,
+    selectedTreeNodeId, 
     };
   }
+
+  textNameChangedRef.current = false;
   setTextName(stationNode);
   setStationView(true);
   setStationTagview(false);
@@ -505,7 +518,7 @@ useEffect(()=>{
         setSelectedTab('linkview');
     }
 
-    const canGoBack = Boolean(previousViewRef.current);
+    const canGoBack = Boolean(previousViewRef.current) && !textNameChangedRef.current;
 
 
 
@@ -554,7 +567,8 @@ useEffect(()=>{
                         </article>
                         <hr  className="hrll" style={{marginBottom:'0px'}}/>
                         <article>
-                        <TreeList getElementAtEvent={handleNodeClick} selectedNodeId={selectedTreeNodeId} circleId={circleId} onStationResolved={setStationNode}/>
+                        <TreeList getElementAtEvent={handleNodeClick} selectedNodeId={selectedTreeNodeId} circleId={circleId} onStationResolved={setStationNode} selectedPrevNodeId={selectedPrevNodeId} prevIdActive={prevIdActive}
+                        />
                             </article>
                             <article>
                             </article>
