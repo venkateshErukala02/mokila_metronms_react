@@ -53,17 +53,20 @@ const TopoPg = () => {
     const [selectedPrevNodeId,setSelectedPrevNodeId] = useState({});
     const [prevIdActive,setPrevIdActive] = useState(false);
     const previousViewRef = useRef(null);
-    const textNameChangedRef = useRef(false);
+    // const textNameChangedRef = useRef(false);
+    const [textNameChanged, setTextNameChanged] = useState(false);
 
     const handleNodeClick = (value) => {
-        textNameChangedRef.current = true;  
-        setTextName(value);
+        setTextNameChanged(true);   
+        setTextName({...value});
         // nodeData
          setSelectedPrevNodeId({
         id: value.data?.id,         
         path: value.path || [],      
     });
     setPrevIdActive(false);
+
+    previousViewRef.current = null;  
     }
 
 
@@ -354,7 +357,8 @@ useEffect(()=>{
 
     setTextName(prev.textName);
     setStationView(prev.stationView);
-    setStationTagview(prev.stationTagview);
+    // setStationTagview(prev.stationTagview);
+    setStationTagview(false);
     setLineTagview(prev.lineTagview);
     setTrainView(prev.trainView);
     setSelectedTreeNodeId(prev.selectedTreeNodeId);
@@ -381,8 +385,8 @@ useEffect(()=>{
     };
   }
 
-  textNameChangedRef.current = false;
-  setTextName(stationNode);
+  setTextNameChanged(false);         
+  setTextName({ ...stationNode });
   setStationView(true);
   setStationTagview(false);
   setLineTagview(false);
@@ -414,6 +418,7 @@ useEffect(()=>{
         setStationTagview(true);
         setStationCount(prev => !prev);
         setStationView(false);
+        setPrevIdActive(false);
         // setTextName('');
 
     }
@@ -518,7 +523,7 @@ useEffect(()=>{
         setSelectedTab('linkview');
     }
 
-    const canGoBack = Boolean(previousViewRef.current) && !textNameChangedRef.current;
+    const canGoBack = Boolean(previousViewRef.current);
 
 
 
@@ -627,7 +632,7 @@ useEffect(()=>{
                     </>
                 ) : (
                     <>
-                    {(textName === '' && stationTagview === true) &&(
+                    {((textName === '' && stationTagview === true)) &&(
                             <>
                             <article className="row">
                         <article className="col-4">
@@ -657,7 +662,38 @@ useEffect(()=>{
                         </article>
                             </>
                     )}
-                    {(['facility', 'location', 'region'].includes(textName?.data?.mode)) && (
+
+                    {((textName !== '' && stationTagview === true)) &&(
+                            <>
+                            <article className="row">
+                        <article className="col-4">
+                            {trainView === true ? (
+                            <h1 className="mapheading">Train View : {trainId}</h1>
+                            ) : (
+                                <>
+                            <h1 className="mapheading"> {rdDataRef.current?.[0]?.station && `Station- ${rdDataRef.current[0].station}`}</h1>
+                            </>
+                            )}
+                        </article>
+                        <article className="col-8" style={{justifyContent:'end',display:'flex',paddingTop:'6px',paddingRight:'8px'}}>
+                          {trainView === true ? (
+                           ''
+                            ) : (
+                                <>
+                              {/* {stationView === false ? <button className="createbtn" type="button" onClick={handleTrainVwVisible}>Back</button> : ''} */}
+                              {canGoBack && (
+  <button className="createbtn" onClick={handleTrainVwVisible}>
+    Back
+  </button>
+)}
+
+                            </>
+                            )}
+                        </article>
+                        </article>
+                            </>
+                    )}
+                    {((['facility', 'location', 'region'].includes(textName?.data?.mode)) && stationTagview === false) && (
                         <article className="row">
                         <article className="col-4">
                             {trainView === true ? (
