@@ -121,27 +121,27 @@ useEffect(() => {
     let svg = 'TTC_SubwayMap.svg';
 
     if (textName != "") {
-        if (textName.data.mode == 'region') {
+        if (textName?.data.mode == 'region') {
           svg = 'TTC_SubwayMap.svg';
-          if (textName.text == 'line1') {
+          if (textName?.text == 'line1') {
             svg = 'Line1.svg';
-          } else if (textName.text == 'line4') {
+          } else if (textName?.text == 'line4') {
             svg = 'line4-sec1.svg';
           }
-      } else if (textName.data.mode == 'location') {
+      } else if (textName?.data.mode == 'location') {
           svg =  textName.text+'.svg';
-      } else if (textName.data.mode == 'facility') {
-        if(textName.data.display === 'davisville_track'){
+      } else if (textName?.data.mode == 'facility') {
+        if(textName?.data.display === 'davisville_track'){
           svg= 'davisville_track.svg';
-        }else if(textName.data.display === 'wilson_track'){
+        }else if(textName?.data.display === 'wilson_track'){
           svg= 'wilson_track.svg';
-        }else if(textName.text === 'Finch trail track' || textName.text ==='VMC trail track'){
+        }else if(textName?.text === 'Finch trail track' || textName?.text ==='VMC trail track'){
           svg= 'Finch_trail_track.svg';
         }else{
         svg =  'Station_Line1.svg';
         }
-    }else if (textName.data.mode === 'yard'){
-      if(textName.text === 'yard_1'){
+    }else if (textName?.data.mode === 'yard'){
+      if(textName?.text === 'yard_1'){
           svg= 'davisville_track.svg'
       }else{
         // svg = textName.data.display+'.svg';
@@ -309,7 +309,7 @@ useEffect(() => {
     el.classList.add("svgstationname");
   }
 }
-}, [textName.text, svgContent]);
+}, [textName?.text, svgContent]);
 
 
 useEffect(() => {
@@ -369,7 +369,7 @@ useEffect(() => {
   };
      
   });
-}, [textName.text, svgContent, yardfacilitieData]);
+}, [textName?.text, svgContent, yardfacilitieData]);
 
 
 useLayoutEffect(() => {

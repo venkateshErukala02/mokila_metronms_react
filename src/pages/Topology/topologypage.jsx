@@ -27,7 +27,7 @@ import MainlineView from "./mainlinetrainview";
 
 const TopoPg = () => {
 
-    const [textName, setTextName] = useState('');
+    const [textName, setTextName] = useState(null);
     const [lineId, setLineId] = useState('');
     const [circleId, setCircleId] = useState('');
     const [stationCount, setStationCount] = useState(false);
@@ -57,7 +57,15 @@ const TopoPg = () => {
     const [textNameChanged, setTextNameChanged] = useState(false);
 
     const handleNodeClick = (value) => {
-        setTextNameChanged(true);   
+        setTextNameChanged(true); 
+        
+        setCircleId('');
+        setLineId('');
+        setStationTagview(false);
+        setLineTagview(false);
+        setStationView(true);
+        setTrainView(false);
+
         setTextName({...value});
         // nodeData
          setSelectedPrevNodeId({
@@ -164,7 +172,7 @@ useEffect(()=>{
 
 
     const renderSectComponent=(textName)=>{
-        switch (textName.text) {
+        switch (textName?.text) {
             case 'line1-sec1':
               return   <>   <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId}/>
                 <TopoSectionTable  textName={textName}/> </>
@@ -279,7 +287,7 @@ useEffect(()=>{
   };
 
    const getTabLabel = (textName) => {
-     const mode = textName.data?.mode;
+     const mode = textName?.data?.mode;
   
     if ((mode === "region" || mode === "location") && stationTagview === false  && lineTagview === false) {
       return (
@@ -309,9 +317,9 @@ useEffect(()=>{
       mode === "encoder"
     ) {
       return textName.data?.systemname || "Unnamed Device";
-    } else if (textName.data?.parent === "yard_1") {
+    } else if (textName?.data?.parent === "yard_1") {
       return textName.text || "Unnamed Facility";
-    } else if (textName.data?.parent === "yard") {
+    } else if (textName?.data?.parent === "yard") {
       return textName.data?.display || "Unnamed Yard";
     }else if (mode === 'global') {
       return "Link View"; 
@@ -485,7 +493,7 @@ useEffect(()=>{
 
         return()=> clearInterval(intervalId);
     }
-}, [circleId, lineId,textName]);
+}, [circleId, lineId]);
 
     const handleTagsPopup = (value, id) => {
         setShowPopup(value);
@@ -632,7 +640,7 @@ useEffect(()=>{
                     </>
                 ) : (
                     <>
-                    {((textName === '' && stationTagview === true)) &&(
+                    {((!textName && stationTagview === true)) &&(
                             <>
                             <article className="row">
                         <article className="col-4">
@@ -723,7 +731,7 @@ useEffect(()=>{
                     )}
                     <hr className="topohr" />
 
-                    {stationView === true ? (
+                    {/* {stationView === true ? (
                         textName?.data &&
                         ['facility', 'Trains', 'mainline', 'yard'].includes(textName.data.mode) ? (
                         renderSectFacility(textName)
@@ -732,7 +740,17 @@ useEffect(()=>{
                         )
                     ) : (
                         (stationTagview || lineTagview) && renderTagView(stationTagview, lineTagview)
-                    )}
+                    )} */}
+                    {stationTagview || lineTagview
+                        ? renderTagView(stationTagview, lineTagview)
+                        : stationView && (
+                            textName?.data &&
+                            ['facility', 'Trains', 'mainline', 'yard'].includes(textName.data.mode)
+                                ? renderSectFacility(textName)
+                                : renderSectComponent(textName)
+                            )
+                        }
+
 
                     {trainView === true && renderSectTrainView(trainView)}
                     </>
