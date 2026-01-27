@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import LeftNavList from "../Navbar/leftnavpage";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import '../ornms.css';
 import './../Inventory/inventory.css';
 import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import { useNavigate } from "react-router-dom";
+import { handleNodeData } from "../Action/action";
 
 const InventRpt = () => {
 
@@ -343,6 +344,19 @@ const InventRpt = () => {
       const handleClosePopup=()=>{
         setShowConfirmDeletePopupStatus(false);
       }
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+      const handleRowClick = (node) => {
+        dispatch(handleNodeData(node))
+              if (`${node.deviceType}` === 'AP') {
+                  navigate('/SN-view', { replace: true })
+                  
+              } else {
+                  navigate(`/${node.deviceType}-view`, { state: { node } , replace: true });
+              }
+      
+          };
 
     return (
         <>
@@ -525,7 +539,15 @@ const InventRpt = () => {
                                             .filter(col => visibleColumns.includes(col.key))
                                             .map((col) => (
                                             <td key={col.key}>
-                                                {node[col.key]}
+                                                {col.key === "label" ? (
+                                        <span
+                                        className="highlightText"
+                                        onClick={() => handleRowClick(node)}
+                                        >
+                                        {node[col.key]}
+                                        </span>):(
+                                                node[col.key]
+                                        )}
                                             </td>
                                             ))}
                                             <td><i className="fa fa-sync"></i></td>

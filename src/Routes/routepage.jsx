@@ -29,15 +29,15 @@ const RoutesPage = () => {
             <Route path="/TR-view" element={<TrainNodeView />} />
             <Route path="/obc-view" element={<ObcNodeView />} />
             <Route path="/encoder-view" element={<EncoderNodeView />} />
-            <Route exact path="/Discovery" element={<DiscovPag />} />
-            <Route  exact path="/Topology" element={<TopoPg />} />
-            <Route  exact path="/Wayside" element={<Wayside />} />
-            <Route  exact path="/TestTopo" element={<NewTopology />} />
-            <Route  exact path="/Config" element={<ConfigPage />} />
-            <Route  exact path="/Event" element={<EventPg />} />
-            <Route exact path="/Inventory" element={<InventRpt />} />
-            <Route exact path="/Setting" element={<SettPage />} />
-            <Route exact path="*" element={<p>Error Not Found</p>} />
+            <Route path="/Discovery" element={<DiscovPag />} />
+            <Route  path="/Topology" element={<TopoPg />} />
+            <Route  path="/Wayside" element={<Wayside />} />
+            <Route  path="/TestTopo" element={<NewTopology />} />
+            <Route  path="/Config" element={<ConfigPage />} />
+            <Route  path="/Event" element={<EventPg />} />
+            <Route path="/Inventory" element={<InventRpt />} />
+            <Route path="/Setting" element={<SettPage />} />
+            <Route path="*" element={<p>Error Not Found</p>} />
          </Routes>
       </Router>
    );

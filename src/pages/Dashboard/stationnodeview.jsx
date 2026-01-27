@@ -17,10 +17,10 @@ const StationNodeDetails = () => {
   const [currentTab, setCurrentTab] = useState('summary')
   const [nodeItemDt, setNodeItemDt] = useState([]);
 
-  // const nodeDataId = useSelector((state) => state.node.node.nodeId);
-  const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
+  //  const nodeDataIds = useSelector((state) => state.node.node.nodeId);
+  const nodeDataId = useSelector((state) => state.node?.node?.nodeId || state.node?.node?.id) ?? localStorage.getItem('nodeId');
 
-  const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress);
+  const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress || state.node?.node?.label);
 
   const getServerStatusDt = async (url) => {
     setIsLoading(true);

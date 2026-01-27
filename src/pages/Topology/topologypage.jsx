@@ -55,6 +55,8 @@ const TopoPg = () => {
     const previousViewRef = useRef(null);
     // const textNameChangedRef = useRef(false);
     const [textNameChanged, setTextNameChanged] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const handleNodeClick = (value) => {
         setTextNameChanged(true); 
@@ -164,8 +166,14 @@ useEffect(() => {
 
 useEffect(()=>{
         if (!textName?.data) return;
-        let url= `api/v2/treeview/station/${textName.data.id}`;
+        const url= `api/v2/treeview/station/${textName.data.id}`;
         getYardfacilitieData(url);
+
+         const intervalId = setInterval(() => {
+            getYardfacilitieData(url);
+        }, 30000);
+
+        return () => clearInterval(intervalId);
 
     },[textName]); 
 
@@ -358,6 +366,12 @@ useEffect(()=>{
         }
     }
 
+    const handleTrainStatusHide=()=>{
+        setTrainView(false);
+        setTrainLabelDiply(false);
+        setStationTagview(true);
+    }
+
     const handleTrainVwVisible=()=>{
     if (!previousViewRef.current) return;
 
@@ -493,7 +507,7 @@ useEffect(()=>{
 
         return()=> clearInterval(intervalId);
     }
-}, [circleId, lineId]);
+}, [circleId, lineId,textName,selectedTab]);
 
     const handleTagsPopup = (value, id) => {
         setShowPopup(value);
@@ -532,7 +546,6 @@ useEffect(()=>{
     }
 
     const canGoBack = Boolean(previousViewRef.current);
-
 
 
     return (
@@ -600,7 +613,7 @@ useEffect(()=>{
                             </li>
 
                            {trainLabelDiply ?  <li><a onClick={handleTrainVwTab}>{trainId}</a>
-                           <button onClick={handleTrainVwVisible}>x</button>
+                           <button onClick={handleTrainStatusHide}>x</button>
                            </li> : '' }
                            <li>
                             <button onClick={handleTagTableView}  className={selectedTab === 'tagtable' ? 'active' : ''}>
@@ -620,7 +633,7 @@ useEffect(()=>{
                     <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} textName={textName}/>
                     </article>
                     {textName && textName?.data?.mode === 'facility' ? (<article style={{margin:'5px',marginTop:'15px'}}>
-                    <StationTagsTable rdDataRef={rdDataRef} />
+                    <StationTagsTable textName={textName} circleId={circleId} lineId={lineId}  rdDataRef={rdDataRef} />
                     </article>) : ('')}
                     {showPopup && (
                         <div className="popupStyle">

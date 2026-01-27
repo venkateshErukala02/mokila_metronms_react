@@ -11,6 +11,7 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
     const [svgContent, setSvgContent] = useState("");
     const svgContainerRef = useRef(null);
     const stationStatusRef = useRef(null);
+    const [manualTitle, setManualTitle] = useState(null);
     const rdData = rdDataRef.current === null ? [] : [rdDataRef.current[0].tags] ;
     const rdDataTitle = rdDataRef.current === null ? [] : [rdDataRef.current[0].station] ;
 
@@ -19,12 +20,44 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
                         : stationNode;
 
 
-                        useEffect(() => {
+useEffect(() => {
   if (!stationNode) return;
   if (!textName?.data) {
     goToStationView(stationNode);
   }
 }, [stationNode]);
+
+// useEffect(() => {
+//   if (textName?.text) {
+//     setManualTitle(textName.text);
+
+//     // clear rdData so it does not overwrite title
+//     rdDataRef.current = null;
+//   }
+// }, [textName?.text]);
+
+
+// useEffect(() => {
+//   if (rdDataRef.current) {
+//     setManualTitle(null);
+//   }
+// }, [rdDataTitle]);
+
+// useLayoutEffect(() => {
+//   if (!svgContent) return;
+
+//   const svgRoot = svgContainerRef.current;
+//   if (!svgRoot) return;
+
+//   const titleElement = svgRoot.querySelector('#section_station_name');
+//   if (!titleElement) return;
+
+//   titleElement.textContent = manualTitle ?? rdDataTitle ?? '';
+//   titleElement.classList.add("svgstationname");
+
+// }, [svgContent, manualTitle, rdDataTitle]);
+
+
 
     const getTrainData = async () => {
         setIsLoading(true);
@@ -93,11 +126,18 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
     useEffect(() => {
         getTrainData();
         getStationStatusDt();
+
+        const intervalId = setInterval(() => {
+            getTrainData();
+            getStationStatusDt();
+        }, 30000);
+
+        return () => clearInterval(intervalId);
     }, [svgContent])
 
     useEffect(() => {
         if (textName?.data?.mode !== 'facility') {
-            setStationStatus([]); 
+            setStationStatus([]);
         }
     }, [textName]);
 
@@ -162,7 +202,7 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
     }
 
     useEffect(() => {
-        if (!svgContent || textName.data?.mode === 'facility') {
+        if (!svgContent || textName?.data?.mode === 'facility') {
 
             const svgRoot = svgContainerRef.current;
             if (!svgRoot) return;
@@ -181,11 +221,11 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
 
             const el = svgRoot.querySelector(`#section_station_name`);
             if (el) {
-                el.textContent = textName.text;
+                el.textContent = rdDataTitle;
                 el.classList.add("svgstationname");
             }
         }
-    }, [textName.text, svgContent]);
+    }, [textName?.text, svgContent]);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -193,7 +233,7 @@ const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply
         let svg = '';
 
         if (textName != "") {
-            if (textName.data.mode == 'facility' && setStationStatus==='false') {
+            if (textName?.data.mode == 'facility' && setStationStatus==='false') {
                 svg = 'Station_Line1.svg';
             }else{
                 svg = 'Station_Line1.svg'; 

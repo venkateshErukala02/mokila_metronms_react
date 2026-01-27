@@ -4,7 +4,7 @@ import '../Dashboard/dashboard.css';
 
 
 
-const StationTagsTable = ({ rdDataRef}) =>{
+const StationTagsTable = ({ circleId, lineId,textName,selectedTab,rdDataRef}) =>{
     const [searchBtn, setSearchBtn] = useState(false);
     const [radialipText, setRadialipText] = useState('');
     const [limitValueSel, setLimitValueSel] = useState('1');
@@ -16,9 +16,23 @@ const StationTagsTable = ({ rdDataRef}) =>{
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-    const rdData = rdDataRef.current === null ? [] : [rdDataRef.current[0].tags] ;
+    // const rdData = rdDataRef.current === null ? [] : [rdDataRef.current[0].tags] ;
+    const [tagData,setTagData] = useState([]);
+    const displayData = tagData.length > 0 ? tagData : (rdDataRef?.current ? rdDataRef?.current[0]?.tags : []);
+    const [tagIdText,setTagIdText] = useState('');
+    const [searchTrigger, setSearchTrigger] = useState(0);
 
- 
+      useEffect(() => {
+           if (!tagIdText.trim()) return;
+
+            const fetchData = async () => {
+                setIsLoading(true);
+                await handleSearchData(tagIdText);
+            };
+
+            fetchData();
+        }, [searchTrigger]);
+
     const handleDeleteTag=async(value)=>{
         setLoading(true);
         setError('');
@@ -48,6 +62,118 @@ const StationTagsTable = ({ rdDataRef}) =>{
     };
 
 
+      const handleSearchData = async (tagIdText) => {
+
+                try {
+                    const response = await fetch(`api/v2/wayside/searchTag?tag=${tagIdText}`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+
+                      if (response.status === 204) {
+                            setIsLoading(false);
+                            setTagData([]);
+                            return;
+                        }
+                    const tgData = await response.json();
+                    const data = tgData[0];
+                    if (response.ok) {
+                        setIsLoading(false);
+                        setTagData(Array.isArray(data) ? data : [data]);
+                        setError({ status: false, msg: "" });
+                    } else {
+                        throw new Error("data not found");
+                    }
+
+                } catch (error) {
+                    setError({ status: true, msg: error.message });
+                }finally {
+                    setLoading(false);
+                }
+
+        }
+
+
+     const handleSearchClick = (e) => {
+        e.preventDefault();
+        if (!tagIdText.trim()) {
+            alert("Please enter a search term");
+
+        } else {
+            setSearchBtn(true);
+            setSearchTrigger(prev => prev + 1);
+        }
+    }
+
+
+    const handleClearSearch = () => {
+        setSearchBtn(false);
+        setTagIdText('');
+        setTagData([]); 
+        // setInvenData([]);
+        // fetchDataRadial();
+      }
+
+
+    //     const fetchDataRadial = async (url) => {
+    //     setIsLoading(true);
+    //     setIsError({ status: false, msg: "" });
+    //     try {
+    //         const username = 'admin';
+    //         const password = 'admin';
+    //         const token = btoa(`${username}:${password}`)
+    //         const options = {
+    //             method: "GET",
+    //             headers: {
+    //                 'Authorization': `Basic ${token}`
+    //             }
+
+    //         };
+    //         const response = await fetch(url, options);
+    //         const data = await response.json();
+    //         if (response.ok) {
+    //             setIsLoading(false);
+    //             if(Object.keys(data).length === 0){
+    //                setTagData([]) 
+    //             }
+    //             setTagData(Array.isArray(data) ? data : [data]);
+    //             // setCircleId('');
+    //             // setLineId('');
+    //             setIsError({ status: false, msg: "" });
+    //         } else {
+    //             throw new Error("data not found");
+    //         }
+    //     } catch (error) {
+    //         setIsLoading(false);
+    //         setIsError({ status: true, msg: error.message });
+    //     }
+    // };
+
+//         useEffect(() => {
+//     let url = '';
+//     if (circleId) {
+//         url = `api/v2/wayside/tagdetails?station=${circleId}`;
+//     } else if (lineId) {
+//         url = `api/v2/wayside/tagdetails?station=${lineId}`;
+//     }else if(textName?.data?.mode === 'facility'){
+//         url = `api/v2/wayside/tagdetails?station=${textName.data.display}`;
+//     }
+
+//     if (url) {
+//         fetchDataRadial(url);
+
+//         const intervalId = setInterval(()=>{
+//             fetchDataRadial(url);
+//         },30000)
+
+//         return()=> clearInterval(intervalId);
+//     }
+// }, [searchClear]);
+
+
+
     return (
         <>
         <h1 className="discoveryheading">Tags</h1>
@@ -64,20 +190,20 @@ const StationTagsTable = ({ rdDataRef}) =>{
 
                     </article>
                     <article className="col-sm-10 col-md-10 col-lg-10 col-xl-10 col-xxl-10">
-                        {/* <ul className="searchdashlist">
+                        <ul className="searchdashlist">
                             <li>
-                                <input name="" value={lineipText} onChange={(e) => setLineipText(e.target.value)} placeholder="IP Address / System Name / Serial Number" id="" className="form-control1 searchbar1" />
+                                <input name="" value={tagIdText} onChange={(e) => setTagIdText(e.target.value)} placeholder="TadId Number" id="" className="form-control1 searchbar1" />
                                 <button type="button" className="createbtn" 
-                                    style={{ marginLeft: '7px' }}>Search</button>
-                                <button type="button" className="createbtn" onClick={handleClearSerch} style={{ marginLeft: '7px', display: searchBtn ? 'inline-block' : 'none' }}> Clear Search</button>
+                                    style={{ marginLeft: '7px' }} onClick={handleSearchClick}>Search</button>
+                                <button type="button" className="createbtn" style={{ marginLeft: '7px', display: searchBtn ? 'inline-block' : 'none' }} onClick={handleClearSearch}> Clear Search</button>
 
                             </li>
-                            <li>
+                            {/* <li>
                                 <label htmlFor="" className="addcloum">Add Columns  <span className="glyphicon glyphicon-tasks"></span></label>
 
                                 
-                            </li>
-                        </ul> */}
+                            </li> */}
+                        </ul>
 
                     </article>
                 </article>  
@@ -119,7 +245,7 @@ const StationTagsTable = ({ rdDataRef}) =>{
                                     </td>
                                 </tr>
                             )}
-                            {rdData.length === 0 && (
+                            {displayData.length === 0 && (
                                  <tr>
                                     <td colSpan="8" style={{ textAlign: "center" }}>
                                         No Data Available
@@ -129,16 +255,16 @@ const StationTagsTable = ({ rdDataRef}) =>{
 
                             {!isLoading &&
                                 !isError.status &&
-                                 (rdData.length > 0 && Object.keys(rdData[0] || {}).length === 0) ? (
+                                 (displayData.length > 0 && Object.keys(displayData[0] || {}).length === 0) ? (
                                     <tr>
                                     <td colSpan="8" style={{ textAlign: "center" }}>
                                         No Data Available
                                     </td>
                                 </tr>
                                 ) :(
-                                    rdData.length !== 0 && rdData[0].map((value, index) => (
+                                    displayData.length !== 0 && displayData.map((value, index) => (
                                      <tr key={index}>
-                                        <td style={{padding:"4px 6px"}}>{value.tag}</td>
+                                        <td style={{padding:"4px 6px"}}>{value[0]?.tag || value?.tag}</td>
                                         <td style={{padding:"4px 6px"}}>{value.direction}</td>
                                         <td style={{padding:"4px 6px"}} className="">{value.position}</td>
                                         <td style={{padding:"4px 48px"}}>{value.status === 'down' ? (<i className="fa-solid fa-arrow-down" style={{color:"red"}}></i> ): (<i className="fa-solid fa-arrow-up" style={{color:"green"}}></i>)}</td>

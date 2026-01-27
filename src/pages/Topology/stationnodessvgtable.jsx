@@ -26,7 +26,7 @@ const StationNodesvgTable=({textName,yardfacilitieData})=>{
                     </article>
                     <article className="col-sm-10 col-md-10 col-lg-10 col-xl-10 col-xxl-10">
                         <ul className="searchdashlist">
-                            <li>
+                            {/* <li>
                                 <input name="" value={lineipText} onChange={(e) => setLineipText(e.target.value)} placeholder="IP Address / System Name / Serial Number" id="" className="form-control1 searchbar1" />
                                 <button type="button" className="createbtn" onClick={() => {
                                     // const url = `api/v2/nodes/search?_s=assetRecord.serialNumber==${radialipText},sysName==${radialipText},label==${radialipText}&limit=${limitValueSelLabel}&offset=0&order=asc`;
@@ -36,10 +36,10 @@ const StationNodesvgTable=({textName,yardfacilitieData})=>{
                                     style={{ marginLeft: '7px' }}>Search</button>
                                 <button type="button" className="createbtn" onClick='' style={{ marginLeft: '7px', display: searchBtn ? 'inline-block' : 'none' }}> Clear Search</button>
 
-                            </li>
-                            <li>
+                            </li> */}
+                            {/* <li>
                                 <label htmlFor="" className="addcloum">Add Columns  <span className="glyphicon glyphicon-tasks"></span></label>
-                            </li>
+                            </li> */}
                         </ul>
 
                     </article>
