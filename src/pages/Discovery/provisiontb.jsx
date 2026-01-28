@@ -54,12 +54,14 @@ const ProvisionTb = ({ getProviContData }) => {
   const columnWrapperRef =  useRef(null);
   const [visibleColumns, setVisibleColumns] = useState(DEFAULT_COLUMNS);
   const firstLoadRef = useRef(true);
-  const [lineNameSel,setLineNameSel] = useState('');
+  const [lineNameSel,setLineNameSel] = useState('-1');
   const [stationData,setStationData] = useState([]);
-  const [stationNameSel,setStationNameSel] = useState('');
-  const [positionNameSel,setPositionNameSel] = useState('');
+  const [stationNameSel,setStationNameSel] = useState('-1');
+  const [positionNameSel,setPositionNameSel] = useState('-1');
+  const [success, setSuccess] = useState('');
 
    useEffect(()=>{
+    if(lineNameSel === '-1') return;
           if(lineNameSel && lineNameSel !== ''){
               const url=`api/v2/treeview/regions/${lineNameSel}/stations`;
   
@@ -313,6 +315,44 @@ const ProvisionTb = ({ getProviContData }) => {
                 setPositionNameSel(e.target.value);
             }
 
+
+            const handleDiscoveryConfig=async(node)=>{
+               const requestBody = [{
+                nodeId : node.nodeId,
+                stationId : stationNameSel,
+                position : positionNameSel,
+               }];
+              const url = 'api/v2/discovery/configure';
+
+              setIsError('');
+
+              setIsLoading(true);
+              try {
+                  const response = await fetch(url,{
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+
+                      },
+                      body: JSON.stringify(requestBody),
+                  });
+                  const ddtt = response;
+
+                  if (response.ok) {
+                      setSuccess('Added Discovery config successfully');
+                      // setProvisionSel(true);
+                  } else {
+                      setIsError('Error starting discovery');
+                  }
+              } catch (error) {
+                  setIsError('An error occurred while contacting the server.');
+              } finally {
+                  setIsLoading(false); 
+              }
+          };
+            
+
+
   return (
 
     <>
@@ -483,7 +523,7 @@ const ProvisionTb = ({ getProviContData }) => {
                     ))}
                      <td style={{ paddingLeft: '18px' }}>
                        <select className="provisionselinput" defaultValue={-1} value={lineNameSel} onChange={handleSelectLine}>
-                      <option value="-1" defaultValue>Select</option>
+                      <option value="-1" disabled>Select</option>
                       {ALL_LINES && ALL_LINES.map((item,index)=>(
                           <option value={item.key} key={index}>{item.label}</option>
                       ))}
@@ -491,7 +531,7 @@ const ProvisionTb = ({ getProviContData }) => {
                     </td>
                      <td style={{ paddingLeft: '18px' }}>
                        <select className="provisionselinput" defaultValue={-1} value={stationNameSel} onChange={handleSelectStation}>
-                        <option value="-1" defaultValue disabled>Select</option>
+                        <option value="-1" disabled>Select</option>
                         {stationData && stationData.map((item,index)=>(
                             <option value={item.value} key={index}>{item.display}</option>
                         ))}
@@ -499,7 +539,7 @@ const ProvisionTb = ({ getProviContData }) => {
                     </td>
                      <td style={{ paddingLeft: '18px' }}>
                        <select className="provisionselinput" defaultValue={-1} value={positionNameSel} onChange={handleSelectPosition}>
-                      <option value="-1" defaultValue disabled>Select</option>
+                      <option value="-1" disabled>Select</option>
                       <option value="SBSE" label="SN-SBSE">SN-SBSE</option>
                       <option value="SBNE" label="SN-SBNE">SN-SBNE</option>
                       <option value="NBSE" label="SN-NBSE">SN-NBSE</option>
@@ -515,7 +555,7 @@ const ProvisionTb = ({ getProviContData }) => {
                       <option value="SBTC" label="Transcoder-SB">Transcoder-SB</option><option value="NBTC" label="Transcoder-NB">Transcoder-NB</option><option value="SBE" label="Encoder-SB">Encoder-SB</option><option value="NBE" label="Encoder-NB">Encoder-NB</option></select>
                     </td>
                      <td style={{ paddingLeft: '18px' }}>
-                      <button type="button" className="createbtn">Save</button>
+                      <button type="button" className="createbtn" onClick={() => handleDiscoveryConfig(node)}>Save</button>
                     </td>
                   </tr>
                   ));

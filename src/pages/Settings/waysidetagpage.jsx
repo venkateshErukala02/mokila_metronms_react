@@ -21,8 +21,23 @@ const WaysideTagContainer=()=>{
         const [reportChecked,setReportChecked] = useState();
         const [pageCount,setPageCount] = useState(1);
         const userDataRef = useRef('');
+        const [searchBtn, setSearchBtn] = useState(false);
+        const [tagIdText,setTagIdText] = useState('');
+        const [searchTrigger, setSearchTrigger] = useState(0);
 
         const value = priorityChecked ? "highpriority" : "none";
+
+         useEffect(() => {
+           if (!tagIdText.trim()) return;
+
+            const fetchData = async () => {
+                setIsLoading(true);
+                await handleSearchData(tagIdText);
+            };
+
+            fetchData();
+        }, [searchTrigger]);
+
         const getTagData = async (url) => {
             setIsLoading(true);
             setIsError({ status: false, msg: "" });
@@ -57,6 +72,7 @@ const WaysideTagContainer=()=>{
 
 
      useEffect(() => {
+         if (searchBtn) return;
             const fetchData =async()=>{
             const url=`api/v2/wayside/waySideTags?page=${pageCount}`;
             await getTagData(url);
@@ -67,7 +83,7 @@ const WaysideTagContainer=()=>{
 
             return ()=> clearInterval(intervalId);
     
-        }, [pageCount]);
+        }, [pageCount,searchBtn]);
 
         //  useEffect(() => {
 
@@ -221,6 +237,61 @@ const WaysideTagContainer=()=>{
             setReportChecked(false);
         }
     }
+
+
+       const handleSearchData = async (tagIdText) => {
+
+                try {
+                    const response = await fetch(`api/v2/wayside/searchTag?tag=${tagIdText}`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+
+                      if (response.status === 204) {
+                            setIsLoading(false);
+                            setTagData([]);
+                            return;
+                        }
+                    const tgData = await response.json();
+                     const data = tgData[0];
+                    if (response.ok) {
+                        setIsLoading(false);
+                        setTagData({tags : Array.isArray(data) ? data : [data],
+                            totalPages : 1
+                        });
+                        setIsError({ status: false, msg: "" });
+                    } else {
+                        throw new Error("data not found");
+                    }
+
+                } catch (error) {
+                    setIsError({ status: true, msg: error.message });
+                }finally {
+                    setIsLoading(false);
+                }
+
+        }
+
+         const handleSearchClick = (e) => {
+        e.preventDefault();
+        if (!tagIdText.trim()) {
+            alert("Please enter a search term");
+
+        } else {
+            setSearchBtn(true);
+            setSearchTrigger(prev => prev + 1);
+        }
+    }
+
+    const handleClearSearch = () => {
+        setSearchBtn(false);
+        setTagIdText('');
+        setPageCount(1);
+        const url=`api/v2/wayside/waySideTags?page=${pageCount}`;
+        getTagData(url);
+      }
  
     return(
         <>
@@ -254,8 +325,9 @@ const WaysideTagContainer=()=>{
                                     <article style={{ float: 'right'}}>
                                         <ul className="setttinglist">
                                             <li>
-                                                 <input type="text" style={{ marginRight: '10px' }} name="" placeholder="Tag Number" id="" className="form-controlinventory" />
-                                <button type="button" className="createbtn">Search</button>
+                                                 <input type="text" style={{ marginRight: '10px' }} name="" placeholder="Tag Number" id="" value={tagIdText} onChange={(e) => setTagIdText(e.target.value)} className="form-controlinventory" />
+                                <button type="button" className="createbtn" onClick={handleSearchClick}>Search</button>
+                                 <button type="button" className="createbtn" style={{ marginLeft: '7px', display: searchBtn ? 'inline-block' : 'none' }} onClick={handleClearSearch}> Clear Search</button>
 
                                             </li>
 
@@ -325,9 +397,9 @@ const WaysideTagContainer=()=>{
                                                 /></td>
                                             <td>{item.tag}</td>
                                             <td>{item.location}</td>
-                                            <td>{item.direction}</td>
+                                            <td>{item.direction || item.line}</td>
                                             <td>
-                                                {item.position}</td>
+                                                {item.position || item.postion}</td>
                                             <td>{item.type}</td>
                                             <td><input type="checkbox" className="incl"
                                                      checked={item.priority === 1} // checkbox reflects priority

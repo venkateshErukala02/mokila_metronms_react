@@ -166,16 +166,22 @@ useEffect(() => {
 
 useEffect(()=>{
         if (!textName?.data) return;
+        let intervalId;
+
+        if(selectedTab !== 'tagtable') {
         const url= `api/v2/treeview/station/${textName.data.id}`;
         getYardfacilitieData(url);
 
-         const intervalId = setInterval(() => {
+          intervalId = setInterval(() => {
             getYardfacilitieData(url);
         }, 30000);
+        }
 
-        return () => clearInterval(intervalId);
+         return () => {
+            if (intervalId) clearInterval(intervalId);
+        };
 
-    },[textName]); 
+    },[textName,selectedTab]); 
 
 
 

@@ -11,6 +11,54 @@ import DatePicker from "react-datepicker";
 const EventPg = () => {
 
     const isVisible = useSelector(state => state.visibility.isVisible);
+    const [cabNumber,setCabNumber] = useState('');
+    const [selectedFromDate,setSelectedFromDate] = useState(null);
+    const [selectedToDate,setSelectedToDate] = useState(null);
+    const [timestampFrom,setTimestampFrom] = useState(Date.now());
+    const [timestampTo,setTimestampTo] = useState(Date.now());
+
+    const handleFromDateChange = (date) => {
+            setSelectedFromDate(date);
+            const timestamp = date.getTime();  
+            setTimestampFrom(timestamp);        
+        };
+
+    const handleToDateChange = (date) => {
+        setSelectedToDate(date);
+        const timestamp = date.getTime();  
+        setTimestampTo(timestamp);        
+    };
+
+
+
+    const ExportCanData =  () => {
+        if(cabNumber.length !== 4){
+            alert("Cab number is incorrect.")
+            return;
+        }
+        const tId = cabNumber.substring(0, 3); 
+        const cId = cabNumber.substring(3);
+
+        if (!timestampFrom || !timestampTo) {
+            alert("Please select start and end dates.");
+            return;
+        }
+
+        if (new Date(timestampFrom) >= new Date(timestampTo)) {
+            alert("Start date should be less than end date.");
+            return;
+        }
+            const url =`api/v2/nodes/cabreport1/${tId}/${cId}/${timestampFrom}/${timestampTo}`;
+            window.open(url, '_blank');
+                setCabNumber('');
+                setSelectedFromDate('');
+                setSelectedToDate('');
+                setTimestampFrom(Date.now());
+                setTimestampTo(Date.now());
+    };
+
+
+
 
     return (
         <>
@@ -30,32 +78,32 @@ const EventPg = () => {
                         <article style={{padding:"12px"}}>
                             <label className="settinglabelsub">Cab Number</label>
                             <input type="text"
-                                // value={version}
+                             value={cabNumber}
                                 required
-                                // onChange={(e) => setVersion(e.target.value)}
-                                name="" placeholder="" id="" className="settinglabelsubinp" />
+                                onChange={(e) => setCabNumber(e.target.value)}
+                                name="" placeholder="Enter Cab Number" id="" className="settinglabelsubinp" />
                                 <article className="labelaligncl">
                                 <label className="settinglabelsub">From</label>
                             <DatePicker
-                            // selected={selectedDate}
+                            selected={selectedFromDate}
                             showTimeSelect
                             dateFormat="yyyy-MM-dd HH:mm"
                             placeholderText="yyyy-MM-dd HH:mm"
-                                // onChange={handleDateChange}
+                            onChange={handleFromDateChange}
                             className="myDatepickercl" />
                             </article>
                             <article className="labelaligncl">
                                 <label className="settinglabelsub">To</label>
                            <DatePicker
-                            // selected={selectedDate}
+                            selected={selectedToDate}
                             showTimeSelect
                             dateFormat="yyyy-MM-dd HH:mm"
                             placeholderText="yyyy-MM-dd HH:mm"
-                                // onChange={handleDateChange}
+                            onChange={handleToDateChange}
                             className="myDatepickercl" />
                             </article>
                                 <article className="f-r labelaligncl">
-                                    <button type="button" className="createbtn">Export</button>
+                                    <button type="button" className="createbtn" onClick={ExportCanData}>Export</button>
                                 </article>
                         </article>
                         </article>
