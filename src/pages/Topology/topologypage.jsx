@@ -57,6 +57,9 @@ const TopoPg = () => {
     const [textNameChanged, setTextNameChanged] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const yardfacilitieDataRef = useRef(null);
+    const [stationIdFromSvg, setStationIdFromSvg] = useState(null);
+    const [trainData, setTrainData] = useState('');
 
     const handleNodeClick = (value) => {
         setTextNameChanged(true); 
@@ -152,6 +155,7 @@ useEffect(() => {
         const data = await response.json();
         if (response.ok) {
             setYardfacilitieData(data || []);
+             yardfacilitieDataRef.current=data;
             setIsError({ status: false, msg: "" });
         } else {
             throw new Error("Data not found");
@@ -162,18 +166,52 @@ useEffect(() => {
         setIsLoading(false);
     }
 };
+
+  const getTrainData = async (url1) => {
+        setIsLoading(true);
+        setIsError({ status: false, msg: "" });
+        try {
+            // const url = `api/v2/treeview/trains/${textName.data.id}`;
+            const username = 'admin';
+            const password = 'admin';
+            const token = btoa(`${username}:${password}`)
+            const options = {
+                method: "GET",
+                headers: {
+                    'Authorization': `Basic ${token}`,
+                    'Accept': 'application/json'
+                }
+            };
+            const response = await fetch(url1, options);
+            const data = await response.json();
+
+            if (response.ok) {
+                setIsLoading(false);
+                setTrainData(data);
+                setIsError({ status: false, msg: "" });
+            } else {
+                throw new Error("Data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message });
+        }
+    };
  
 
 useEffect(()=>{
         if (!textName?.data) return;
         let intervalId;
-
-        if(selectedTab !== 'tagtable') {
-        const url= `api/v2/treeview/station/${textName.data.id}`;
-        getYardfacilitieData(url);
+        const stationId = stationIdFromSvg ? stationIdFromSvg : textName?.data?.id;
+        if(!stationId || selectedTab !== 'tagtable') {
+        const urlStation= `api/v2/treeview/station/${stationId}`;
+        const urlTrains = `api/v2/treeview/trains/${stationId}`;
+        getYardfacilitieData(urlStation);
+        getTrainData(urlTrains);
 
           intervalId = setInterval(() => {
-            getYardfacilitieData(url);
+            getYardfacilitieData(urlStation);
+            getTrainData(urlTrains);
         }, 30000);
         }
 
@@ -181,7 +219,7 @@ useEffect(()=>{
             if (intervalId) clearInterval(intervalId);
         };
 
-    },[textName,selectedTab]); 
+    },[textName?.data?.id,selectedTab,circleId,stationIdFromSvg]); 
 
 
 
@@ -239,7 +277,7 @@ useEffect(()=>{
                         </>
                     )
                 }else{
-                    return ( <> <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView}/>
+                    return ( <> <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData}/>
               <StationNodeTableView  yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} />
                       </> );
                 }
@@ -266,7 +304,7 @@ useEffect(()=>{
      const renderTagView = (stationTagview, lineTagview) => {
         if (stationTagview) {
             return <>
-                <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview} stationNode={stationNode}  goToStationView={goToStationView}/>
+                <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview} stationNode={stationNode}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData}  yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData}/>
               <StationNodeTableView yardfacilitieData={yardfacilitieData}  textName={textName} rdDataRef={rdDataRef} stationNode={stationNode} />
             </>
         } else if (lineTagview) {
@@ -599,7 +637,7 @@ useEffect(()=>{
                         </article>
                         <hr  className="hrll" style={{marginBottom:'0px'}}/>
                         <article>
-                        <TreeList getElementAtEvent={handleNodeClick} selectedNodeId={selectedTreeNodeId} circleId={circleId} onStationResolved={setStationNode} selectedPrevNodeId={selectedPrevNodeId} prevIdActive={prevIdActive}
+                        <TreeList getElementAtEvent={handleNodeClick} selectedNodeId={selectedTreeNodeId} circleId={circleId} onStationResolved={setStationNode} selectedPrevNodeId={selectedPrevNodeId} prevIdActive={prevIdActive}  onStationCircleIdChange={stationIdFromSvg}
                         />
                             </article>
                             <article>

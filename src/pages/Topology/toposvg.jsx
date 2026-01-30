@@ -165,61 +165,61 @@ useEffect(() => {
   }, [textName]);
  
 
-useLayoutEffect(() => {
-  if (!svgContent) return;
+// useLayoutEffect(() => {
+//   if (!svgContent) return;
 
-  const username = 'admin';
-  const password = 'admin';
-  const token = btoa(`${username}:${password}`);
-  const options = {
-    method: "GET",
-    headers: {
-      'Authorization': `Basic ${token}`
-    }
-  };
+//   const username = 'admin';
+//   const password = 'admin';
+//   const token = btoa(`${username}:${password}`);
+//   const options = {
+//     method: "GET",
+//     headers: {
+//       'Authorization': `Basic ${token}`
+//     }
+//   };
 
-  const fetchStationStatus = () => {
-    let call = "";
-    let currentTextName = textName;
+//   const fetchStationStatus = () => {
+//     let call = "";
+//     let currentTextName = textName;
 
-    if (!currentTextName || Object.keys(currentTextName).length === 0) {
-      call = "all";
-      currentTextName = { data: { mode: "global" } };
-    } else {
-      call = currentTextName.text === "Global" ? "all" : currentTextName.text;
-    }
+//     if (!currentTextName || Object.keys(currentTextName).length === 0) {
+//       call = "all";
+//       currentTextName = { data: { mode: "global" } };
+//     } else {
+//       call = currentTextName.text === "Global" ? "all" : currentTextName.text;
+//     }
 
-    if (
-      currentTextName.data.mode !== 'facility' &&
-      currentTextName.data.type !== 'facility'
-    ) {
-      fetch('api/v2/wayside/stationstatus?time=1800', options)
-        .then((res) => res.json())
-        .then((response) => {
-          const data = response.stations;
-          const svgRoot = svgContainerRef.current;
-          if (!svgRoot) return;
+//     if (
+//       currentTextName.data.mode !== 'facility' &&
+//       currentTextName.data.type !== 'facility'
+//     ) {
+//       fetch('api/v2/wayside/stationstatus?time=1800', options)
+//         .then((res) => res.json())
+//         .then((response) => {
+//           const data = response.stations;
+//           const svgRoot = svgContainerRef.current;
+//           if (!svgRoot) return;
 
-          data.forEach(({ station, status }) => {
-            const el = svgRoot.querySelector(`#${station}`);
-            if (el) {
-              el.setAttribute("fill", status === "down" ? "red" : "green");
-            }
-          });
-        })
-        .catch();
-    } else if (currentTextName.data.mode === 'facility') {
-      // getStationStatusDt();
-      // getTrainData();
-    }
-  };
+//           data.forEach(({ station, status }) => {
+//             const el = svgRoot.querySelector(`#${station}`);
+//             if (el) {
+//               el.setAttribute("fill", status === "down" ? "red" : "green");
+//             }
+//           });
+//         })
+//         .catch();
+//     } else if (currentTextName.data.mode === 'facility') {
+//       // getStationStatusDt();
+//       // getTrainData();
+//     }
+//   };
 
-  fetchStationStatus();
+//   fetchStationStatus();
 
-  const interval = setInterval(fetchStationStatus, 30000);
+//   const interval = setInterval(fetchStationStatus, 30000);
 
-  return () => clearInterval(interval);
-}, [svgContent]);
+//   return () => clearInterval(interval);
+// }, [svgContent]);
 
 
 const handleTrainClick = (event) => {

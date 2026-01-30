@@ -4,7 +4,7 @@ import './../Topology/topology.css';
 
 
 
-const TreeList = ({ getElementAtEvent,selectedNodeId,circleId,onStationResolved ,selectedTreeNodeId,selectedPrevNodeId,prevIdActive}) => {
+const TreeList = ({ getElementAtEvent,selectedNodeId,circleId,onStationResolved ,selectedTreeNodeId,selectedPrevNodeId,prevIdActive,onStationCircleIdChange}) => {
   const [nodeData, setNodeData] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   const [treeData, setTreeData] = useState([
@@ -189,7 +189,8 @@ useEffect(() => {
               setLocationId(facility?.locationId || null);
               setRegionName(facility?.regionName || null);
               setLocationName(facility?.locationName || null);
-              setStationName(facility?.name || null)
+              setStationName(facility?.name || null);
+              onStationCircleIdChange?.(facility?.id || null);
             setIsError({ status: false, msg: "" });
         } else {
             throw new Error("Data not found");

@@ -3,8 +3,8 @@ import { useLayoutEffect } from 'react';
 import '../ornms.css'
  
 
-const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply, setTrainId ,rdDataRef,trainView,trainId,stationNode,goToStationView }) => {
-    const [trainData, setTrainData] = useState('')
+const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply, setTrainId ,rdDataRef,trainView,trainId,stationNode,goToStationView,yardfacilitieData,yardfacilitieDataRef,trainData }) => {
+    // const [trainData, setTrainData] = useState('')
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [isLoading, setIsLoading] = useState(false);
     const [stationStatus, setStationStatus] = useState([]);
@@ -79,7 +79,7 @@ useEffect(() => {
 
             if (response.ok) {
                 setIsLoading(false);
-                setTrainData(data);
+                // setTrainData(data);
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("Data not found");
@@ -124,12 +124,12 @@ useEffect(() => {
     };
 
     useEffect(() => {
-        getTrainData();
-        getStationStatusDt();
+        // getTrainData();
+        // getStationStatusDt();
 
         const intervalId = setInterval(() => {
-            getTrainData();
-            getStationStatusDt();
+            // getTrainData();
+            // getStationStatusDt();
         }, 30000);
 
         return () => clearInterval(intervalId);
@@ -144,7 +144,7 @@ useEffect(() => {
 
 
     useLayoutEffect(() => {
-        if (!svgContent || !stationStatus.length) return;
+        if (!svgContent) return;
 
         const svgRoot = svgContainerRef.current;
 
@@ -158,7 +158,7 @@ useEffect(() => {
             const allElements = svgRoot.querySelectorAll('[id^="SB-R"], [id^="NB-R"]');
     
              allElements.forEach(el => {
-                el.style.fill = stationStatus.length === 0 ? '#ffffff' : '';
+                el.style.fill = yardfacilitieData?.length === 0 ? '#ffffff' : '';
             });
             const titleElement = svgRoot.querySelector('#section_station_name');
                 if(titleElement){
@@ -166,10 +166,11 @@ useEffect(() => {
                 }
         };
 
-        if(stationStatus.length === 0){
+        if(yardfacilitieData?.length === 0){
             resetSVGNodeElements();
         }else{
-         stationStatusRef?.current?.forEach((item) => { 
+            // ref
+         yardfacilitieDataRef?.current?.forEach((item) => { 
          const el = svgRoot.querySelector(`#${item.position}`);
             const title = svgRoot.querySelector(`#ts-${item.position}`);
                 if (item.type !== 'sta' && title !== null) {
@@ -187,7 +188,7 @@ useEffect(() => {
                 
         });
     }
-    }, [stationStatus, svgContent]);
+    }, [yardfacilitieData, svgContent,yardfacilitieDataRef]);
 
 
 
@@ -399,7 +400,7 @@ useEffect(() => {
              const allElements = svgRoot.querySelectorAll('[id^="SB-R"], [id^="NB-R"]');
     
              allElements.forEach(el => {
-                el.style.fill = stationStatus.length === 0 ? '#ffffff' : '';
+                el.style.fill = yardfacilitieData?.length === 0 ? '#ffffff' : '';
             });
             const titleElement = svgRoot.querySelector('#section_station_name');
                 if(titleElement){
@@ -417,7 +418,7 @@ useEffect(() => {
                   titleElement.textContent = rdDataTitle;    
                 }
         if (rdData[0]?.length === 0) {
-          if(stationStatus.length === 0){
+          if(yardfacilitieData?.length === 0){
             resetSVGNodeElements();
               }
             resetSVGTagElements();
@@ -440,7 +441,7 @@ useEffect(() => {
             } 
         });
       }
-    }, [rdData, svgContent,stationStatus]);
+    }, [rdData, svgContent,yardfacilitieData]);
 
         const getNodeLabel = (node) => {
         const mode = node.data?.mode;
