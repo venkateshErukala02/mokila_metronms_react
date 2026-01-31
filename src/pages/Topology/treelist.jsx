@@ -4,7 +4,7 @@ import './../Topology/topology.css';
 
 
 
-const TreeList = ({ getElementAtEvent,selectedNodeId,circleId,onStationResolved ,selectedTreeNodeId,selectedPrevNodeId,prevIdActive,onStationCircleIdChange}) => {
+const TreeList = ({ getElementAtEvent,selectedNodeId,circleId,onStationResolved ,selectedTreeNodeId,selectedPrevNodeId,prevIdActive,onStationCircleIdChange,stationRefreshKey}) => {
   const [nodeData, setNodeData] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   const [treeData, setTreeData] = useState([
@@ -50,7 +50,7 @@ const TreeList = ({ getElementAtEvent,selectedNodeId,circleId,onStationResolved 
         let url= `api/v2/facilities?_s=uniqueName==${circleId}`;
         getUniquefacilitieData(url);
 
-    },[circleId]);
+    },[circleId,stationRefreshKey]);
 
 //   useEffect(() => {
 //   if (!uniquefacilitieData || !selectedNodeId) return;

@@ -60,6 +60,8 @@ const TopoPg = () => {
     const yardfacilitieDataRef = useRef(null);
     const [stationIdFromSvg, setStationIdFromSvg] = useState(null);
     const [trainData, setTrainData] = useState('');
+    const [stationRefreshKey, setStationRefreshKey] = useState(0);
+    const hasRun = useRef(false);
 
     const handleNodeClick = (value) => {
         setTextNameChanged(true); 
@@ -98,8 +100,8 @@ useEffect(()=>{
 
 useEffect(()=>{
         if (!circleId) return;
-        let url= `api/v2/facilities?_s=uniqueName==${circleId}`;
-        getUniquefacilitieData(url);
+        // let url= `api/v2/facilities?_s=uniqueName==${circleId}`;
+        // getUniquefacilitieData(url);
 
     },[circleId]);
 
@@ -142,11 +144,11 @@ useEffect(() => {
 };
  
 
-  const getYardfacilitieData = async (url) => {
+  const getYardfacilitieData = async (urlStation) => {
     setIsLoading(true);
     setIsError({ status: false, msg: "" });
     try {
-        const response = await fetch(url, {
+        const response = await fetch(urlStation, {
             method: "GET",
             headers: {
                 'Authorization': `Basic ${btoa('admin:admin')}`
@@ -167,7 +169,7 @@ useEffect(() => {
     }
 };
 
-  const getTrainData = async (url1) => {
+  const getTrainData = async (urlTrains) => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
@@ -182,7 +184,7 @@ useEffect(() => {
                     'Accept': 'application/json'
                 }
             };
-            const response = await fetch(url1, options);
+            const response = await fetch(urlTrains, options);
             const data = await response.json();
 
             if (response.ok) {
@@ -201,8 +203,12 @@ useEffect(() => {
 
 useEffect(()=>{
         if (!textName?.data) return;
+        if (circleId) return;
+        if(textName?.data?.mode !== 'facility') return;
         let intervalId;
-        const stationId = stationIdFromSvg ? stationIdFromSvg : textName?.data?.id;
+        const stationId = textName?.data?.id;
+        if (!stationId) return;
+        if (stationId === null) return;
         if(!stationId || selectedTab !== 'tagtable') {
         const urlStation= `api/v2/treeview/station/${stationId}`;
         const urlTrains = `api/v2/treeview/trains/${stationId}`;
@@ -219,8 +225,37 @@ useEffect(()=>{
             if (intervalId) clearInterval(intervalId);
         };
 
-    },[textName?.data?.id,selectedTab,circleId,stationIdFromSvg]); 
+    },[textName?.data?.id,textName?.data?.mode,selectedTab,circleId]); 
 
+
+    useEffect(()=>{
+        if(!circleId) return;
+        // let intervalId;
+        if (selectedTab !== 'link-view') return;
+        if(stationRefreshKey <0) return; 
+        if (!stationIdFromSvg) return;
+        const stationId = stationIdFromSvg;
+        if (!stationId) return;
+        if (stationId === null) return;
+        // if(!stationId || selectedTab !== 'tagtable') {
+        const urlStation= `api/v2/treeview/station/${stationId}`;
+        const urlTrains = `api/v2/treeview/trains/${stationId}`;
+        getYardfacilitieData(urlStation);
+        getTrainData(urlTrains);
+
+        const intervalId = setInterval(() => {
+            getYardfacilitieData(urlStation);
+            getTrainData(urlTrains);
+        }, 30000);
+        // }
+
+         return () => {
+            if (intervalId) clearInterval(intervalId);
+        };
+
+    },[stationIdFromSvg,stationRefreshKey,selectedTab]); 
+
+    
 
 
     const renderSectComponent=(textName)=>{
@@ -485,6 +520,7 @@ useEffect(()=>{
         setStationCount(prev => !prev);
         setStationView(false);
         setPrevIdActive(false);
+        setStationRefreshKey(prev => prev + 1);
         // setTextName('');
 
     }
@@ -637,7 +673,7 @@ useEffect(()=>{
                         </article>
                         <hr  className="hrll" style={{marginBottom:'0px'}}/>
                         <article>
-                        <TreeList getElementAtEvent={handleNodeClick} selectedNodeId={selectedTreeNodeId} circleId={circleId} onStationResolved={setStationNode} selectedPrevNodeId={selectedPrevNodeId} prevIdActive={prevIdActive}  onStationCircleIdChange={stationIdFromSvg}
+                        <TreeList getElementAtEvent={handleNodeClick} selectedNodeId={selectedTreeNodeId} circleId={circleId} onStationResolved={setStationNode} selectedPrevNodeId={selectedPrevNodeId} prevIdActive={prevIdActive}  onStationCircleIdChange={setStationIdFromSvg} stationRefreshKey={stationRefreshKey}
                         />
                             </article>
                             <article>
