@@ -875,7 +875,7 @@
      inkscape:label="NBNE4" />
      <g
      id="top_train_layer"
-     style="display:inline"
+     style="display:none"
      transform="translate(13.61989,2.5908732)"
      sodipodi:insensitive="true">
      <path
@@ -907,6 +907,7 @@
    id="toptrainclicktexttitle">abc</title></text></g>
    <g
      id="bottom_train_layer"
+     style="display:none"
      transform="translate(10.802165,-1.9349313)"
      sodipodi:insensitive="true"><path
        id="bottomtrainclick"

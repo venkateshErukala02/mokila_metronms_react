@@ -58,10 +58,12 @@ const TopoPg = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const yardfacilitieDataRef = useRef(null);
+    const trainDataRef = useRef(null);
     const [stationIdFromSvg, setStationIdFromSvg] = useState(null);
     const [trainData, setTrainData] = useState('');
     const [stationRefreshKey, setStationRefreshKey] = useState(0);
     const hasRun = useRef(false);
+    const [enableStationPolling, setEnableStationPolling] = useState(true);
 
     const handleNodeClick = (value) => {
         setTextNameChanged(true); 
@@ -74,6 +76,7 @@ const TopoPg = () => {
         setTrainView(false);
 
         setTextName({...value});
+        setTimeLeft(30);
         // nodeData
          setSelectedPrevNodeId({
         id: value.data?.id,         
@@ -190,6 +193,7 @@ useEffect(() => {
             if (response.ok) {
                 setIsLoading(false);
                 setTrainData(data);
+                trainDataRef.current = data;
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("Data not found");
@@ -199,10 +203,13 @@ useEffect(() => {
             setIsError({ status: true, msg: error.message });
         }
     };
- 
+ const textNameIntervalRef = useRef(null);
+const stationSvgIntervalRef = useRef(null);
+// const prevStationIdRef = useRef(null);
 
 useEffect(()=>{
         if (!textName?.data) return;
+        setTrainData('');
         if (circleId) return;
         if(textName?.data?.mode !== 'facility') return;
         let intervalId;
@@ -212,50 +219,178 @@ useEffect(()=>{
         if(!stationId || selectedTab !== 'tagtable') {
         const urlStation= `api/v2/treeview/station/${stationId}`;
         const urlTrains = `api/v2/treeview/trains/${stationId}`;
+         if (textNameIntervalRef.current) clearInterval(textNameIntervalRef.current);
         getYardfacilitieData(urlStation);
         getTrainData(urlTrains);
 
-          intervalId = setInterval(() => {
+          textNameIntervalRef.current  = setInterval(() => {
             getYardfacilitieData(urlStation);
             getTrainData(urlTrains);
         }, 30000);
         }
 
          return () => {
-            if (intervalId) clearInterval(intervalId);
+             if (textNameIntervalRef.current) {
+      clearInterval(textNameIntervalRef.current);
+      textNameIntervalRef.current = null;
+    }
         };
 
-    },[textName?.data?.id,textName?.data?.mode,selectedTab,circleId]); 
+    },[textName?.data?.id,textName?.data?.mode,selectedTab]); 
+
+// const prevStationIdRef = useRef(null);
+// const stationIdRef = useRef(null);
+
+// useEffect(() => {
+//   if (stationIdFromSvg) {
+//     stationIdRef.current = stationIdFromSvg;
+//   }
+// }, [stationIdFromSvg]);
+
+useEffect(() => {
+  if (!enableStationPolling) return;
+  if (stationRefreshKey < 0) return;
+  if (!stationIdFromSvg) return;
+
+  const stationId = stationIdFromSvg;
+
+    const urlStation = `api/v2/treeview/station/${stationId}`;
+    const urlTrains = `api/v2/treeview/trains/${stationId}`;
+    const fetchData = () => {
+    getYardfacilitieData(urlStation);
+    getTrainData(urlTrains);
+  };
+
+//   if (prevStationIdRef.current !== stationId) {
+//     prevStationIdRef.current = stationId;
+    fetchData();
+//   }
+
+   if (stationSvgIntervalRef.current) clearInterval(stationSvgIntervalRef.current);
 
 
-    useEffect(()=>{
-        if(!circleId) return;
-        // let intervalId;
-        if (selectedTab !== 'link-view') return;
-        if(stationRefreshKey <0) return; 
-        if (!stationIdFromSvg) return;
-        const stationId = stationIdFromSvg;
-        if (!stationId) return;
-        if (stationId === null) return;
-        // if(!stationId || selectedTab !== 'tagtable') {
-        const urlStation= `api/v2/treeview/station/${stationId}`;
-        const urlTrains = `api/v2/treeview/trains/${stationId}`;
-        getYardfacilitieData(urlStation);
-        getTrainData(urlTrains);
+   stationSvgIntervalRef.current = setInterval(fetchData, 30000);
 
-        const intervalId = setInterval(() => {
-            getYardfacilitieData(urlStation);
-            getTrainData(urlTrains);
-        }, 30000);
-        // }
+//   return () => clearInterval(intervalId);
+ return () => {
+    if (stationSvgIntervalRef.current) {
+      clearInterval(stationSvgIntervalRef.current);
+      stationSvgIntervalRef.current = null;
+    }
+  };
 
-         return () => {
-            if (intervalId) clearInterval(intervalId);
-        };
+}, [stationRefreshKey, selectedTab, stationIdFromSvg, enableStationPolling]);
 
-    },[stationIdFromSvg,stationRefreshKey,selectedTab]); 
 
-    
+// useEffect(() => {
+//   if (stationRefreshKey < 0) return;
+//   if (!stationIdFromSvg) return;
+
+//   const stationId = stationIdFromSvg;
+//   const urlStation = `api/v2/treeview/station/${stationId}`;
+//   const urlTrains = `api/v2/treeview/trains/${stationId}`;
+
+//   const stationChanged = prevStationIdRef.current !== stationId;
+//   const refreshTriggered = !stationChanged && stationRefreshKey >= 0;
+
+//   if (stationChanged || refreshTriggered) {
+//     prevStationIdRef.current = stationId;
+//     getYardfacilitieData(urlStation);
+//     getTrainData(urlTrains);
+//   }
+
+//   const intervalId = setInterval(() => {
+//     getYardfacilitieData(urlStation);
+//     getTrainData(urlTrains);
+//   }, 30000);
+
+//   return () => clearInterval(intervalId);
+
+// }, [stationIdFromSvg]);
+
+
+    // useEffect(()=>{
+    //     if(!circleId) return;
+    //     // let intervalId;
+    //     // if(selectedTab) return;
+    //     // if (selectedTab !== 'linkview') return;
+    //     if(stationRefreshKey <0) return; 
+    //     if (!stationIdFromSvg) return;
+    //     const stationId = stationIdFromSvg;
+    //     if (!stationId) return;
+    //     if (stationId === null) return;
+    //     // if(!stationId || selectedTab !== 'tagtable') {
+    //     const urlStation= `api/v2/treeview/station/${stationId}`;
+    //     const urlTrains = `api/v2/treeview/trains/${stationId}`;
+    //      if (prevStationIdRef.current !== stationId) {
+    //          prevStationIdRef.current = stationId;
+    //     getYardfacilitieData(urlStation);
+    //     getTrainData(urlTrains);
+    //      }
+
+    //     const intervalId = setInterval(() => {
+    //         getYardfacilitieData(urlStation);
+    //         getTrainData(urlTrains);
+    //     }, 30000);
+    //     // }
+
+    //      return () => {
+    //         if (intervalId) clearInterval(intervalId);
+    //     };
+
+    // },[stationIdFromSvg]); 
+
+
+    // useEffect(()=>{
+    //     // if(!circleId) return;
+    //     // let intervalId;
+    //     // if (selectedTab === 'linkview') return;
+    //     if(stationRefreshKey <0) return; 
+    //     if (!stationIdFromSvg) return;
+    //     const stationId = stationIdFromSvg;
+    //     if (!stationId) return;
+    //     if (stationId === null) return;
+    //     // if(!stationId || selectedTab !== 'tagtable') {
+    //     const urlStation= `api/v2/treeview/station/${stationId}`;
+    //     const urlTrains = `api/v2/treeview/trains/${stationId}`;
+    //       if (prevStationIdRef.current === stationId) {
+    //          prevStationIdRef.current = stationId;
+    //     getYardfacilitieData(urlStation);
+    //     getTrainData(urlTrains);
+    //       } 
+    //     const intervalId = setInterval(() => {
+    //         getYardfacilitieData(urlStation);
+    //         getTrainData(urlTrains);
+    //     }, 30000);
+    //     // }
+
+    //      return () => {
+    //         if (intervalId) clearInterval(intervalId);
+    //     };
+
+    // },[stationRefreshKey]); 
+
+// useEffect(() => {
+//   if (stationRefreshKey < 0) return;
+//   if (!stationIdFromSvg) return;
+// //   if (selectedTab) return;
+
+//   const stationId = stationIdFromSvg;
+//   const urlStation = `api/v2/treeview/station/${stationId}`;
+//   const urlTrains = `api/v2/treeview/trains/${stationId}`;
+
+//  
+//   getYardfacilitieData(urlStation);
+//   getTrainData(urlTrains);
+
+//   const intervalId = setInterval(() => {
+//     getYardfacilitieData(urlStation);
+//     getTrainData(urlTrains);
+//   }, 30000);
+
+//   return () => clearInterval(intervalId);
+// }, [stationIdFromSvg, stationRefreshKey, selectedTab]);
+
 
 
     const renderSectComponent=(textName)=>{
@@ -312,7 +447,7 @@ useEffect(()=>{
                         </>
                     )
                 }else{
-                    return ( <> <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData}/>
+                    return ( <> <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg}/>
               <StationNodeTableView  yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} />
                       </> );
                 }
@@ -339,7 +474,7 @@ useEffect(()=>{
      const renderTagView = (stationTagview, lineTagview) => {
         if (stationTagview) {
             return <>
-                <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview} stationNode={stationNode}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData}  yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData}/>
+                <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview} stationNode={stationNode}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData}  yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg}/>
               <StationNodeTableView yardfacilitieData={yardfacilitieData}  textName={textName} rdDataRef={rdDataRef} stationNode={stationNode} />
             </>
         } else if (lineTagview) {
@@ -455,9 +590,10 @@ useEffect(()=>{
     if (!previousViewRef.current) return;
 
   const prev = previousViewRef.current;
-
+    setEnableStationPolling(false);
     setTextName(prev.textName);
     setStationView(prev.stationView);
+    setTimeLeft(30);
     // setStationTagview(prev.stationTagview);
     setStationTagview(false);
     setLineTagview(prev.lineTagview);
@@ -513,10 +649,12 @@ useEffect(()=>{
       trainView,
     };
   }
+        setEnableStationPolling(true);
         setCircleId(id);
         setSelectedTreeNodeId({ id: id,
             path: ["global", "region", "location"]}); 
         setStationTagview(true);
+        setTimeLeft(30);
         setStationCount(prev => !prev);
         setStationView(false);
         setPrevIdActive(false);
@@ -617,12 +755,14 @@ useEffect(()=>{
 
     const handleTagTableView=()=>{
         setTagTableView(true);
-        setSelectedTab('tagtable')
+        setSelectedTab('tagtable');
+        setTimeLeft(30);
     }
 
     const handleLinkView=()=>{
         setTagTableView(false);
         setSelectedTab('linkview');
+        setTimeLeft(30);
     }
 
     const canGoBack = Boolean(previousViewRef.current);

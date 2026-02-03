@@ -3,7 +3,7 @@ import { useLayoutEffect } from 'react';
 import '../ornms.css'
  
 
-const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply, setTrainId ,rdDataRef,trainView,trainId,stationNode,goToStationView,yardfacilitieData,yardfacilitieDataRef,trainData }) => {
+const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply, setTrainId ,rdDataRef,trainView,trainId,stationNode,goToStationView,yardfacilitieData,yardfacilitieDataRef,trainData,trainDataRef ,stationIdFromSvg }) => {
     // const [trainData, setTrainData] = useState('')
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [isLoading, setIsLoading] = useState(false);
@@ -26,6 +26,34 @@ useEffect(() => {
     goToStationView(stationNode);
   }
 }, [stationNode]);
+
+const resetTrainLayers = (svgRoot) => {
+  const selectors = [
+    '#top_train_layer',
+    '#bottom_train_layer',
+    '#toptrainclick',
+    '#toptrainclick2',
+    '#toptrainclick3',
+    '#toptrainclicktext',
+    '#bottomtrainclick',
+    '#bottomtrainclick1',
+    '#bottomtrainclick2',
+    '#bottomtrainclick3',
+    '#bottomtrainclicktext'
+  ];
+
+  selectors.forEach(sel => {
+    const el = svgRoot.querySelector(sel);
+    if (!el) return;
+
+    el.style.display = 'none';
+    el.style.visibility = 'hidden';
+    el.removeAttribute('train-id');
+  });
+};
+
+
+
 
 // useEffect(() => {
 //   if (textName?.text) {
@@ -260,13 +288,15 @@ useEffect(() => {
 
     useLayoutEffect(() => {
         if (!svgContent || !trainData.length) return;
-
+     const rafId = requestAnimationFrame(() => {
         const svgRoot = svgContainerRef.current;
 
         let svgTopArray = ['#toptrainclick', '#toptrainclick2', '#toptrainclicktext', '#toptrainclick3']
 
         let svgBottomArray = ['#bottomtrainclick', '#bottomtrainclick1', '#bottomtrainclick2', '#bottomtrainclick3', '#bottomtrainclicktext'
         ]
+
+        // resetTrainLayers(svgRoot);
 
         trainData.forEach((item) => {
             let trainName = 'Train: ' + item.trainId + item.obc;
@@ -279,6 +309,7 @@ useEffect(() => {
                 const bottomLayer = svgRoot.querySelector('#bottom_train_layer');
 
                 if (bottomLayer) {
+                    bottomLayer.style.display = "block";
                     bottomLayer.setAttribute('train-id', item.trainId + item.obc);
                     bottomLayer.style.cursor = "pointer";
                     bottomLayer.addEventListener('click', handleTrainClick);
@@ -296,6 +327,7 @@ useEffect(() => {
                 const bottomLayer = svgRoot.querySelector('#bottom_train_layer');
 
                 if (bottomLayer) {
+                    bottomLayer.style.display = "block";
                     bottomLayer.style.cursor = "pointer"; 
                     bottomLayer.addEventListener('click', handleTrainClick);
                 }
@@ -313,6 +345,7 @@ useEffect(() => {
                 const topLayer = svgRoot.querySelector('#top_train_layer');
 
                 if (topLayer) {
+                    topLayer.style.display = "block";
                     topLayer.style.cursor = "pointer";
                     topLayer.addEventListener('click', handleTrainClick);
                 }
@@ -330,6 +363,7 @@ useEffect(() => {
                 const topLayer = svgRoot.querySelector('#top_train_layer');
 
                 if (topLayer) {
+                    topLayer.style.display = "block";
                     topLayer.style.cursor = "pointer";
                     topLayer.addEventListener('click', handleTrainClick);
                 }
@@ -347,7 +381,11 @@ useEffect(() => {
 
         })
 
-    }, [trainData, svgContent]);
+     });
+     
+    return () => cancelAnimationFrame(rafId);
+
+    }, [svgContent,trainData]);
 
     const handleTrainClick = (event) => {
         let trainIcon = event.target.parentElement

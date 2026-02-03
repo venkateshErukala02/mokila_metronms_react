@@ -169,6 +169,7 @@ useEffect(() => {
 }, [regionId, locationId, selectedNodeId, regionName, locationName,stationName]);
 
 
+const facilityIdRef = useRef(null);
 
  const getUniquefacilitieData = async (url) => {
     setIsLoading(true);
@@ -185,12 +186,15 @@ useEffect(() => {
             setUniquefacilitieData(data || []);
 
             const facility = data?.facility?.[0];
+            const facilityId = facility?.id ?? null;
+            facilityIdRef.current = facilityId;
               setRegionId(facility?.regionId || null);
               setLocationId(facility?.locationId || null);
               setRegionName(facility?.regionName || null);
               setLocationName(facility?.locationName || null);
               setStationName(facility?.name || null);
-              onStationCircleIdChange?.(facility?.id || null);
+              // onStationCircleIdChange?.(facility?.id || null);
+              onStationCircleIdChange?.(facilityIdRef.current);
             setIsError({ status: false, msg: "" });
         } else {
             throw new Error("Data not found");
