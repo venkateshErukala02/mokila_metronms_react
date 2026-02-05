@@ -525,6 +525,61 @@ thead.eventsthtb {
 
 /* --------------------------------------------------------------------- */
 
+
+
+thead.boundeventsthtb>tr{border-bottom: 2px solid rgb(33 35 39 / 7%);}
+thead.boundeventsthtb>tr>th{font-size: 13px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #000000de;letter-spacing: 0.6px;}
+
+tbody.boundeventstbdtb>tr>td{font-size: 13px;font-family: "Arial";padding: 4px 6px 4px 0;color: #000000de;padding-left: 0; overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;padding-left: 2px;}
+tbody.boundeventstbdtb>tr:nth-child(odd){        background-color: rgb(229 241 255 / 50%);
+}
+.boundeventstbdtb{border-bottom: 1px solid rgb(33 35 39 / 7%);}
+tbody.boundeventstbdtb>tr:nth-child(even){        background-color:white;
+}
+tbody.boundeventstbdtb>tr{border-bottom: 1px solid rgb(33 35 39 / 7%);}
+tbody.boundeventstbdtb>tr{width: 100%;font-size: 12px;}
+
+.boundeventstbdtb>tr:last-child{border-bottom: none;}
+
+
+
+thead.boundeventsthtb > tr > th:nth-child(1),  
+thead.boundeventsthtb > tr > th:nth-child(2) { 
+    width: 138px; 
+}
+thead.boundeventsthtb > tr > th:nth-child(3) { 
+    width: 100px; 
+}
+
+thead.boundeventsthtb > tr > th:nth-child(4) { 
+    width: auto;
+}
+
+tbody.boundeventstbdtb > tr > td:nth-child(1), 
+tbody.boundeventstbdtb > tr > td:nth-child(2) {
+    width: 138px; 
+}
+
+tbody.boundeventstbdtb > tr > td:nth-child(3) {
+    width: 100px; 
+    padding-left: 10px;
+}
+tbody.boundeventstbdtb > tr > td:nth-child(4) {
+    width: auto; 
+}
+
+thead.boundeventsthtb {
+    background: #fff;
+    position: sticky;
+    top: -1px;
+    z-index: 2;
+}
+
+
+/* --------------------------------------------------------------------- */
+
 .border-lr{border-left: 1px solid rgb(33 35 39 / 7%);border-right: 1px solid rgb(33 35 39 / 7%);height: 100vh;border-bottom: 1px solid rgb(33 35 39 / 7%);}
 thead.inventthtb>tr{border-bottom: 2px solid rgb(33 35 39 / 7%);}
 thead.inventthtb>tr>th{font-size: 13px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #000000de;letter-spacing: 0.6px;cursor: pointer;}
@@ -881,6 +936,8 @@ tbody.statustagtbbd>tr>td>a{
 
 .eventmaintable{height: 86vh;overflow-y: auto;border: 1px solid rgb(33 35 39 / 7%);margin-bottom: 12px;}
 
+
+.bouneventtable{height: 19vh;overflow-y: auto;border: 1px solid rgb(33 35 39 / 7%);margin-bottom: 12px;}
 
 
 .discovlist{list-style-type: none;max-width: 400px;margin: auto;padding-bottom: 82px;}
@@ -2510,6 +2567,8 @@ text-decoration: none;
     min-height: 33px;
     font-weight: bold;
     font-size: 14px;
+    padding-left: 6px;
+    padding-top: 6px;
   }
   .alarmiconsty{
     float: right;

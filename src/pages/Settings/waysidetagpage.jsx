@@ -255,7 +255,13 @@ const WaysideTagContainer=()=>{
                             return;
                         }
                     const tgData = await response.json();
-                     const data = tgData[0];
+                     const data = tgData?.[0];
+                    if (!data || (Array.isArray(data) && data.length === 0)) {
+                    setIsLoading(false);
+                    setTagData([]);
+                    return;
+                    }
+
                     if (response.ok) {
                         setIsLoading(false);
                         setTagData({tags : Array.isArray(data) ? data : [data],

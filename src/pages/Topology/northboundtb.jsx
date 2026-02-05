@@ -25,7 +25,7 @@ const NorthBoundTb=({textName})=>{
             const data = await response.json();
             if (response.ok) {
                 setIsLoading(false);
-                setNorthData(data || []);
+                setNorthData(data.event || []);
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("data not found");
@@ -47,17 +47,20 @@ const NorthBoundTb=({textName})=>{
 
         fetchData();
 
-        const intervalId = setInterval(fetchData,60000);
+        const intervalId = setInterval(fetchData,30000);
 
         return()=> clearInterval(intervalId);
         }, [textName]);
 
-
+    const formatTime = (timestamp) => {
+        const date = new Date(timestamp);
+        return date.toLocaleString();
+    };
 
     return(
         <>
         <article style={{marginTop:'10px'}}>
-                        <article className="bound-card" style={{height:'25vh',overflowY:'auto'}}>
+                        <article className="bound-card">
                       
                         <article className="trainevenhead">
                             North Bound
@@ -69,6 +72,44 @@ const NorthBoundTb=({textName})=>{
                         <button className="sbarrow"><i className="fa-solid fa-arrow-right"></i></button>
                             </article>
                         </article>
+                         <article className="bouneventtable">
+                    <article className="row">
+                        <table className="col-12">
+                            <thead className="boundeventsthtb">
+                                <tr>
+                                    <th>IP Address</th>
+                                    <th>Time</th>
+                                    <th>Severity</th>
+                                    <th>Message</th>
+                                </tr>
+                            </thead>
+
+                            <tbody className="boundeventstbdtb">
+                                {!isLoading && !isError.status && (!northData || northData?.length === 0) && (
+                                    <tr>
+                                        <td colSpan="8" style={{ textAlign: "center" }}>
+                                            No Data Available
+                                        </td>
+                                    </tr>
+                                )}
+                                {Array.isArray(northData) && northData?.length > 0 ? (
+                                    northData.map((event) => (
+                                        <tr key={event.id}>
+                                            <td>{event.nodeLabel ? event.nodeLabel : event.host}</td>
+                                            <td>{formatTime(event.createTime)}</td>
+                                            <td>{event.severity}</td>
+                                            <td>{event.logMessage}</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        {/* <td colSpan="4" className="datacl centered-text">No Data</td> */}
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </article>
+                </article>
                         </article>
                     </article>
         </>
