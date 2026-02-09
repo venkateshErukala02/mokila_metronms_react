@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import "../ornms.css";
 import EncoderSummaryTab from "./encodersummarytab";
 import LeftNavList from "../Navbar/leftnavpage";
+import EncoderEventTab from "./encodereventstab";
 
 
 const EncoderNodeView = () => {
@@ -91,9 +92,9 @@ const EncoderNodeView = () => {
       case 'summary':
         return <EncoderSummaryTab currentTab='encoder'/>
         break;
-//       case 'events':
-//         return <ObcEventTab nodeItemDt={nodeItemDt}/>
-//         break;
+      case 'events':
+        return <EncoderEventTab />
+        break;
       default:
         break;
     }
