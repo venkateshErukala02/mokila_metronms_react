@@ -113,12 +113,12 @@ const handleCpuchart=()=>{
         <article className="container-fluid">
           <article className="row">
             <article className="col-md-12 graphbord1">
-              <article className="latencyfullwidthcl">
+              <article className="latencyfullwidthcl-monitortab">
                 <TxRxDiffchart currentTab='transcoder' graphOption={graphOption} graphOptionValue={graphOptionValue}/>
               </article>
             </article>
              <article className="col-md-12 graphbord1" style={{marginTop:'20px'}}>
-              <article className="latencyfullwidthcl">
+              <article className="latencyfullwidthcl-monitortab">
                 <TemperatureChart currentTab='transcoder' graphOption={graphOption} graphOptionValue={graphOptionValue}/>
               </article>
             </article>
@@ -129,7 +129,7 @@ const handleCpuchart=()=>{
                  <article className="latency-togglebtn cpuart-highlight" style={{textAlign:'center'}}>
                    <span className={`${cpuChartStatus === true ? 'cpu-higlight': ''}`}>CPU </span><i class={`fa-solid fa-toggle-on ${cpuChartStatus === true ? 'fa-rotate-180' : ''} `} onClick={handleCpuchart}></i> <span className={`${cpuChartStatus === true ? '': 'cpu-higlight'}`}>Tx Errors</span>
                   </article> 
-              <article className="latencyfullwidthcl">
+              <article className="latencyfullwidthcl-monitortab">
                  {cpuChartStatus ? (<CpuChart currentTab='transcoder' graphOption={graphOption} graphOptionValue={graphOptionValue}/>) : (<TxErrorChart currentTab='transcoder'  graphOption={graphOption} graphOptionValue={graphOptionValue}/>)}      
                 </article>
                 </article>

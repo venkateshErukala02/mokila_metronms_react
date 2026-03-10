@@ -7,6 +7,7 @@ import "../ornms.css";
 import LeftNavList from "../Navbar/leftnavpage";
 import SnSummaryTab from "./stationsummarytab";
 import SnEventTab from "./stationeventstab";
+import SnConfigurationTab from "./stationconfiguration";
 
 const StationNodeDetails = () => {
   const [isLoading, setIsLoading] = useState("");
@@ -85,12 +86,15 @@ const StationNodeDetails = () => {
 
   const renderCurrentTab = (value) => {
     switch (value) {
-      case 'summary':
+      case 'monitoring':
         return <SnSummaryTab nodeItemDt={nodeItemDt} />
         break;
       case 'events':
         return <SnEventTab />
         break;
+      case 'summary':
+      return <SnConfigurationTab nodeItemDt={nodeItemDt} />
+      break;
       default:
         break;
     }
@@ -115,6 +119,7 @@ const StationNodeDetails = () => {
                 <li><a>Node View</a></li>
                 <li><a href={`http://${nodeItemDt.ipAddress}`} target="_blank">{nodeItemDt.ipAddress}</a></li>
                 <li onClick={() => handleRowClick('summary')} className={`${currentTab === 'summary' ? 'active' : ''}`}> <a> <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Summary</a></li>
+                <li onClick={() => handleRowClick('monitoring')} className={`${currentTab === 'monitoring' ? 'active' : ''}`}> <a> <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Monitoring</a></li>
                 <li onClick={() => handleRowClick('events')} className={`${currentTab === 'events' ? 'active' : ''}`}> <a> <i
                   className="fas fa-chart-area Monitor-icon"
                   style={{ fontSize: "22px" }}

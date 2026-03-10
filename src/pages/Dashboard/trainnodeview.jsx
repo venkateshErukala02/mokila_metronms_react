@@ -9,6 +9,7 @@ import SnSummaryTab from "./stationsummarytab";
 import SnEventTab from "./stationeventstab";
 import TrainSummaryTab from "./trainsummarytab";
 import TrainEventTab from "./traineventtab"; 
+import TrainConfigurationTab from "./trainconfiguration";
 
 const TrainNodeView = () => {
   const [isLoading, setIsLoading] = useState("");
@@ -87,12 +88,15 @@ const TrainNodeView = () => {
 
   const renderCurrentTab = (value) => {
     switch (value) {
-      case 'summary':
+      case 'monitoring':
         return <TrainSummaryTab nodeItemDt={nodeItemDt} />
         break;
       case 'events':
         return <TrainEventTab />
         break;
+      case 'summary':
+      return <TrainConfigurationTab nodeItemDt={nodeItemDt}/>
+      break;
       default:
         break;
     }
@@ -116,7 +120,8 @@ const TrainNodeView = () => {
               <ul className="nodelist">
                 <li><a>Node View</a></li>
                 <li><a href={`http://${nodeItemDt.ipAddress}`} target="_blank">{nodeItemDt.ipAddress}</a></li>
-                <li onClick={() => handleRowClick('summary')} className={`${currentTab === 'summary' ? 'active' : ''}`}> <a> <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Summary</a></li>
+                  <li onClick={() => handleRowClick('summary')} className={`${currentTab === 'summary' ? 'active' : ''}`}> <a> <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Summary</a></li>
+                <li onClick={() => handleRowClick('monitoring')} className={`${currentTab === 'monitoring' ? 'active' : ''}`}> <a> <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Monitoring</a></li>
                 <li onClick={() => handleRowClick('events')} className={`${currentTab === 'events' ? 'active' : ''}`}> <a> <i
                   className="fas fa-chart-area Monitor-icon"
                   style={{ fontSize: "22px" }}

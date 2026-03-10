@@ -3047,6 +3047,31 @@ svg *:focus {
 }
 
 
+.configtabinput{
+    background-color: #eae7e7;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    min-height: 35px;
+    width: 66%;
+    margin-left: 22px;
+}
+
+.config-card{
+    padding: 33px 23px;
+    padding-bottom: 0;
+}
+
+.config-aln-right{
+    text-align: right;
+    padding-right: 14px;
+}
+.config-text{
+    color: #495057;
+    font-size: 14px;
+    padding: 0;
+}
+
+
 .form-contltranscd-evnt {
     background: #b4b4c53b;
     border: none;
@@ -4071,6 +4096,118 @@ svg *:focus {
   border-right: 8px solid #1f2933;
 }
 
+.config-tab-wh{
+    max-width: 686px;
+    min-width: 622px;   
+    margin: auto;
+}
+
+.quadlis {
+    color: #495057;
+    font-size: 15px;
+    font-weight: 400;
+    font-weight: 700;
+    margin-right: 0;
+    text-align: center;
+}
+
+
+.config-label {
+    color: #495057;
+    font-size: 15px;
+    font-weight: 400;
+    font-weight: 700;
+    margin-right: 0;
+    text-align: left;
+    margin-bottom: 0;
+}
+
+
+.config-input {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    min-height: 25px;
+    padding: 0;
+    font-size: 13px;
+    background-color: initial;
+    background-color: #eae7e7;
+    width: 100%;
+}
+.checkbox-mr{
+    margin: 3px 10px 0 2px
+}
+
+.config-p{
+    padding: 0 7% !important;
+}
+.config-ht{
+        min-height: 324px;
+    max-height: 350px;
+}
+
+.form-row-config {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 7px;
+    margin-left: -5px;
+    margin-right: -5px;
+}
+
+.config-checkbox{
+    transform: scale(1.6);
+    cursor: pointer;
+    margin-right: 10px !important;
+}
+
+.config-savebtn{
+    text-align: center;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 12px;
+}
+
+.configlist{
+    padding: 0;
+    margin: 0;
+}
+
+.configlist>li {
+    list-style-type: none;
+    display: flex;
+    font-size: 17px;
+    padding: 15px;
+    vertical-align: middle;
+    justify-content: space-evenly;
+}
+
+.configlist>li>h6{
+    font-size: 17px;
+    padding: 0;
+    margin: 0;
+}
+
+.configlist>li>span{
+    color: #0da320;
+}
+
+.configlinktitle {
+    color: #212327;
+    font-size: 21px;
+    margin: 0;
+    padding: 13px 0 0 26px;
+    font-weight: bold;
+}
+.monitor-trnscode{
+    padding: 10px;
+    border: 10px solid rgb(204, 204, 204);
+}
+
+.latencyfullwidthcl-monitortab {
+    height: 240px;
+    width: 1685px;
+    margin: auto;
+}
 
  /* width={700} height={240} */
 

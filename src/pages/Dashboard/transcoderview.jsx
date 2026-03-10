@@ -7,6 +7,7 @@ import "../ornms.css";
 import LeftNavList from "../Navbar/leftnavpage";
 import TcSummaryTab from "./transcodersummarytab";
 import TcEventTab from "./transcodereventtab";
+import TcMonitoringTab from "./transcodermonitoring";
 
 const TranscoderView = () => {
     const [isLoading, setIsLoading] = useState("");
@@ -121,6 +122,9 @@ const TranscoderView = () => {
             case 'events':
                 return <TcEventTab />
                 break;
+            case 'monitoring':
+            return <TcMonitoringTab />
+            break;
 
             default:
                 break;
@@ -146,6 +150,7 @@ const TranscoderView = () => {
                                 <li><a>Node View</a></li>
                                 <li><a href={`http://${IPadd}`} target="_blank">{IPadd}</a></li>
                                 <li onClick={() => handleRowClick('summary')} className={`${currentTab === 'summary' ? 'active' : ''}`}> <a>  <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Summary</a></li>
+                                 <li onClick={() => handleRowClick('monitoring')} className={`${currentTab === 'monitoring' ? 'active' : ''}`}> <a>  <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Monitoring</a></li>
                                 <li onClick={() => handleRowClick('events')} className={`${currentTab === 'events' ? 'active' : ''}`}> <a> <i
                                     className="fas fa-chart-area Monitor-icon"
                                     style={{ fontSize: "22px" }}

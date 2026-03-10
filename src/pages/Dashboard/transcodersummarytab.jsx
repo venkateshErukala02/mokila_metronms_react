@@ -302,7 +302,9 @@ const TcSummaryTab = ({ transcoderData }) => {
                                         </article>
                                     </article>
 
-                                    <TranscoderDashboard />
+                                    <article>
+                                        hello
+                                    </article>
 
                                 </article>
                             </article>

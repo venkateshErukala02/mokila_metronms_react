@@ -21,7 +21,7 @@ const SnSummaryTab = ({ nodeItemDt }) => {
           <article className="container-fluid">
             <article className="row" style={{ display: "flex" }}>
               <article className="col-md-2" id="summary-1 div1" style={{minHeight:'924px',maxHeight:'924px',background:'white'}}>
-                <article>
+                {/* <article>
 
                   <article className="card" id="div2">
                     <article style={{ margin: "auto", textAlign: 'center' }}>
@@ -116,7 +116,7 @@ const SnSummaryTab = ({ nodeItemDt }) => {
 
                     </article>
                   </article>
-                </article>
+                </article> */}
               </article>
 
               <article className="col-md-10" style={{ background: 'white',borderLeft:'10px solid #cccccc' }}>
