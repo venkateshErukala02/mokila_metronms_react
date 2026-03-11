@@ -11,6 +11,7 @@ import TrainSummaryTab from "./trainsummarytab";
 import TrainEventTab from "./traineventtab"; 
 import ObcSummaryTab from "./Obcsummarytab";
 import ObcEventTab from "./obceventtab";
+import ObcMonitoringTab from "./obcconfiguration";
 
 const ObcNodeView = () => {
   const [isLoading, setIsLoading] = useState("");
@@ -91,10 +92,13 @@ const ObcNodeView = () => {
   const renderCurrentTab = (value) => {
     switch (value) {
       case 'summary':
-        return <ObcSummaryTab nodeItemDt={nodeItemDt} currentTab='obc'/>
+        return <ObcMonitoringTab nodeItemDt={nodeItemDt} currentTab='obc'/>
         break;
       case 'events':
         return <ObcEventTab nodeItemDt={nodeItemDt}/>
+        break;
+      case 'monitoring':
+        return <ObcSummaryTab nodeItemDt={nodeItemDt} currentTab='obc'/>
         break;
       default:
         break;
@@ -120,6 +124,7 @@ const ObcNodeView = () => {
                 <li><a>Node View</a></li>
                 <li><a href={`http://${nodeIpaddress}`} target="_blank">{nodeIpaddress}</a></li>
                 <li onClick={() => handleRowClick('summary')} className={`${currentTab === 'summary' ? 'active' : ''}`}> <a> <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Summary</a></li>
+                <li onClick={() => handleRowClick('monitoring')} className={`${currentTab === 'monitoring' ? 'active' : ''}`}> <a> <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Monitoring</a></li>
                 <li onClick={() => handleRowClick('events')} className={`${currentTab === 'events' ? 'active' : ''}`}> <a> <i
                   className="fas fa-chart-area Monitor-icon"
                   style={{ fontSize: "22px" }}

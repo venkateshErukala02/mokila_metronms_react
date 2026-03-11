@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import transcoderImage from "../../assets/img/transcoderimg.jpeg";
 import radioimage from "../../assets/img/radiomode.png";
@@ -20,6 +20,18 @@ const TcSummaryTab = ({ transcoderData }) => {
     let xps = transcoderData?.Quad?.xpos
     let yps = transcoderData?.Quad?.ypos
 
+
+    const checkServicesList = [
+    { name: "vtranscoder", displayName: "Transcoder Service" },
+    { name: "gst-health", displayName: "GST Health" },
+    { name: "gstreamer", displayName: "G Stream Service" },
+    { name: "cam1", displayName: "Camera 1" },
+    { name: "cam2", displayName: "Camera 2" },
+    { name: "cam3", displayName: "Camera 3" },
+    { name: "cam4", displayName: "Camera 4" },
+  ];
+
+
     const [isLoading, setIsLoading] = useState("");
     const [isError, setIsError] = useState("");
     const [upTimeData, setUpTimeData] = useState([]);
@@ -35,6 +47,38 @@ const TcSummaryTab = ({ transcoderData }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [tempData,setTempData] = useState('');
+    const [serviceStatus,setServiceStatus]  = useState([]);
+    const [parsedServices, setParsedServices] = useState(
+    checkServicesList.map(item => ({ ...item, status: "checking",value: null }))
+  );
+  const [allParsedServices, setAllParsedServices] = useState([]);
+  const [showTerminal, setShowTerminal] = useState(false);
+  const [terminalData, setTerminalData] = useState({
+  camName: "",
+  status: "unknown",
+  pingHistory: [], // array to store ping values
+  loading: true,
+});
+  
+ const intervalRef = useRef(null);
+
+
+  useEffect(() => {
+  if (showTerminal && terminalData?.camName) {
+    // const ip = navState?.ip || "unknown";
+
+    intervalRef.current = setInterval(() => {
+      fetchCamStatus('192.168.66.12', terminalData.camName);
+    }, 1000); // 30 seconds
+  }
+
+  return () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+}, [showTerminal]);
 
 
       useEffect(() => {
@@ -47,6 +91,103 @@ const TcSummaryTab = ({ transcoderData }) => {
         setXpos(xps);
         setYpos(yps);
     }, [cam1,cam2,cam3,cam4,bitrate,prfle,xps,yps])
+
+       const getServiceCheckStatus = async (url) => {
+        setIsLoading(true);
+        setIsError({ status: false, msg: "" });
+        try {
+            const options = {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            };
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (response.ok) {
+                setIsLoading(false);
+
+
+                setServiceStatus(data);
+                setIsError({ status: false, msg: "" });
+            } else {
+                throw new Error("Data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message });
+        }
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            let url = `http://localhost:8980/metronms/api/v2/troubleshoot/transcoder/192.168.66.12/servicecheck`;
+            await getServiceCheckStatus(url);
+        };
+        fetchData();
+    }, []);
+
+
+useEffect(() => {
+  if (!serviceStatus || serviceStatus.length === 0) return;
+
+  const parsedApi = serviceStatus; // already array
+
+  let index = 0;
+
+  const interval = setInterval(() => {
+    if (index >= parsedApi.length) {
+      clearInterval(interval);
+      return;
+    }
+
+    const current = parsedApi[index];
+
+    setParsedServices(prev =>
+      prev.map(item => {
+        if (item.name === current.name) {
+          const value =
+            current.data && typeof current.data === "object"
+              ? Object.values(current.data)[0]
+              : null;
+
+          return {
+            ...item,
+            status: current.status,
+            value: value,
+          };
+        }
+        return item;
+      })
+    );
+
+    index++;
+  }, 700);
+
+  return () => clearInterval(interval);
+
+}, [serviceStatus]);
+
+
+
+    
+    const serviceStatusDt = [
+      { name: "Transcoder Service", status: "running" },
+      { name: "G Stream Service", status: "running" },
+    ];
+    
+    const cameraStatus = [
+      { cam: "Cam 1", status: "working" },
+      { cam: "Cam 2", status: "working" },
+      { cam: "Cam 3", status: "not reachable" },
+      { cam: "Cam 4", status: "working" },
+    ];
+    
+    const logsData = [
+      "[INFO] Transcoder started successfully",
+    ];
+
 
 
     const getServerStatusDt = async (url) => {
@@ -137,6 +278,107 @@ const TcSummaryTab = ({ transcoderData }) => {
 
     const nodeLocation = useSelector((state) => state.node.node.location) || localStorage.getItem('nodeLocation');
     const nodeIpaddress = useSelector((state) => state.node.node.ipAddress) || localStorage.getItem('nodeIpaddress');
+
+
+
+     function formatValue(val) {
+    if (!val) return "";
+    
+    // Match the numeric part and the unit
+    const match = val.match(/^([\d.]+)([a-zµ]*)$/i);
+    if (!match) return val;
+
+    const number = parseFloat(match[1]);
+    const unit = match[2] || "";
+
+    // Round to 2 decimals
+    const rounded = number.toFixed(2);
+
+    return `${rounded}${unit}`;
+  }
+
+
+const fetchCamStatus = async (camName) => {
+  const url = `http://localhost:8980/metronms/api/v2/troubleshoot/transcoder/192.168.66.12/cameraping/${camName}`;
+
+  try {
+    setIsLoading(true);
+    setIsError({ status: false, msg: "" });
+
+    const username = "admin";
+    const password = "admin";
+    const token = btoa(`${username}:${password}`);
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Basic ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error("Data not found");
+    }
+
+    setTempData(data);
+
+    // Parse microseconds
+    let ms, bytes;
+
+    if (data?.value) {
+      const microseconds = parseFloat(data.value.replace("µs", ""));
+      ms = microseconds / 1000;   // convert to milliseconds
+      bytes = microseconds / 600; // your custom formula
+    } else {
+      ms = "N/A";
+      bytes = 0;
+    }
+
+    setTerminalData(prev => ({
+      ...prev,
+      camName,
+      status: data?.status || "unknown",
+      pingHistory: [...(prev.pingHistory || []), { ms, bytes }],
+      loading: false
+    }));
+
+    setIsLoading(false);
+
+  } catch (err) {
+
+    setIsLoading(false);
+    setIsError({ status: true, msg: err.message });
+
+    setTerminalData(prev => ({
+      ...prev,
+      camName,
+      status: "error",
+      pingHistory: [...(prev.pingHistory || []), { ms: "Error", bytes: 0 }],
+      loading: false
+    }));
+  }
+};
+
+const handleCamStatus = async (camName) => {
+//const ip = navState?.ip || "unknown";
+
+  setShowTerminal(true);
+
+  setTerminalData({
+    camName,
+    status: "loading",
+    pingHistory: [],
+    loading: true
+  });
+
+  await fetchCamStatus(camName);
+};
+
+
+
     return (
         <>
 
@@ -302,8 +544,100 @@ const TcSummaryTab = ({ transcoderData }) => {
                                         </article>
                                     </article>
 
-                                    <article>
-                                        hello
+                                    <article className="align-pad">
+                                         <h3 className="configlinktitle">
+                                                    Connection Details
+                                                </h3>
+                                                <article>
+                                          <ul className="configlist">
+                                        {parsedServices?.slice(0, 3).map((item, index) => (
+                                        <li key={index}>
+                                            <h6>{item.displayName}</h6>
+                                            {item.status === "success" ? (
+                                            <span>✔ {item.status === "success" ?  "Running" : "Failed" } </span>
+                                            ) : item.status === "failure" ? (
+                                            <span>✖ Failed</span>
+                                            ) : (
+                                            <span className="pulse">Checking...</span>
+                                            )}
+                                        </li>
+                                        ))}
+
+                                        {parsedServices.length < Math.min(3, allParsedServices?.length || 3) && (
+                                        <li>
+                                            <span className="pulse">Checking...</span>
+                                            <span>⏳</span>
+                                        </li>
+                                        )}
+                                    </ul>
+            
+                                        </article>
+                                    <div>
+                                        <h3 className="configlinktitle">
+                                        Check Camera Connectivity
+                                        </h3>
+                                        <article>
+                                        <ul className="configlist">
+                                        {parsedServices?.slice(3, 7).map((item, index) => (
+                                            <li
+                                            key={index}
+                                            className=""
+                                            >
+                                            <h6>{item.displayName}</h6>
+                                            {item.status === "success" ? (
+                                                <span>✔ {item.status === "success" ?  "Pinging" : "Failed" } {item.value ? `(${formatValue(item.value)})` : ""}  
+                                                <button type="button" className="createbtn" onClick={() => handleCamStatus(item.name)}>ping</button>
+                                                 </span>
+                                                ) : item.status === "failure" ? (
+                                                <span className="">✖ Not Pinging {item.value ? `(${formatValue(item.value)})` : ""}  
+                                                <button type="button" className="createbtn" onClick={() => handleCamStatus(item.name)}>ping</button>
+                                                 </span>
+                                                ) : (
+                                                <span className="pulse">Checking...</span>
+                                                )}
+                                            </li>
+                                        ))}
+                                        </ul>
+                                        </article>
+                                        {showTerminal && (
+                                            <div className="terminal-overlay">
+                                                <div className="terminal-window">
+
+                                                <button
+                                                    className="terminal-close"
+                                                    onClick={() => setShowTerminal(false)}
+                                                >
+                                                    ✖
+                                                </button>
+
+                                                <div className="terminal-body">
+                                                    {terminalData?.loading ? (
+                                                    <p className="terminal-loading">
+                                                        Pinging {terminalData.camName}...
+                                                    </p>
+                                                    ) : (
+                                                    <>
+                                                        <p>Pinging $: {terminalData.camName}</p>
+
+                                                        <ul className="terminal-list">
+                                                        {terminalData.pingHistory.map((ping, index) => (
+                                                            <li key={index}>
+                                                            {Math.round(ping.bytes)} bytes from {'192.168.66.12'|| "unknown"} :
+                                                            time =
+                                                            {typeof ping.ms === "number"
+                                                                ? ping.ms.toFixed(3)
+                                                                : ping.ms} ms
+                                                            </li>
+                                                        ))}
+                                                        </ul>
+                                                    </>
+                                                    )}
+                                                </div>
+
+                                                </div>
+                                            </div>
+                                            )}
+                                        </div>
                                     </article>
 
                                 </article>
