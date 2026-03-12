@@ -461,39 +461,80 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                 >
                                     <article className="container-fluid">
                                         <article className="row">
+                                             <h1 className="config-head">Configuration</h1>
                                             <article className="col-12 col-md-12 quadcont">
-                                                <h1 className="quadhead">Quad</h1>
-                                                <article className="col-12">
-                                                    <article className="form-row-config "><label for="" className="col-5 config-label">Radio Mode</label><article className="col-sm-4 col-md-4 col-lg-4 ">
-                                                        <input type="text" className="config-input"
-                                                            // value={config?.config?.radioMode || ''}
-                                                            disabled
-                                                        />
-                                                    </article>
-                                                    </article>
-                                                    <article className="form-row-config "><label for="" className="col-5 config-label">Frequency Domain</label><article className="col-sm-4 col-md-4 col-lg-4">
+                                                  <article className="card-sub config-tab-wh">
+                                                              
+                                                              
+                                                                <article className="form-row-config "><label for="" className="col-5 config-label">TrainRadio IP</label><article className="col-sm-4 col-md-4 col-lg-4">
+                                                                    <input type="text" className="config-input" 
+                                                                        disabled
+                                                                    />
+                                                                </article>
+                                                                </article>
+                                                                <article className="form-row-config "><label for="" className="col-5 config-label">Encoder IP</label><article className="col-sm-4 col-md-4 col-lg-4">
+                                                                    <input type="text" className="config-input"
+                                                                        disabled
+                                                                    />
+                                                                </article>
+                                                                </article>
+                                                                <article className="form-row-config "><label for="" className="col-5 config-label">NTP IP </label><article className="col-sm-4 col-md-4 col-lg-4">
+                                                                    <input type="text" className="config-input" 
+                                                                        disabled
+                                                                    />
+                                                                </article>
+                                                                </article>
+                                                                <article className="form-row-config "><label for="" className="col-5 config-label">FTPserver IP</label><article className="col-sm-4 col-md-4 col-lg-4">
+                                                                    <input type="text" className="config-input" 
+                                                                        disabled
+                                                                    />
+                                                                </article>
+                                                                </article>
+                                                                <article className="form-row-config "><label for="" className="col-5 config-label">FTPserver User</label><article className="col-sm-4 col-md-4 col-lg-4">
+                                                                    <input type="text" className="config-input"
 
-                                                    </article>
-                                                    </article>
-                                                    <article className="form-row-config "><label for="" className="col-5 config-label">Preferred Channel Bandwidth</label><article className="col-sm-4 col-md-4 col-lg-4">
+                                                                        disabled
+                                                                    />
+                                                                </article>
+                                                                </article>
+                                                              
+                                                                <article className="form-row-config "><label for="" className="col-5 config-label">FTPserver Password</label><article className="col-sm-4 col-md-4 col-lg-4">
+                                                                    <input type="text" className="config-input" 
+                                                                        disabled
+                                                                    />
+                                                                </article>
+                                                                </article>
+                                                             
+                                                                <article className="config-savebtn">
+                                                                    <article>
+                                                                        <button
+                                                                            className="createbtn"
+                                                                        // onClick={handleAddBitrateData}
+                                                                        // style={{
+                                                                        //     pointerEvents: isEditMode ? 'auto' : 'none', 
+                                                                        //     opacity: isEditMode ? 1 : 0.6               
+                                                                        // }}
+                                                                        >
+                                                                            Save
+                                                                        </button>
 
-                                                    </article>
-                                                    </article>
-                                                    <article className="form-row-config "><label for="" className="col-5 config-label">Active Bandwidth</label><article className="col-sm-4 col-md-4 col-lg-4">
-                                                        {/* <input type="text" className="config-input" value={config?.config?.currentChannelBandwidth || ''}
-                                                                                        disabled
-                                                                                    /> */}
-                                                    </article>
-                                                    </article>
-                                                    <article className="form-row-config "><label for="" className="col-5 config-label">Operational Mode</label><article className="col-sm-4 col-md-4 col-lg-4">
+                                                                    </article>
+                                                                    <article>
+                                                                        <button
+                                                                            className="createbtn"
+                                                                        // onClick={handleAddBitrateData}
+                                                                        // style={{
+                                                                        //     pointerEvents: isEditMode ? 'auto' : 'none', 
+                                                                        //     opacity: isEditMode ? 1 : 0.6               
+                                                                        // }}
+                                                                        >
+                                                                            Apply
+                                                                        </button>
 
-                                                    </article>
-                                                    </article>
-                                                    <article className="form-row-config "><label for="" className="col-5 config-label">Auto Channel Selection Bandwidth</label><article className="col-sm-4 col-md-4 col-lg-4">
+                                                                    </article>
 
-                                                    </article>
-                                                    </article>
-                                                </article>
+                                                                </article>
+                                                            </article>
 
                                             </article>
                                         </article>

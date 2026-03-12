@@ -4193,6 +4193,48 @@ svg *:focus {
     margin: 0;
 }
 
+
+.configlist-st{
+    margin: 0;
+    max-width: 500px;
+    min-width: 500px;
+    padding: 0;
+    margin-left: 83px;
+    margin-top: 18px;
+}
+
+
+.configlist-st>li {
+    display: flex;
+    font-size: 17px;
+    list-style-type: none;
+    padding: 7px;
+}
+.configlist-st>li>div>span {
+    font-size: 16px;
+    transform: translateY(-1px);
+    display: block;
+    padding-left: 10px;
+}
+
+.configlist-st>li>h6{
+    font-size: 17px;
+    padding: 0;
+    margin: 0;
+}
+
+.signal-active {
+  fill: #22c55e; /* green */
+}
+
+.signal-inactive {
+  fill: #9ca3af; /* gray */
+}
+
+.configlist-st>li>svg{
+   height: 67px;
+}
+
 .pulse{
   animation: pulseAnimation 1.5s infinite;
 }
@@ -4232,7 +4274,6 @@ svg *:focus {
 }
 
 
-/* overlay */
 .terminal-overlay{
   position:fixed;
   top:0;
@@ -4246,7 +4287,6 @@ svg *:focus {
   z-index:50;
 }
 
-/* terminal window */
 .terminal-window{
   background:#000;
   color:#4ade80;
@@ -4261,7 +4301,6 @@ svg *:focus {
   font-family:monospace;
 }
 
-/* close button */
 .terminal-close{
   position:absolute;
   top:8px;
@@ -4273,21 +4312,33 @@ svg *:focus {
   cursor:pointer;
 }
 
-/* terminal body */
 .terminal-body{
   font-size:14px;
 }
 
-/* list */
 .terminal-list{
   margin-top:10px;
   padding-left:0;
   list-style:none;
 }
 
-/* loading animation */
 .terminal-loading{
   animation:pulse 1.5s infinite;
+}
+
+.config-head {
+    font-size: 17px;
+    margin: 0;
+    padding: 13px 20px;
+    margin-left: 29px;
+}
+
+.container-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* grid-cols-2 */
+  gap: 1.5rem; /* gap-6 = 24px */
+  padding-left: 3rem; /* px-12 */
+  padding-right: 3rem;
 }
 
  /* width={700} height={240} */

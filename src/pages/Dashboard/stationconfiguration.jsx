@@ -3,6 +3,7 @@ import '../../../src/pages/ornms.css';
 import nodeimage from "../../assets/img/suinodeview.png";
 import radioimage from "../../assets/img/radiomode.png";
 import bootloader from "../../assets/img/bootloader.png";
+import SignalIconn from "./configsignal";
 
 
 
@@ -38,6 +39,8 @@ const SnConfigurationTab = ({ nodeItemDt }) => {
     const [canApply, setCanApply] = useState(false);
     const [config, setConfig] = useState([]);
     const [step, setStep] = useState(0);
+    const [linkDetails, setLinkDetails] = useState(null);
+
 
     const handleRowClick = (value) => {
         setConfigTab(value);
@@ -250,6 +253,78 @@ const SnConfigurationTab = ({ nodeItemDt }) => {
 
         handleStationConfigChange("rxAntennas", current);
     };
+
+
+    const SignalStrength = ({ value }) => {
+          const MIN = 0;
+          const MAX = 0.25;
+        
+          const normalized = Math.min(
+            Math.max((value - MIN) / (MAX - MIN), 0),
+            1
+          );
+        
+          const activeCells = Math.ceil(normalized * 5);
+        
+          const getClass = (cell) =>
+            // cell <= activeCells ? 'fill-green-400' : 'fill-gray-400';
+           cell <= activeCells ? "signal-active" : "signal-inactive";
+        
+          return <SignalIconn getClass={getClass} />;
+        };
+
+
+         const getServiceCheckDt = async (url) => {
+        setIsLoading(true);
+        setIsError({ status: false, msg: "" });
+        try {
+            const username = "admin";
+            const password = "admin";
+            const token = btoa(`${username}:${password}`);
+            const options = {
+                method: "GET",
+                headers: {
+                    "Authorization": `Basic ${token}`,
+                    "Content-Type": "application/json",
+                },
+            };
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (response.ok) {
+                setIsLoading(false);
+
+
+                setLinkDetails(data.links);
+                setIsError({ status: false, msg: "" });
+            } else {
+                throw new Error("Data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message });
+        }
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            let url = `http://localhost:8980/metronms/api/v2/nodelinks/linkstats?nodeId=1429`;
+            await getServiceCheckDt(url);
+        };
+        fetchData();
+    }, []);
+
+    const linkDetailsList = [
+  { name: "lsnr", displayName: "Local SNR" },
+  { name: "rsnr", displayName: "Remote SNR" },
+  { name: "lsignal", displayName: "Local Signal" },
+  { name: "rsignal", displayName: "Remote Signal" },
+  { name: "lnoise", displayName: "Local Noise" },
+  { name: "rnoise", displayName: "Remote Noise" },
+  { name: "stationame", displayName: "Statio Name" },
+  { name: "associatedipaddr", displayName: "Associatedipaddr" },
+  { name: "associatedmacaddr", displayName: "Associatedmacaddr" },
+];
 
 
 
@@ -743,52 +818,156 @@ const SnConfigurationTab = ({ nodeItemDt }) => {
                                         </article>
                                     </article>
                                     <article>
-
-                                        {step >= 1 && (
                                             <>
                                                 <h3 className="configlinktitle">
                                                     Connection Details
                                                 </h3>
 
-                                                <ul className="configlist">
-                                                    {serviceStatus.map((srv, i) => (
-                                                        <li
-                                                            key={i}
-                                                        >
-                                                            <h6>{srv.name}</h6>
-                                                            {srv.status === "running" ? (
-                                                                <span className="text-green-400">Running</span>
-                                                            ) : (
-                                                                <span className="text-red-400">Failed</span>
-                                                            )}
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </>
+                                                <div className="container-grid ">       
+                                            <ul className="configlist-st">
+                                        {["stationame", "associatedmacaddr","local","lsignal","lsnr", ].map(
+                                            (key, index) => {
+                                            if (key === "stationame") {
+                                                return (
+                                                <li key={index} className="">
+                                                
+                                                    <h6>Connected Car :</h6>
+                                                    <div className="">
+                                                    <span className="">
+                                                        {linkDetails?.stationame ?? ""} 
+                                                    </span>
+                                                    </div>
+                                                </li>
+                                                );
+                                            }
+                                                if (key === "associatedmacaddr") {
+                                                return (
+                                                <li key={index} className="">
+                                                
+                                                    <h6>Associated MAC Address :</h6>
+                                                    <div className="">
+                                                    <span className="">
+                                                        {linkDetails?.associatedmacaddr ?? ""} 
+                                                    </span>
+                                                    </div>
+                                                </li>
+                                                );
+                                            }
+                                            if (key === "lsnr") {
+                                                return (
+                                                <li key={index} className="" style={{paddingTop:'0px'}}>
+                                                    
+                                                    <h6 style={{paddingTop:"40px"}}>SNR :</h6>
+                                                    <span className="" style={{paddingTop:"37px"}}>
+                                                        {linkDetails?.[key] === null || linkDetails?.[key] === ""
+                                                        ? " --"
+                                                        : linkDetails?.[key] + " dB"}
+                                                    </span>
+                                                    <SignalStrength value={linkDetails?.[key] || 0} />
+                                                
+                                                </li>
+                                                );
+                                            }
+                                                if (key === "local") {
+                                                return (
+                                                <li key={index} className="">
+                                                    
+                                                    <h6 className="">Local</h6>
+                                                </li>
+                                                );
+                                            }
+                                            if (key === "lsignal") {
+                                                return (
+                                                <li key={index} className="">
+                                                    
+                                                    <h6>Singnal/Noise :</h6>
+                                                    <div className="">
+                                                    <span className="">
+                                                        {linkDetails?.lsignal ?? "--"} dB / {linkDetails?.lnoise ?? "--"} dB
+                                                    </span>
+                                                    </div>
+                                                </li>
+                                                );
+                                            }
+
+                                            return (
+                                                <li key={index} className="">
+                                                <h6>{linkDetailsList.find((item) => item.name === key)?.displayName} :</h6>
+                                                <span className="">{linkDetails?.[key] ?? ""}</span>
+                                                </li>
+                                            );
+                                            }
                                         )}
+                                        </ul>       
 
-                                        {/* {step >= 2 && (
-            <div className="flex justify-center mt-6">
-              <button
-                onClick={() =>
-                  navigate(`/device/station-radios/${location.state?.deviceId || "1"}`, {
-                    state: {
-                      activeTab: "Logs",
-                      deviceInfo,
-                    },
-                  })
-                }
-                className="w-[220px] py-3 bg-gradient-to-r from-cyan-400 to-blue-600 hover:from-cyan-500 hover:to-blue-700
-                          text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5"
-              >
-                Verify Logs
-              </button>
-            </div>
-          )} */}
+                                                <ul className="configlist-st">
+                                        {["networkname", "associatedipaddr","remote","rsignal","rsnr"].map(
+                                            (key, index) => {
+                                                if (key === "networkname") {
+                                                return (
+                                                <li key={index} className="">
+                                                    
+                                                    <h6>Network Name :</h6>
+                                                    <span className="">{linkDetails?.[key] ?? ""}</span>
+                                                </li>
+                                                );
+                                            }
+                                            if (key === "associatedipaddr") {
+                                                return (
+                                                <li key={index} className="">
+                                                    
+                                                    <h6>Associated IP Address :</h6>
+                                                    <span className="">{linkDetails?.[key] ?? ""}</span>
+                                                </li>
+                                                );
+                                            }
+                                            if (key === "remote") {
+                                                return (
+                                                <li key={index} className="">
+                                                    <h6 className="">Remote </h6>
+                                                </li>
+                                                );
+                                            }
+                                            if (key === "rsnr") {
+                                                return (
+                                                <li key={index} className="" style={{paddingTop:'0px'}}>
+                                                    
+                                                    <h6 style={{paddingTop:"40px"}}>SNR :</h6>
+                                                    <span className="" style={{paddingTop:"37px"}}>
+                                                        {linkDetails?.[key] === null || linkDetails?.[key] === ""
+                                                        ? " --"
+                                                        : linkDetails?.[key] + " dB"}
+                                                    </span>
+                                                    <SignalStrength value={linkDetails?.[key] || 0} />
+                                                </li>
+                                                );
+                                            }
+                                            if (key === "rsignal") {
+                                                return (
+                                                <li key={index} className="">
+                                                    
+                                                    <h6>Singnal/Noise :</h6>
+                                                    <div className="">
+                                                    <span className="">
+                                                        {linkDetails?.rsignal ?? "--"} dB / {linkDetails?.rnoise ?? "--"} dB
+                                                    </span>
+                                                    </div>
+                                                </li>
+                                                );
+                                            }
 
+                                            return (
+                                                <li key={index} className="">
+                                                <h6>{linkDetailsList.find((item) => item.name === key)?.displayName} :</h6>
+                                                <span className="">{linkDetails?.[key] ?? ""}</span>
+                                                </li>
+                                            );
+                                            }
+                                        )}
+                                        </ul>
+                                            </div>
+                                            </>
                                     </article>
-                                    {/* <TranscoderDashboard /> */}
-
                                 </article>
                             </article>
                         </article>
