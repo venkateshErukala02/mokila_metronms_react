@@ -10,15 +10,17 @@ import TranscoderDashboard from "./transcoderdashboard";
 import { use } from "react";
 
 
-const TcSummaryTab = ({ transcoderData }) => {
-    let cam1 = transcoderData?.RSTPURL?.["cam1.url"]
-    let cam2 = transcoderData?.RSTPURL?.["cam2.url"]
-    let cam3 = transcoderData?.RSTPURL?.["cam3.url"]
-    let cam4 = transcoderData?.RSTPURL?.["cam4.url"]
-    let bitrate = transcoderData?.Quad?.bitrate
-    let prfle = transcoderData?.Quad?.profile
-    let xps = transcoderData?.Quad?.xpos
-    let yps = transcoderData?.Quad?.ypos
+const TcSummaryTab = ({  }) => {
+    // let cam1 = transcoderData?.RSTPURL?.["cam1.url"]
+    // let cam2 = transcoderData?.RSTPURL?.["cam2.url"]
+    // let cam3 = transcoderData?.RSTPURL?.["cam3.url"]
+    // let cam4 = transcoderData?.RSTPURL?.["cam4.url"]
+    // let bitrate = transcoderData?.Quad?.bitrate
+    // let prfle = transcoderData?.Quad?.profile
+    // let xps = transcoderData?.Quad?.xpos
+    // let yps = transcoderData?.Quad?.ypos
+        const [transcoderData, setTranscoderData] = useState([]);
+
 
 
     const checkServicesList = [
@@ -35,14 +37,14 @@ const TcSummaryTab = ({ transcoderData }) => {
     const [isLoading, setIsLoading] = useState("");
     const [isError, setIsError] = useState("");
     const [upTimeData, setUpTimeData] = useState([]);
-    const [bitRate,setBitRate] = useState(bitrate);
-    const [profile,setProfile] = useState(prfle);
-    const [xpos,setXpos] = useState(xps);
-    const [ypos,setYpos] = useState(yps);
-    const [camone,setCamone]=useState(cam1);
-    const [camtwo,setCamtwo] = useState(cam2);
-    const [camthree,setCamthree] = useState(cam3);
-    const [camfour,setCamfour] = useState(cam4);
+    // const [bitRate,setBitRate] = useState(bitrate);
+    // const [profile,setProfile] = useState(prfle);
+    // const [xpos,setXpos] = useState(xps);
+    // const [ypos,setYpos] = useState(yps);
+    // const [camone,setCamone]=useState(cam1);
+    // const [camtwo,setCamtwo] = useState(cam2);
+    // const [camthree,setCamthree] = useState(cam3);
+    // const [camfour,setCamfour] = useState(cam4);
     const [isEditMode,setIsEditMode] =useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -59,8 +61,147 @@ const TcSummaryTab = ({ transcoderData }) => {
   pingHistory: [], // array to store ping values
   loading: true,
 });
+
+const [isSavingQuad,setIsSavingQuad] = useState(false);
+const [isSavingRstpurl,setIsSavingRstpurl] = useState(false);
+const [isApplyQuad,setIsApplyQuad] = useState(false);
+const [isApplyRstpurl,setIsApplyRstpurl] = useState(false);
+const [isApplyingQuad,setIsApplyingQuad] = useState(false);
+const [isApplyingRstpurl,setIsApplyingRstpurl] = useState(false);
+const [isChangedQuad,setIsChangedQuad] = useState(false);
+const [isChangedRstpurl,setIsChangedRstpurl] = useState(false);
+const [triggerConfig,setTriggerConfig] = useState(0);
+
+
+
+const [transcoderStats, setTranscoderStats] = useState({
+     System: {
+       firmware: '',
+       hardware: '',
+       device_name: '',
+       temperature: '',
+       ntp_status: '',
+       sntpip:''
+     },
+     Quad: {
+       bitrate: '',
+       profile: '',
+       xpos: '',
+       ypos: ''
+     },
+     RSTPURL: {
+      "cam1.url": "",
+      "cam2.url": "",
+      "cam3.url": "",
+      "cam4.url": "",
+     }
+   });
+ const [changedSections, setChangedSections] = useState({
+  quad: false,
+  rtsp: false
+});
+
   
  const intervalRef = useRef(null);
+
+
+
+
+     const getServerStatus = async (url) => {
+        setIsLoading(true);
+        setIsError({ status: false, msg: "" });
+        try {
+            const username = "admin";
+            const password = "admin";
+            const token = btoa(`${username}:${password}`);
+            const options = {
+                method: "GET",
+                headers: {
+                    "Authorization": `Basic ${token}`,
+                    "Content-Type": "application/json",
+                },
+            };
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (response.ok) {
+                const { System, Quad, RSTPURL, temp, uptime } = data;
+
+                setIsLoading(false);
+
+
+                  setTranscoderStats({
+        System: {
+          firmware: System?.firmware ?? "N/A",
+          hardware: System?.hardware ?? "N/A",
+          device_name: System?.model ?? "N/A",
+          syslogip: System?.syslogip ?? "N/A",
+          temperature: temp ?? "N/A",
+          uptime: uptime ?? "N/A",
+          sntpip:System?.sntpip?? "N/A"
+        },
+        Quad: {
+          bitrate: Quad?.bitrate ?? "N/A",
+          profile: Quad?.profile ?? "N/A",
+          xpos: Quad?.xpos ?? "N/A",
+          ypos: Quad?.ypos ?? "N/A",
+        },
+        RSTPURL: {
+          "cam1.url": RSTPURL?.["cam1.url"] ?? "",
+          "cam2.url": RSTPURL?.["cam2.url"] ?? "",
+          "cam3.url": RSTPURL?.["cam3.url"] ?? "",
+          "cam4.url": RSTPURL?.["cam4.url"] ?? "",
+        }
+      });
+                setIsError({ status: false, msg: "" });
+            } else {
+                throw new Error("Data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message });
+        }
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const nodeId = localStorage.getItem('nodeId');
+            let url = `http://${nodeIpaddress}:8084/transcoder/api/v1/config`;
+          //let url = 'http://localhost:8980/transcoder/api/v1/config';
+
+            await getServerStatus(url);
+        };
+        fetchData();
+    }, []);
+
+
+
+const handleRTSPChange = (cam, value) => {
+    setIsChangedRstpurl(true);
+  setTranscoderStats((prev) => ({
+    ...prev,
+    RSTPURL: {
+       ...prev.RSTPURL,
+      // [`${cam}.url`]: value
+       [cam]: value
+    }
+  }));
+
+  setChangedSections((prev) => ({ ...prev, rtsp: true }));
+};
+const handleQuadChange = (name, value) => {
+    setIsChangedQuad(true);
+  setTranscoderStats((prev) => ({
+    ...prev,
+    Quad: {
+      ...prev.Quad,
+      [name]: name === "bitrate" ? Number(value) * 1000 : value
+    }
+  }));
+
+  setChangedSections((prev) => ({ ...prev, quad: true }));
+};
+
 
 
   useEffect(() => {
@@ -81,16 +222,16 @@ const TcSummaryTab = ({ transcoderData }) => {
 }, [showTerminal]);
 
 
-      useEffect(() => {
-        setCamone(cam1);
-        setCamtwo(cam2);
-        setCamthree(cam3);
-        setCamfour(cam4);
-        setBitRate(bitrate);
-        setProfile(prfle);
-        setXpos(xps);
-        setYpos(yps);
-    }, [cam1,cam2,cam3,cam4,bitrate,prfle,xps,yps])
+    //   useEffect(() => {
+    //     setCamone(cam1);
+    //     setCamtwo(cam2);
+    //     setCamthree(cam3);
+    //     setCamfour(cam4);
+    //     setBitRate(bitrate);
+    //     setProfile(prfle);
+    //     setXpos(xps);
+    //     setYpos(yps);
+    // }, [cam1,cam2,cam3,cam4,bitrate,prfle,xps,yps])
 
        const getServiceCheckStatus = async (url) => {
         setIsLoading(true);
@@ -375,8 +516,214 @@ const handleCamStatus = async (camName) => {
   });
 
   await fetchCamStatus(camName);
+  
 };
 
+
+
+const rebootQuadTranscoderService = async () => {
+  try {
+    setIsApplyingQuad(true);
+    const ip = "192.168.66.12"; // replace with your dynamic IP if needed
+    const stopUrl = `http://${ip}:8084/transcoder/api/v1/service/stop`;
+    const startUrl = `http://${ip}:8084/transcoder/api/v1/service/start`;
+
+    // Stop service
+    const stopResponse = await fetch(stopUrl, { method: "POST" });
+    if (!stopResponse.ok) {
+      throw new Error(`Failed to stop transcoder. Status: ${stopResponse.status}`);
+    }
+    console.log("Transcoder stopped");
+
+    // Wait 10 seconds
+    await new Promise((resolve) => setTimeout(resolve, 10000));
+
+    // Start service
+    const startResponse = await fetch(startUrl, { method: "POST" });
+    if (!startResponse.ok) {
+      throw new Error(`Failed to start transcoder. Status: ${startResponse.status}`);
+    }
+    console.log("Transcoder started");
+
+    // Show alert only if both requests succeeded
+    setIsApplyQuad(false);
+    setIsApplyingQuad(false);
+    alert("Configuration applied successfully");
+     setTriggerConfig((prev) => prev +1);
+  } catch (error) {
+    console.error("Error rebooting transcoder:", error);
+    setIsApplyingQuad(false);
+    setIsApplyQuad(false);
+
+  }
+};
+
+const rebootRstpTranscoderService = async () => {
+  try {
+    setIsApplyingRstpurl(true);
+    const ip = "192.168.66.12"; // replace with your dynamic IP if needed
+    const stopUrl = `http://${ip}:8084/transcoder/api/v1/service/stop`;
+    const startUrl = `http://${ip}:8084/transcoder/api/v1/service/start`;
+
+    // Stop service
+    const stopResponse = await fetch(stopUrl, { method: "POST" });
+    if (!stopResponse.ok) {
+      throw new Error(`Failed to stop transcoder. Status: ${stopResponse.status}`);
+    }
+    console.log("Transcoder stopped");
+
+    // Wait 10 seconds
+    await new Promise((resolve) => setTimeout(resolve, 10000));
+
+    // Start service
+    const startResponse = await fetch(startUrl, { method: "POST" });
+    if (!startResponse.ok) {
+      throw new Error(`Failed to start transcoder. Status: ${startResponse.status}`);
+    }
+    console.log("Transcoder started");
+
+    // Show alert only if both requests succeeded
+    setIsApplyRstpurl(false);
+    setIsApplyingRstpurl(false);
+    alert("Configuration applied successfully");
+     setTriggerConfig((prev) => prev +1);
+  } catch (error) {
+    console.error("Error rebooting transcoder:", error);
+     setIsApplyRstpurl(false);
+    setIsApplyingRstpurl(false);
+
+  }
+};
+
+
+  const handleQuadConfiguration = async () => {
+
+        try {
+           setIsSavingQuad(true); 
+            const requestBody = {
+                            "section": 'Quad',
+                            "values": { ...transcoderStats.Quad } 
+                            }
+
+            const options = {
+                method: "POST",
+                headers: {
+                    // "Authorization": `Basic ${token}`,
+                    "Content-Type": "application/json",
+                    'Accept': '*/*'
+                },
+                body: JSON.stringify(requestBody)
+            };
+            const response = await fetch(`http://localhost:8980/metronms/api/v2/nodemanageview/tranquad/1170`,options);
+            // const data = await response.json();
+
+        let data = null;
+
+        const text = await response.text(); // read response safely
+        if (text) {
+            data = JSON.parse(text); // only parse if not empty
+        }
+
+            if (response?.ok === true || response?.status === 200) {
+                setIsLoading(false);
+                setIsSavingQuad(false);
+                setIsChangedQuad(false);
+                setIsApplyQuad(true);
+                    alert("Configuration Saved successfully")
+                // await rebootTranscoderService();
+            //    await handleCommit();
+
+                // setConfigData(data);
+                setIsError({ status: false, msg: "" });
+            } else {
+                throw new Error("Data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message });
+        }
+      };
+
+
+
+      const handleRstpurlConfiguration = async () => {
+
+        try {
+           setIsSavingRstpurl(true); 
+           const requestBody = {
+                            "section": 'Quad',
+                            "values": { ...transcoderStats.RSTPURL } 
+                            }
+            const options = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                 body: JSON.stringify(requestBody)
+            };
+            const response = await fetch(`http://localhost:8980/metronms/api/v2/nodemanageview/trancam/1170`,options);
+            // const data = await response.json();
+
+        let data = null;
+
+        const text = await response.text(); // read response safely
+        if (text) {
+            data = JSON.parse(text); // only parse if not empty
+        }
+
+            if (response?.ok === true || response?.status === 200) {
+                    alert("Configuration Saved successfully")
+                setIsLoading(false);
+            //    await handleCommit();
+
+                setIsSavingRstpurl(false);
+                setIsApplyRstpurl(true);
+                setIsChangedRstpurl(false);
+                // setConfigData(data);
+                setIsError({ status: false, msg: "" });
+            } else {
+                throw new Error("Data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message });
+        }
+      };
+
+
+  const handleSaveConfiguration = async () => {
+  try {
+    if (changedSections.quad) {
+      await handleQuadConfiguration();
+    }
+
+    if (changedSections.rtsp) {
+      await handleRstpurlConfiguration();
+    }
+
+    setChangedSections({ quad: false, rtsp: false });
+
+    // setCanApply(true);
+  } catch (error) {
+    console.error("Error saving configuration:", error);
+  }
+};
+
+
+
+// const handleSaveConfiguration = async () => {
+//   const ip = location.state?.deviceInfo?.ip;
+//   try {
+//     if (changedSections.quad) {
+//       await transcoderService.quadAPICall(ip, transcoderStats.Quad);
+//     }
+
+//     if (changedSections.rtsp) {
+//       await transcoderService.rTSPAPICall(ip, transcoderStats.RTSPURL);
+//     }
+
+//     setChangedSections({ quad: false, rtsp: false });
+//      setCanApply(true);
 
 
     return (
@@ -396,8 +743,8 @@ const handleCamStatus = async (camName) => {
                                     <article className="" id="div2">
                                         <article style={{ margin: "auto", textAlign: 'center' }}>
                                             <img className="nodeimg" src={transcoderImage} alt="transcoderImage" width="210px" height="190px" />
-                                            <label className="summarymode"> {transcoderData?.System?.ser}</label>
-                                            <label className="summarymode" style={{ display: 'block' }}> {nodeLocation} ({transcoderData?.System?.sysname})</label>
+                                            <label className="summarymode"> {transcoderStats?.System?.ser}</label>
+                                            <label className="summarymode" style={{ display: 'block' }}> {nodeLocation} ({transcoderStats?.System?.sysname})</label>
                                             <label className="summarysytem"><i className="fas fa-arrow-up fa-1x ng-scope "></i>{upTimeData}</label>
                                             <label className="summarymode" style={{ display: 'block',marginTop:'7px' }}>Temperature:{tempData.temp}</label>
                                         </article>
@@ -419,14 +766,14 @@ const handleCamStatus = async (camName) => {
                                                         alt=""
                                                         style={{ marginRight: "6px" }}
                                                     />
-                                                    <h6>NTP <span>{transcoderData?.System?.sntpip} </span></h6>
+                                                    <h6>NTP <span>{transcoderStats?.System?.sntpip} </span></h6>
                                                 </li>
                                                 <li>
                                                     <i
                                                         className="hardwareversionicon"
                                                         style={{ marginRight: "6px" }}
                                                     ></i>
-                                                    <h6>Hardware Version <span>{transcoderData?.System?.hardware}</span></h6>
+                                                    <h6>Hardware Version <span>{transcoderStats?.System?.hardware}</span></h6>
                                                 </li>
                                                 <li>  <img
                                                     src={bootloader}
@@ -437,7 +784,8 @@ const handleCamStatus = async (camName) => {
                                                         marginRight: "6px",
                                                     }}
                                                 />
-                                                    <h6> Firmware Version <span>{transcoderData?.System?.firmware} </span></h6></li>
+                                                    <h6> Firmware Version <span>{transcoderStats?.System?.firmware} </span></h6>
+                                                    </li>
 
 
                                             </ul>
@@ -461,30 +809,47 @@ const handleCamStatus = async (camName) => {
                                                 < article className="">
                                                     <article className="card-sub">
                                                         <article className="form-row"><label for="" className="col-4 quadlis">Bitrate</label><article className="col-sm-4 col-md-4 col-lg-5 quadlisvalue">
-                                                            <input type="text" className="transcoderinput" value={bitRate}
-                                                            onChange={(e)=> setBitRate(e.target.value)}
-                                                            />
+                                                             <input
+                                                            className="transcoderinput"
+                                                            name="bitrate"
+                                                             value={
+                                                                transcoderStats?.Quad?.bitrate
+                                                                ? transcoderStats.Quad.bitrate / 1000
+                                                                : ""
+                                                            }
+                                                            onChange={(e) => handleQuadChange("bitrate", e.target.value)}
+                                                            required
+                                                        />
                                                         </article>
                                                         </article>
                                                         <article className="form-row"><label for="" className="col-4 quadlis">Profile</label><article className="col-sm-4 col-md-4 col-lg-5 quadlisvalue">
-                                                            <input type="text" className="transcoderinput" value={profile} 
-                                                            onChange={(e)=> setProfile(e.target.value)}
+                                                           <input
+                                                            type="text"
+                                                            className="transcoderinput"
+                                                            value={transcoderStats?.Quad?.profile ?? ""}
+                                                            onChange={(e) => handleQuadChange("profile", e.target.value)}
                                                             />
                                                         </article>
                                                         </article>
                                                         <article className="form-row"><label for="" className="col-4 quadlis">Xpos</label><article className="col-sm-4 col-md-4 col-lg-5 quadlisvalue">
-                                                            <input type="text" className="transcoderinput" value={xpos} 
-                                                            onChange={(e)=> setXpos(e.target.value)}
+                                                           <input
+                                                            type="text"
+                                                            className="transcoderinput"
+                                                            value={transcoderStats?.Quad?.xpos ?? ""}
+                                                            onChange={(e) => handleQuadChange("xpos", e.target.value)}
                                                             />
                                                         </article>
                                                         </article>
                                                         <article className="form-row"><label for="" className="col-4 quadlis">Ypos</label><article className="col-sm-4 col-md-4 col-lg-5 quadlisvalue">
-                                                            <input type="text" className="transcoderinput" value={ypos} 
-                                                            onChange={(e)=> setYpos(e.target.value)}
+                                                          <input
+                                                            type="text"
+                                                            className="transcoderinput"
+                                                            value={transcoderStats?.Quad?.ypos ?? ""}
+                                                            onChange={(e) => handleQuadChange("ypos", e.target.value)}
                                                             />
                                                         </article>
                                                         </article>
-                                                        <article className="" style={{textAlign:'center'}}>
+                                                        {/* <article className="" style={{textAlign:'center'}}>
                                                               <button className="resetbtn" style={{marginRight:'15px'}} 
                                                               onClick={handleEditBit}
                                                               >Edit</button>
@@ -500,7 +865,41 @@ const handleCamStatus = async (camName) => {
                                                         </button>
 
                                               
-                                                </article>
+                                                </article> */}
+                                                      <article className="config-savebtn">
+                                                                    <article>
+                                                                        <button
+                                                                            className="createbtn"
+                                                                            type="button"
+                                                                        onClick={handleSaveConfiguration}
+                                                                         disabled={!isChangedQuad || isSavingQuad}
+                                                                        style={{
+                                                                            pointerEvents: (!isChangedQuad || isSavingQuad) ? 'none' : 'auto',
+                                                                            opacity: (!isChangedQuad || isSavingQuad) ? 0.6 : 1          
+                                                                        }}
+                                                                        >
+                                                                            Save
+                                                                            
+                                                                        </button>
+
+                                                                    </article>
+                                                                    <article>
+                                                                       <button
+                                                                            className="createbtn"
+                                                                            type="button"
+                                                                            disabled={!isApplyQuad}
+                                                                            onClick={rebootQuadTranscoderService}
+                                                                            style={{
+                                                                                pointerEvents: (!isApplyQuad) ? 'none' : 'auto',
+                                                                                opacity: (!isApplyQuad) ? 0.6 : 1
+                                                                            }}
+                                                                        >
+                                                                            {isApplyingQuad ? "Applying..." : "Apply"}
+                                                                            {/* Apply */}
+                                                                        </button>
+                                                                    </article>
+
+                                                                </article>
                                                     </article>
                                                 </article>
                                               
@@ -510,34 +909,91 @@ const handleCamStatus = async (camName) => {
                                                 < article className="">
                                                     <article className="card-sub">
                                                         <article className="form-row"><label for="" className="col-3 quadlis">Cam1URL</label><article className="col-sm-9 col-md-9 col-lg-9 quadlisvalue">
-                                                                 <input type="text" className="transcoderinput" value={camone}
-                                                                 onChange={(e)=> setCamone(e.target.value)}
-                                                                 />
+                                                                <input
+                                                            type="text"
+                                                            className="transcoderinput"
+                                                            value={transcoderStats?.RSTPURL?.["cam1.url"] ?? ""}
+                                                            onChange={(e) => handleRTSPChange("cam1.url", e.target.value)}
+                                                            />
                                                         </article>
                                                         </article>
                                                         <article className="form-row"><label for="" className="col-3 quadlis">Cam2URL</label><article className="col-sm-9 col-md-9 col-lg-9 quadlisvalue">
-                                                            <input type="text" className="transcoderinput" value={camtwo} 
-                                                            onChange={(e)=> setCamtwo(e.target.value)}
+                                                           <input
+                                                            type="text"
+                                                            className="transcoderinput"
+                                                            value={transcoderStats?.RSTPURL?.["cam2.url"] ?? ""}
+                                                            onChange={(e) => handleRTSPChange("cam2.url", e.target.value)}
                                                             />
                                                         </article>
                                                         </article>
                                                         <article className="form-row"><label for="" className="col-3 quadlis">Cam3URL</label><article className="col-sm-9 col-md-9 col-lg-9 quadlisvalue">
-                                                            <input type="text" className="transcoderinput" value={camthree}
-                                                            onChange={(e)=> setCamthree(e.target.value)}
+                                                           <input
+                                                            type="text"
+                                                            className="transcoderinput"
+                                                            value={transcoderStats?.RSTPURL?.["cam3.url"] ?? ""}
+                                                              onChange={(e) => handleRTSPChange("cam3.url", e.target.value)}
                                                             />
                                                         </article>
                                                         </article>
                                                         <article className="form-row"><label for="" className="col-3 quadlis">Cam4URL</label><article className="col-sm-9 col-md-9 col-lg-9 quadlisvalue">
-                                                            <input type="text" className="transcoderinput" value={camfour} 
-                                                            onChange={(e)=> setCamfour(e.target.value)}
+                                                           <input
+                                                            type="text"
+                                                            className="transcoderinput"
+                                                            value={transcoderStats?.RSTPURL?.["cam4.url"] ?? ""}
+                                                            onChange={(e) => handleRTSPChange("cam4.url", e.target.value)}
                                                             />
                                                         </article>
                                                         </article>
-                                                    <article className="" style={{textAlign:'center'}}>
-                                                         <button className="resetbtn" style={{marginRight:'15px'}}>Edit</button>
+                                                    {/* <article className="" style={{textAlign:'center'}}>
+                                                         <button
+                                                                            className="createbtn"
+                                                                            type="button"
+                                                                        onClick={handleSaveConfiguration}
+                                                                         disabled={!isChanged || isSaving}
+                                                                        style={{
+                                                                            pointerEvents: (!isChanged || isSaving) ? 'none' : 'auto',
+                                                                            opacity: (!isChanged || isSaving) ? 0.6 : 1  
+                                                                                    
+                                                                        }}
+                                                                        >
+                                                                            {isSaving ? "Saving..." : "Save"}
+                                                                        </button>
                                                       <button className="createbtn" >Save</button>
                                                
-                                                </article>
+                                                </article> */}
+                                                 <article className="config-savebtn">
+                                                                    <article>
+                                                                        <button
+                                                                            className="createbtn"
+                                                                            type="button"
+                                                                        onClick={handleSaveConfiguration}
+                                                                       disabled={!isChangedRstpurl || isSavingRstpurl}
+                                                                        style={{
+                                                                            pointerEvents: (!isChangedRstpurl || isSavingRstpurl) ? 'none' : 'auto',
+                                                                            opacity: (!isChangedRstpurl || isSavingRstpurl) ? 0.6 : 1          
+                                                                        }}
+                                                                        >
+                                                                            {/* {isSaving ? "Saving..." : "Save"} */}
+                                                                            Save
+                                                                        </button>
+
+                                                                    </article>
+                                                                    <article>
+                                                                       <button
+                                                                            className="createbtn"
+                                                                            type="button"
+                                                                            onClick={rebootRstpTranscoderService}
+                                                                             disabled={!isApplyRstpurl}
+                                                                            style={{
+                                                                                pointerEvents: (!isApplyRstpurl) ? 'none' : 'auto',
+                                                                                opacity: (!isApplyRstpurl) ? 0.6 : 1
+                                                                            }}
+                                                                        >
+                                                                            {isApplyingRstpurl ? "Applying..." : "Apply"}
+                                                                        </button>
+                                                                    </article>
+
+                                                                </article>
                                                     </article>
                                                 </article>
                                             </article>

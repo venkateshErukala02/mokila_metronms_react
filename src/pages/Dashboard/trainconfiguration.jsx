@@ -61,6 +61,10 @@ const [changedConfig, setChangedConfig] = useState(
     return acc;
   }, {})
 );
+const [isSaving, setIsSaving] = useState(false);
+const [isApplying, setIsApplying] = useState(false);
+const [triggerConfig,setTriggerConfig] = useState(0);
+
 
 // When API data (configData) arrives, update state
 useEffect(() => {
@@ -92,8 +96,10 @@ useEffect(() => {
         { label: "Enable", value: 1 },
         { label: "Disable", value: 2 }
     ];
-    const radioModeOptions = ['SU', 'BSU'];
-    // const countryOptions = ["EU", "JP", "CN", "US"];
+         const radioModeOptions = [
+            { label: "BSU", value: 4 },
+            { label: "SU", value: 5 }
+            ];
     const countryOptions = [
   { label: "unitedStates5GHz", value: 1 },
   { label: "unitedStates5p8GHz", value: 2 },
@@ -309,37 +315,49 @@ useEffect(() => {
     //   }, [nodeDataId]);
 
 
-         const handleApplyConfiguration = async () => {
-      try {
-            const username = "admin";
-            const password = "admin";
-            const token = btoa(`${username}:${password}`);
-            const options = {
-                method: "GET",
-                headers: {
-                    "Authorization": `Basic ${token}`,
-                    "Content-Type": "application/json",
-                },
-            };
-            const response = await fetch(`http://localhost:8980/metronms/api/v2/nodelinks/radio/reboot?nodeId=1429`);
-            // const data = await response.json();
-            let data = null;
-              const text = await response.text(); // read response safely
-        if (text) {
-            data = JSON.parse(text); // only parse if not empty
-        }
+   const handleApplyConfiguration = async () => {
+  try {
+    setIsApplying(true);
 
-            if (response?.ok === true || response?.status === 200) {
-                setIsLoading(false);
-                setIsError({ status: false, msg: "" });
-            } else {
-                throw new Error("Data not found");
-            }
-        } catch (error) {
-            setIsLoading(false);
-            setIsError({ status: true, msg: error.message });
-        }
-      };
+    const username = "admin";
+    const password = "admin";
+    const token = btoa(`${username}:${password}`);
+
+    const options = {
+      method: "GET",
+      headers: {
+        Authorization: `Basic ${token}`,
+        "Content-Type": "application/json",
+      },
+    };
+
+    const response = await fetch(
+      `http://localhost:8980/metronms/api/v2/nodelinks/radio/reboot?nodeId=1429`,
+      options
+    );
+
+    let data = null;
+    const text = await response.text();
+
+    if (text) {
+      data = JSON.parse(text);
+    }
+
+    if (response.ok) {
+      setIsError({ status: false, msg: "" });
+      alert("Configuration applied successfully");
+        setTriggerConfig((prev) => prev +1);
+
+    } else {
+      throw new Error("Data not found");
+    }
+
+  } catch (error) {
+    setIsError({ status: true, msg: error.message });
+  } finally {
+    setIsApplying(false);
+  }
+};
 
     const handleCommit=async()=>{
 
@@ -357,15 +375,15 @@ useEffect(() => {
             if (response?.ok === true || response.status === 200) {
                 setIsLoading(false);
                 setCanApply(true);
-            //     await getConfigDt(
-            //   `http://localhost:8980/metronms/api/v2/nodelinks/getRadio/Config?nodeId=1429&deviceType=TR`
-            // );
+                 setIsSaving(false);
+                 setIsChanged(false);
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("Data not found");
             }
         } catch (error) {
             setIsLoading(false);
+            setIsSaving(false);
             setIsError({ status: true, msg: error.message });
         }
     }
@@ -374,7 +392,7 @@ useEffect(() => {
 
       const handleSaveConfiguration = async () => {
         try {
-           
+           setIsSaving(true); 
             const options = {
                 method: "POST",
                 headers: {
@@ -396,7 +414,7 @@ useEffect(() => {
                 setIsLoading(false);
                await handleCommit();
 
-                setConfigData(data);
+                // setConfigData(data);
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("Data not found");
@@ -534,7 +552,7 @@ useEffect(() => {
             await getConfigDt(url);
         };
         fetchData();
-    }, []);
+    }, [triggerConfig]);
 
 
          const getServiceCheckDt = async (url) => {
@@ -730,10 +748,20 @@ useEffect(() => {
                                                                         <article className="col-sm-6 col-md-6 col-lg-6">
                                                                             <article className="col-12">
                                                                                 <article className="form-row-config "><label for="" className="col-5 config-label">Radio Mode</label><article className="col-sm-4 col-md-4 col-lg-4 ">
-                                                                                    <input type="text" className="config-input"
-                                                                                        value={configData?.radioMode || ''}
-                                                                                        disabled
-                                                                                    />
+                                                                                     <select
+                                                                                    className="config-input"
+                                                                                    value={configData?.radioMode ?? ""}
+                                                                                    // disabled
+                                                                                    onChange={(e) => e.preventDefault()}
+                                                                                    >
+                                                                                    <option value="">Select Mode</option>
+
+                                                                                    {radioModeOptions.map((opt) => (
+                                                                                        <option key={opt.value} value={opt.value}>
+                                                                                        {opt.label}
+                                                                                        </option>
+                                                                                    ))}
+                                                                                    </select>
                                                                                 </article>
                                                                                 </article>
                                                                                 <article className="form-row-config "><label for="" className="col-5 config-label">Frequency Domain</label><article className="col-sm-4 col-md-4 col-lg-4">
@@ -830,7 +858,7 @@ useEffect(() => {
                                                                         </article>
                                                                         <article className="col-sm-6 col-md-6 col-lg-6">
                                                                             <article className="form-row-config "><label for="" className="col-4 config-label">Preferred Channel </label><article className="col-sm-4 col-md-4 col-lg-4">
-                                                                                <input type="text" className="config-input" value={configData?.prefChannel || ''}
+                                                                                <input type="text" className="config-input" value={configData?.channel || ''}
                                                                                     onChange={(e) => handleStationConfigChange("prefChannel", Number(e.target.value) || 0)}
                                                                                 />
                                                                             </article>
@@ -843,7 +871,7 @@ useEffect(() => {
                                                                             </article>
                                                                             </article>
                                                                             <article className="form-row-config "><label for="" className="col-4 config-label">Active Channel</label><article className="col-sm-4 col-md-4 col-lg-4">
-                                                                                <input type="text" className="config-input" value={configData?.prefChannel || ''}
+                                                                                <input type="text" className="config-input" value={configData?.channel || ''}
 
                                                                                     disabled
                                                                                 />
@@ -1021,31 +1049,29 @@ useEffect(() => {
                                                                             className="createbtn"
                                                                             type="button"
                                                                         onClick={handleSaveConfiguration}
-                                                                        disabled={!isChanged}
-                                                                        // disabled={true}
+                                                                         disabled={!isChanged || isSaving}
                                                                         style={{
-                                                                            pointerEvents: isChanged ? 'auto' : 'none', 
-                                                                            opacity: isChanged ? 1 : 0.6               
+                                                                            pointerEvents: (!isChanged || isSaving) ? 'none' : 'auto',
+                                                                            opacity: (!isChanged || isSaving) ? 0.6 : 1          
                                                                         }}
                                                                         >
-                                                                            Save
+                                                                            {isSaving ? "Saving..." : "Save"}
                                                                         </button>
 
                                                                     </article>
                                                                     <article>
-                                                                        <button
+                                                                       <button
                                                                             className="createbtn"
                                                                             type="button"
-                                                                            disabled={!canApply}
-                                                                        onClick={handleApplyConfiguration}
-                                                                        style={{
-                                                                            pointerEvents: canApply ? 'auto' : 'none', 
-                                                                            opacity: canApply ? 1 : 0.6               
-                                                                        }}
+                                                                            disabled={!canApply || isApplying}
+                                                                            onClick={handleApplyConfiguration}
+                                                                            style={{
+                                                                                pointerEvents: (!canApply || isApplying) ? 'none' : 'auto',
+                                                                                opacity: (!canApply || isApplying) ? 0.6 : 1
+                                                                            }}
                                                                         >
-                                                                            Apply
+                                                                            {isApplying ? "Applying..." : "Apply"}
                                                                         </button>
-
                                                                     </article>
 
                                                                 </article>
@@ -1060,31 +1086,31 @@ useEffect(() => {
                                                 {configTab === 'basic' && <article className="config-savebtn">
                                                     <article>
                                                         <button
-                                                            className="createbtn"
-                                                            type="button"
-                                                          onClick={handleSaveConfiguration}
-                                                          disabled={!isChanged}
-                                                        style={{
-                                                                            pointerEvents: isChanged ? 'auto' : 'none', 
-                                                                            opacity: isChanged ? 1 : 0.6               
+                                                                            className="createbtn"
+                                                                            type="button"
+                                                                        onClick={handleSaveConfiguration}
+                                                                         disabled={!isChanged || isSaving}
+                                                                        style={{
+                                                                            pointerEvents: (!isChanged || isSaving) ? 'none' : 'auto',
+                                                                            opacity: (!isChanged || isSaving) ? 0.6 : 1          
                                                                         }}
-                                                        >
-                                                            Save
-                                                        </button>
+                                                                        >
+                                                                            {isSaving ? "Saving..." : "Save"}
+                                                                        </button>
 
                                                     </article>
                                                     <article>
-                                                        <button
+                                                         <button
                                                             className="createbtn"
                                                             type="button"
-                                                             disabled={!canApply}
-                                                        onClick={handleApplyConfiguration}
-                                                         style={{
-                                                                            pointerEvents: canApply ? 'auto' : 'none', 
-                                                                            opacity: canApply ? 1 : 0.6               
-                                                                        }}
+                                                            disabled={!canApply || isApplying}
+                                                            onClick={handleApplyConfiguration}
+                                                            style={{
+                                                                pointerEvents: (!canApply || isApplying) ? 'none' : 'auto',
+                                                                opacity: (!canApply || isApplying) ? 0.6 : 1
+                                                            }}
                                                         >
-                                                            Apply
+                                                            {isApplying ? "Applying..." : "Apply"}
                                                         </button>
 
                                                     </article>

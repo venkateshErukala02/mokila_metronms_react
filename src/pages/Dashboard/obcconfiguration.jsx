@@ -45,6 +45,76 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
         loading: true,
     });
     const [diskData, setDiskData] = useState("");
+    const [triggerConfig,setTriggerConfig] = useState(0);
+    const [configData,setConfigData] = useState([]);
+    const [changedData,setChangedData] = useState({});
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [success, setSuccess] = useState('');
+
+
+    const handleUpload = async (e) => {
+        e.preventDefault();
+        if (!selectedFile) {
+            alert("Please select a file first.");
+            return;
+        }
+
+        setLoading(true);
+        setError('');
+        setSuccess('');
+
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+
+        try {
+            const username = 'admin';
+            const password = 'admin';
+            const token = btoa(`${username}:${password}`)
+            const ip = '192.168.66.6';
+
+            const response = await fetch(`http://localhost:8980/metronms/api/v2/nodemanageview/obc/patch/1212`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `Basic ${token}`,
+                     "Content-Type": "application/octet-stream",
+                            
+                },
+                body: formData, 
+            });
+
+            if (response.ok) {
+                setSuccess('File Uploaded successfully');
+                alert('File Uploaded successfully')
+
+                setSelectedFile(null);
+            } else {
+                const errText = await response.text();
+                setError(`Error starting discovery: ${errText}`);
+            }
+        } catch (error) {
+            setError('An error occurred while contacting the server.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+    // const downloadSampleCSV = () => {
+    //     const csvContent = "data:text/csv;charset=utf-8,"
+    //         + ["Name,Email,Age", "John Doe,john@example.com,30"].join("\n");
+    //     const encodedUri = encodeURI(csvContent);
+    //     const link = document.createElement("a");
+    //     link.setAttribute("href", encodedUri);
+    //     link.setAttribute("download", "Sample.csv");
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     document.body.removeChild(link);
+    // };
+
+
+    const handleFileChange = (event) => {
+        setSelectedFile(event.target.files[0]);
+    };
 
     useEffect(() => {
         if (nodeIpaddress) {
@@ -382,6 +452,135 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
 
 
 
+    const getConfigDt = async (url) => {
+             if (!url) {
+                console.warn("URL is missing. API call skipped.");
+                return;
+            }
+        setIsLoading(true);
+        setIsError({ status: false, msg: "" });
+        try {
+
+            const options = {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            };
+            const response = await fetch(url);
+            let data = await response.json();
+
+            if (response.ok) {
+                setIsLoading(false);
+                    if (typeof data === "string") {
+                    data = JSON.parse(data);
+                    }
+
+                setConfigData(data);
+                setIsError({ status: false, msg: "" });
+            } else {
+                throw new Error("Data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message });
+        }
+    };
+
+    useEffect(() => {
+        const ip = "192.168.66.6"
+        const fetchData = async () => {
+            let url = `http://${ip}:8084/obc/api/v1/config`;
+            await getConfigDt(url);
+        };
+        fetchData();
+    }, [triggerConfig]);
+
+
+  const handleObcConfigChange = (name, value) => {
+  setConfigData((prev) => ({
+    ...prev,
+    [name]: value // update top-level key
+  }));
+
+  setChangedData((prev) => ({
+        ...prev,
+        [name]:value
+  }))
+  
+};
+
+
+  const handleSaveConfiguration = async () => {
+        try {
+        //    setIsSaving(true); 
+            const options = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                 body: JSON.stringify(configData)
+            };
+            const response = await fetch(`http://localhost:8980/metronms/api/v2/nodemanageview/obc/setconfig/1212`,options);
+            // const data = await response.json();
+
+                let data = null;
+
+                const text = await response.text(); // read response safely
+                if (text) {
+                    data = JSON.parse(text); // only parse if not empty
+        }
+
+            if (response?.ok === true || response?.status === 200) {
+                setIsLoading(false);
+
+                // setConfigData(data);
+                setIsError({ status: false, msg: "" });
+            } else {
+                throw new Error("Data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message });
+        }
+      };
+
+
+   const handleApplyConfiguration = async () => {
+  try {
+
+    // const ip = "192.168.66.6"; // replace with your dynamic IP if needed
+    const stopUrl = `http://localhost:8980/metronms/api/v2/nodemanageview/obc/reboot/1212`;
+
+    // Stop service
+    const stopResponse = await fetch(stopUrl, { method: "GET" });
+    if (!stopResponse.ok) {
+      throw new Error(`Failed to stop transcoder. Status: ${stopResponse.status}`);
+    }
+    console.log("Transcoder stopped");
+        //   alert("Configuration applied successfully");
+
+   
+
+    if (stopResponse.status === 200) {
+      setIsError({ status: false, msg: "" });
+      alert("Configuration applied successfully");
+         setTriggerConfig((prev) => prev +1);
+
+    } else {
+      throw new Error("Data not found");
+    }
+
+  } catch (error) {
+    setIsError({ status: true, msg: error.message });
+  } finally {
+    // setIsApplying(false);
+  }
+};
+
+
+
+
     return (
         <>
 
@@ -462,45 +661,59 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                     <article className="container-fluid">
                                         <article className="row">
                                              <h1 className="config-head">Configuration</h1>
-                                            <article className="col-12 col-md-12 quadcont">
+                                            <article className="col-12 col-md-12 quadcont" style={{display:'flex'}}>
+                                                <article className="col-6">
                                                   <article className="card-sub config-tab-wh">
                                                               
-                                                              
+                                                              <article className="form-row-config "><label for="" className="col-5 config-label">Car Number</label><article className="col-sm-4 col-md-4 col-lg-4">
+                                                                    <input type="text" className="config-input" 
+                                                                    value={configData?.carnumber || ""}
+                                                                        disabled
+                                                                    />
+                                                                </article>
+                                                                </article>
                                                                 <article className="form-row-config "><label for="" className="col-5 config-label">TrainRadio IP</label><article className="col-sm-4 col-md-4 col-lg-4">
                                                                     <input type="text" className="config-input" 
-                                                                        disabled
+                                                                    value={configData?.trainradioip || ""}
+                                                                         onChange={(e) => handleObcConfigChange("trainradioip", e.target.value)}
                                                                     />
                                                                 </article>
                                                                 </article>
                                                                 <article className="form-row-config "><label for="" className="col-5 config-label">Encoder IP</label><article className="col-sm-4 col-md-4 col-lg-4">
                                                                     <input type="text" className="config-input"
-                                                                        disabled
+                                                                     value={configData?.encoderip || ""}
+                                                                         onChange={(e) => handleObcConfigChange("encoderip", e.target.value)}
                                                                     />
                                                                 </article>
                                                                 </article>
                                                                 <article className="form-row-config "><label for="" className="col-5 config-label">NTP IP </label><article className="col-sm-4 col-md-4 col-lg-4">
                                                                     <input type="text" className="config-input" 
-                                                                        disabled
+                                                                     value={configData?.ntpserverip || ""}
+                                                                        onChange={(e) => handleObcConfigChange("ntpserverip", e.target.value)} 
                                                                     />
                                                                 </article>
                                                                 </article>
                                                                 <article className="form-row-config "><label for="" className="col-5 config-label">FTPserver IP</label><article className="col-sm-4 col-md-4 col-lg-4">
-                                                                    <input type="text" className="config-input" 
-                                                                        disabled
+                                                                    <input type="text" className="config-input"
+                                                                     value={configData?.ftpserverip || ""} 
+                                                                         onChange={(e) => handleObcConfigChange("ftpserverip", e.target.value)}
                                                                     />
                                                                 </article>
                                                                 </article>
                                                                 <article className="form-row-config "><label for="" className="col-5 config-label">FTPserver User</label><article className="col-sm-4 col-md-4 col-lg-4">
                                                                     <input type="text" className="config-input"
+                                                                    value={configData?.ftpusername || ""}
 
-                                                                        disabled
+                                                                         onChange={(e) => handleObcConfigChange("ftpusername", e.target.value)}
                                                                     />
                                                                 </article>
                                                                 </article>
                                                               
                                                                 <article className="form-row-config "><label for="" className="col-5 config-label">FTPserver Password</label><article className="col-sm-4 col-md-4 col-lg-4">
                                                                     <input type="text" className="config-input" 
-                                                                        disabled
+                                                                            value={configData?.ftppassword || ""}
+
+                                                                        onChange={(e) => handleObcConfigChange("ftppassword", e.target.value)}
                                                                     />
                                                                 </article>
                                                                 </article>
@@ -509,7 +722,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                                     <article>
                                                                         <button
                                                                             className="createbtn"
-                                                                        // onClick={handleAddBitrateData}
+                                                                        onClick={handleSaveConfiguration}
                                                                         // style={{
                                                                         //     pointerEvents: isEditMode ? 'auto' : 'none', 
                                                                         //     opacity: isEditMode ? 1 : 0.6               
@@ -522,7 +735,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                                     <article>
                                                                         <button
                                                                             className="createbtn"
-                                                                        // onClick={handleAddBitrateData}
+                                                                        onClick={handleApplyConfiguration}
                                                                         // style={{
                                                                         //     pointerEvents: isEditMode ? 'auto' : 'none', 
                                                                         //     opacity: isEditMode ? 1 : 0.6               
@@ -534,6 +747,27 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                                     </article>
 
                                                                 </article>
+                                                            </article>
+                                                            </article>
+                                                            <article className="col-6">
+                                                                <article className="regioncont">
+                <label htmlFor="" className="disfilelabel" style={{ marginBottom: '1px' }}>Select your file</label>
+                <div className="filename-display">
+                    {selectedFile ? selectedFile.name : 'No file selected'}
+                </div>
+                <input
+                    className="dislineinputcl"
+                    type="file"
+                    onChange={handleFileChange}
+                    id="hiddenFileInput"
+                    style={{ display: "none" }}
+                />
+                <button onClick={() => document.getElementById("hiddenFileInput").click()} className="attachcl">
+                    <i className="fa-solid fa-paperclip"></i></button>
+                <button onClick={handleUpload} className="uploadcl"><i className="fa-solid fa-upload"></i></button>
+                {/* <button onClick={downloadSampleCSV} className="createbtn">Sample.csv<i className="fa fa-file-text" aria-hidden="true"></i></button> */}
+
+            </article>
                                                             </article>
 
                                             </article>
