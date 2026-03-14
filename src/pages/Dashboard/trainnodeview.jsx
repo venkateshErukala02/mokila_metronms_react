@@ -21,10 +21,23 @@ const TrainNodeView = () => {
   const [nodeItemDt, setNodeItemDt] = useState([]);
 
   // const nodeDataId = useSelector((state) => state.node.node.nodeId);
-  const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
 
-  const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress);
+      const nodeDataId = useSelector((state) => state.node?.node?.nodeId || state.node?.node?.id) ?? localStorage.getItem('nodeId');
+      const nodeLocation = useSelector((state) => state.node.node.location) || localStorage.getItem('nodeLocation');
+      const nodeIpaddress = useSelector((state) => state.node.node.ipAddress) || localStorage.getItem('nodeIpaddress');
 
+    useEffect(()=>{
+        if(nodeDataId){
+          localStorage.setItem('nodeId',nodeDataId);
+    
+        }
+      },[nodeDataId]);
+    
+      useEffect(()=>{
+        if(nodeIpaddress){
+          localStorage.setItem('nodeIpaddress',nodeIpaddress);
+        }
+      },[nodeIpaddress]);
   const getServerStatusDt = async (url) => {
     setIsLoading(true);
     setIsError({ status: false, msg: "" });

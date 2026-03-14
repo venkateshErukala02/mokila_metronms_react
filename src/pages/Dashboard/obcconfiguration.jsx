@@ -23,7 +23,21 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
         { name: "Encoder Connectivity", displayName: "Encoder Connectivity" },
         { name: "FTP Server Connectivity", displayName: "FTP Server Connectivity" },
     ];
-    const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress) || localStorage.getItem('nodeIpaddress');
+    const nodeDataId = useSelector((state) => state.node?.node?.nodeId);
+    const nodeIpaddress = useSelector((state) => state.node.node.ipAddress) || localStorage.getItem('nodeIpaddress');
+
+    useEffect(()=>{
+        if(nodeDataId){
+          localStorage.setItem('nodeId',nodeDataId);
+    
+        }
+      },[nodeDataId]);
+    
+      useEffect(()=>{
+        if(nodeIpaddress){
+          localStorage.setItem('nodeIpaddress',nodeIpaddress);
+        }
+      },[nodeIpaddress]);
 
     const [isLoading, setIsLoading] = useState("");
     const [isError, setIsError] = useState("");
@@ -72,9 +86,8 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
             const username = 'admin';
             const password = 'admin';
             const token = btoa(`${username}:${password}`)
-            const ip = '192.168.66.6';
 
-            const response = await fetch(`http://localhost:8980/metronms/api/v2/nodemanageview/obc/patch/1212?filename=${selectedFile.name}`, {
+            const response = await fetch(`api/v2/nodemanageview/obc/patch/${nodeDataId}?filename=${selectedFile.name}`, {
                 method: "POST",
                 headers: {
                     'Authorization': `Basic ${token}`,
@@ -197,7 +210,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            let url = `http://localhost:8980/metronms/api/v2/troubleshoot/obc/192.168.66.12/servicecheck`;
+            let url = `api/v2/troubleshoot/obc/${nodeIpaddress}/servicecheck`;
             await getServiceCheckStatus(url);
         };
         fetchData();
@@ -298,54 +311,54 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
         }
     };
 
-    const getTemperatureDt = async (url) => {
-        setIsLoading(true);
-        setIsError({ status: false, msg: "" });
-        try {
-            const username = "admin";
-            const password = "admin";
-            const token = btoa(`${username}:${password}`);
-            const options = {
-                method: "GET",
-                headers: {
-                    "Authorization": `Basic ${token}`,
-                    "Content-Type": "application/json",
-                },
-            };
-            const response = await fetch(url);
-            const data = await response.json();
+    // const getTemperatureDt = async (url) => {
+    //     setIsLoading(true);
+    //     setIsError({ status: false, msg: "" });
+    //     try {
+    //         const username = "admin";
+    //         const password = "admin";
+    //         const token = btoa(`${username}:${password}`);
+    //         const options = {
+    //             method: "GET",
+    //             headers: {
+    //                 "Authorization": `Basic ${token}`,
+    //                 "Content-Type": "application/json",
+    //             },
+    //         };
+    //         const response = await fetch(url);
+    //         const data = await response.json();
 
-            if (response.ok) {
-                setIsLoading(false);
+    //         if (response.ok) {
+    //             setIsLoading(false);
 
 
-                setTempData(data);
-                setIsError({ status: false, msg: "" });
-            } else {
-                throw new Error("Data not found");
-            }
-        } catch (error) {
-            setIsLoading(false);
-            setIsError({ status: true, msg: error.message });
-        }
-    };
+    //             setTempData(data);
+    //             setIsError({ status: false, msg: "" });
+    //         } else {
+    //             throw new Error("Data not found");
+    //         }
+    //     } catch (error) {
+    //         setIsLoading(false);
+    //         setIsError({ status: true, msg: error.message });
+    //     }
+    // };
 
     useEffect(() => {
         const fetchData = async () => {
-            let url = `http://${nodeIpaddress}:8084/transcoder/api/v1/uptime`;
+            let url = `http://${nodeIpaddress}:8084/obc/api/v1/uptime`;
             await getServerStatusDt(url);
         };
         fetchData();
     }, []);
 
 
-    useEffect(() => {
-        const fetchData = async () => {
-            let url = `http://${nodeIpaddress}:8084/transcoder/api/v1/temp`;
-            await getTemperatureDt(url);
-        };
-        fetchData();
-    }, [])
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         let url = `http://${nodeIpaddress}:8084/transcoder/api/v1/temp`;
+    //         await getTemperatureDt(url);
+    //     };
+    //     fetchData();
+    // }, [])
 
 
     const handleEditBit = () => {
@@ -370,89 +383,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
         const rounded = number.toFixed(2);
 
         return `${rounded}${unit}`;
-    }
-
-
-    const fetchCamStatus = async (camName) => {
-        const url = `http://localhost:8980/transcoder/192.168.66.12/cameraping/${camName}`;
-
-        try {
-            setIsLoading(true);
-            setIsError({ status: false, msg: "" });
-
-            const username = "admin";
-            const password = "admin";
-            const token = btoa(`${username}:${password}`);
-
-            const response = await fetch(url, {
-                method: "GET",
-                headers: {
-                    Authorization: `Basic ${token}`,
-                    "Content-Type": "application/json",
-                },
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error("Data not found");
-            }
-
-            setTempData(data);
-
-            // Parse microseconds
-            let ms, bytes;
-
-            if (data?.value) {
-                const microseconds = parseFloat(data.value.replace("µs", ""));
-                ms = microseconds / 1000;   // convert to milliseconds
-                bytes = microseconds / 600; // your custom formula
-            } else {
-                ms = "N/A";
-                bytes = 0;
-            }
-
-            setTerminalData(prev => ({
-                ...prev,
-                camName,
-                status: data?.status || "unknown",
-                pingHistory: [...(prev.pingHistory || []), { ms, bytes }],
-                loading: false
-            }));
-
-            setIsLoading(false);
-
-        } catch (err) {
-
-            setIsLoading(false);
-            setIsError({ status: true, msg: err.message });
-
-            setTerminalData(prev => ({
-                ...prev,
-                camName,
-                status: "error",
-                pingHistory: [...(prev.pingHistory || []), { ms: "Error", bytes: 0 }],
-                loading: false
-            }));
-        }
-    };
-
-    const handleCamStatus = async (camName) => {
-        //const ip = navState?.ip || "unknown";
-
-        setShowTerminal(true);
-
-        setTerminalData({
-            camName,
-            status: "loading",
-            pingHistory: [],
-            loading: true
-        });
-
-        await fetchCamStatus(camName);
-    };
-
-
+    }  
 
     const getConfigDt = async (url) => {
              if (!url) {
@@ -490,9 +421,8 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
     };
 
     useEffect(() => {
-        const ip = "192.168.66.6"
         const fetchData = async () => {
-            let url = `http://${ip}:8084/obc/api/v1/config`;
+            let url = `http://${nodeIpaddress}:8084/obc/api/v1/config`;
             await getConfigDt(url);
         };
         fetchData();
@@ -525,7 +455,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                 },
                  body: JSON.stringify(configData)
             };
-            const response = await fetch(`http://localhost:8980/metronms/api/v2/nodemanageview/obc/setconfig/1212`,options);
+            const response = await fetch(`api/v2/nodemanageview/obc/setconfig/${nodeDataId}`,options);
             // const data = await response.json();
 
                 let data = null;
@@ -555,8 +485,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
    const handleApplyConfiguration = async () => {
   try {
         setIsApplying(true); 
-    // const ip = "192.168.66.6"; // replace with your dynamic IP if needed
-    const stopUrl = `http://localhost:8980/metronms/api/v2/nodemanageview/obc/reboot/1212`;
+    const stopUrl = `api/v2/nodemanageview/obc/reboot/${nodeDataId}`;
 
     // Stop service
     const stopResponse = await fetch(stopUrl, { method: "GET" });

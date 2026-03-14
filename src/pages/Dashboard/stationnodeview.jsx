@@ -87,13 +87,13 @@ const StationNodeDetails = () => {
   const renderCurrentTab = (value) => {
     switch (value) {
       case 'monitoring':
-        return <SnSummaryTab nodeItemDt={nodeItemDt} />
+        return <SnSummaryTab />
         break;
       case 'events':
         return <SnEventTab />
         break;
       case 'summary':
-      return <SnConfigurationTab nodeItemDt={nodeItemDt} />
+      return <SnConfigurationTab  />
       break;
       default:
         break;
@@ -117,7 +117,7 @@ const StationNodeDetails = () => {
 
               <ul className="nodelist">
                 <li><a>Node View</a></li>
-                <li><a href={`http://${nodeItemDt.ipAddress}`} target="_blank">{nodeItemDt.ipAddress || nodeIpaddress}</a></li>
+                <li><a href={`http://${nodeItemDt.ipAddress}`} target="_blank">{nodeItemDt.ipAddress}</a></li>
                 <li onClick={() => handleRowClick('summary')} className={`${currentTab === 'summary' ? 'active' : ''}`}> <a> <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Summary</a></li>
                 <li onClick={() => handleRowClick('monitoring')} className={`${currentTab === 'monitoring' ? 'active' : ''}`}> <a> <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Monitoring</a></li>
                 <li onClick={() => handleRowClick('events')} className={`${currentTab === 'events' ? 'active' : ''}`}> <a> <i

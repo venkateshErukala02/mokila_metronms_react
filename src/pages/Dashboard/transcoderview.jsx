@@ -37,48 +37,48 @@ const TranscoderView = () => {
       },[nodeIpaddress]);
     
 
-    // const getServerStatusDt = async (url) => {
-    //     setIsLoading(true);
-    //     setIsError({ status: false, msg: "" });
-    //     try {
-    //         const username = "admin";
-    //         const password = "admin";
-    //         const token = btoa(`${username}:${password}`);
-    //         const options = {
-    //             method: "GET",
-    //             headers: {
-    //                 "Authorization": `Basic ${token}`,
-    //                 "Content-Type": "application/json",
-    //             },
-    //         };
-    //         const response = await fetch(url);
-    //         const data = await response.json();
+    const getServerStatusDt = async (url) => {
+        setIsLoading(true);
+        setIsError({ status: false, msg: "" });
+        try {
+            const username = "admin";
+            const password = "admin";
+            const token = btoa(`${username}:${password}`);
+            const options = {
+                method: "GET",
+                headers: {
+                    "Authorization": `Basic ${token}`,
+                    "Content-Type": "application/json",
+                },
+            };
+            const response = await fetch(url);
+            const data = await response.json();
 
-    //         if (response.ok) {
-    //             setIsLoading(false);
+            if (response.ok) {
+                setIsLoading(false);
 
 
-    //             setTranscoderData(data);
-    //             setIsError({ status: false, msg: "" });
-    //         } else {
-    //             throw new Error("Data not found");
-    //         }
-    //     } catch (error) {
-    //         setIsLoading(false);
-    //         setIsError({ status: true, msg: error.message });
-    //     }
-    // };
+                setTranscoderData(data);
+                setIsError({ status: false, msg: "" });
+            } else {
+                throw new Error("Data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message });
+        }
+    };
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         const nodeId = localStorage.getItem('nodeId');
-    //         let url = `http://${nodeIpaddress}:8084/transcoder/api/v1/config`;
-    //       //let url = 'http://localhost:8980/transcoder/api/v1/config';
+    useEffect(() => {
+        const fetchData = async () => {
+            const nodeId = localStorage.getItem('nodeId');
+            let url = `http://${nodeIpaddress}:8084/transcoder/api/v1/config`;
+          //let url = '/transcoder/api/v1/config';
 
-    //         await getServerStatusDt(url);
-    //     };
-    //     fetchData();
-    // }, []);
+            await getServerStatusDt(url);
+        };
+        fetchData();
+    }, []);
 
     useEffect(() => {
         if (nodeDataId) {
@@ -148,7 +148,7 @@ const TranscoderView = () => {
 
                             <ul className="nodelist">
                                 <li><a>Node View</a></li>
-                                <li><a href={`http://${IPadd}`} target="_blank">{IPadd}</a></li>
+                                <li><a href={`http://${transcoderData?.System?.nwkip}`} target="_blank">{transcoderData?.System?.nwkip}</a></li>
                                 <li onClick={() => handleRowClick('summary')} className={`${currentTab === 'summary' ? 'active' : ''}`}> <a>  <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Summary</a></li>
                                  <li onClick={() => handleRowClick('monitoring')} className={`${currentTab === 'monitoring' ? 'active' : ''}`}> <a>  <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Monitoring</a></li>
                                 <li onClick={() => handleRowClick('events')} className={`${currentTab === 'events' ? 'active' : ''}`}> <a> <i

@@ -7,7 +7,7 @@ import bootloader from "../../assets/img/bootloader.png";
 import NetworkMonitoringDashboard from "./nodeviewchart";
 
 
-const SnSummaryTab = ({ nodeItemDt }) => {
+const SnSummaryTab = ({  }) => {
 
   return (
     <>

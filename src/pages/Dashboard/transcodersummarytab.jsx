@@ -74,6 +74,23 @@ const [triggerConfig,setTriggerConfig] = useState(0);
 
 
 
+ const nodeDataId = useSelector((state) => state.node?.node?.nodeId);
+ const nodeLocation = useSelector((state) => state.node.node.location) || localStorage.getItem('nodeLocation');
+    const nodeIpaddress = useSelector((state) => state.node.node.ipAddress) || localStorage.getItem('nodeIpaddress');
+
+    useEffect(()=>{
+        if(nodeDataId){
+          localStorage.setItem('nodeId',nodeDataId);
+    
+        }
+      },[nodeDataId]);
+    
+      useEffect(()=>{
+        if(nodeIpaddress){
+          localStorage.setItem('nodeIpaddress',nodeIpaddress);
+        }
+      },[nodeIpaddress]);
+
 const [transcoderStats, setTranscoderStats] = useState({
      System: {
        firmware: '',
@@ -167,7 +184,7 @@ const [transcoderStats, setTranscoderStats] = useState({
         const fetchData = async () => {
             const nodeId = localStorage.getItem('nodeId');
             let url = `http://${nodeIpaddress}:8084/transcoder/api/v1/config`;
-          //let url = 'http://localhost:8980/transcoder/api/v1/config';
+          //let url = '/transcoder/api/v1/config';
 
             await getServerStatus(url);
         };
@@ -209,7 +226,7 @@ const handleQuadChange = (name, value) => {
     // const ip = navState?.ip || "unknown";
 
     intervalRef.current = setInterval(() => {
-      fetchCamStatus('192.168.66.12', terminalData.camName);
+      fetchCamStatus(nodeIpaddress, terminalData.camName);
     }, 1000); // 30 seconds
   }
 
@@ -263,7 +280,7 @@ const handleQuadChange = (name, value) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            let url = `http://localhost:8980/metronms/api/v2/troubleshoot/transcoder/192.168.66.12/servicecheck`;
+            let url = `api/v2/troubleshoot/transcoder/${nodeIpaddress}/servicecheck`;
             await getServiceCheckStatus(url);
         };
         fetchData();
@@ -417,9 +434,7 @@ useEffect(() => {
         setIsEditMode(true);
     }
 
-    const nodeLocation = useSelector((state) => state.node.node.location) || localStorage.getItem('nodeLocation');
-    const nodeIpaddress = useSelector((state) => state.node.node.ipAddress) || localStorage.getItem('nodeIpaddress');
-
+    
 
 
      function formatValue(val) {
@@ -440,7 +455,7 @@ useEffect(() => {
 
 
 const fetchCamStatus = async (camName) => {
-  const url = `http://localhost:8980/metronms/api/v2/troubleshoot/transcoder/192.168.66.12/cameraping/${camName}`;
+  const url = `api/v2/troubleshoot/transcoder/${nodeIpaddress}/cameraping/${camName}`;
 
   try {
     setIsLoading(true);
@@ -524,9 +539,8 @@ const handleCamStatus = async (camName) => {
 const rebootQuadTranscoderService = async () => {
   try {
     setIsApplyingQuad(true);
-    const ip = "192.168.66.12"; // replace with your dynamic IP if needed
-    const stopUrl = `http://${ip}:8084/transcoder/api/v1/service/stop`;
-    const startUrl = `http://${ip}:8084/transcoder/api/v1/service/start`;
+    const stopUrl = `http://${nodeIpaddress}:8084/transcoder/api/v1/service/stop`;
+    const startUrl = `http://${nodeIpaddress}:8084/transcoder/api/v1/service/start`;
 
     // Stop service
     const stopResponse = await fetch(stopUrl, { method: "POST" });
@@ -561,9 +575,8 @@ const rebootQuadTranscoderService = async () => {
 const rebootRstpTranscoderService = async () => {
   try {
     setIsApplyingRstpurl(true);
-    const ip = "192.168.66.12"; // replace with your dynamic IP if needed
-    const stopUrl = `http://${ip}:8084/transcoder/api/v1/service/stop`;
-    const startUrl = `http://${ip}:8084/transcoder/api/v1/service/start`;
+    const stopUrl = `http://${nodeIpaddress}:8084/transcoder/api/v1/service/stop`;
+    const startUrl = `http://${nodeIpaddress}:8084/transcoder/api/v1/service/start`;
 
     // Stop service
     const stopResponse = await fetch(stopUrl, { method: "POST" });
@@ -614,7 +627,7 @@ const rebootRstpTranscoderService = async () => {
                 },
                 body: JSON.stringify(requestBody)
             };
-            const response = await fetch(`http://localhost:8980/metronms/api/v2/nodemanageview/tranquad/1170`,options);
+            const response = await fetch(`api/v2/nodemanageview/tranquad/${nodeDataId}`,options);
             // const data = await response.json();
 
         let data = null;
@@ -661,7 +674,7 @@ const rebootRstpTranscoderService = async () => {
                 },
                  body: JSON.stringify(requestBody)
             };
-            const response = await fetch(`http://localhost:8980/metronms/api/v2/nodemanageview/trancam/1170`,options);
+            const response = await fetch(`api/v2/nodemanageview/trancam/${nodeDataId}`,options);
             // const data = await response.json();
 
         let data = null;
@@ -1078,7 +1091,7 @@ const rebootRstpTranscoderService = async () => {
                                                         <ul className="terminal-list">
                                                         {terminalData.pingHistory.map((ping, index) => (
                                                             <li key={index}>
-                                                            {Math.round(ping.bytes)} bytes from {'192.168.66.12'|| "unknown"} :
+                                                            {Math.round(ping.bytes)} bytes from {nodeIpaddress|| "unknown"} :
                                                             time =
                                                             {typeof ping.ms === "number"
                                                                 ? ping.ms.toFixed(3)

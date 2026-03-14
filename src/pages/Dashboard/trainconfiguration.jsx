@@ -4,13 +4,33 @@ import nodeimage from "../../assets/img/suinodeview.png";
 import radioimage from "../../assets/img/radiomode.png";
 import bootloader from "../../assets/img/bootloader.png";
 import SignalIconn from "./configsignal";
+import { useSelector } from "react-redux";
 
 
 
 
 
-const TrainConfigurationTab = ({ nodeItemDt }) => {
+const TrainConfigurationTab = ({  }) => {
 
+
+  const [nodeItemDt, setNodeItemDt] = useState([]);
+
+     const nodeDataId = useSelector((state) => state.node?.node?.nodeId || state.node?.node?.id) ?? localStorage.getItem('nodeId');
+     const nodeLocation = useSelector((state) => state.node.node.location) || localStorage.getItem('nodeLocation');
+        const nodeIpaddress = useSelector((state) => state.node.node.ipAddress) || localStorage.getItem('nodeIpaddress');
+    
+        useEffect(()=>{
+            if(nodeDataId){
+              localStorage.setItem('nodeId',nodeDataId);
+        
+            }
+          },[nodeDataId]);
+        
+          useEffect(()=>{
+            if(nodeIpaddress){
+              localStorage.setItem('nodeIpaddress',nodeIpaddress);
+            }
+          },[nodeIpaddress]);
 
     const [isLoading, setIsLoading] = useState("");
     const [isError, setIsError] = useState("");
@@ -274,45 +294,45 @@ useEffect(() => {
     ];
 
 
-    //   const getConfigSummaryDt = async (url) => {
-    //     setIsLoading(true);
-    //     setIsError({ status: false, msg: "" });
-    //     try {
-    //       const username = "admin";
-    //       const password = "admin";
-    //       const token = btoa(`${username}:${password}`);
-    //       const options = {
-    //         method: "GET",
-    //         headers: {
-    //           "Authorization": `Basic ${token}`,
-    //           "Content-Type": "application/json",
-    //         },
-    //       };
-    //       const response = await fetch(url, options);
-    //       const data = await response.json();
+      const getConfigSummaryDt = async (url) => {
+        setIsLoading(true);
+        setIsError({ status: false, msg: "" });
+        try {
+          const username = "admin";
+          const password = "admin";
+          const token = btoa(`${username}:${password}`);
+          const options = {
+            method: "GET",
+            headers: {
+              "Authorization": `Basic ${token}`,
+              "Content-Type": "application/json",
+            },
+          };
+          const response = await fetch(url, options);
+          const data = await response.json();
 
-    //       if (response.ok) {
-    //         setIsLoading(false);
+          if (response.ok) {
+            setIsLoading(false);
 
 
-    //         setNodeItemDt(data);
-    //         setIsError({ status: false, msg: "" });
-    //       } else {
-    //         throw new Error("Data not found");
-    //       }
-    //     } catch (error) {
-    //       setIsLoading(false);
-    //       setIsError({ status: true, msg: error.message });
-    //     }
-    //   };
+            setNodeItemDt(data);
+            setIsError({ status: false, msg: "" });
+          } else {
+            throw new Error("Data not found");
+          }
+        } catch (error) {
+          setIsLoading(false);
+          setIsError({ status: true, msg: error.message });
+        }
+      };
 
-    //   useEffect(() => {
-    //     const fetchData = async () => {
-    //       let url = `api/v2/nodemanageview/summarydb?nodeId=${nodeDataId}`;
-    //       await getConfigSummaryDt(url);
-    //     };
-    //     fetchData();
-    //   }, [nodeDataId]);
+      useEffect(() => {
+        const fetchData = async () => {
+          let url = `api/v2/nodemanageview/summarydb?nodeId=${nodeDataId}`;
+          await getConfigSummaryDt(url);
+        };
+        fetchData();
+      }, [nodeDataId]);
 
 
    const handleApplyConfiguration = async () => {
@@ -332,7 +352,7 @@ useEffect(() => {
     };
 
     const response = await fetch(
-      `http://localhost:8980/metronms/api/v2/nodelinks/radio/reboot?nodeId=1429`,
+      `api/v2/nodelinks/radio/reboot?nodeId=${nodeDataId}`,
       options
     );
 
@@ -368,7 +388,7 @@ useEffect(() => {
                     "Content-Type": "application/json",
                 },
             };
-            const response = await fetch(`http://localhost:8980/metronms/api/v2/nodelinks/radio/commit?nodeId=1429`,options);
+            const response = await fetch(`api/v2/nodelinks/radio/commit?nodeId=${nodeDataId}`,options);
               const text = await response.text();
         
 
@@ -400,7 +420,7 @@ useEffect(() => {
                 },
                  body: JSON.stringify(changedConfig)
             };
-            const response = await fetch(`http://localhost:8980/metronms/api/v2/nodelinks/setRadio/Config?nodeId=1429&deviceType=TR`,options);
+            const response = await fetch(`api/v2/nodelinks/setRadio/Config?nodeId=${nodeDataId}&deviceType=TR`,options);
             // const data = await response.json();
 
         let data = null;
@@ -548,7 +568,7 @@ useEffect(() => {
 
     useEffect(() => {
         const fetchData = async () => {
-            let url = `http://localhost:8980/metronms/api/v2/nodelinks/getRadio/Config?nodeId=1429&deviceType=TR`;
+            let url = `api/v2/nodelinks/getRadio/Config?nodeId=${nodeDataId}&deviceType=TR`;
             await getConfigDt(url);
         };
         fetchData();
@@ -589,7 +609,7 @@ useEffect(() => {
 
     useEffect(() => {
         const fetchData = async () => {
-            let url = `http://localhost:8980/metronms/api/v2/nodelinks/trainlinkstats?nodeId=1429`;
+            let url = `api/v2/nodelinks/trainlinkstats?nodeId=${nodeDataId}`;
             await getServiceCheckDt(url);
         };
         fetchData();

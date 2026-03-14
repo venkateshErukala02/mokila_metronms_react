@@ -4,12 +4,20 @@ import nodeimage from "../../assets/img/suinodeview.png";
 import radioimage from "../../assets/img/radiomode.png";
 import bootloader from "../../assets/img/bootloader.png";
 import SignalIconn from "./configsignal";
+import { useSelector } from "react-redux";
 
 
 
 
 
-const SnConfigurationTab = ({ nodeItemDt }) => {
+const SnConfigurationTab = ({  }) => {
+
+const count = useSelector((state) => state);
+  const isVisible = useSelector((state) => state.visibility.isVisible);
+     const nodeDataId = useSelector((state) => state.node?.node?.nodeId || state.node?.node?.id) ?? localStorage.getItem('nodeId');
+
+  const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress || state.node?.node?.label);
+
 
 
     const [isLoading, setIsLoading] = useState("");
@@ -64,7 +72,21 @@ const [changedConfig, setChangedConfig] = useState(
 const [isSaving, setIsSaving] = useState(false);
 const [isApplying, setIsApplying] = useState(false);
 const [triggerConfig,setTriggerConfig] = useState(0);
+  const [nodeItemDt, setNodeItemDt] = useState([]);
 
+
+    useEffect(() => {
+    if (nodeDataId) {
+      localStorage.setItem('nodeId', nodeDataId);
+
+    }
+  }, [nodeDataId]);
+
+  useEffect(() => {
+    if (nodeIpaddress) {
+      localStorage.setItem('nodeIpaddress', nodeIpaddress);
+    }
+  }, [nodeIpaddress]);
 
 // When API data (configData) arrives, update state
 useEffect(() => {
@@ -273,45 +295,45 @@ useEffect(() => {
     
 
 
-    //   const getConfigSummaryDt = async (url) => {
-    //     setIsLoading(true);
-    //     setIsError({ status: false, msg: "" });
-    //     try {
-    //       const username = "admin";
-    //       const password = "admin";
-    //       const token = btoa(`${username}:${password}`);
-    //       const options = {
-    //         method: "GET",
-    //         headers: {
-    //           "Authorization": `Basic ${token}`,
-    //           "Content-Type": "application/json",
-    //         },
-    //       };
-    //       const response = await fetch(url, options);
-    //       const data = await response.json();
+      const getConfigSummaryDt = async (url) => {
+        setIsLoading(true);
+        setIsError({ status: false, msg: "" });
+        try {
+          const username = "admin";
+          const password = "admin";
+          const token = btoa(`${username}:${password}`);
+          const options = {
+            method: "GET",
+            headers: {
+              "Authorization": `Basic ${token}`,
+              "Content-Type": "application/json",
+            },
+          };
+          const response = await fetch(url, options);
+          const data = await response.json();
 
-    //       if (response.ok) {
-    //         setIsLoading(false);
+          if (response.ok) {
+            setIsLoading(false);
 
 
-    //         setNodeItemDt(data);
-    //         setIsError({ status: false, msg: "" });
-    //       } else {
-    //         throw new Error("Data not found");
-    //       }
-    //     } catch (error) {
-    //       setIsLoading(false);
-    //       setIsError({ status: true, msg: error.message });
-    //     }
-    //   };
+            setNodeItemDt(data);
+            setIsError({ status: false, msg: "" });
+          } else {
+            throw new Error("Data not found");
+          }
+        } catch (error) {
+          setIsLoading(false);
+          setIsError({ status: true, msg: error.message });
+        }
+      };
 
-    //   useEffect(() => {
-    //     const fetchData = async () => {
-    //       let url = `api/v2/nodemanageview/summarydb?nodeId=${nodeDataId}`;
-    //       await getConfigSummaryDt(url);
-    //     };
-    //     fetchData();
-    //   }, [nodeDataId]);
+      useEffect(() => {
+        const fetchData = async () => {
+          let url = `api/v2/nodemanageview/summarydb?nodeId=${nodeDataId}`;
+          await getConfigSummaryDt(url);
+        };
+        fetchData();
+      }, [nodeDataId]);
 
 
 
@@ -437,7 +459,7 @@ useEffect(() => {
 
     useEffect(() => {
         const fetchData = async () => {
-            let url = `http://localhost:8980/metronms/api/v2/nodelinks/getRadio/Config?nodeId=1690&deviceType=SN`;
+            let url = `api/v2/nodelinks/getRadio/Config?nodeId=${nodeDataId}&deviceType=SN`;
             await getConfigDt(url);
         };
         fetchData();
@@ -475,7 +497,7 @@ useEffect(() => {
 
     useEffect(() => {
         const fetchData = async () => {
-            let url = `http://localhost:8980/metronms/api/v2/nodelinks/linkstats?nodeId=1690`;
+            let url = `api/v2/nodelinks/linkstats?nodeId=${nodeDataId}`;
             await getServiceCheckDt(url);
         };
         fetchData();
@@ -513,7 +535,7 @@ useEffect(() => {
     };
 
     const response = await fetch(
-      `http://localhost:8980/metronms/api/v2/nodelinks/radio/reboot?nodeId=1690`,
+      `api/v2/nodelinks/radio/reboot?nodeId=${nodeDataId}`,
       options
     );
 
@@ -531,7 +553,7 @@ useEffect(() => {
         setTriggerConfig((prev) => prev +1);
       setTimeout(() => {
         getConfigDt(
-          `http://localhost:8980/metronms/api/v2/nodelinks/getRadio/Config?nodeId=1690&deviceType=SN`
+          `api/v2/nodelinks/getRadio/Config?nodeId=${nodeDataId}&deviceType=SN`
         );
       }, 120000);
 
@@ -555,7 +577,7 @@ useEffect(() => {
                     "Content-Type": "application/json",
                 },
             };
-            const response = await fetch(`http://localhost:8980/metronms/api/v2/nodelinks/radio/commit?nodeId=1690`,options);
+            const response = await fetch(`api/v2/nodelinks/radio/commit?nodeId=${nodeDataId}`,options);
               const text = await response.text();
         
 
@@ -587,7 +609,7 @@ const handleSaveConfiguration = async () => {
                 },
                  body: JSON.stringify(changedConfig)
             };
-            const response = await fetch(`http://localhost:8980/metronms/api/v2/nodelinks/setRadio/Config?nodeId=1690&deviceType=TR`,options);
+            const response = await fetch(`api/v2/nodelinks/setRadio/Config?nodeId=${nodeDataId}&deviceType=SN`,options);
             // const data = await response.json();
 
         let data = null;
