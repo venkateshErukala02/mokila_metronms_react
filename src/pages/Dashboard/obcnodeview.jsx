@@ -21,11 +21,56 @@ const ObcNodeView = () => {
   const isVisible = useSelector((state) => state.visibility.isVisible);
   const [currentTab, setCurrentTab] = useState('summary')
   const [nodeItemDt, setNodeItemDt] = useState([]);
+    const [diskData, setDiskData] = useState("");
 
   // const nodeDataId = useSelector((state) => state.node.node.nodeId);
   const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
 
   const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress)|| localStorage.getItem('nodeIpaddress');
+
+
+   const getDiskData = async (url) => {
+        setIsLoading(true);
+        setIsError({ status: false, msg: "" });
+        try {
+            const username = "admin";
+            const password = "admin";
+            const token = btoa(`${username}:${password}`);
+            const options = {
+                method: "GET",
+                headers: {
+                    "Authorization": `Basic ${token}`,
+                    "Content-Type": "application/json",
+                },
+            };
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (response.ok) {
+                setIsLoading(false);
+                setDiskData(data);
+                setIsError({ status: false, msg: "" });
+            } else {
+                throw new Error("Data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message });
+        }
+    };
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            let url = `http://${nodeIpaddress}:8084/${currentTab}/api/v1/disk`;
+            await getDiskData(url);
+        };
+        fetchData();
+
+        const intervalId = setInterval(fetchData, 30000);
+
+        return () => clearInterval(intervalId);
+    }, [nodeIpaddress, currentTab]);
 
   const getServerStatusDt = async (url) => {
     setIsLoading(true);

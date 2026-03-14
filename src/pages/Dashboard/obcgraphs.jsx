@@ -114,23 +114,23 @@ const handleCpuchart=()=>{
         <article className="container-fluid">
           <article className="row">
             <article className="col-md-12 graphbord2">
-              <article className="latencyfullwidthcl">
+              <article className="latencyfullwidthcl-monitortab">
                 <TxRxDiffchart currentTab='obc' graphOption={graphOption} graphOptionValue={graphOptionValue}/>
               </article>
             </article>
               <article className="col-md-12" style={{marginTop:'20px'}}>
-                 <article className="latencyfullwidthcl graphbord2">
+                 <article className="latencyfullwidthcl-monitortab graphbord2">
                  <TxErrorChart currentTab='obc' graphOption={graphOption} graphOptionValue={graphOptionValue}/>     
                  </article>
                 </article>
              </article>
             </article>
                  <article className="col-md-12" style={{marginTop:'20px',padding:'0px'}}>
-              <article className="latencyfullwidthcl">
+              <article className="latencyfullwidthcl-monitortab">
                 <article className="latency-togglebtn cpuart-highlight" style={{textAlign:'center'}}>
                    <span className={`${cpuChartStatus === true ? 'cpu-higlight': ''}`}>CPU </span><i class={`fa-solid fa-toggle-on ${cpuChartStatus === true ? 'fa-rotate-180' : ''} `} onClick={handleCpuchart}></i> <span className={`${cpuChartStatus === true ? '': 'cpu-higlight'}`}>Latency</span>
                   </article> 
-              <article className="latencyfullwidthcl graphbord2">
+              <article className="latencyfullwidthcl-monitortab graphbord2">
                  {cpuChartStatus ? (<CpuChart currentTab='obc' graphOption={graphOption} graphOptionValue={graphOptionValue}/>) : (<LatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue}/>)}      
                        </article>
                        </article>

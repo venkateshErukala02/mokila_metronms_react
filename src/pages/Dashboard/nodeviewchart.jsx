@@ -115,14 +115,14 @@ const data = [
         <article className="container-fluid">
           <article className="row">
             <article className="col-md-12 graphbord1">
-              <article className="latencyfullwidthcl">
+              <article className="latencyfullwidthcl-monitortab">
                           <LocalSnr graphOption={graphOption} graphOptionValue={graphOptionValue} />
 
               </article>
              
             </article>
             <article className="col-md-12 graphbord2" style={{marginTop:'25px'}}>
-              <article className="latencyfullwidthcl">
+              <article className="latencyfullwidthcl-monitortab">
                 <TxChart graphOption={graphOption} graphOptionValue={graphOptionValue} />
               </article>
             </article>
@@ -131,7 +131,7 @@ const data = [
         <article className="container-fluid" style={{ marginTop: '10px' }}>
           <article className="row">
             <article className="col-md-12 graphbord1" style={{marginTop:'25px'}}>
-              <article className="latencyfullwidthcl">
+              <article className="latencyfullwidthcl-monitortab">
               
                <LatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue} />
               </article>

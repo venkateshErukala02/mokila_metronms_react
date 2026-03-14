@@ -20,7 +20,7 @@ const TrainSummaryTab = ({ nodeItemDt }) => {
 
           <article className="container-fluid">
             <article className="row" style={{ display: "flex" }}>
-              <article className="col-md-2" id="summary-1 div1" style={{minHeight:'850px',maxHeight:'850px',background:'white'}}>
+              {/* <article className="col-md-2" id="summary-1 div1" style={{minHeight:'850px',maxHeight:'850px',background:'white'}}>
                 <article>
 
                   <article className="card" id="div2">
@@ -116,9 +116,9 @@ const TrainSummaryTab = ({ nodeItemDt }) => {
                     </article>
                   </article>
                 </article>
-              </article>
+              </article> */}
 
-              <article className="col-md-10" style={{ background: 'white',borderLeft:'10px solid #cccccc' }}>
+              <article className="col-md-12" style={{ background: 'white' }}>
                 <article
                   style={{
                     backgroundColor: "white",

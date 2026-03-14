@@ -50,7 +50,9 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
     const [changedData,setChangedData] = useState({});
     const [selectedFile, setSelectedFile] = useState(null);
     const [success, setSuccess] = useState('');
-
+    const [isChanged,setIsChanged] = useState(false)
+    const [canApply, setCanApply] = useState(false);
+    const [isApplying,setIsApplying] = useState(false);
 
     const handleUpload = async (e) => {
         e.preventDefault();
@@ -72,7 +74,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
             const token = btoa(`${username}:${password}`)
             const ip = '192.168.66.6';
 
-            const response = await fetch(`http://localhost:8980/metronms/api/v2/nodemanageview/obc/patch/1212`, {
+            const response = await fetch(`http://localhost:8980/metronms/api/v2/nodemanageview/obc/patch/1212?filename=${selectedFile.name}`, {
                 method: "POST",
                 headers: {
                     'Authorization': `Basic ${token}`,
@@ -503,6 +505,8 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
     [name]: value // update top-level key
   }));
 
+   setIsChanged(true);
+
   setChangedData((prev) => ({
         ...prev,
         [name]:value
@@ -535,6 +539,8 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                 setIsLoading(false);
 
                 // setConfigData(data);
+                setCanApply(true);
+                setIsChanged(false);
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("Data not found");
@@ -548,7 +554,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
 
    const handleApplyConfiguration = async () => {
   try {
-
+        setIsApplying(true); 
     // const ip = "192.168.66.6"; // replace with your dynamic IP if needed
     const stopUrl = `http://localhost:8980/metronms/api/v2/nodemanageview/obc/reboot/1212`;
 
@@ -563,10 +569,11 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
    
 
     if (stopResponse.status === 200) {
+        setIsApplying(false); 
+        setCanApply(false);
       setIsError({ status: false, msg: "" });
       alert("Configuration applied successfully");
          setTriggerConfig((prev) => prev +1);
-
     } else {
       throw new Error("Data not found");
     }
@@ -574,7 +581,8 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
   } catch (error) {
     setIsError({ status: true, msg: error.message });
   } finally {
-    // setIsApplying(false);
+        setIsApplying(false); 
+         setCanApply(false);
   }
 };
 
@@ -722,28 +730,30 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                                     <article>
                                                                         <button
                                                                             className="createbtn"
-                                                                        onClick={handleSaveConfiguration}
-                                                                        // style={{
-                                                                        //     pointerEvents: isEditMode ? 'auto' : 'none', 
-                                                                        //     opacity: isEditMode ? 1 : 0.6               
-                                                                        // }}
+                                                                            type="button"
+                                                                           onClick={handleSaveConfiguration}
+                                                                         disabled={!isChanged}
+                                                                        style={{
+                                                                            pointerEvents: (!isChanged) ? 'none' : 'auto',
+                                                                            opacity: (!isChanged) ? 0.6 : 1          
+                                                                        }}
                                                                         >
                                                                             Save
                                                                         </button>
-
                                                                     </article>
                                                                     <article>
                                                                         <button
                                                                             className="createbtn"
-                                                                        onClick={handleApplyConfiguration}
-                                                                        // style={{
-                                                                        //     pointerEvents: isEditMode ? 'auto' : 'none', 
-                                                                        //     opacity: isEditMode ? 1 : 0.6               
-                                                                        // }}
+                                                                            type="button"
+                                                                            disabled={!canApply || isApplying}
+                                                                            onClick={handleApplyConfiguration}
+                                                                            style={{
+                                                                                pointerEvents: (!canApply || isApplying) ? 'none' : 'auto',
+                                                                                opacity: (!canApply || isApplying) ? 0.6 : 1
+                                                                            }}
                                                                         >
-                                                                            Apply
+                                                                            {isApplying ? "Applying..." : "Apply"}
                                                                         </button>
-
                                                                     </article>
 
                                                                 </article>
@@ -751,23 +761,23 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                             </article>
                                                             <article className="col-6">
                                                                 <article className="regioncont">
-                <label htmlFor="" className="disfilelabel" style={{ marginBottom: '1px' }}>Select your file</label>
-                <div className="filename-display">
-                    {selectedFile ? selectedFile.name : 'No file selected'}
-                </div>
-                <input
-                    className="dislineinputcl"
-                    type="file"
-                    onChange={handleFileChange}
-                    id="hiddenFileInput"
-                    style={{ display: "none" }}
-                />
-                <button onClick={() => document.getElementById("hiddenFileInput").click()} className="attachcl">
-                    <i className="fa-solid fa-paperclip"></i></button>
-                <button onClick={handleUpload} className="uploadcl"><i className="fa-solid fa-upload"></i></button>
-                {/* <button onClick={downloadSampleCSV} className="createbtn">Sample.csv<i className="fa fa-file-text" aria-hidden="true"></i></button> */}
+                                                                    <label htmlFor="" className="config-label" style={{ marginBottom: '1px',display:'block' }}>Select your patchfile</label>
+                                                                    <div className="filename-display" style={{fontSize:'14px'}}>
+                                                                        {selectedFile ? selectedFile.name : 'No file selected'}
+                                                                    </div>
+                                                                    <input
+                                                                        className="dislineinputcl"
+                                                                        type="file"
+                                                                        onChange={handleFileChange}
+                                                                        id="hiddenFileInput"
+                                                                        style={{ display: "none" }}
+                                                                    />
+                                                                    <button onClick={() => document.getElementById("hiddenFileInput").click()} className="attachcl">
+                                                                        <i className="fa-solid fa-paperclip"></i></button>
+                                                                    <button onClick={handleUpload} className="uploadcl"><i className="fa-solid fa-upload"></i></button>
+                                                                    {/* <button onClick={downloadSampleCSV} className="createbtn">Sample.csv<i className="fa fa-file-text" aria-hidden="true"></i></button> */}
 
-            </article>
+                                                                        </article>
                                                             </article>
 
                                             </article>

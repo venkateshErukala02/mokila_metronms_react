@@ -17,7 +17,7 @@ const ObcSummaryTab = ({ nodeItemDt, currentTab }) => {
   const [upTimeData, setUpTimeData] = useState([]);
   const [isLoading, setIsLoading] = useState("");
   const [isError, setIsError] = useState("");
-  const [diskData, setDiskData] = useState("");
+  // const [diskData, setDiskData] = useState("");
   const [currentObcsubTab, setCurrentObcsubTab] = useState('obc')
 
   const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress) || localStorage.getItem('nodeIpaddress');
@@ -78,47 +78,47 @@ const ObcSummaryTab = ({ nodeItemDt, currentTab }) => {
   }, [nodeIpaddress, currentTab]);
 
 
-  const getDiskData = async (url) => {
-    setIsLoading(true);
-    setIsError({ status: false, msg: "" });
-    try {
-      const username = "admin";
-      const password = "admin";
-      const token = btoa(`${username}:${password}`);
-      const options = {
-        method: "GET",
-        headers: {
-          "Authorization": `Basic ${token}`,
-          "Content-Type": "application/json",
-        },
-      };
-      const response = await fetch(url);
-      const data = await response.json();
+  // const getDiskData = async (url) => {
+  //   setIsLoading(true);
+  //   setIsError({ status: false, msg: "" });
+  //   try {
+  //     const username = "admin";
+  //     const password = "admin";
+  //     const token = btoa(`${username}:${password}`);
+  //     const options = {
+  //       method: "GET",
+  //       headers: {
+  //         "Authorization": `Basic ${token}`,
+  //         "Content-Type": "application/json",
+  //       },
+  //     };
+  //     const response = await fetch(url);
+  //     const data = await response.json();
 
-      if (response.ok) {
-        setIsLoading(false);
-        setDiskData(data);
-        setIsError({ status: false, msg: "" });
-      } else {
-        throw new Error("Data not found");
-      }
-    } catch (error) {
-      setIsLoading(false);
-      setIsError({ status: true, msg: error.message });
-    }
-  };
+  //     if (response.ok) {
+  //       setIsLoading(false);
+  //       setDiskData(data);
+  //       setIsError({ status: false, msg: "" });
+  //     } else {
+  //       throw new Error("Data not found");
+  //     }
+  //   } catch (error) {
+  //     setIsLoading(false);
+  //     setIsError({ status: true, msg: error.message });
+  //   }
+  // };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      let url = `http://${nodeIpaddress}:8084/${currentTab}/api/v1/disk`;
-      await getDiskData(url);
-    };
-    fetchData();
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     let url = `http://${nodeIpaddress}:8084/${currentTab}/api/v1/disk`;
+  //     await getDiskData(url);
+  //   };
+  //   fetchData();
 
-    const intervalId = setInterval(fetchData, 30000);
+  //   const intervalId = setInterval(fetchData, 30000);
 
-  return () => clearInterval(intervalId);
-  }, [nodeIpaddress, currentTab]);
+  // return () => clearInterval(intervalId);
+  // }, [nodeIpaddress, currentTab]);
 
 
   const renderCurrentObcsubTab = (value) => {
@@ -157,13 +157,12 @@ const ObcSummaryTab = ({ nodeItemDt, currentTab }) => {
 
           <article className="container-fluid">
             <article className="row" style={{ display: "flex" }}>
-              <article className="col-md-2" id="summary-1 div1" style={{ minHeight: '850px', maxHeight: '934px', background: 'white' }}>
+              {/* <article className="col-md-2" id="summary-1 div1" style={{ minHeight: '850px', maxHeight: '934px', background: 'white' }}>
                 <article>
 
                   <article className="card" id="div2">
                     <article style={{ margin: "auto", textAlign: 'center' }}>
                       <img className="nodeimg" style={{ width: '70px', height: '58px' }} src={obcimage} alt="node" />
-                      {/* <label className="summarymode"> {nodeItemDt.nodeDesc}</label> */}
                       <label className="summarymode" style={{ display: 'block' }}> Cab - {nodeItemDt?.carnumber || "loading.."}</label>
                       <label className="summarysytem"><i className="fas fa-arrow-up fa-1x ng-scope "></i>{upTimeData}</label>
                     </article>
@@ -214,9 +213,9 @@ const ObcSummaryTab = ({ nodeItemDt, currentTab }) => {
                     </article>
                   </article>
                 </article>
-              </article>
+              </article> */}
 
-              <article className="col-md-10" style={{ background: 'white', borderLeft: '10px solid #cccccc', minHeight: '934px' }}>
+              <article className="col-md-12" style={{ background: 'white', minHeight: '934px' }}>
                 <article
                   style={{
                     backgroundColor: "white",
