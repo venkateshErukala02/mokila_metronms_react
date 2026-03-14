@@ -725,7 +725,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                         {item.status === "success" ? (
                                                             <span>✔ {item.status === "success" ? "Running" : "Failed"} </span>
                                                         ) : item.status === "failure" ? (
-                                                            <span>✖ Failed</span>
+                                                            <span className="failure-color">✖ Failed</span>
                                                         ) : (
                                                             <span className="pulse">Checking...</span>
                                                         )}
@@ -757,7 +757,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                                 <span>✔ {item.status === "success" ? "Pinging" : "Failed"}
                                                                 </span>
                                                             ) : item.status === "failure" ? (
-                                                                <span className="">✖ Not Pinging
+                                                                <span className="failure-color">✖ Not Pinging
                                                                 </span>
                                                             ) : (
                                                                 <span className="pulse">Checking...</span>

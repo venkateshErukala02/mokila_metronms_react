@@ -4341,6 +4341,9 @@ svg *:focus {
   padding-right: 3rem;
 }
 
+.failure-color{
+    color: red !important;
+}
  /* width={700} height={240} */
 
 /*  */

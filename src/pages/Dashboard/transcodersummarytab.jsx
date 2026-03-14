@@ -11,18 +11,7 @@ import { use } from "react";
 
 
 const TcSummaryTab = ({  }) => {
-    // let cam1 = transcoderData?.RSTPURL?.["cam1.url"]
-    // let cam2 = transcoderData?.RSTPURL?.["cam2.url"]
-    // let cam3 = transcoderData?.RSTPURL?.["cam3.url"]
-    // let cam4 = transcoderData?.RSTPURL?.["cam4.url"]
-    // let bitrate = transcoderData?.Quad?.bitrate
-    // let prfle = transcoderData?.Quad?.profile
-    // let xps = transcoderData?.Quad?.xpos
-    // let yps = transcoderData?.Quad?.ypos
-        const [transcoderData, setTranscoderData] = useState([]);
-
-
-
+  
     const checkServicesList = [
     { name: "vtranscoder", displayName: "Transcoder Service" },
     { name: "gst-health", displayName: "GST Health" },
@@ -454,7 +443,7 @@ useEffect(() => {
   }
 
 
-const fetchCamStatus = async (camName) => {
+const fetchCamStatus = async (nodeIpaddress,camName) => {
   const url = `api/v2/troubleshoot/transcoder/${nodeIpaddress}/cameraping/${camName}`;
 
   try {
@@ -483,9 +472,9 @@ const fetchCamStatus = async (camName) => {
 
     // Parse microseconds
     let ms, bytes;
-
-    if (data?.value) {
-      const microseconds = parseFloat(data.value.replace("µs", ""));
+    const pingValue = data?.data?.[camName];
+    if (pingValue) {
+      const microseconds = parseFloat(pingValue.replace("µs", ""));
       ms = microseconds / 1000;   // convert to milliseconds
       bytes = microseconds / 600; // your custom formula
     } else {
@@ -530,10 +519,14 @@ const handleCamStatus = async (camName) => {
     loading: true
   });
 
-  await fetchCamStatus(camName);
+  await fetchCamStatus(nodeIpaddress,camName);
   
 };
 
+
+
+const pingMs = parseFloat('620.372'.replace('µs', '')) / 1000;
+const bytes = 620.372 / 600;
 
 
 const rebootQuadTranscoderService = async () => {
@@ -1025,7 +1018,7 @@ const rebootRstpTranscoderService = async () => {
                                             {item.status === "success" ? (
                                             <span>✔ {item.status === "success" ?  "Running" : "Failed" } </span>
                                             ) : item.status === "failure" ? (
-                                            <span>✖ Failed</span>
+                                            <span className="failure-color">✖ Failed</span>
                                             ) : (
                                             <span className="pulse">Checking...</span>
                                             )}
@@ -1058,7 +1051,7 @@ const rebootRstpTranscoderService = async () => {
                                                 <button type="button" className="createbtn" onClick={() => handleCamStatus(item.name)}>ping</button>
                                                  </span>
                                                 ) : item.status === "failure" ? (
-                                                <span className="">✖ Not Pinging {item.value ? `(${formatValue(item.value)})` : ""}  
+                                                <span className="failure-color" >✖ Not Pinging {item.value ? `(${formatValue(item.value)})` : ""}  
                                                 <button type="button" className="createbtn" onClick={() => handleCamStatus(item.name)}>ping</button>
                                                  </span>
                                                 ) : (
