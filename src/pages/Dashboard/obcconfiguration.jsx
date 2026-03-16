@@ -18,10 +18,10 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
         { name: "TDM Service", displayName: "TDM Service" },
         { name: "Driver", displayName: "Driver Service" },
         { name: "FTP Service", displayName: "FTP Service" },
-        { name: "Train Radio Connectivity", displayName: "Train Radio Connectivity" },
-        { name: "NTP Server Connectivity", displayName: "NTP Server Connectivity" },
-        { name: "Encoder Connectivity", displayName: "Encoder Connectivity" },
-        { name: "FTP Server Connectivity", displayName: "FTP Server Connectivity" },
+        { name: "Train Radio Connectivity", displayName: "Train Radio" },
+        { name: "NTP Server Connectivity", displayName: "NTP Server" },
+        { name: "Encoder Connectivity", displayName: "Encoder" },
+        { name: "FTP Server Connectivity", displayName: "FTP Server" },
     ];
     const nodeDataId = useSelector((state) => state.node?.node?.nodeId);
     const nodeIpaddress = useSelector((state) => state.node.node.ipAddress) || localStorage.getItem('nodeIpaddress');
@@ -169,7 +169,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            let url = `http://${nodeIpaddress}:8084/${currentTab}/api/v1/disk`;
+            let url = `http://${nodeIpaddress}:8084/obc/api/v1/disk`;
             await getDiskData(url);
         };
         fetchData();
@@ -516,6 +516,9 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
 };
 
 
+  
+
+
 
 
     return (
@@ -598,7 +601,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                     <article className="container-fluid">
                                         <article className="row">
                                              <h1 className="config-head">Configuration</h1>
-                                            <article className="col-12 col-md-12 quadcont" style={{display:'flex'}}>
+                                            <article className="col-12 col-md-12 rstcont" style={{display:'flex'}}>
                                                 <article className="col-6">
                                                   <article className="card-sub config-tab-wh">
                                                               
@@ -609,7 +612,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                                     />
                                                                 </article>
                                                                 </article>
-                                                                <article className="form-row-config "><label for="" className="col-5 config-label">TrainRadio IP</label><article className="col-sm-4 col-md-4 col-lg-4">
+                                                                <article className="form-row-config "><label for="" className="col-5 config-label">Train Radio IP</label><article className="col-sm-4 col-md-4 col-lg-4">
                                                                     <input type="text" className="config-input" 
                                                                     value={configData?.trainradioip || ""}
                                                                          onChange={(e) => handleObcConfigChange("trainradioip", e.target.value)}
@@ -630,14 +633,14 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                                     />
                                                                 </article>
                                                                 </article>
-                                                                <article className="form-row-config "><label for="" className="col-5 config-label">FTPserver IP</label><article className="col-sm-4 col-md-4 col-lg-4">
+                                                                <article className="form-row-config "><label for="" className="col-5 config-label">FTP Server IP</label><article className="col-sm-4 col-md-4 col-lg-4">
                                                                     <input type="text" className="config-input"
                                                                      value={configData?.ftpserverip || ""} 
                                                                          onChange={(e) => handleObcConfigChange("ftpserverip", e.target.value)}
                                                                     />
                                                                 </article>
                                                                 </article>
-                                                                <article className="form-row-config "><label for="" className="col-5 config-label">FTPserver User</label><article className="col-sm-4 col-md-4 col-lg-4">
+                                                                <article className="form-row-config "><label for="" className="col-5 config-label">FTP Server User</label><article className="col-sm-4 col-md-4 col-lg-4">
                                                                     <input type="text" className="config-input"
                                                                     value={configData?.ftpusername || ""}
 
@@ -646,7 +649,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                                 </article>
                                                                 </article>
                                                               
-                                                                <article className="form-row-config "><label for="" className="col-5 config-label">FTPserver Password</label><article className="col-sm-4 col-md-4 col-lg-4">
+                                                                <article className="form-row-config "><label for="" className="col-5 config-label">FTP Server Password</label><article className="col-sm-4 col-md-4 col-lg-4">
                                                                     <input type="text" className="config-input" 
                                                                             value={configData?.ftppassword || ""}
 
@@ -655,7 +658,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                                 </article>
                                                                 </article>
                                                              
-                                                                <article className="config-savebtn">
+                                                                <article className="config-savebtn" style={{paddingLeft:"22px"}}>
                                                                     <article>
                                                                         <button
                                                                             className="createbtn"
@@ -690,7 +693,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                             </article>
                                                             <article className="col-6">
                                                                 <article className="regioncont">
-                                                                    <label htmlFor="" className="config-label" style={{ marginBottom: '1px',display:'block' }}>Select your patchfile</label>
+                                                                    <label htmlFor="" className="config-label" style={{ marginBottom: '1px',display:'block' }}>Patch file to upload</label>
                                                                     <div className="filename-display" style={{fontSize:'14px'}}>
                                                                         {selectedFile ? selectedFile.name : 'No file selected'}
                                                                     </div>
@@ -743,7 +746,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                         </article>
                                         <div>
                                             <h3 className="configlinktitle">
-                                                Check Camera Connectivity
+                                                Device Connectivity
                                             </h3>
                                             <article>
                                                 <ul className="configlist">
@@ -754,10 +757,10 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                         >
                                                             <h6>{item.displayName}</h6>
                                                             {item.status === "success" ? (
-                                                                <span>✔ {item.status === "success" ? "Pinging" : "Failed"}
+                                                                <span>✔ {item.status === "success" ? "Pinging" : "Failed"} ({item.value ? `${formatValue(item.value)}` : "0"})
                                                                 </span>
                                                             ) : item.status === "failure" ? (
-                                                                <span className="failure-color">✖ Not Pinging
+                                                                <span className="failure-color" style={{paddingRight:'39px'}}>✖ Not Pinging
                                                                 </span>
                                                             ) : (
                                                                 <span className="pulse">Checking...</span>

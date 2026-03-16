@@ -649,7 +649,7 @@ const handleSaveConfiguration = async () => {
 
                     <article className="container-fluid">
                         <article className="row" style={{ display: "flex" }}>
-                            <article className="col-md-2 nodelistheight" id="summary-1 div1" style={{ minHeight: '1112px', maxHeight: '1112px', background: 'white' }}>
+                            <article className="col-md-2 nodelistheight" id="summary-1 div1" style={{ minHeight: '956px', maxHeight: '1050px', background: 'white' }}>
                                 <article>
 
                                     <article className="card" id="div2">

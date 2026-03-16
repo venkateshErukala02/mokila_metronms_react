@@ -4169,11 +4169,11 @@ svg *:focus {
 
 .configlist{
     margin: 0;
-    max-width: 500px;
-    min-width: 500px;
-    padding: 0;
+    max-width: 908px;
+    min-width: 470px;
+    /* padding: 0;
     margin-left: 83px;
-    margin-top: 18px;
+    margin-top: 18px; */
 }
 .align-pad{
     padding: 17px 19px;
@@ -4253,6 +4253,12 @@ svg *:focus {
 
 .configlist>li>span{
     color: #0da320;
+    min-width: 263px;
+    max-width: 500px;
+    text-align: left;
+}
+.configlist>li>span>button{
+    margin-left: 12px;
 }
 
 .configlinktitle {
@@ -4260,7 +4266,15 @@ svg *:focus {
     font-size: 21px;
     font-weight: 700;
     margin: 0;
-    padding: 13px 0 0 26px;
+    padding: 13px 0 17px 26px;
+}
+
+.trans-latencyinput {
+    width: 20%;
+    background-color: #eae7e7;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    min-height: 35px;
 }
 .monitor-trnscode{
     padding: 10px;
@@ -4330,7 +4344,8 @@ svg *:focus {
     font-size: 17px;
     margin: 0;
     padding: 13px 20px;
-    margin-left: 29px;
+    padding-left: 19px !important;
+    /* margin-left: 29px; */
 }
 
 .container-grid {

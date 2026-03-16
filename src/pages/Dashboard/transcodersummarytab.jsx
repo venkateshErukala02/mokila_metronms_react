@@ -100,6 +100,7 @@ const [transcoderStats, setTranscoderStats] = useState({
       "cam2.url": "",
       "cam3.url": "",
       "cam4.url": "",
+      "latency" : ""
      }
    });
  const [changedSections, setChangedSections] = useState({
@@ -157,6 +158,7 @@ const [transcoderStats, setTranscoderStats] = useState({
           "cam2.url": RSTPURL?.["cam2.url"] ?? "",
           "cam3.url": RSTPURL?.["cam3.url"] ?? "",
           "cam4.url": RSTPURL?.["cam4.url"] ?? "",
+          "latency": RSTPURL?.latency ?? "",
         }
       });
                 setIsError({ status: false, msg: "" });
@@ -426,21 +428,40 @@ useEffect(() => {
     
 
 
-     function formatValue(val) {
-    if (!val) return "";
+  //    function formatValue(val) {
+  //   if (!val) return "";
     
-    // Match the numeric part and the unit
-    const match = val.match(/^([\d.]+)([a-zµ]*)$/i);
-    if (!match) return val;
+  //   // Match the numeric part and the unit
+  //   const match = val.match(/^([\d.]+)([a-zµ]*)$/i);
+  //   if (!match) return val;
 
-    const number = parseFloat(match[1]);
-    const unit = match[2] || "";
+  //   const number = parseFloat(match[1]);
+  //   const unit = match[2] || "";
 
-    // Round to 2 decimals
-    const rounded = number.toFixed(2);
+  //   // Round to 2 decimals
+  //   const rounded = number.toFixed(2);
 
-    return `${rounded}${unit}`;
-  }
+  //   return `${rounded}${unit}`;
+  // }
+
+  function formatValue(val) {
+  if (!val) return "";
+
+  // Fix encoding issue
+  val = val.replace(/Âµs/g, "µs");
+
+  // Match the numeric part and the unit
+  const match = val.match(/^([\d.]+)([a-zµ]*)$/i);
+  if (!match) return val;
+
+  const number = parseFloat(match[1]);
+  const unit = match[2] || "";
+
+  // Round to 2 decimals
+  const rounded = number.toFixed(2);
+
+  return `${rounded}${unit}`;
+}
 
 
 const fetchCamStatus = async (nodeIpaddress,camName) => {
@@ -743,7 +764,7 @@ const rebootRstpTranscoderService = async () => {
 
                     <article className="container-fluid">
                         <article className="row" style={{ display: "flex" }}>
-                            <article className="col-md-2 nodelistheight" id="summary-1 div1" style={{minHeight:'1112px',maxHeight:'1112px',background:'white'}}>
+                            <article className="col-md-2 nodelistheight" id="summary-1 div1" style={{minHeight:'902px',maxHeight:'999px',background:'white'}}>
                                 <article>
 
                                     <article className="" id="div2">
@@ -752,7 +773,7 @@ const rebootRstpTranscoderService = async () => {
                                             <label className="summarymode"> {transcoderStats?.System?.ser}</label>
                                             <label className="summarymode" style={{ display: 'block' }}> {nodeLocation} ({transcoderStats?.System?.sysname})</label>
                                             <label className="summarysytem"><i className="fas fa-arrow-up fa-1x ng-scope "></i>{upTimeData}</label>
-                                            <label className="summarymode" style={{ display: 'block',marginTop:'7px' }}>Temperature:{tempData.temp}</label>
+                                            <label className="summarymode" style={{ display: 'block',marginTop:'7px' }}>Temperature : {tempData.temp} °C</label>
                                         </article>
                                         <article style={{ margin: "auto" }}>
                                             <article>
@@ -950,6 +971,15 @@ const rebootRstpTranscoderService = async () => {
                                                             />
                                                         </article>
                                                         </article>
+                                                        <article className="form-row"><label for="" className="col-3 quadlis">Latency</label><article className="col-sm-9 col-md-9 col-lg-9 quadlisvalue">
+                                                           <input
+                                                            type="text"
+                                                            className="trans-latencyinput"
+                                                            value={transcoderStats?.RSTPURL?.latency ?? ""}
+                                                            onChange={(e) => handleRTSPChange("latency", e.target.value)}
+                                                            />
+                                                        </article>
+                                                        </article>
                                                     {/* <article className="" style={{textAlign:'center'}}>
                                                          <button
                                                                             className="createbtn"
@@ -1036,7 +1066,7 @@ const rebootRstpTranscoderService = async () => {
                                         </article>
                                     <div>
                                         <h3 className="configlinktitle">
-                                        Check Camera Connectivity
+                                        Camera Connectivity
                                         </h3>
                                         <article>
                                         <ul className="configlist">
