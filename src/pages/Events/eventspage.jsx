@@ -67,7 +67,7 @@ const EventPg = () => {
                   <LeftNavList  className='leftsidebar'/>
                   </article>
                   <article className="container-fluid">
-                  <article className="row">
+                  <article className="row sect-padd">
                     <article className="col-sm-10 col-md-10 col-lg-10 col-xl-10 col-xxl-10" style={{paddingRight:'10px'}}>
                         <h1 className="evntsheadcl">Events</h1>
                         <EventMainTB/>

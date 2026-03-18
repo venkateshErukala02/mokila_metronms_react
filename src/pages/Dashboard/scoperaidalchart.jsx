@@ -68,6 +68,13 @@ const BsChart = ({ getDataStatus }) => {
   const staArrayRaw = userData.sta ? extractValues(userData) : [];
 
 const hasItem = (name) => staArrayRaw.some(item => item.name === name);
+if (!hasItem('ap')) {
+  staArrayRaw.push({ name: 'ap', down: 0, up: 0 });
+}
+
+if (!hasItem('sta')) {
+  staArrayRaw.push({ name: 'sta', down: 0, up: 0 });
+}
 
 if (!hasItem('transcoder')) {
   staArrayRaw.push({ name: 'transcoder', down: 0, up: 0 });
@@ -152,7 +159,7 @@ const staArray = staArrayRaw.sort((a, b) => {
       case "cam":
         return 'Ip Cameras';
       case "sta":
-        return 'Train Radio';
+        return 'Train Radios';
       case "encoder":
         return 'Encoders';
       case "obc":

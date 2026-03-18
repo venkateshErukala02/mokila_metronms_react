@@ -775,7 +775,7 @@ useEffect(() => {
             <LeftNavList  className='leftsidebar'/>
             </article>
             <article className="container-fluid">
-            <article className="row">
+            <article className="row sect-padd">
                 <article className="col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
                     <article className="border-allsd" style={{ height: '90vh', margin: '5px 5px 0 5px' }}>
                         <article className="row">
@@ -784,7 +784,7 @@ useEffect(() => {
                             </article>
                             <article className="col-4" style={{ float: 'right' }}>
                                 <article style={{ float: 'right' }}>
-                                    <button className="createbtn">Refresh</button>
+                                    {/* <button className="createbtn">Refresh</button> */}
                                 </article>
                             </article>
                             <article className="row">

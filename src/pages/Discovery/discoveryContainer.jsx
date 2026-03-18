@@ -164,10 +164,9 @@ const DiscovContai = () => {
         }
     };
     
-   
     const downloadSampleCSV = () => {
         const csvContent = "data:text/csv;charset=utf-8,"
-            + ["Name,Email,Age", "John Doe,john@example.com,30"].join("\n");
+            + ["IP Address,Device Type, MAC-Address, System-Name,Station,Line,Position", "192.168.2.91,AP,00:d0:41:e0:4c:e8,Systemname,407,Line1,NBNE"].join("\n");
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);

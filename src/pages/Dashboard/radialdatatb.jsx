@@ -135,8 +135,11 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
                 fetchDataRadial(url);
                 break;
             case 'fullradialdown':
-            case 'fullradialgood':
                 url = `api/v2//dashboard/filternodesg?filter=ns&value=${dname}&offset=${pageSize}&limit=${limitValueSelLabel}&status=all&rd=ap&sort=${sortField}&by=${sortOrder}&ar=glob`;
+                fetchDataRadial(url);
+                break;
+            case 'fullradialgood':
+                url = `api/v2//dashboard/filternodesg?filter=ns&value=up&offset=${pageSize}&limit=${limitValueSelLabel}&status=all&rd=ap&sort=${sortField}&by=${sortOrder}&ar=glob`;
                 fetchDataRadial(url);
                 break;
 

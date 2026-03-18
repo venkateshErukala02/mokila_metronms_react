@@ -24,6 +24,12 @@ const SouthBoundTb=({textName})=>{
 
             };
             const response = await fetch(url, options);
+
+            if (response.status === 204) {
+            setSouthData([]); // important
+            setIsLoading(false);
+            return;
+            }
             
             const data = await response.json();
             if (response.ok) {

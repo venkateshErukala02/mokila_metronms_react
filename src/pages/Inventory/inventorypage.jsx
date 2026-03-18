@@ -358,12 +358,83 @@ const InventRpt = () => {
       
           };
 
+
+
+          const getRfTagData = async () => {
+    
+        try {
+            const response = await fetch("api/v2/nodes/tagreport", {
+                method: "POST",
+                headers: {
+                    // 'Authorization': `Basic ${token}`
+                },
+                // body: formData, 
+            });
+    
+            if (response.ok) {
+                // setSuccess('Discovery started successfully');
+                // alert('Discovery started successfully')
+
+                // setSelectedFile(null);
+            } else {
+                const errText = await response.text();
+                setError(`Error starting discovery: ${errText}`);
+            }
+        } catch (error) {
+            setError('An error occurred while contacting the server.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+        const getInventoryReportData = async () => {
+    
+            const payload = {
+        cols: [
+            "sysName",
+            "macAddress",
+            "assetRecord.serialNumber",
+            "sysUptime",
+            "productCode",
+            "radioMode",
+            "station",
+            "section",
+            "line"
+                ]
+                };
+        try {
+            const response = await fetch("api/v2/nodes/export_to_csv", {
+                method: "POST",
+                headers: {
+                    // 'Authorization': `Basic ${token}`
+                },
+                body: JSON.stringify(payload)
+            });
+    
+            if (response.ok) {
+                // setSuccess('Discovery started successfully');
+                // alert('Discovery started successfully')
+
+                // setSelectedFile(null);
+            } else {
+                const errText = await response.text();
+                setError(`Error starting discovery: ${errText}`);
+            }
+        } catch (error) {
+            setError('An error occurred while contacting the server.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <>
             <article className="display-f">
+                <article className={isVisible ? 'leftsidebardisblock' : 'leftsidebardisnone'}>
             <LeftNavList className="leftsidebar"/>
+            </article>
                     <article className="container-fluid">
-                    <article className="row">
+                    <article className="row sect-padd">
                     <article className="col-md-12">
                         <h1 className="inventtitle">Inventory Reports</h1>
 
@@ -380,7 +451,7 @@ const InventRpt = () => {
                                 <span className="totalcl" style={{ marginLeft: '10px' }}>Total: <span>{invenData.totalCount}</span></span>
                                 <span className="totalcl">Good: <span>{activeTrueCount}</span></span>
                                 <span className="totalcl">Down: <span>{activeFalseCount}</span></span>
-                                <input type="text" style={{ marginRight: '10px' }} name="" placeholder="IP Address / System Name / Serial Number" id="" value={searchText} onChange={(e)=> setSearchText(e.target.value)} className="form-controlinventory" />
+                                <input type="text" style={{ marginRight: '10px' }} name="" placeholder="Enter systemname / ipaddress / serialnumber" id="" value={searchText} onChange={(e)=> setSearchText(e.target.value)} className="form-controlinventory" />
                                 <button type="button" className="createbtn" onClick={handleSearchClick}>Search</button>
                                 <button className="createbtn" type="button" onClick={handleClearSearch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
 
@@ -431,14 +502,14 @@ const InventRpt = () => {
 
                                         </li>
                                         <li>
-                                            <button type="button" className="createbtn">Inventory Report
+                                            <button type="button" className="createbtn" onClick={getRfTagData}>RF TAG report
                                                 <i className="fa fa-file-text" aria-hidden="true"></i>
                                             </button>
 
                                         </li>
                                         <li>
-                                            <button type="button" className="createbtn">Node Report
-                                                <span className="fa fa-file-pdf-o"></span>
+                                            <button type="button" className="createbtn" onClick={getInventoryReportData}>Inventory Report
+                                                <i className="fa fa-file-text" aria-hidden="true"></i>
                                             </button>
 
                                         </li>

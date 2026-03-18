@@ -16,9 +16,9 @@ const TrainEventTab = () => {
     const [eventtimeSel, setEventtimeSel] = useState(Date.now() - 86400000);
     const [eventmainSeverityValueSel, setEventmainSeverityValueSel] = useState('-1');
     const [eventmainSeverityLabelSel, setEventmainSeverityLabelSel] = useState('All');
-    const [eventmainLimitValueSel, setEventmainLimitValueSel] = useState('1');
+    const [eventmainLimitValueSel, setEventmainLimitValueSel] = useState('50');
     const [eventmainLimitLabelSel, setEventmainLimitLabelSel] = useState('50');
-    const [eventauditLimitValueSel, setEventauditLimitValueSel] = useState('1');
+    const [eventauditLimitValueSel, setEventauditLimitValueSel] = useState('50');
     const [eventauditLimitLabelSel, setEventauditLimitLabelSel] = useState('50');
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [date, setDate] = useState(null);
@@ -168,11 +168,12 @@ const TrainEventTab = () => {
     };
 
 
-    const handleMainEventLimitValue = (event) => {
-        let selectedIndex = event.target.selectedIndex;
-        setEventmainLimitValueSel(selectedIndex)
-        let label = event.target.options[selectedIndex].label;
-        setEventmainLimitLabelSel(label)
+   const handleMainEventLimitValue = (event) => {
+         const value = event.target.value;  
+        const label = event.target.options[event.target.selectedIndex].label;
+
+        setEventmainLimitValueSel(value);
+        setEventmainLimitLabelSel(label);
     }
 
     const handleMainAuditLimitValue = (event) => {
@@ -191,6 +192,60 @@ const TrainEventTab = () => {
     const handleChange = (event) => {
         setLogsMode(event.target.value);
     };
+
+      const getReportData = async () => {
+            let effectiveDate;
+
+            if (date === null) {
+                const sixHoursInMs = 6 * 60 * 60 * 1000;
+                const now = new Date();
+                effectiveDate = now.getTime() - sixHoursInMs;
+            } else {
+                const formatDate = new Date(date);
+                effectiveDate = formatDate.getTime();
+            }
+            let url= ''
+            if(typevalueSel === 'events'){
+                url = `api/v2/events/export?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
+            }else{
+                url=`api/v2/events/export?_s=eventDisplay%3D%3DY;eventSource%3D%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
+            }
+    
+        try {
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    // 'Authorization': `Basic ${token}`
+                },
+                // body: formData, 
+            });
+    
+             if (!response.ok) {
+            const errText = await response.text();
+            setIsError(`Error starting download: ${errText}`);
+            return;
+        }
+
+        const blob = await response.blob();
+
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+
+        const filename = response.headers.get('Content-Disposition')?.split('filename=')[1] || 'report.csv';
+        a.href = downloadUrl;
+        a.download = filename.replace(/"/g, '');
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        window.URL.revokeObjectURL(downloadUrl);
+        } catch (error) {
+            setIsError('An error occurred while contacting the server.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
 
     return (
         <>
@@ -247,6 +302,10 @@ const TrainEventTab = () => {
                                 <article className="col-sm-8 col-md-8 col-lg-8 col-xl-8 col-xxl-8">
                                     <article style={{ float: 'right' }}>
                                         <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block' }}>
+                                <button type="button" style={{marginRight:'12px'}} className="createbtn" onClick={getReportData}>Report 
+                                    <i className="fa fa-file-text" aria-hidden="true"></i>
+                                </button>
+
                                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Type:</label>
 
                                             <select name="name" id="name" value={typevalueSel} onChange={handleType} className="form-controll1" style={{ maxWidth: '93px' }}>

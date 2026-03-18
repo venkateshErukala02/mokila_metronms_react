@@ -59,14 +59,14 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
         formData.append('upfile', selectedFile); // your API should accept a field named "file"
     
         try {
-            const username = 'admin';
-            const password = 'admin';
-            const token = btoa(`${username}:${password}`)
+            // const username = 'admin';
+            // const password = 'admin';
+            // const token = btoa(`${username}:${password}`)
             const response = await fetch("api/v2/facilities/uploaddiscctx", {
                 method: "POST",
                 headers: {
-                    'Authorization': `Basic ${token}`,
-                    "Content-Type": "application/json",
+                    // 'Authorization': `Basic ${token}`,
+                    // "Content-Type": "application/json",
                 },
                 body: formData, // Don't set Content-Type manually!
             });
@@ -89,7 +89,7 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
 
     const downloadSampleCSV = () => {
         const csvContent = "data:text/csv;charset=utf-8,"
-            + ["Name,Email,Age", "John Doe,john@example.com,30"].join("\n");
+            + ["name,Section,Station Code", "Pioneer Village,line1-sec1,PNV"].join("\n");
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);

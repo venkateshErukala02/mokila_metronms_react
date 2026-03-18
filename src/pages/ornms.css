@@ -733,7 +733,7 @@ tbody.tbbdtwo>tr{border-bottom: 1px solid rgb(33 35 39 / 7%);}
 thead.stationeventsthtb>tr{border-bottom: 2px solid rgb(33 35 39 / 7%);}
 thead.stationeventsthtb>tr>th{font-size: 13px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #000000de;letter-spacing: 0.6px;}
 
-tbody.stationeventstbdtb>tr>td{font-size: 13px;font-family: "Arial";padding: 6px;letter-spacing: 0.1px;color: #000000de;padding-left: 0;}
+tbody.stationeventstbdtb>tr>td{font-size: 13px;font-family: "Arial";padding: 6px;letter-spacing: 0.1px;color: #000000de;padding-left: 8px;}
 tbody.stationeventstbdtb>tr:nth-child(odd){        background-color: rgb(229 241 255 / 50%);
 }
 .stationeventstbdtb{border-bottom: 1px solid rgb(33 35 39 / 7%);}
@@ -4358,6 +4358,10 @@ svg *:focus {
 
 .failure-color{
     color: red !important;
+}
+
+.sect-padd{
+    padding: 0 6px !important;
 }
  /* width={700} height={240} */
 

@@ -99,7 +99,7 @@ const SettPage = () => {
                   <LeftNavList  className='leftsidebar'/>
                   </article>
                     <article className="container-fluid">
-                    <article className="row">
+                    <article className="row sect-padd">
                     <h1 className="settingtitle">Settings</h1>
                     <article className="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2">
                         <article>

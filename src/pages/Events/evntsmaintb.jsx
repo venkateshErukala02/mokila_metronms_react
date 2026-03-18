@@ -14,7 +14,7 @@ const EventMainTB = () => {
     const [eventtimeSel, setEventtimeSel] = useState(Date.now() - 86400000);
     const [eventmainSeverityValueSel, setEventmainSeverityValueSel] = useState('');
     const [eventmainSeverityLabelSel, setEventmainSeverityLabelSel] = useState('All');
-    const [eventmainLimitValueSel, setEventmainLimitValueSel] = useState('1');
+    const [eventmainLimitValueSel, setEventmainLimitValueSel] = useState('50');
     const [eventmainLimitLabelSel, setEventmainLimitLabelSel] = useState('50');
     const [eventauditLimitValueSel, setEventauditLimitValueSel] = useState('1');
     const [eventauditLimitLabelSel, setEventauditLimitLabelSel] = useState('50');
@@ -28,7 +28,7 @@ const EventMainTB = () => {
     const [showEventPopup,setShowEventPopup] = useState(false);
     const [eventpopupData,setEventpopupData] = useState([]);
     const popupRef = useRef(null);
-
+    const [date, setDate] = useState(null);
 
 
     useEffect(() => {
@@ -136,7 +136,7 @@ const EventMainTB = () => {
 
                 break;
             case 'auditlog':
-                url= `api/v2/audit/list?_s=datentime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`
+                url= `api/v2/audit/list?_s=&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`
                 getDataEvntMain(url);
                 break;
 
@@ -238,11 +238,12 @@ const EventMainTB = () => {
     };
 
 
-    const handleMainEventLimitValue = (event) => {
-        let selectedIndex = event.target.selectedIndex;
-        setEventmainLimitValueSel(selectedIndex)
-        let label = event.target.options[selectedIndex].label;
-        setEventmainLimitLabelSel(label)
+   const handleMainEventLimitValue = (event) => {
+         const value = event.target.value;  
+        const label = event.target.options[event.target.selectedIndex].label;
+
+        setEventmainLimitValueSel(value);
+        setEventmainLimitLabelSel(label);
     }
 
     const handleMainAuditLimitValue = (event) => {
@@ -251,6 +252,8 @@ const EventMainTB = () => {
         let label = event.target.options[selectedIndex].label;
         setEventauditLimitLabelSel(label)
     }
+
+    
 
 
     const handleClearSerch = () => {
@@ -301,18 +304,30 @@ const EventMainTB = () => {
                 const regex = /^192\.168\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
                 if (regex.test(eventipText)) {
                     const id = await handleNodeIp(eventipText);
-                         if (id) {
+                         if (id && typevalueSel === 'events') {
                         // filter  =  filter +'node.id%3D%3D' + `${id}` + ';';
-                        url = `api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;node.id%3D%3D${id};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=0&order=desc&orderBy=id`
+                        url = `api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource%3D%3Dsyslogd;node.id%3D%3D${id};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=0&order=desc&orderBy=id`
                         handleRadialIPa(url);
+                         }else{
+                             url = `api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;node.id%3D%3D${id};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=0&order=desc&orderBy=id`
+                        handleRadialIPa(url); 
                          }
                 }  else {
-                    filter  =  filter + `eventLogMsg%3D%3D` +`*${eventipText}*`;
+                    if(typevalueSel === 'events'){
+                         filter  =  filter +  `eventDisplay%3D%3DY%3BeventSource!%3Dsyslogd;`+ `eventLogMsg%3D%3D` +`*${eventipText}*`;
                      if (eventmainLimitLabelSel != 'all') {
                     filter  =  filter +'&limit=' + `${eventmainLimitLabelSel}`;
                     }
                     url = start + filter + '&offset=0&order=desc&orderBy=id';
                      handleRadialIPa(url);
+                    }else{
+                    filter  =  filter + `eventDisplay%3D%3DY%3BeventSource%3D%3Dsyslogd;` + `eventLogMsg%3D%3D` +`*${eventipText}*`;
+                     if (eventmainLimitLabelSel != 'all') {
+                    filter  =  filter +'&limit=' + `${eventmainLimitLabelSel}`;
+                    }
+                    url = start + filter + '&offset=0&order=desc&orderBy=id';
+                     handleRadialIPa(url);
+                }
                 }
                
             }
@@ -385,6 +400,60 @@ const EventMainTB = () => {
     }
 
 
+      const getReportData = async () => {
+            let effectiveDate;
+
+            if (date === null) {
+                const sixHoursInMs = 6 * 60 * 60 * 1000;
+                const now = new Date();
+                effectiveDate = now.getTime() - sixHoursInMs;
+            } else {
+                const formatDate = new Date(date);
+                effectiveDate = formatDate.getTime();
+            }
+            let url= ''
+            if(typevalueSel === 'events'){
+                url = `api/v2/events/export?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
+            }else if(typevalueSel==='syslogd'){
+                url=`api/v2/events/export?_s=eventDisplay%3D%3DY;eventSource%3D%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
+            }
+    
+        try {
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    // 'Authorization': `Basic ${token}`
+                },
+                // body: formData, 
+            });
+    
+             if (!response.ok) {
+            const errText = await response.text();
+            setIsError(`Error starting download: ${errText}`);
+            return;
+        }
+
+        const blob = await response.blob();
+
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+
+        const filename = response.headers.get('Content-Disposition')?.split('filename=')[1] || 'report.csv';
+        a.href = downloadUrl;
+        a.download = filename.replace(/"/g, '');
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        window.URL.revokeObjectURL(downloadUrl);
+        } catch (error) {
+            setIsError('An error occurred while contacting the server.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
     return (
         <>
             <article className="row border-tlr custom-row">
@@ -398,7 +467,7 @@ const EventMainTB = () => {
                         <span className="eventscp">Scope : </span>
                         <span className="eventgolcl" onClick={toggleDropdown} >Golbal <span className="fa fa-chevron-down highlightText v-align-tt iconsy"></span></span>
 
-                        <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="IP Address " id="" className="form-controlevents" />
+                        <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
                         <button type="button" className="createbtn" onClick={() => { handleRadialIP();}} >Search</button>
                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
 
@@ -420,6 +489,10 @@ const EventMainTB = () => {
                 <article className="col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xxl-7">
                     <article style={{ float: 'right' }}>
                         <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block' }}>
+                             <button type="button" style={{marginRight:'12px'}} className="createbtn" onClick={getReportData}>Report 
+                                    <i className="fa fa-file-text" aria-hidden="true"></i>
+                                </button>
+
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Type:</label>
 
                             <select name="name" id="name" value={typevalueSel} onChange={handleType} className="form-controll1" style={{ maxWidth: '93px' }}>
@@ -440,7 +513,7 @@ const EventMainTB = () => {
                                 <option value="1" label="Indeterminate">Indeterminate</option>
                             </select>
 
-                            <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Category:</label>
+                            {/* <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Category:</label>
 
                             <select name="name" id="name" className="form-controll1" style={{ maxWidth: '124px', minWidth: '124px' }}>
                                 <option value="All">All</option>
@@ -448,7 +521,7 @@ const EventMainTB = () => {
                                <option value="uei.opennms.org/nodes/nodeDown" label="Down">Down</option>
                                <option value="uei.opennms.org/traps/KEYWEST-MIB/associatedTrap" label="Associated">Associated</option>
                                <option value="uei.opennms.org/traps/KEYWEST-MIB/disassociatedTrap" label="Dissociated">Dissociated</option>
-                            </select>
+                            </select> */}
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
                             <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
                                 <option value="3600000" label="Last hour">Last hour</option>
@@ -465,6 +538,8 @@ const EventMainTB = () => {
                             </select>
                         </article>
                         <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
+
+                            
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Type:</label>
 
                             <select name="name" id="name" value={typevalueSel} onChange={handleType} className="form-controll1" style={{ maxWidth: '93px' }}>

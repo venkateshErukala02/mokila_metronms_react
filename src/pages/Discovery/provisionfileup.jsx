@@ -56,7 +56,7 @@ const ProvisionFileUp = () => {
 
     const downloadSampleCSV = () => {
         const csvContent = "data:text/csv;charset=utf-8,"
-            + ["Name,Email,Age", "John Doe,john@example.com,30"].join("\n");
+            + [" IP Address,macAddress/nodeSysName/productcode/position/serialNumber/facility", "192.168.2.91,AP"].join("\n");
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);

@@ -85,6 +85,9 @@ article.row {
     padding: 10px;
     position: relative;
 }
+.leftnavlist>li>a{
+    margin-left: 5px !important;
+}
 
 .leftnavlist>li>a>i {
     color: #808893;

@@ -10,15 +10,15 @@ const SnEventTab=()=>{
 
  const [eventmainData, setEventmainData] = useState([]);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
-    const [typevalueSel, setTypevalueSel] = useState('syslogd');
-    const [typelabelSel, setTypelabelSel] = useState('Syslogs');
+    const [typevalueSel, setTypevalueSel] = useState('events');
+    const [typelabelSel, setTypelabelSel] = useState('Events');
     // const [selectedDuration, setSelectedDuration] = useState(86400000); 
     const [eventtimeSel, setEventtimeSel] = useState(Date.now() - 86400000);
     const [eventmainSeverityValueSel, setEventmainSeverityValueSel] = useState('-1');
     const [eventmainSeverityLabelSel, setEventmainSeverityLabelSel] = useState('All');
-    const [eventmainLimitValueSel, setEventmainLimitValueSel] = useState('1');
+    const [eventmainLimitValueSel, setEventmainLimitValueSel] = useState('50');
     const [eventmainLimitLabelSel, setEventmainLimitLabelSel] = useState('50');
-    const [eventauditLimitValueSel, setEventauditLimitValueSel] = useState('1');
+    const [eventauditLimitValueSel, setEventauditLimitValueSel] = useState('50');
     const [eventauditLimitLabelSel, setEventauditLimitLabelSel] = useState('50');
     const [date,setDate] = useState(null);
     const [pageSize,setPageSize] = useState(1);
@@ -76,7 +76,7 @@ const SnEventTab=()=>{
             } else if (data.event) {
                 normalized = data.event;
             }else if(typevalueSel === 'syslogd'){
-                normalized = data.events;
+                normalized = data.event;
             }
 
             setEventmainData(normalized);
@@ -92,6 +92,7 @@ const SnEventTab=()=>{
     };
 
     useEffect(() => {
+         const fetchData = () => {
 
          let effectiveDate;
 
@@ -107,26 +108,30 @@ const SnEventTab=()=>{
 
         switch (typevalueSel) {
             case 'events':
-               url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&limit=50&offset=0`;
-                getDataEvntMain(url);
+               url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&limit=${eventmainLimitValueSel}&offset=0`;
                 break;
 
             case 'syslogd':
                 // url='api/v2/essearch/search';
-                url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource%3D%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&limit=50&offset=0`;
-                getDataEvntMain(url);
+                url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource%3D%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&limit=${eventmainLimitValueSel}&offset=0`;
 
                 break;
             case 'auditlog':
                 url = '/api/v2/audit/list?_s=&limit=50&offset=0&order=desc&orderBy=id';
-                getDataEvntMain(url);
                 break;
 
             default:
-                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd&limit=50&offset=0`;
-                getDataEvntMain(url);
+                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd&limit=${eventmainLimitValueSel}&offset=0`;
                 break;
         }
+         getDataEvntMain(url);
+    }
+
+     fetchData();
+
+  const interval = setInterval(fetchData, 30000);
+    return () => clearInterval(interval);
+
     }, [typevalueSel,nodeDataId,selectedDuration,eventmainLimitLabelSel,fromValue,pageSize]);
 
     const formatTime = (timestamp) => {
@@ -172,10 +177,11 @@ const SnEventTab=()=>{
     }
 
     const handleMainEventLimitValue = (event) => {
-        let selectedIndex = event.target.selectedIndex;
-        setEventmainLimitValueSel(selectedIndex)
-        let label = event.target.options[selectedIndex].label;
-        setEventmainLimitLabelSel(label)
+         const value = event.target.value;  
+        const label = event.target.options[event.target.selectedIndex].label;
+
+        setEventmainLimitValueSel(value);
+        setEventmainLimitLabelSel(label);
     }
 
     const handleMainAuditLimitValue = (event) => {
@@ -224,6 +230,62 @@ const SnEventTab=()=>{
                 setIsLastPage(true);
             }
 
+
+
+
+          const getReportData = async () => {
+            let effectiveDate;
+
+            if (date === null) {
+                const sixHoursInMs = 6 * 60 * 60 * 1000;
+                const now = new Date();
+                effectiveDate = now.getTime() - sixHoursInMs;
+            } else {
+                const formatDate = new Date(date);
+                effectiveDate = formatDate.getTime();
+            }
+            let url= ''
+            if(typevalueSel === 'events'){
+                url = `api/v2/events/export?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
+            }else{
+                url=`api/v2/events/export?_s=eventDisplay%3D%3DY;eventSource%3D%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
+            }
+    
+        try {
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    // 'Authorization': `Basic ${token}`
+                },
+                // body: formData, 
+            });
+    
+             if (!response.ok) {
+            const errText = await response.text();
+            setIsError(`Error starting download: ${errText}`);
+            return;
+        }
+
+        const blob = await response.blob();
+
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+
+        const filename = response.headers.get('Content-Disposition')?.split('filename=')[1] || 'report.csv';
+        a.href = downloadUrl;
+        a.download = filename.replace(/"/g, '');
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        window.URL.revokeObjectURL(downloadUrl);
+        } catch (error) {
+            setIsError('An error occurred while contacting the server.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <>
          <article className="row">
@@ -252,6 +314,9 @@ const SnEventTab=()=>{
                 <article className="col-sm-8 col-md-8 col-lg-8 col-xl-8 col-xxl-8">
                     <article style={{ float: 'right' }}>
                         <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block' }}>
+                             <button type="button" style={{marginRight:'12px'}} className="createbtn" onClick={getReportData}>Report 
+                                                <i className="fa fa-file-text" aria-hidden="true"></i>
+                                            </button>
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Type:</label>
 
                             <select name="name" id="name" value={typevalueSel} onChange={handleType} className="form-controll1" style={{ maxWidth: '93px' }}>
@@ -282,10 +347,10 @@ const SnEventTab=()=>{
                                 <option value="now-2d" label="48 hours">48 hours</option>
                             </select>
                             <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
-                                <option value="0" label="25">25</option>
-                                <option value="1" label="50">50</option>
-                                <option value="2" label="100">100</option>
-                                <option value="3" label="500">500</option>
+                                <option value="25" label="25">25</option>
+                                <option value="50" label="50">50</option>
+                                <option value="100" label="100">100</option>
+                                <option value="500" label="500">500</option>
                             </select>
                         </article>
                         <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
@@ -307,10 +372,10 @@ const SnEventTab=()=>{
                             </article>
 
                             <select className="form-controll1" value={eventauditLimitValueSel} onChange={handleMainAuditLimitValue}  style={{ width: 'auto' }} aria-invalid="false">
-                            <option value="0" label="25">25</option>
-                                <option value="1" label="50">50</option>
-                                <option value="2" label="100">100</option>
-                                <option value="3" label="500">500</option>
+                            <option value="25" label="25">25</option>
+                                <option value="50" label="50">50</option>
+                                <option value="100" label="100">100</option>
+                                <option value="500" label="500">500</option>
                             </select>
                         </article>
 
@@ -369,8 +434,8 @@ const SnEventTab=()=>{
                                 eventmainData.map((event) => (
                                     <tr key={event.id}>
                                         <td>{event.source}</td>
-                                        <td>{formatTime(event.timestamp)}</td>
-                                         <td>{event.message}</td>
+                                        <td>{formatTime(event.time)}</td>
+                                         <td>{event.logMessage}</td>
                                     </tr>
                                 ))
                             ) : (

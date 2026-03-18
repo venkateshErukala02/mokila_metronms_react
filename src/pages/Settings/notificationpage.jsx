@@ -466,12 +466,12 @@ const NotificationContainer=()=>{
           <article className={profileStatusCont ? 'col-8' : 'col-12'}>
                         <article className="" style={{ height: '90vh' }}>
                             <article className="row custom-row border-tlr">
-                                <article className="col-8">
+                                <article className="col-4">
                                    <article className="p-lr">
                                    <button className="createbtn" type="button" onClick={handleDisableNotificationStatus}>{disableNotifiBtnStatus === true ? ("Disable Notification") : ("Enable Notification")}</button>
                                    </article>
                                 </article>
-                                <article className="col-4">
+                                <article className="col-8">
                                     <article style={{ float: 'right' }}>
                                         <ul className="setttinglist">
                                             <li>

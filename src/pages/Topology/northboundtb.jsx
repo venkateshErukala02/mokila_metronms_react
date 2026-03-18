@@ -21,8 +21,18 @@ const NorthBoundTb=({textName})=>{
                 }
 
             };
+
+            
             const response = await fetch(url, options);
+
+             if (response.status === 204) {
+            setNorthData([]); // important
+            setIsLoading(false);
+            return;
+            }
+
             const data = await response.json();
+            
             if (response.ok) {
                 setIsLoading(false);
                 setNorthData(data.event || []);

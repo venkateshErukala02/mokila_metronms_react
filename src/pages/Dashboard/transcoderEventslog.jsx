@@ -39,6 +39,7 @@ const TranscoderEventLog = ({ currentTab, nodeItemDt }) => {
     const [searchTrigger, setSearchTrigger] = useState(0);
     const nodeDataId = useSelector((state) => state.node.node.nodeId) || localStorage.getItem('nodeId');
     const nodeIpaddress = useSelector((state) => state.node.node.ipAddress) || localStorage.getItem('nodeIpaddress');
+  const [currentObcsubTab, setCurrentObcsubTab] = useState('obcbackup')
 
 
     const getTranscoderLogData = async (url) => {
@@ -117,14 +118,19 @@ useEffect(() => {
     const day = String(targetDate.getDate()).padStart(2, "0");
     const formattedDate = `${y}-${month}-${day}`;
 
-    if (selectLog === "obclogs") {
+    if (selectLog === "obclogs" ) {
+        if(currentObcsubTab === "obcbackup"){
       const hours = String(targetDate.getHours()).padStart(2, "0");
       const minutes = String(targetDate.getMinutes()).padStart(2, "0");
       const seconds = String(targetDate.getSeconds()).padStart(2, "0");
       const obcFormatDate = `${y}${month}${day}/${hours}${minutes}${seconds}`;
-      url = `api/v2/treeview/datelogs/${nodeItemDt?.carnumber || ""}/${obcFormatDate}?q=${executedSearch}`;
+    //   url = `api/v2/treeview/datelogs/${nodeDataId || ""}/${obcFormatDate}?q=${executedSearch}`;
+    url = `http://${nodeIpaddress}:8084/obc/api/v1/curlogs`;
+        }else if(currentObcsubTab === "obccurrent"){
+            url = `http://${nodeIpaddress}:8084/obc/api/v1/backlogs`;
+        }
     } else if (selectLog === "trainlogs") {
-      url = `api/v2/treeview/trainlogs/${nodeItemDt?.carnumber || ""}/${formattedDate}?q=${executedSearch}`;
+      url = `api/v2/treeview/trainlogs/${nodeDataId|| ""}/${formattedDate}?q=${executedSearch}`;
     }
   } else {
     const targetDate = executedDate || selectedDate;
@@ -141,10 +147,12 @@ useEffect(() => {
   if (url) {
     getTranscoderLogData(url);
   }
-}, [executedSearch, executedDate, searchTrigger, nodeIpaddress, currentTab, nodeItemDt]);
+}, [executedSearch, executedDate, searchTrigger, nodeIpaddress, currentTab, nodeItemDt,currentObcsubTab]);
 
 
-
+const handleRowClick = (value) => {
+    setCurrentObcsubTab(value);
+  }
 
     return (
         <section className="container-fluid">
@@ -189,6 +197,29 @@ useEffect(() => {
                     >Clear Search</button>)}
                 </>
             </article>
+            {currentTab === 'obc' &&  <article className="row" style={{ height: '86vh', overflowY: 'auto', border: '1px solid #21232712' }}>
+                <article>
+                     <article className="col-md-12" style={{display:'flex',justifyContent:'center'}}>
+                    <ul className="obcsublist">
+                      <li  onClick={() => handleRowClick('obcbackup')} className={`${currentObcsubTab === 'obcbackup' ? 'active' : ''}`}><a>OBC Backup</a></li>
+                      <li  onClick={() => handleRowClick('obccurrent')} className={`${currentObcsubTab === 'obccurrent' ? 'active' : ''}`}><a>OBC Current</a></li>
+                    </ul>
+                  </article>
+                </article>
+               {/* {currentObcsubTab === 'obcbackup' ? ( */}
+                <>
+                <ul className="log-list">
+                    {eventLogDt && String(eventLogDt)
+                        .split('\n')
+                        .filter(line => line.trim() !== '')
+                        .map((line, index) => (
+                            <li key={index}>{line}</li>
+                        ))}
+                </ul></>
+                {/* )  : (<>
+                hello</>)}  */}
+
+            </article>}
             <article className="row" style={{ height: '86vh', overflowY: 'auto', border: '1px solid #21232712' }}>
                 <ul className="log-list">
                     {eventLogDt && String(eventLogDt)
