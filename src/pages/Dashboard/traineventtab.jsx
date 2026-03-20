@@ -14,7 +14,7 @@ const TrainEventTab = () => {
     const [typelabelSel, setTypelabelSel] = useState('Syslogs');
     const [selectedDuration, setSelectedDuration] = useState(86400000);
     const [eventtimeSel, setEventtimeSel] = useState(Date.now() - 86400000);
-    const [eventmainSeverityValueSel, setEventmainSeverityValueSel] = useState('-1');
+    const [eventmainSeverityValueSel, setEventmainSeverityValueSel] = useState('');
     const [eventmainSeverityLabelSel, setEventmainSeverityLabelSel] = useState('All');
     const [eventmainLimitValueSel, setEventmainLimitValueSel] = useState('50');
     const [eventmainLimitLabelSel, setEventmainLimitLabelSel] = useState('50');
@@ -84,6 +84,9 @@ const TrainEventTab = () => {
 
     useEffect(() => {
 
+        const fetchData = () => {
+
+
         let effectiveDate;
 
             if (date === null) {
@@ -96,28 +99,42 @@ const TrainEventTab = () => {
             }
         let url = '';
 
+        let filterParts = [
+            "eventDisplay==Y",
+            typevalueSel === 'events' ? "eventSource!=syslogd" : 'eventSource==syslogd'
+            ];
+
+            if (eventmainSeverityValueSel) {
+            filterParts.push(`eventSeverity==${eventmainSeverityValueSel}`);
+            }
+            const filterString = filterParts.join(";");
+
         switch (typevalueSel) {
             case 'events':
-               url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&limit=50&offset=0`;
-                getDataEvntMain(url);
+               url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${effectiveDate}&limit=50&offset=0`;
                 break;
 
             case 'syslogd':
-                url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource%3D%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&limit=50&offset=0`;
-                getDataEvntMain(url);
+                url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${effectiveDate}&limit=50&offset=0`;
 
                 break;
             case 'auditlog':
                 url = '/api/v2/audit/list?_s=&limit=50&offset=0&order=desc&orderBy=id';
-                getDataEvntMain(url);
                 break;
 
             default:
                 url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd&limit=50&offset=0`;
-                getDataEvntMain(url);
                 break;
         }
-    }, [typevalueSel, nodeDataId]);
+          getDataEvntMain(url);
+    }
+
+    fetchData();
+
+    const interval = setInterval(fetchData, 30000);
+    return () => clearInterval(interval);
+
+    }, [typevalueSel, nodeDataId,eventmainSeverityValueSel]);
 
     const formatTime = (timestamp) => {
         const date = new Date(timestamp);
@@ -205,10 +222,22 @@ const TrainEventTab = () => {
                 effectiveDate = formatDate.getTime();
             }
             let url= ''
+
+             let filterParts = [
+            "eventDisplay==Y",
+            typevalueSel === 'events' ? "eventSource!=syslogd" : 'eventSource==syslogd'
+            ];
+
+            if (eventmainSeverityValueSel) {
+            filterParts.push(`eventSeverity==${eventmainSeverityValueSel}`);
+            }
+            const filterString = filterParts.join(";");
+
+
             if(typevalueSel === 'events'){
-                url = `api/v2/events/export?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
+                url = `api/v2/events/export?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${effectiveDate}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
             }else{
-                url=`api/v2/events/export?_s=eventDisplay%3D%3DY;eventSource%3D%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
+                url=`api/v2/events/export?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${effectiveDate}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
             }
     
         try {
@@ -302,9 +331,9 @@ const TrainEventTab = () => {
                                 <article className="col-sm-8 col-md-8 col-lg-8 col-xl-8 col-xxl-8">
                                     <article style={{ float: 'right' }}>
                                         <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block' }}>
-                                <button type="button" style={{marginRight:'12px'}} className="createbtn" onClick={getReportData}>Report 
+                                {/* <button type="button" style={{marginRight:'12px'}} className="createbtn" onClick={getReportData}>Report 
                                     <i className="fa fa-file-text" aria-hidden="true"></i>
-                                </button>
+                                </button> */}
 
                                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Type:</label>
 

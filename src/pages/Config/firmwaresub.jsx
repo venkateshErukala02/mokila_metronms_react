@@ -125,7 +125,7 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
 
     const downloadSampleCSV = () => {
         const csvContent = "data:text/csv;charset=utf-8,"
-            + ["Name,Email,Age", "John Doe,john@example.com,30"].join("\n");
+            + ["IP Address", "192.168.66.6"].join("\n");
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);

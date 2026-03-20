@@ -18,7 +18,8 @@ const StationNodeDetails = () => {
   const [currentTab, setCurrentTab] = useState('summary')
   const [nodeItemDt, setNodeItemDt] = useState([]);
 
-  //  const nodeDataIds = useSelector((state) => state.node.node.nodeId);
+   const nodeDataI = useSelector((state) => state);
+   console.log('plpplp',nodeDataI);
   const nodeDataId = useSelector((state) => state.node?.node?.nodeId || state.node?.node?.id) ?? localStorage.getItem('nodeId');
 
   const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress || state.node?.node?.label);

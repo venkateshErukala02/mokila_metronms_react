@@ -411,15 +411,25 @@ const InventRpt = () => {
                 body: JSON.stringify(payload)
             });
     
-            if (response.ok) {
-                // setSuccess('Discovery started successfully');
-                // alert('Discovery started successfully')
+            if (!response.ok) {
+            const errText = await response.text();
+            setIsError(`Error starting download: ${errText}`);
+            return;
+        }
 
-                // setSelectedFile(null);
-            } else {
-                const errText = await response.text();
-                setError(`Error starting discovery: ${errText}`);
-            }
+        const blob = await response.blob();
+
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+
+        const filename = response.headers.get('Content-Disposition')?.split('filename=')[1] || 'report.csv';
+        a.href = downloadUrl;
+        a.download = filename.replace(/"/g, '');
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        window.URL.revokeObjectURL(downloadUrl);
         } catch (error) {
             setError('An error occurred while contacting the server.');
         } finally {

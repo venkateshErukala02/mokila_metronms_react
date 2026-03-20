@@ -16,9 +16,12 @@ import ObcNodeView from '../pages/Dashboard/obcnodeview';
 import Wayside from '../pages/Wayside/wayside';
 import ConfigPage from '../pages/Config/configpage';
 import EncoderNodeView from '../pages/Dashboard/encodernodeview';
+import { useSelector } from 'react-redux';
 
 
 const RoutesPage = () => {
+
+   const currentUser = useSelector((state) => state?.loginuser?.node?.role);
    return (
       <Router>
          <Navbar />
@@ -33,7 +36,7 @@ const RoutesPage = () => {
             <Route  path="/Topology" element={<TopoPg />} />
             <Route  path="/Wayside" element={<Wayside />} />
             <Route  path="/TestTopo" element={<NewTopology />} />
-            <Route  path="/Config" element={<ConfigPage />} />
+           {currentUser !== "Read-only" && ( <Route  path="/Config" element={<ConfigPage />} />)}
             <Route  path="/Event" element={<EventPg />} />
             <Route path="/Inventory" element={<InventRpt />} />
             <Route path="/Setting" element={<SettPage />} />

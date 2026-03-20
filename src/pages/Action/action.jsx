@@ -3,6 +3,7 @@ export const CURRENT_PIE= 'CURRENT_PIE';
 export const CURRENT_STATIONID = 'CURRENT_STATIONID';
 export const NODE_DATA = 'NODE_DATA';
 export const CLEAR_PIE = 'CLEAR_PIE';
+export const LOGIN_DATA = 'LOGIN_DATA';
 
 
 export const toggleVisibility = () => {
@@ -30,4 +31,9 @@ export const handleNodeData = (payload) => ({
 export const clearPiename = (payload)=>({
   type: CLEAR_PIE,
   payload,
+})
+
+export const handleLoginUserData =(payload)=>({
+  type:LOGIN_DATA,
+  payload
 })

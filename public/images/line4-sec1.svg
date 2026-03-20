@@ -8,7 +8,7 @@
 <circle id="bayview" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="162.036" cy="136.32" r="6.178"/>
 <circle id="bessarion" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="248.412" cy="136.32" r="6.178"/>
 <circle id="leslie" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="333.8" cy="136.32" r="6.178"/>
-<circle id="donmills" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="422.153" cy="136.32" r="6.178"/>
+<circle id="don_mills" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="422.153" cy="136.32" r="6.178"/>
 <text id="bayview_txt" transform="matrix(0.9997 -0.0234 0.0234 0.9997 141.8403 161.9766)" font-family="'MyriadPro-Regular'" font-size="13.9995">Bayview</text>
 <circle id="yonge" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="74.959" cy="137.321" r="6.178"/>
 <text id="bessarion_txt" transform="matrix(0.9999 -0.0085 0.0085 1 220.5029 161.3525)" font-family="'MyriadPro-Regular'" font-size="14">Bessarion</text>

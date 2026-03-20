@@ -53,7 +53,7 @@ const FirmwareMng = () => {
             const options = {
                 method: "GET",
                 headers: {
-                    'Authorization': `Basic ${token}`,
+                   // 'Authorization': `Basic ${token}`,
                     "Content-Type": "application/json",
                 },
 

@@ -199,10 +199,21 @@ const resetTrainLayers = (svgRoot) => {
         }else{
             // ref
          yardfacilitieDataRef?.current?.forEach((item) => { 
+            let tt = item.position?.toLowerCase() + 'text'; 
+            let posttext = svgRoot.querySelector(`#${tt}`);
          const el = svgRoot.querySelector(`#${item.position}`);
             const title = svgRoot.querySelector(`#ts-${item.position}`);
-                if (item.type !== 'sta' && title !== null) {
-                title.textContent = item.ipAddress;
+                if (item.type !== 'sta' && title && posttext) {
+                    // if (item.type=='transcoder') {
+                    //     posttext.textContent = 'T' 
+                    // } else if (item.type=='encoder') {
+                    //     posttext.textContent = 'E' 
+                    // }
+                     posttext.textContent =
+                    item.type === 'transcoder' ? 'T' :
+                    item.type === 'encoder' ? 'E' :
+                    '';
+                    title.textContent = item.ipAddress;
                 if (el) {
                    if (item.status === "down") {
                     el.style.fill = "red";

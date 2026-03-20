@@ -144,7 +144,7 @@ const EventMainTB = () => {
 
                 break;
         }
-    }, [typevalueSel, pageSize, eventmainLimitLabelSel,selectedDuration,eventmainSeverityValueSel,searchBtn]);
+    }, [typevalueSel, pageSize, eventmainLimitLabelSel,eventmainSeverityValueSel,searchBtn,eventtimeSel]);
 
 
     const handleNodeIp = async (eventipText) => {
@@ -412,10 +412,24 @@ const EventMainTB = () => {
                 effectiveDate = formatDate.getTime();
             }
             let url= ''
+
+              let filterParts = [
+            "eventDisplay==Y",
+            typevalueSel === 'events' ? "eventSource!=syslogd" : 'eventSource==syslogd'
+            ];
+
+            if (eventmainSeverityValueSel) {
+            filterParts.push(`eventSeverity==${eventmainSeverityValueSel}`);
+            }
+            if (eventmainSeverityValueSel) {
+            filterParts.push(`eventSeverity==${eventmainSeverityValueSel}`);
+            }
+            const filterString = filterParts.join(";");
+
             if(typevalueSel === 'events'){
-                url = `api/v2/events/export?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
+                url = `api/v2/events/export?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${effectiveDate}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
             }else if(typevalueSel==='syslogd'){
-                url=`api/v2/events/export?_s=eventDisplay%3D%3DY;eventSource%3D%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
+                url=`api/v2/events/export?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${effectiveDate}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
             }
     
         try {
@@ -489,9 +503,9 @@ const EventMainTB = () => {
                 <article className="col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xxl-7">
                     <article style={{ float: 'right' }}>
                         <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block' }}>
-                             <button type="button" style={{marginRight:'12px'}} className="createbtn" onClick={getReportData}>Report 
+                             {/* <button type="button" style={{marginRight:'12px'}} className="createbtn" onClick={getReportData}>Report 
                                     <i className="fa fa-file-text" aria-hidden="true"></i>
-                                </button>
+                                </button> */}
 
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Type:</label>
 

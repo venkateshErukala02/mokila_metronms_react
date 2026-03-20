@@ -65,7 +65,8 @@ const BsChart = ({ getDataStatus }) => {
         actualValue: value.down + value.up
       }));
 
-  const staArrayRaw = userData.sta ? extractValues(userData) : [];
+  // const staArrayRaw = userData.sta ? extractValues(userData) : [];
+  const staArrayRaw = extractValues(userData);
 
 const hasItem = (name) => staArrayRaw.some(item => item.name === name);
 if (!hasItem('ap')) {
@@ -204,8 +205,10 @@ useEffect(() => {
   };
 }, []);
 
+
         const dataName = useSelector((state) => state.piename.piename);
         const getChartClass=(item)=>{
+           if (!dataName) return '';
            return item === dataName ? 'active' : '';
         }
 

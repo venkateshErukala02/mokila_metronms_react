@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import '../ornms.css';
 import '../Navbar/leftnavpage.css';
+import { useSelector } from "react-redux";
 
 
 const LeftNavList = () => {
@@ -28,6 +29,8 @@ const LeftNavList = () => {
     };
 
     const activeIndex = getActiveIndex(location.pathname); 
+    const currentUser = useSelector((state) => state?.loginuser?.node?.role);
+
 
     return (
             <article style={{display:"inline-block"}}>
@@ -53,10 +56,18 @@ const LeftNavList = () => {
                     <a>  <i className={`fas fa-lg fa-sitemap ${activeIndex === 6 ? 'activee' : ''}`}></i>
                         <span className="tooltipcll">TestTopo</span></a>
                     </li> */}
-                    <li onClick={() => handleClick("/Config")}>
+                  {/* {currentUser === 'ROLE_READONLY' ? }  <li onClick={() => handleClick("/Config")}>
                     <a>  <i className={`fas fa-lg fa-cogs ${activeIndex === 7 ? 'activee' : ''}`}></i>
                         <span className="tooltipcll">Configuration</span></a>
-                    </li>
+                    </li> */}
+                    {currentUser !== "Read-only" && (
+                        <li onClick={() => handleClick("/Config")}>
+                            <a>
+                            <i className={`fas fa-lg fa-cogs ${activeIndex === 7 ? 'activee' : ''}`}></i>
+                            <span className="tooltipcll">Configuration</span>
+                            </a>
+                        </li>
+                        )}
                     <li onClick={() => handleClick("/Event")}>
                     <a>  <i className={`fas fa-lg fa-star ${activeIndex === 4 ? 'activee' : ''}`}></i>
                         <span className="tooltipcll">Events</span></a>

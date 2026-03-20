@@ -125,9 +125,9 @@ useEffect(() => {
       const seconds = String(targetDate.getSeconds()).padStart(2, "0");
       const obcFormatDate = `${y}${month}${day}/${hours}${minutes}${seconds}`;
     //   url = `api/v2/treeview/datelogs/${nodeDataId || ""}/${obcFormatDate}?q=${executedSearch}`;
-    url = `http://${nodeIpaddress}:8084/obc/api/v1/curlogs`;
+        url = `http://${nodeIpaddress}:8084/obc/api/v1/backlogs`;
         }else if(currentObcsubTab === "obccurrent"){
-            url = `http://${nodeIpaddress}:8084/obc/api/v1/backlogs`;
+             url = `http://${nodeIpaddress}:8084/obc/api/v1/curlogs`;
         }
     } else if (selectLog === "trainlogs") {
       url = `api/v2/treeview/trainlogs/${nodeDataId|| ""}/${formattedDate}?q=${executedSearch}`;
@@ -156,10 +156,10 @@ const handleRowClick = (value) => {
 
     return (
         <section className="container-fluid">
-            <article className="border-tlr custom-row" style={{ paddingLeft: '60%' }}>
+            <article className="border-tlr custom-row" style={{ paddingLeft: currentTab === 'obc' ? '0%' : '60%' }}>
                 <>
                     {currentTab === 'obc' && (<>
-                        <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>SelectLogs:</label>
+                        <label for="name" className="selectlbl" style={{ display: 'inline-block',paddingLeft:'19px' }}>SelectLogs:</label>
 
 
                         <select name="name" id="name" value={selectLog} onChange={(e) => setSelectLog(e.target.value)} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
@@ -167,7 +167,7 @@ const handleRowClick = (value) => {
                             <option value="trainlogs" label="Trainlogs">Trainlogs</option>
                         </select>
                     </>)}
-                    <input
+                   {currentTab !== 'obc' && (<>  <input
                         type="text"
                         placeholder="Search text"
                         value={searchText}
@@ -195,9 +195,10 @@ const handleRowClick = (value) => {
                     {(searchText !== '' || search !== '') && (<button type="button" className="createbtn" style={{ marginLeft: '10px' }}
                         onClick={handleClearSearch}
                     >Clear Search</button>)}
+                  </> )}
                 </>
             </article>
-            {currentTab === 'obc' &&  <article className="row" style={{ height: '86vh', overflowY: 'auto', border: '1px solid #21232712' }}>
+            {currentTab === 'obc' && selectLog === 'obclogs' &&  <article className="row" style={{ height: '86vh', overflowY: 'auto', border: '1px solid #21232712' }}>
                 <article>
                      <article className="col-md-12" style={{display:'flex',justifyContent:'center'}}>
                     <ul className="obcsublist">

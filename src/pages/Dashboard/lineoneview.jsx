@@ -60,6 +60,8 @@ const SvgViewer = ({scopeValueSel,getCircleId}) => {
           const el = svgRoot.querySelector(`#${station}`);
           if (el && status === "down") {
             el.setAttribute("fill", "red");
+          }else if(el && status === "up") {
+             el.setAttribute("fill", "green");
           }
         });
       });

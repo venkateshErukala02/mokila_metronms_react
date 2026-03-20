@@ -2,14 +2,14 @@ import {useState,useEffect} from "react";
 import '../ornms.css';
 import logo from '../../assets/img/keywestlogo.png'
 import {  useDispatch } from 'react-redux';
-import { toggleVisibility } from '../Action/action';
+import { handleLoginUserData, toggleVisibility } from '../Action/action';
 import '../Navbar/navbarpage.css';
 
 const Navbar = () => {
         const [userData, setUserData] = useState({});
         const [isLoading, setIsLoading] = useState(false)
         const [isError, setIsError] = useState({ status: false, msg: "" }) 
-    
+        const [userLoginData,setUserLoginData] = useState([])
         const getData = async () => {
             setIsLoading(true);
             setIsError({ status: false, msg: "" })
@@ -59,6 +59,43 @@ const Navbar = () => {
         }, []);
 
 
+        const getLoginUserData = async () => {
+            setIsLoading(true);
+            setIsError({ status: false, msg: "" })
+            try {
+             const url = 'api/v2/dashboard/currentuser'
+
+                const options = {
+                    method: "GET",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                }
+                const response = await fetch(url, options)
+                const data = await response.json();
+                if (response.ok) {
+                    dispatch(handleLoginUserData(data)); 
+                    setIsLoading(false);
+                    setUserLoginData(data);
+                    setIsLoading(false);
+                    setIsError({ status: false, msg: "" });
+    
+                } else {
+                    throw new Error("data not found");
+                }
+    
+            } catch (error) {
+                setIsLoading(false)
+                setIsError({ status: true, msg: error.message })
+            }
+        }
+    
+        useEffect(() => {        
+                getLoginUserData();
+            }, [])
+
+
         const dispatch = useDispatch();
     
     const handleToggle = () => {
@@ -92,7 +129,7 @@ const Navbar = () => {
             <article className="col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1">
             <ul className="navlisttwo">
                     <li>
-                        <h6>admin</h6>
+                        <h6>{userLoginData.currentUser}</h6>
                     </li>
                     <li>
                         <a href="login.jsp">

@@ -1,4 +1,7 @@
 import {useState,useEffect} from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { handleNodeData } from "../Action/action";
 
 
 const StationNodesvgTable=({textName,yardfacilitieData})=>{
@@ -9,7 +12,19 @@ const StationNodesvgTable=({textName,yardfacilitieData})=>{
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [searchBtn, setSearchBtn] = useState("");
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
+      const handleRowClick = (node) => {
+        dispatch(handleNodeData(node))
+              if (`${node.type}` === 'AP') {
+                  navigate('/SN-view', { replace: true })
+                  
+              } else {
+                  navigate(`/${node.type}-view`, { state: { node } , replace: true });
+              }
+      
+          };
 
     return(
         <>
@@ -91,7 +106,7 @@ const StationNodesvgTable=({textName,yardfacilitieData})=>{
                                 yardfacilitieData.map((node, index) => (
                                     <tr key={index}>
                                         <td>{node.systemName}</td>
-                                        <td>{node.ipAddress}</td>
+                                        <td  className="highlightText"  onClick={() => handleRowClick(node)}>{node.ipAddress}</td>
                                         <td>{node.connectedTo}</td>
                                         <td>{node.status}</td>
                                         <td>{node.position}</td>

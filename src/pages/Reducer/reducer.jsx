@@ -1,4 +1,4 @@
-import { TOGGLE_VISIBILITY,CURRENT_PIE, CURRENT_STATIONID,NODE_DATA,CLEAR_PIE } from '../Action/action';
+import { TOGGLE_VISIBILITY,CURRENT_PIE, CURRENT_STATIONID,NODE_DATA,CLEAR_PIE,LOGIN_DATA } from '../Action/action';
 
 const initialState = {
   isVisible: true,
@@ -13,6 +13,10 @@ const initialState2 ={
 }
 const initialState3 ={
   node :'',
+}
+
+const initialState4 ={
+  loginuser :'',
 }
 
 
@@ -64,6 +68,19 @@ export const currentstationidReducer=(state = initialState2,action)=>{
 export const nodeReducer = (state = initialState3, action) => {
   switch (action.type) {
     case NODE_DATA:
+      return {
+        ...state,
+        node: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+
+export const loginReducer = (state = initialState4, action) => {
+  switch (action.type) {
+    case LOGIN_DATA:
       return {
         ...state,
         node: action.payload,

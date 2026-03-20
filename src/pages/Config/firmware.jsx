@@ -161,7 +161,7 @@ const handleChange = (value) => {
         const response = await fetch(url, {
             method: 'POST',
             headers: {
-                'Authorization': `Basic ${token}`,
+                // 'Authorization': `Basic ${token}`,
                 'Content-Type': 'application/json',
                 'Accept': '*/*'
             }
@@ -226,7 +226,7 @@ const handleBulkDelete = async () => {
         const response = await fetch(`api/v2/task/deletetasks`, {
             method: "POST",
             headers: {
-                'Authorization': `Basic ${token}`,
+                //'Authorization': `Basic ${token}`,
                 'Content-Type': 'application/json',
                 'Accept': '*/*'
             },
