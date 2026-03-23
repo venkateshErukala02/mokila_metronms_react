@@ -1,6 +1,7 @@
 import React,{useEffect, useState} from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
+import { useSelector } from "react-redux";
 
 
 const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mode})=>{
@@ -19,6 +20,7 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
 
 
     const isEditMode =  mode === 'edit';
+    const currentUser = useSelector((state) => state?.loginuser?.node?.role);
 
             const [beginIp,setBeginIp] =  useState('');
             const [endIp,setEndIp] = useState('');
@@ -233,7 +235,12 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
                                 <hr className="hrnote" />
                                 <center className="d-f">
                                     <button className="cancelbtn" type="button" onClick={handleProfileNewconfigContclose}>Cancle</button>
-                                    <button className="creatsetingbtn" type="button" onClick={handleAddSnmpConfig}>
+                                    <button type="button" onClick={handleAddSnmpConfig}
+                                    disabled={currentUser === "Read-only"}
+                                    className={`creatsetingbtn ${
+                                        currentUser === "Read-only" ? "btndisable" : ""
+                                    }`} title={currentUser === "Read-only" ? "Permission required" : ""}
+                                    >
                                       {isEditMode ? 'Update' : 'Create'}
                                         </button>
                                 </center>

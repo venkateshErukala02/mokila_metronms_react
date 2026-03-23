@@ -331,10 +331,10 @@ useEffect(() => {
     setShowPopup(true);
     let url='';
     if(id === undefined){
-        url = `api/v2//nodelinks/linkstatstest?nodeId=373`;
+        url = `api/v2//nodelinks/linkstats?nodeId=373`;
  
     }else{
-        url = `api/v2//nodelinks/linkstatstest?nodeId=${id}`;
+        url = `api/v2//nodelinks/linkstats?nodeId=${id}`;
     }
         getServerStatusDt(url);
     // setFirmpopupData(data);
@@ -362,7 +362,7 @@ useEffect(() => {
                                 <article className="trainsel">
                                 <label for="" className="selectlbl">Select Section :</label>
                                 <select className="form-controll1" value={trainValueSel} onChange={handleTrains} style={{ width: "auto", display: 'inline-block' }} aria-invalid="false">
-                                    <option value="2" label="Select" disabled>Select</option>
+                                    <option value="2" label="Select">Select</option>
                                     <option value="11" label="Mainline">Mainline</option>
                                     <option value="12" label="Yard">Yard</option>
                                 </select>

@@ -287,7 +287,7 @@ const selectedFileRef = useRef(null);
     
             if (response.ok) {
                 setSuccess('Discovery started successfully');
-                alert('Discovery started successfully')
+                // alert('Discovery started successfully')
 
                 setSelectedFile(null);
             } else {

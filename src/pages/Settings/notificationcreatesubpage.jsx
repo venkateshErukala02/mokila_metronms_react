@@ -1,11 +1,13 @@
 import React,{useEffect, useState} from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
+import { useSelector } from "react-redux";
  
 
 const NotificationCreateSubCont=({handleSubContainer,notification,mode,notificationEventDt,notificationPathDt})=>{
     
     const isEditMode =  mode === 'edit';
+    const currentUser = useSelector((state) => state?.loginuser?.node?.role);
 
     const [eventNotifiSel,setEventNotifiSel] =  useState('');
     const [nameNotifi, setNameNotifi] = useState('');
@@ -198,7 +200,11 @@ useEffect(()=>{
                                 <hr className="hrnote" />
                                 <center className="d-f">
                                         <button className="cancelbtn" type="button" onClick={handleProfileContclose}>Cancle</button>
-                                        <button className="creatsetingbtn" onClick={handleAddNotification}>
+                                        <button onClick={handleAddNotification} 
+                                        className={`creatsetingbtn ${
+                                        currentUser === "Read-only" ? "btndisable" : ""
+                                    }`} title={currentUser === "Read-only" ? "Permission required" : ""}
+                                        disabled={currentUser === "Read-only"}>
                                             {isEditMode ? 'Update' : 'Create'}
                                             </button>
                                 </center>

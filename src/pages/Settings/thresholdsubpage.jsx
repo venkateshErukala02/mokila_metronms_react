@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
 import { type } from "@testing-library/user-event/dist/type";
+import { useSelector } from "react-redux";
 
 
 const ThresholdSubCont = ({ handleSubContainer, refreshThresholdData,threshold,mode }) => {
 
     const isEditMode = mode === 'edit';
+    const currentUser = useSelector((state) => state?.loginuser?.node?.role);
 
     const [threshdDescription,setThreshdDescription] = useState('');
     const [threshdType,setThreshdType] =  useState('');
@@ -55,7 +57,7 @@ const ThresholdSubCont = ({ handleSubContainer, refreshThresholdData,threshold,m
         });
         if (response.ok) {
             // setSuccess('Discovery started successfully');
-            alert('Discovery started successfully')
+            // alert('Discovery started successfully')
             handleProfileContclose();
             if(refreshThresholdData) refreshThresholdData();
             // setSectionName('');
@@ -151,7 +153,12 @@ const ThresholdSubCont = ({ handleSubContainer, refreshThresholdData,threshold,m
                                 <hr className="hrnote" />
                                 <center className="d-f">
                                     <button className="cancelbtn">Cancle</button>
-                                    <button type="button" className="creatsetingbtn" onClick={handleAddThreshold}>
+                                    <button type="button" onClick={handleAddThreshold}
+                                    disabled={currentUser === "Read-only"}
+                                    className={`creatsetingbtn ${
+                                        currentUser === "Read-only" ? "btndisable" : ""
+                                    }`} title={currentUser === "Read-only" ? "Permission required" : ""}
+                                    >
                                        {isEditMode ? 'Update' :'Create'}
                                         </button>
                                 </center>

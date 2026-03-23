@@ -69,8 +69,8 @@ const StationNodesvgTable=({textName,yardfacilitieData})=>{
                             <tr>
                                 <th>System Name</th>
                                 <th>Primary IP</th>
-                                <th>Connected To</th>
                                 <th>Device Type</th>
+                                <th>Status</th>
                                 <th>Position</th>
                             </tr>
                         </thead>
@@ -107,7 +107,7 @@ const StationNodesvgTable=({textName,yardfacilitieData})=>{
                                     <tr key={index}>
                                         <td>{node.systemName}</td>
                                         <td  className="highlightText"  onClick={() => handleRowClick(node)}>{node.ipAddress}</td>
-                                        <td>{node.connectedTo}</td>
+                                        <td>{node.type}</td>
                                         <td>{node.status}</td>
                                         <td>{node.position}</td>
                                     </tr>

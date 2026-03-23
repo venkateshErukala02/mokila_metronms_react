@@ -1,6 +1,7 @@
 import React,{useEffect, useState} from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
+import { useSelector } from "react-redux";
  
 
 const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddTarget,handleAddEscalationTarget,selectedAddUsers,escalations,handleEditDestination,editMode,name,initialDelayProp})=>{
@@ -10,6 +11,7 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
     const [path,setPath] = useState('');
     const [initialDelay,setInitialDelay] = useState('');
     const [localName,setLocalName] = useState("");
+    const currentUser = useSelector((state) => state?.loginuser?.node?.role);
 
     const handleProfileContclose=()=>{
         handleSubContainer();
@@ -180,8 +182,16 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
                                 </article>
                                   <article style={{padding:'15px 0'}}>
                                   <center>
-                                        <button className="cancelbtn" type="button" onClick={handleDeletePath}>Delete</button>
-                                        <button className="creatsetingbtn" type="button" onClick={handleEditNotifiConfig}>Edit</button>
+                                        <button type="button" onClick={handleDeletePath} disabled={currentUser === "Read-only"}
+                                        className={`cancelbtn ${
+                                        currentUser === "Read-only" ? "btndisable" : ""
+                                    }`} title={currentUser === "Read-only" ? "Permission required" : ""}>Delete</button>
+                                        <button type="button" onClick={handleEditNotifiConfig} 
+                                        disabled={currentUser === "Read-only"}
+                                        className={`creatsetingbtn ${
+                                        currentUser === "Read-only" ? "btndisable" : ""
+                                    }`} title={currentUser === "Read-only" ? "Permission required" : ""}
+                                        >Edit</button>
                                 </center>
                                 </article>
                                
@@ -259,7 +269,12 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
                                 <article style={{padding:'15px 0'}}>
                                 <center className="d-f">
                                         <button className="cancelbtn" type="button" onClick={handleProfileContclose}>Cancle</button>
-                                        <button className="creatsetingbtn" type="buttton" onClick={handleCreateDestinPath}>{editMode ? 'Update' : 'Create'}</button>
+                                        <button type="buttton" onClick={handleCreateDestinPath}
+                                        disabled={currentUser === "Read-only"}
+                                        className={`creatsetingbtn ${
+                                        currentUser === "Read-only" ? "btndisable" : ""
+                                    }`} title={currentUser === "Read-only" ? "Permission required" : ""}
+                                        >{editMode ? 'Update' : 'Create'}</button>
                                 </center>
                                 </article>
                                

@@ -780,7 +780,7 @@ useEffect(() => {
                     <article className="border-allsd" style={{ height: '90vh', margin: '5px 5px 0 5px' }}>
                         <article className="row">
                             <article className="col-7">
-                                <h1 className="topoheading">Topology</h1>
+                                <h1 className="topo-title">Topology</h1>
                             </article>
                             <article className="col-4" style={{ float: 'right' }}>
                                 <article style={{ float: 'right' }}>
@@ -789,16 +789,16 @@ useEffect(() => {
                             </article>
                             <article className="row">
                                 <article className="col-12">
-                                    <span className="radioSelct">Radio Mode:</span>
+                                    {/* <span className="radioSelct">Radio Mode:</span>
                                     <select className="form-controlfirm" value="select" style={{ width: "auto" }} aria-invalid="false">
                                         <option value="0" label="All">All</option>
                                         <option value="1" selected="selected" label="AP">AP</option>
                                         <option value="2" label="SU">SU</option>
-                                    </select>
+                                    </select> */}
                                 </article>
                             </article>
                         </article>
-                        <hr className="hrll" />
+                        {/* <hr className="hrll" />
                         <article className="systemcont">
                             <article className="row">
                                 <article className="col-6">
@@ -810,7 +810,7 @@ useEffect(() => {
                                 </article>
                                 </article>
                             </article>
-                        </article>
+                        </article> */}
                         <hr  className="hrll" style={{marginBottom:'0px'}}/>
                         <article>
                         <TreeList getElementAtEvent={handleNodeClick} selectedNodeId={selectedTreeNodeId} circleId={circleId} onStationResolved={setStationNode} selectedPrevNodeId={selectedPrevNodeId} prevIdActive={prevIdActive}  onStationCircleIdChange={setStationIdFromSvg} stationRefreshKey={stationRefreshKey}

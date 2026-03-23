@@ -14,8 +14,12 @@ const EventPg = () => {
     const [cabNumber,setCabNumber] = useState('');
     const [selectedFromDate,setSelectedFromDate] = useState(null);
     const [selectedToDate,setSelectedToDate] = useState(null);
+    const [selectedStartDate,setSelectedStartDate] = useState(null);
+    const [selectedEndDate,setSelectedEndDate] = useState(null);
     const [timestampFrom,setTimestampFrom] = useState(Date.now());
     const [timestampTo,setTimestampTo] = useState(Date.now());
+    const [timestampStart,setTimestampStart] = useState(Date.now());
+    const [timestampEnd,setTimestampEnd] = useState(Date.now());
 
     const handleFromDateChange = (date) => {
             setSelectedFromDate(date);
@@ -27,6 +31,19 @@ const EventPg = () => {
         setSelectedToDate(date);
         const timestamp = date.getTime();  
         setTimestampTo(timestamp);        
+    };
+
+
+    const handleStartDateChange = (date) => {
+            setSelectedStartDate(date);
+            const timestamp = date.getTime();  
+            setTimestampStart(timestamp);        
+        };
+
+    const handleEndDateChange = (date) => {
+        setSelectedEndDate(date);
+        const timestamp = date.getTime();  
+        setTimestampEnd(timestamp);        
     };
 
 
@@ -106,6 +123,48 @@ const EventPg = () => {
                                     <button type="button" className="createbtn" onClick={ExportCanData}>Export</button>
                                 </article>
                         </article>
+                        <article style={{clear:"both"}}>
+                            {/* <h1 className="evntsheadcl border-allsd">Export Cab Logs</h1> */}
+                        <article style={{padding:"12px"}}>
+                        <article>
+                             <label className="settinglabelsub">Start Date</label>
+                            <DatePicker
+                            selected={selectedStartDate}
+                            // showTimeSelect
+                            dateFormat="yyyy-MM-dd"
+                            placeholderText="yyyy-MM-dd"
+                            onChange={handleStartDateChange}
+                            className="myDatepickercl" 
+                            calendarContainer={({ children }) => (
+                                <div style={{ display: 'flex' }}>
+                                <div style={{ display: 'inline-block',background:"white" ,border:"1px solid #aeaeae"}}>{children}</div>
+                                <div style={{ display: 'none' }} /> 
+                                </div>
+                            )}
+                            />
+                            </article>
+                            <article className="labelaligncl">
+                                <label className="settinglabelsub">End Date</label>
+                           <DatePicker
+                            selected={selectedEndDate}
+                            // showTimeSelect
+                            dateFormat="yyyy-MM-dd"
+                            placeholderText="yyyy-MM-dd"
+                            onChange={handleEndDateChange}
+                            className="myDatepickercl" 
+                            calendarContainer={({ children }) => (
+                                <div style={{ display: 'flex' }}>
+                                <div style={{ display: 'inline-block',background:"white"  ,border:"1px solid #aeaeae"}}>{children}</div>
+                                <div style={{ display: 'none' }} />
+                                </div>
+                            )}
+                            />
+                        </article>
+                        <article className="f-r labelaligncl">
+                                    <button type="button" className="createbtn" onClick="">Download</button>
+                                </article>
+                                </article>
+                                </article>
                         </article>
                     </article>
                     </article>

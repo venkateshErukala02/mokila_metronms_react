@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const UserContainer=()=>{
         const [profileStatusCont, setProfileStatusCont] = useState(true);
         const [userData, setUserData] = useState([]);
-        const [userLimitValueSel, setUserLimitValueSel] = useState('50');
+        const [userLimitValueSel, setUserLimitValueSel] = useState('10');
         const [isLoading, setIsLoading] = useState(false);
         const [isError, setIsError] = useState({ status: false, msg: "" });
         const [mode, setMode] = useState(null); 
@@ -51,7 +51,7 @@ const UserContainer=()=>{
      useEffect(() => {
         const fetchUserData = async()=>{
             // const url = `rest/users/list?limit=${userLimitValueSel}&offset=0&sort=asc`
-            const url=`rest/users/list?limit=10&offset=0&sort=${sortOrder}`
+            const url=`rest/users/list?limit=${userLimitValueSel}&offset=0&sort=${sortOrder}`
             getUserData(url);
         }
 
@@ -107,7 +107,7 @@ const UserContainer=()=>{
             const text = await response.text();
 
             if (response.ok) {
-                const url=`rest/users/list?limit=10&offset=0&sort=${sortOrder}`
+                const url=`rest/users/list?limit=${userLimitValueSel}&offset=0&sort=${sortOrder}`
                 getUserData(url);
             } else {
                 setIsError('Error starting discovery');
@@ -149,10 +149,10 @@ const UserContainer=()=>{
 
                                             <li>
                                                 <select className="form-controlfirm" value={userLimitValueSel} onChange={handleUserLimitValue} style={{ width: '50px', marginTop: '4px' }} aria-invalid="false">
-                                                    <option value="0" label="50">50</option>
-                                                    <option value="1" label="25" defaultValue={25}>25</option>
-                                                    <option value="2" label="50">50</option>
-                                                    <option value="3" label="100">100</option>
+                                                    <option value="10" label="10" defaultValue={10}>10</option>
+                                                    <option value="25" label="25">25</option>
+                                                    <option value="50" label="50">50</option>
+                                                    <option value="100" label="100">100</option>
                                                 </select>
                                             </li>
                                         </ul>

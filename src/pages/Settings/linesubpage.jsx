@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
+import { useSelector } from "react-redux";
 
 
 const LineSubCont = ({ handleSubContainer,refreshLineData,mode,line }) => {
+    const currentUser = useSelector((state) => state?.loginuser?.node?.role);
 
     const isEditMode = mode === 'edit';
 
@@ -103,7 +105,12 @@ const LineSubCont = ({ handleSubContainer,refreshLineData,mode,line }) => {
                                 <hr className="hrnote" />
                                 <center className="d-f">
                                     <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancle</button>
-                                    <button type="button" className="creatsetingbtn" onClick={handleAddLine}>
+                                    <button type="button"   className={`creatsetingbtn ${
+                                        currentUser === "Read-only" ? "btndisable" : ""
+                                    }`} onClick={handleAddLine}
+                                    disabled={currentUser === "Read-only"}
+                                    title={currentUser === "Read-only" ? "Permission required" : ""}
+                                    >
                                        {isEditMode ? 'Update' :'Create'} 
                                         </button>
                                 </center>

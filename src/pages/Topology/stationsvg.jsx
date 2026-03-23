@@ -203,25 +203,30 @@ const resetTrainLayers = (svgRoot) => {
             let posttext = svgRoot.querySelector(`#${tt}`);
          const el = svgRoot.querySelector(`#${item.position}`);
             const title = svgRoot.querySelector(`#ts-${item.position}`);
-                if (item.type !== 'sta' && title && posttext) {
-                    // if (item.type=='transcoder') {
-                    //     posttext.textContent = 'T' 
-                    // } else if (item.type=='encoder') {
-                    //     posttext.textContent = 'E' 
-                    // }
-                     posttext.textContent =
-                    item.type === 'transcoder' ? 'T' :
-                    item.type === 'encoder' ? 'E' :
-                    '';
-                    title.textContent = item.ipAddress;
+                if (item.type !== 'sta') {
+                    if (item.type=='transcoder' && posttext) {
+                        posttext.textContent = 'T' 
+                    } else if (item.type=='encoder' && posttext) {
+                        posttext.textContent = 'E' 
+                    }
+                    //  posttext.textContent =
+                    // item.type === 'transcoder' ? 'T' :
+                    // item.type === 'encoder' ? 'E' :
+                    // '';
+                    if (title) {
+                            title.textContent = item.ipAddress;
+                        } else {
+                            console.warn(`Element with id ts-${item.position} not found`);
+                        }
+                    // title.textContent = item.ipAddress;
                 if (el) {
                    if (item.status === "down") {
                     el.style.fill = "red";
-                } else if (item.status === "up") {
+                 } else if (item.status === "up") {
                     el.style.fill = "rgb(102, 204, 51)";
-                    }
                     }else{
                         el.style.fill = "#FFFFFF";
+                    }
                     }
                 }
                 

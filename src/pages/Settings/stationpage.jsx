@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const StationContainer=()=>{
         const [profileStatusCont, setProfileStatusCont] = useState(true);
         const [stationData, setStationData] = useState([]);
-        const [locationLimitValueSel, setLocationLimitValueSel] = useState('50');
+        const [locationLimitValueSel, setLocationLimitValueSel] = useState('10');
         const [isLoading, setIsLoading] = useState(false);
         const [isError, setIsError] = useState({ status: false, msg: "" });
         const [editStation,setEditStation] = useState(null);
@@ -51,7 +51,7 @@ const StationContainer=()=>{
 
      useEffect(() => {
             // const url = `api/v2/locations?_s=&limit=${locationLimitValueSel}&offset=0&order=asc&orderBy=name`
-            const url=`api/v2/facilities?_s=&limit=10&offset=0&order=${sortOrder}&orderBy=${sortField}`
+            const url=`api/v2/facilities?_s=&limit=${locationLimitValueSel}&offset=0&order=${sortOrder}&orderBy=${sortField}`
             getStationData(url);
     
         }, [locationLimitValueSel,sortOrder]);
@@ -109,10 +109,10 @@ const StationContainer=()=>{
 
                                             <li>
                                                 <select className="form-controlfirm" value={locationLimitValueSel} onChange={handleLocationLimitValue} style={{ width: '50px', marginTop: '4px' }} aria-invalid="false">
-                                                    <option value="0" label="50">50</option>
-                                                    <option value="1" label="25" defaultValue={25}>25</option>
-                                                    <option value="2" label="50">50</option>
-                                                    <option value="3" label="100">100</option>
+                                                    <option value="10" label="10" defaultValue={10} >10</option>
+                                                    <option value="25" label="25">25</option>
+                                                    <option value="50" label="50">50</option>
+                                                    <option value="100" label="100">100</option>
                                                 </select>
                                             </li>
                                         </ul>

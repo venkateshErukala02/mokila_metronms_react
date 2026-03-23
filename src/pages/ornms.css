@@ -1458,6 +1458,11 @@ margin-right: 3px;
     padding: 7px;
     font-size: 17px;font-family: "Lato-Regular"; letter-spacing: 1px;
     font-weight: 900;}
+.topo-title{background-color: #ffffff !important;
+color: #212327;
+padding: 17px 0 13px 9px;
+font-size: 17px;font-family: "Lato-Regular"; letter-spacing: 1px;
+font-weight: 900;}
 .radioSelct{color: #50565e ;font-weight: 400;font-family: 'Lato-Regular';font-size: 15px;margin-left: 10px;letter-spacing: 0.6px;}
 .form-controltopo {
     background: #b4b4c53b;
@@ -4363,6 +4368,15 @@ svg *:focus {
 .sect-padd{
     padding: 0 6px !important;
 }
+
+.btndisable{
+    background-color: rgb(204, 204, 204);
+    color: rgb(102, 102, 102);
+    border: none;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
  /* width={700} height={240} */
 
 /*  */

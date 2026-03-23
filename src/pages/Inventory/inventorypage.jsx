@@ -366,6 +366,7 @@ const InventRpt = () => {
             const response = await fetch("api/v2/nodes/tagreport", {
                 method: "POST",
                 headers: {
+                    "Content-Type": "application/json"
                     // 'Authorization': `Basic ${token}`
                 },
                 // body: formData, 
@@ -406,6 +407,7 @@ const InventRpt = () => {
             const response = await fetch("api/v2/nodes/export_to_csv", {
                 method: "POST",
                 headers: {
+                    "Content-Type": "application/json"
                     // 'Authorization': `Basic ${token}`
                 },
                 body: JSON.stringify(payload)
@@ -436,6 +438,19 @@ const InventRpt = () => {
             setLoading(false);
         }
     };
+
+
+    const formatUptime = (ticks) => {
+    const totalSeconds = Math.floor(ticks / 100);
+
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    const pad = (num) => String(num).padStart(2, "0");
+
+    return `${pad(days)}:${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+};
 
     return (
         <>
@@ -626,7 +641,9 @@ const InventRpt = () => {
                                         onClick={() => handleRowClick(node)}
                                         >
                                         {node[col.key]}
-                                        </span>):(
+                                        </span>): col.key === "sysUptime" ? (
+                                                formatUptime(node[col.key])
+                                            ) :(
                                                 node[col.key]
                                         )}
                                             </td>

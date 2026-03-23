@@ -4,17 +4,19 @@ import LineSubCont from "./linesubpage";
 import './../Settings/settings.css'; 
 import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useSelector } from "react-redux";
 
 const LineContainer=()=>{
         const [profileStatusCont, setProfileStatusCont] = useState(true);
         const [lineData, setLineData] = useState([]);
-        const [regionLimitValueSel, setRegionLimitValueSel] = useState('50');
+        const [regionLimitValueSel, setRegionLimitValueSel] = useState('10');
         const [isLoading, setIsLoading] = useState(false);
         const [isError, setIsError] = useState({ status: false, msg: "" });
         const [editLine,setEditLine] = useState(null);
         const [mode, setMode] = useState(null); 
         const [sortField, setSortField] = useState('name');
         const [sortOrder, setSortOrder] = useState('asc');
+        const currentUser = useSelector((state) => state?.loginuser?.node?.role);
 
         const getLineData = async (url) => {
             setIsLoading(true);
@@ -51,7 +53,7 @@ const LineContainer=()=>{
 
      useEffect(() => {
         const fetchLinesData = async()=>{
-            const url= `api/v2/regions?_s=&limit=10&offset=0&order=${sortOrder}&orderBy=${sortField}`
+            const url= `api/v2/regions?_s=&limit=${regionLimitValueSel}&offset=0&order=${sortOrder}&orderBy=${sortField}`
             // const url = `api/v2/regions?_s=&limit=${regionLimitValueSel}&offset=0&order=asc&orderBy=name`
            await getLineData(url);
          
@@ -118,7 +120,7 @@ const LineContainer=()=>{
 
             if (response.ok) {
                 // alert("Are you sure you want to delete this firmware?")
-                 let url =`api/v2/regions?_s=&limit=10&offset=0&order=${sortOrder}&orderBy=${sortField}`
+                 let url =`api/v2/regions?_s=&limit=${regionLimitValueSel}&offset=0&order=${sortOrder}&orderBy=${sortField}`
             getLineData(url);
             } else {
                 setIsError('Error starting discovery');
@@ -165,10 +167,10 @@ const LineContainer=()=>{
 
                                             <li>
                                                 <select className="form-controlfirm" value={regionLimitValueSel} onChange={handleRegionLimitValue} style={{ width: '50px', marginTop: '4px' }} aria-invalid="false">
-                                                    <option value="0" label="50">50</option>
-                                                    <option value="1" label="25" defaultValue={25}>25</option>
-                                                    <option value="2" label="50">50</option>
-                                                    <option value="3" label="100">100</option>
+                                                    <option value="10" label="10" defaultValue={10}>10</option>
+                                                    <option value="25" label="25">25</option>
+                                                    <option value="50" label="50">50</option>
+                                                    <option value="100" label="100">100</option>
                                                 </select>
                                             </li>
                                         </ul>
@@ -216,7 +218,7 @@ const LineContainer=()=>{
                                     {lineData && lineData.map((item) => (
                                         <tr key={item.id}>
                                             <td>{item.name}</td>
-                                            <td><i className="fas fa-edit" onClick={()=> handleEditLineDt(item)}></i></td>
+                                            <td><i className="fas fa-edit" onClick={currentUser !== "Read-only" ? () => handleEditLineDt(item) : undefined}></i></td>
                                             <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" 
                                              onClick={()=> handleDeleteLine(item)}
                                             ></i></td>

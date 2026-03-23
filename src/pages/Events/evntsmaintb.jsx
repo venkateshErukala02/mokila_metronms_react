@@ -315,6 +315,12 @@ const EventMainTB = () => {
                 }  else {
                     if(typevalueSel === 'events'){
                          filter  =  filter +  `eventDisplay%3D%3DY%3BeventSource!%3Dsyslogd;`+ `eventLogMsg%3D%3D` +`*${eventipText}*`;
+                            if (eventmainSeverityValueSel) {
+                        filter  =  filter + '&eventSeverity==' + `${eventmainSeverityValueSel}`;
+                        }
+                         if (eventtimeSel) {
+                    filter  =  filter +  '&eventCreateTime%3Dgt%3D' + `${eventtimeSel}`;
+                    }
                      if (eventmainLimitLabelSel != 'all') {
                     filter  =  filter +'&limit=' + `${eventmainLimitLabelSel}`;
                     }
@@ -322,6 +328,12 @@ const EventMainTB = () => {
                      handleRadialIPa(url);
                     }else{
                     filter  =  filter + `eventDisplay%3D%3DY%3BeventSource%3D%3Dsyslogd;` + `eventLogMsg%3D%3D` +`*${eventipText}*`;
+                     if (eventmainSeverityValueSel) {
+                        filter  =  filter + '&eventSeverity==' + `${eventmainSeverityValueSel}`;
+                        }
+                         if (eventtimeSel) {
+                    filter  =  filter +  '&eventCreateTime%3Dgt%3D' + `${eventtimeSel}`;
+                    }
                      if (eventmainLimitLabelSel != 'all') {
                     filter  =  filter +'&limit=' + `${eventmainLimitLabelSel}`;
                     }
@@ -421,15 +433,17 @@ const EventMainTB = () => {
             if (eventmainSeverityValueSel) {
             filterParts.push(`eventSeverity==${eventmainSeverityValueSel}`);
             }
-            if (eventmainSeverityValueSel) {
-            filterParts.push(`eventSeverity==${eventmainSeverityValueSel}`);
+
+            // const regex = /^192\.168\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+            if (eventipText) {
+            filterParts.push(`eventLogMsg==*${eventipText}*`);
             }
             const filterString = filterParts.join(";");
 
             if(typevalueSel === 'events'){
-                url = `api/v2/events/export?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${effectiveDate}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
+                url = `api/v2/events/export?_s=${encodeURIComponent(filterString)}&eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
             }else if(typevalueSel==='syslogd'){
-                url=`api/v2/events/export?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${effectiveDate}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
+                url=`api/v2/events/export?_s=${encodeURIComponent(filterString)}&eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
             }
     
         try {
@@ -467,11 +481,22 @@ const EventMainTB = () => {
         }
     };
 
+    useEffect(()=>{
+        setSearchBtn(false);
+        setEventipText('');
+        setEventmainLimitValueSel('50');
+        setEventmainLimitLabelSel('50');
+        setEventtimeSel(Date.now() - 86400000);
+        setEventmainSeverityValueSel('');
+        setEventmainSeverityLabelSel('All');
+        setPageSize(1);
+    },[typevalueSel]);
+
 
     return (
         <>
             <article className="row border-tlr custom-row">
-                <article className="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xxl-5">
+                <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
                     <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block' }}>
                         <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
                             <i className="fa-solid fa-arrow-left"></i>
@@ -484,7 +509,7 @@ const EventMainTB = () => {
                         <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
                         <button type="button" className="createbtn" onClick={() => { handleRadialIP();}} >Search</button>
                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
-
+                        <button type="button" className="createbtn" onClick={getReportData} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}>  <i class="fa-solid fa-download"></i></button>
 
                     </article>
                     <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
@@ -500,7 +525,7 @@ const EventMainTB = () => {
                     </article>
 
                 </article>
-                <article className="col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xxl-7">
+                <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
                     <article style={{ float: 'right' }}>
                         <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block' }}>
                              {/* <button type="button" style={{marginRight:'12px'}} className="createbtn" onClick={getReportData}>Report 
@@ -545,10 +570,10 @@ const EventMainTB = () => {
                             </select>
 
                             <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
-                                <option value="0" label="25">25</option>
-                                <option value="1" label="50">50</option>
-                                <option value="2" label="100">100</option>
-                                <option value="3" label="500">500</option>
+                                <option value="25" label="25">25</option>
+                                <option value="50" label="50">50</option>
+                                <option value="100" label="100">100</option>
+                                <option value="500" label="500">500</option>
                             </select>
                         </article>
                         <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
@@ -570,10 +595,10 @@ const EventMainTB = () => {
                             </select>
 
                             <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
-                                <option value="0" label="25">25</option>
-                                <option value="1" label="50">50</option>
-                                <option value="2" label="100">100</option>
-                                <option value="3" label="500">500</option>
+                                <option value="25" label="25">25</option>
+                                <option value="50" label="50">50</option>
+                                <option value="100" label="100">100</option>
+                                <option value="500" label="500">500</option>
                             </select>
                         </article>
 

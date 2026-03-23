@@ -1,9 +1,11 @@
 import React,{useState,useEffect} from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
+import { useSelector } from "react-redux";
 
 
 const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
+    const currentUser = useSelector((state) => state?.loginuser?.node?.role);
 
             const isEditMode = mode ==='edit';
 
@@ -326,7 +328,13 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
                                 <hr className="hrnote" />
                                 <center className="d-f">
                                         <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancle</button>
-                                        <button type="button" className="creatsetingbtn" onClick={handleAddStation}>
+                                        <button type="button" onClick={handleAddStation}
+                                        className={`creatsetingbtn ${
+                                        currentUser === "Read-only" ? "btndisable" : ""
+                                    }`} title={currentUser === "Read-only" ? "Permission required" : ""}
+
+                                        disabled={currentUser === "Read-only"}
+                                        >
                                         {isEditMode ? 'Update' : 'Create'}
                                     </button>
                                 </center>
@@ -343,9 +351,9 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
                                 id="hiddenFileInput"
                                 style={{ display: "none" }}
                             />
-                                     <button type="button" onClick={() => document.getElementById("hiddenFileInput").click()} className="attachcl">
+                                     <button type="button" onClick={() => document.getElementById("hiddenFileInput").click()} className="attachcl"  disabled={currentUser === "Read-only"}>
                                 <i className="fa-solid fa-paperclip"></i></button>
-                            <button type="button" onClick={handleUpload} className="uploadcl"><i className="fa-solid fa-upload"></i></button>
+                            <button type="button" onClick={handleUpload}   disabled={currentUser === "Read-only"} className="uploadcl"><i className="fa-solid fa-upload"></i></button>
                             <button type="button" onClick={downloadSampleCSV} className="createbtn">Sample.csv<i className="fa fa-file-text" aria-hidden="true"></i></button>
 
                                 </article>} 

@@ -1,9 +1,11 @@
 import React, { useState , useEffect} from "react";
 import EyeSlash from '../../assets/img/eye-slash.png';
 import Eye from '../../assets/img/eye.png';
+import { useSelector } from "react-redux";
 
 
 const ServerConfigContainer = () => {
+    const currentUser = useSelector((state) => state?.loginuser?.node?.role);
 
     const [userFtp, setUserFtp] = useState();
     const [serverDropdw, setServerDropdw] = useState(true);
@@ -375,7 +377,7 @@ const ServerConfigContainer = () => {
                                                                         cursor: !isFormValid() ? 'not-allowed' : 'pointer',
                                                                         opacity: !isFormValid() ? 0.6 : 1  
                                                                     }} type="button"
-                                                                 disabled={!isFormValid()}  onClick={()=>handleAddServerConfig(serverConfigDt)}>Save</button>
+                                                                 disabled={!isFormValid() || currentUser === "Read-only"}  onClick={()=>handleAddServerConfig(serverConfigDt)}>Save</button>
                                                             </article>
                                                         </article>
 
@@ -499,7 +501,7 @@ const ServerConfigContainer = () => {
                                                                         cursor: !isEmailFormValid() ? 'not-allowed' : 'pointer',
                                                                         opacity: !isEmailFormValid() ? 0.6 : 1  
                                                                     }} 
-                                                                disabled ={!isEmailFormValid()}
+                                                                disabled ={!isEmailFormValid() || currentUser === "Read-only"}
                                                                 onClick={handleAddEmailConfig}>Save</button>
                                                             </article>
                                                         </article>

@@ -586,6 +586,9 @@ useEffect(() => {
       case 'location':
         url = `api/v2/treeview/locations/${nodeInTree.data.id}/facilitiesn?show=all`;
         break;
+      case 'Trains':
+        url = `api/v2/treeview/regions/${nodeInTree.data.id}/locations`;
+        break;
       case 'yard':
         url = `api/v2/treeview/locations/${nodeInTree.data.id}/facilitiesn?show=all`;
         break;

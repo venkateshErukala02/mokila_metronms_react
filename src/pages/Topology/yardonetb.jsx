@@ -45,8 +45,8 @@ const YardTbone=({textName,yardfacilitieData})=>{
         }
         setSortedData([...yardfacilitieData]);
         for (const node of yardfacilitieData) {
-            const url = `api/v2/nodelinks/linkstatstest?nodeId=0`; // test API
-            // const url = `api/v2/nodelinks/linkstats?nodeId=${node.nodeId}`; // working API
+            // const url = `api/v2/nodelinks/linkstatstest?nodeId=0`; // test API
+            const url = `api/v2/nodelinks/linkstats?nodeId=${node.nodeId}`; // working API
             await getYardLinkData(url, node.nodeId);
         }
     };

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
+import { useSelector } from "react-redux";
 
 
 const WaysideTagSubCont = ({ handleSubContainer, refreshTagData, mode, user }) => {
+    const currentUser = useSelector((state) => state?.loginuser?.node?.role);
 
     const isEditMode = mode === 'edit';
 
@@ -126,7 +128,7 @@ const WaysideTagSubCont = ({ handleSubContainer, refreshTagData, mode, user }) =
 
             if (response.ok) {
                 // setSuccess('Discovery started successfully');
-                alert('Discovery started successfully')
+                // alert('Discovery started successfully')
                 handleProfileContclose();
                 if(refreshTagData) refreshTagData();
             //    setUserName('');
@@ -212,7 +214,12 @@ const WaysideTagSubCont = ({ handleSubContainer, refreshTagData, mode, user }) =
 
                                 <center className="d-f">
                                     <button className="cancelbtn" onClick={handleProfileContclose}>Cancle</button>
-                                    <button className="creatsetingbtn" onClick={handleAddUser}>
+                                    <button onClick={handleAddUser}
+                                    className={`creatsetingbtn ${
+                                        currentUser === "Read-only" ? "btndisable" : ""
+                                    }`} title={currentUser === "Read-only" ? "Permission required" : ""}
+                                    disabled={currentUser === "Read-only"}
+                                    >
                                         {isEditMode ? 'Update' : 'Upload'}
                                     </button>
                                 </center>

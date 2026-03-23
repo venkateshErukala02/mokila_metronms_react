@@ -3,9 +3,11 @@ import '../ornms.css'
 import './../Settings/settings.css';
 import EyeSlash from '../../assets/img/eye-slash.png';
 import Eye from '../../assets/img/eye.png';
+import { useSelector } from "react-redux";
 
 
 const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
+    const currentUser = useSelector((state) => state?.loginuser?.node?.role);
 
     const isEditMode = mode === 'edit';
 
@@ -155,7 +157,7 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
 
             if (response.ok) {
                 // setSuccess('Discovery started successfully');
-                alert('Discovery started successfully')
+                alert('User Created successfully')
                 handleProfileContclose();
                 if(refreshUserData) refreshUserData();
                setUserName('');
@@ -357,7 +359,11 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
                                 <hr className="hrnote" />
                                 <center className="d-f">
                                     <button className="cancelbtn">Cancle</button>
-                                    <button type="button" className="creatsetingbtn"  disabled={!!emailError} onClick={handleAddUser}>
+                                    <button type="button"  disabled={!!emailError || currentUser === "Read-only" } onClick={handleAddUser}
+                                    className={`creatsetingbtn ${
+                                        currentUser === "Read-only" ? "btndisable" : ""
+                                    }`} title={currentUser === "Read-only" ? "Permission required" : ""}
+                                    >
                                        {isEditMode  ? 'Update' :'Create'}
                                         </button>
                                 </center>

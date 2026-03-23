@@ -3,6 +3,7 @@ import '../ornms.css'
 import UserSubCont from "./usersubpage";
 import './../Settings/settings.css';
 import WaysideTagSubCont from "./waysidetagsub";
+import { useSelector } from "react-redux";
 
 const WaysideTagContainer=()=>{
         const [profileStatusCont, setProfileStatusCont] = useState(false);
@@ -24,6 +25,7 @@ const WaysideTagContainer=()=>{
         const [searchBtn, setSearchBtn] = useState(false);
         const [tagIdText,setTagIdText] = useState('');
         const [searchTrigger, setSearchTrigger] = useState(0);
+        const currentUser = useSelector((state) => state?.loginuser?.node?.role);
 
         const value = priorityChecked ? "highpriority" : "none";
 
@@ -315,9 +317,9 @@ const WaysideTagContainer=()=>{
                                         id="hiddenFileInput"
                                         style={{ display: "none" }}
                                     />
-                                    <button type="button" onClick={() => document.getElementById("hiddenFileInput").click()} className="attachcl-wayside-setting">
+                                    <button type="button" onClick={() => document.getElementById("hiddenFileInput").click()} className="attachcl-wayside-setting" disabled={currentUser === "Read-only"}>
                                         <i className="fa-solid fa-paperclip"></i></button>
-                                    <button type="button" onClick={handleUpload} className="uploadcl-wayside-setting"><i className="fa-solid fa-upload"></i></button>
+                                    <button type="button" onClick={handleUpload} className="uploadcl-wayside-setting" disabled={currentUser === "Read-only"}><i className="fa-solid fa-upload"></i></button>
                                        </article>
                             <article className="row custom-row border-tlr">
                                 <article className="col-8">

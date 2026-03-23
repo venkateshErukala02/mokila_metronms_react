@@ -2,9 +2,11 @@ import React,{useEffect, useState} from "react";
 import '../ornms.css'
 import { index } from "d3";
 import './../Settings/settings.css';
+import { useSelector } from "react-redux";
  
 
 const SectionSubCont=({handleSubContainer,refreshSectionData,mode,section})=>{
+    const currentUser = useSelector((state) => state?.loginuser?.node?.role);
 
     const isEditMode = mode === 'edit';
 
@@ -182,7 +184,13 @@ useEffect(()=>{
                                 <hr className="hrnote" />
                                 <center className="d-f">
                                         <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancle</button>
-                                        <button type="button" className="creatsetingbtn" onClick={handleAddSection}>
+                                        <button type="button" onClick={handleAddSection}
+                                        className={`creatsetingbtn ${
+                                        currentUser === "Read-only" ? "btndisable" : ""
+                                    }`}
+                                     title={currentUser === "Read-only" ? "Permission required" : ""}
+                                        disabled={currentUser === "Read-only"}
+                                        >
                                            {isEditMode ? 'Update':'Create'}
                                             </button>
                                 </center>

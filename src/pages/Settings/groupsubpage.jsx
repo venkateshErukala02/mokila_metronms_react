@@ -1,6 +1,7 @@
 import {useState,useEffect} from "react";
 import '../ornms.css'
 import './../Settings/settings.css';
+import { useSelector } from "react-redux";
 
 
 const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
@@ -13,6 +14,7 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const allUsers = ["admin", "rtc"];
+    const currentUser = useSelector((state) => state?.loginuser?.node?.role);
 
 
     const handleProfileContclose=()=>{
@@ -172,7 +174,12 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
                                 <hr className="hrnote" />
                                 <center className="d-f">
                                         <button className="cancelbtn" onClick={handleProfileContclose}>Cancle</button>
-                                        <button type="button" className="creatsetingbtn" onClick={handleAddGroup}>{isEditMode ? 'Update':'Create'}</button>
+                                        <button type="button" onClick={handleAddGroup}
+                                        disabled={currentUser === "Read-only"}
+                                        className={`creatsetingbtn ${
+                                        currentUser === "Read-only" ? "btndisable" : ""
+                                    }`} title={currentUser === "Read-only" ? "Permission required" : ""}
+                                        >{isEditMode ? 'Update':'Create'}</button>
                                 </center>
                                
                                 </article>

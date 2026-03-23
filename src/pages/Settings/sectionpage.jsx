@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const SectionContainer=()=>{
         const [profileStatusCont, setProfileStatusCont] = useState(true);
         const [sectionData, setSectionData] = useState([]);
-        const [cityLimitValueSel, setCityLimitValueSel] = useState('50');
+        const [cityLimitValueSel, setCityLimitValueSel] = useState('10');
         const [isLoading, setIsLoading] = useState(false);
         const [isError, setIsError] = useState({ status: false, msg: "" });
         const [editSection,setEditSection] = useState(null); 
@@ -51,7 +51,7 @@ const SectionContainer=()=>{
 
      useEffect(() => {
         const fetchSectionData=async()=>{
-        const url=`api/v2/locations?_s=&limit=10&offset=0&order=${sortOrder}&orderBy=${sortField}`
+        const url=`api/v2/locations?_s=&limit=${cityLimitValueSel}&offset=0&order=${sortOrder}&orderBy=${sortField}`
             // const url = `api/v2/cities?_s=&limit=${cityLimitValueSel}&offset=0&order=asc&orderBy=name`
             await getSectionData(url);
         }
@@ -108,7 +108,7 @@ const SectionContainer=()=>{
             const text = await response.text();
 
             if (response.ok) {
-                const url=`api/v2/locations?_s=&limit=10&offset=0&order=${sortOrder}&orderBy=${sortField}`
+                const url=`api/v2/locations?_s=&limit=${cityLimitValueSel}&offset=0&order=${sortOrder}&orderBy=${sortField}`
                 getSectionData(url);
             } else {
                 setIsError('Error starting discovery');
@@ -156,10 +156,10 @@ const SectionContainer=()=>{
 
                                             <li>
                                                 <select className="form-controlfirm" value={cityLimitValueSel} onChange={handleCityLimitValue} style={{ width: '50px', marginTop: '4px' }} aria-invalid="false">
-                                                    <option value="0" label="50">50</option>
-                                                    <option value="1" label="25" defaultValue={25}>25</option>
-                                                    <option value="2" label="50">50</option>
-                                                    <option value="3" label="100">100</option>
+                                                    <option value="10" label="10" defaultValue={10}>10</option>
+                                                    <option value="25" label="25" >25</option>
+                                                    <option value="50" label="50">50</option>
+                                                    <option value="100" label="100">100</option>
                                                 </select>
                                             </li>
                                         </ul>
