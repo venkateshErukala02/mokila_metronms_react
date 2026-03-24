@@ -154,15 +154,15 @@ const staArray = staArrayRaw.sort((a, b) => {
   const renderHeadname=(value)=>{
     switch (value) {
       case 'ap':
-        return 'Station Nodes';
+        return 'Station Node';
       case "transcoder":
-        return 'Ip Transcoders  ';
+        return 'Transcoder';
       case "cam":
-        return 'Ip Cameras';
+        return 'Cameras';
       case "sta":
-        return 'Train Radios';
+        return 'Train Radio';
       case "encoder":
-        return 'Encoders';
+        return 'Encoder';
       case "obc":
           return 'OBC';
       case "ioc":

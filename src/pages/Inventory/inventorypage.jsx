@@ -54,6 +54,9 @@ const InventRpt = () => {
     const firstLoadRef = useRef(true);
     const [showConfirmDeletePopupStatus,setShowConfirmDeletePopupStatus] = useState(false);
 
+     const currentUser = useSelector((state) => state?.loginuser?.node?.role);
+            const isReadOnly = currentUser === 'Read-only';
+
     useEffect(()=>{
         const handleClickOutside=(event)=>{
             if(columnWrapperRef.current && !columnWrapperRef.current.contains(event.target)){
@@ -348,12 +351,12 @@ const InventRpt = () => {
     const dispatch = useDispatch();
 
       const handleRowClick = (node) => {
-        dispatch(handleNodeData(node))
               if (`${node.deviceType}` === 'AP') {
                   navigate('/SN-view', { replace: true })
-                  
+                  dispatch(handleNodeData(node))
               } else {
                   navigate(`/${node.deviceType}-view`, { state: { node } , replace: true });
+                  dispatch(handleNodeData(node))
               }
       
           };
@@ -470,8 +473,8 @@ const InventRpt = () => {
                                 </button>
                                 <button type="button" className="numcl"><span>{pageSize}</span></button>
                                 <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
-                                <span className="eventscp">Scope : </span>
-                                <span className="eventgolcl" onClick={toggleDropdown}  >Golbal <span className="fa fa-chevron-down highlightText v-align-tt iconsy"></span></span>
+                                {/* <span className="eventscp">Scope : </span>
+                                <span className="eventgolcl" onClick={toggleDropdown}  >Golbal <span className="fa fa-chevron-down highlightText v-align-tt iconsy"></span></span> */}
 
                                 <span className="totalcl" style={{ marginLeft: '10px' }}>Total: <span>{invenData.totalCount}</span></span>
                                 <span className="totalcl">Good: <span>{activeTrueCount}</span></span>
@@ -521,7 +524,12 @@ const InventRpt = () => {
                                     )}
                                         </li>
                                         <li>
-                                            <button type="button" className="createbtn" onClick={handleBulkDelete}>Delete
+                                            <button type="button"
+                                            className={`createbtn ${
+                                        currentUser === "Read-only" ? "btndisable" : ""
+                                    }`}
+                                    title={currentUser === "Read-only" ? "Permission required" : ""}
+                                    onClick={currentUser !== 'Read-only' ? handleBulkDelete : undefined}>Delete
                                                 <i className="fa fa-trash" aria-hidden="true"></i>
                                             </button>
 
@@ -649,7 +657,15 @@ const InventRpt = () => {
                                             </td>
                                             ))}
                                             <td><i className="fa fa-sync"></i></td>
-                                            <td><i className="fa fa-trash" onClick={handleBulkDelete} ></i></td>
+                                            <td><i className="fa fa-trash" onClick={currentUser !== 'Read-only' ? handleBulkDelete : undefined} 
+                                            style={{
+                                                cursor: isReadOnly ? "not-allowed" : "pointer" ,
+                                                color: isReadOnly ? "black" : "#ef0808",
+                                                opacity: isReadOnly ? 0.6 :1 
+                                            }}
+                                            title={isReadOnly ? "Permission required" :''}
+
+                                            ></i></td>
                                         </tr>
                                         ))
                                     ) : (

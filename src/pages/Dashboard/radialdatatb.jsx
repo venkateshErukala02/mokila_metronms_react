@@ -27,6 +27,7 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
             "sysName",
             "ipAddress",
             "status",  
+            "productCode",
             "sysUptime",
             "region",
             "location",
@@ -350,10 +351,11 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
     }
 
     const handleSort = (field) => {
-        if (sortField === field) {
+        const mappedField = field === 'productCode' ? 'productcode' : field;
+        if (sortField === mappedField) {
             setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
         } else {
-            setSortField(field);
+            setSortField(mappedField);
             setSortOrder('asc');
         }
     };

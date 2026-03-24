@@ -17,6 +17,7 @@ const LineContainer=()=>{
         const [sortField, setSortField] = useState('name');
         const [sortOrder, setSortOrder] = useState('asc');
         const currentUser = useSelector((state) => state?.loginuser?.node?.role);
+        const isReadOnly = currentUser === 'Read-only';
 
         const getLineData = async (url) => {
             setIsLoading(true);
@@ -218,9 +219,16 @@ const LineContainer=()=>{
                                     {lineData && lineData.map((item) => (
                                         <tr key={item.id}>
                                             <td>{item.name}</td>
-                                            <td><i className="fas fa-edit" onClick={currentUser !== "Read-only" ? () => handleEditLineDt(item) : undefined}></i></td>
+                                            <td><i className="fas fa-edit" onClick={currentUser !== 'Read-only' ? () => handleEditLineDt(item) : undefined}></i></td>
                                             <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" 
-                                             onClick={()=> handleDeleteLine(item)}
+                                             onClick={currentUser !== 'Read-only' ? ()=> handleDeleteLine(item) : undefined}
+
+                                             style={{
+                                                cursor: isReadOnly ? "not-allowed" : "pointer" ,
+                                                color: isReadOnly ? "black" : "#ef0808",
+                                                opacity: isReadOnly ? 0.6 :1 
+                                            }}
+                                            title={isReadOnly ? "Permission required" :''}
                                             ></i></td>
                                         </tr>
                                     ))}

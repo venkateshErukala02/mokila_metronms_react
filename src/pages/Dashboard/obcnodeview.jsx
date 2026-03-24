@@ -24,9 +24,9 @@ const ObcNodeView = () => {
     const [diskData, setDiskData] = useState("");
 
   // const nodeDataId = useSelector((state) => state.node.node.nodeId);
-  const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
+  const nodeDataId = useSelector((state) => state.node?.node?.nodeId || state.node?.node?.id)
 
-  const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress)|| localStorage.getItem('nodeIpaddress');
+  const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress || state.node?.node?.primaryIP);
 
 
    const getDiskData = async (url) => {

@@ -4,6 +4,7 @@ import SectionSubCont from "./sectionsubpage";
 import './../Settings/settings.css';
 import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useSelector } from "react-redux";
 
 const SectionContainer=()=>{
         const [profileStatusCont, setProfileStatusCont] = useState(true);
@@ -15,7 +16,8 @@ const SectionContainer=()=>{
         const [mode, setMode] = useState(null); 
         const [sortField, setSortField] = useState('name');
         const [sortOrder, setSortOrder] = useState('asc');
-        
+        const currentUser = useSelector((state) => state?.loginuser?.node?.role);
+        const isReadOnly = currentUser === 'Read-only'
         const getSectionData = async (url) => {
             setIsLoading(true);
             setIsError({ status: false, msg: "" }); 
@@ -212,9 +214,16 @@ const SectionContainer=()=>{
                                         <tr key={item.id}>
                                             <td>{item.name}</td>
                                             <td>{item.parent}</td>
-                                            <td ><i className="fas fa-edit" onClick={()=> handleEditSectionDt(item)}></i></td>
+                                            <td ><i className="fas fa-edit" onClick={currentUser !== 'Read-only' ? ()=> handleEditSectionDt(item) :undefined}></i></td>
                                             <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" 
-                                             onClick={()=> handleDeleteSection(item)}
+                                             onClick={currentUser !== 'Read-only' ? ()=> handleDeleteSection(item):undefined}
+
+                                             style={{
+                                                cursor: isReadOnly ? "not-allowed" : "pointer" ,
+                                                color: isReadOnly ? "black" : "#ef0808",
+                                                opacity: isReadOnly ? 0.6 :1 
+                                            }}
+                                            title={isReadOnly ? "Permission required" :''}
                                             ></i></td>
                                         </tr>
                                     ))}

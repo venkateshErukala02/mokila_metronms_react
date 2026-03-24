@@ -3,6 +3,7 @@ import '../ornms.css'
 import SnmpSubDefaultCont from "./snmpsubdefaultpage";
 import './../Settings/settings.css';
 import SnmpSubNewconfigCont from "./snmpsubnewconfigpage";
+import { useSelector } from "react-redux";
 
 const SnmpContainer=()=>{
         const [profileStatusNewconfigCont, setProfileStatusNewconfigCont] = useState(false);
@@ -15,6 +16,8 @@ const SnmpContainer=()=>{
         const [profileStatusTableCont, setProfileStatusTableCont] =useState(true);
 
         const SNMP_URL = 'api/v2/nodelinks/snmpconfig?begin=&end=';
+        const currentUser = useSelector((state) => state?.loginuser?.node?.role);
+        const isReadOnly = currentUser === 'Read-only';
 
         
         const getSnmpData = async (url) => {
@@ -155,7 +158,7 @@ const SnmpContainer=()=>{
                                             <td>{item.end}</td>
                                             <td>{item.readCommunity}</td>
                                             <td>{item.writeCommunity}</td>
-                                            <td><i className="fas fa-edit" onClick={()=>handleEditSnmpDt(item)}></i></td>
+                                            <td><i className="fas fa-edit" onClick={currentUser !== 'Read-only' ? ()=>handleEditSnmpDt(item) : undefined}></i></td>
                                         </tr>
                                     ))}
                                        

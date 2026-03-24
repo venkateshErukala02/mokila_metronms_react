@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import './../Discovery/discovery.css';
+import { useSelector } from "react-redux";
 
 
 const ProvisionFileUp = () => {
@@ -8,6 +9,8 @@ const ProvisionFileUp = () => {
     const [loading, setLoading] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [success, setSuccess] = useState('');
+    const currentUser = useSelector((state) => state?.loginuser?.node?.role);
+    const isReadOnly = currentUser === 'Read-only';
 
 
     const handleUpload = async (e) => {
@@ -86,9 +89,21 @@ const ProvisionFileUp = () => {
                     id="hiddenFileInput"
                     style={{ display: "none" }}
                 />
-                <button onClick={() => document.getElementById("hiddenFileInput").click()} className="attachcl">
+                <button 
+                 onClick={
+                    currentUser !== "Read-only"
+                    ? () => document.getElementById("hiddenFileInput").click()
+                    : undefined
+                }
+                title={currentUser === "Read-only" ? "Permission required" : ""}
+                        disabled={isReadOnly}  className="attachcl"
+                    >
                     <i className="fa-solid fa-paperclip"></i></button>
-                <button onClick={handleUpload} className="uploadcl"><i className="fa-solid fa-upload"></i></button>
+                <button
+                onClick={currentUser !== 'Read-only' ? handleUpload : undefined}
+                             title={currentUser === "Read-only" ? "Permission required" : ""}
+                                    disabled={isReadOnly} 
+             className="uploadcl"><i className="fa-solid fa-upload"></i></button>
                 <button onClick={downloadSampleCSV} className="createbtn">Sample.csv<i className="fa fa-file-text" aria-hidden="true"></i></button>
 
             </article>

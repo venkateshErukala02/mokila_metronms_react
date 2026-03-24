@@ -22,7 +22,9 @@ const TcSummaryTab = ({  }) => {
     { name: "cam4", displayName: "Camera 4" },
   ];
 
-
+   const currentUser = useSelector((state) => state?.loginuser?.node?.role);
+          const isReadOnly = currentUser === 'Read-only';
+        
     const [isLoading, setIsLoading] = useState("");
     const [isError, setIsError] = useState("");
     const [upTimeData, setUpTimeData] = useState([]);
@@ -898,8 +900,8 @@ const rebootRstpTranscoderService = async () => {
                                                                         <button
                                                                             className="createbtn"
                                                                             type="button"
-                                                                        onClick={handleSaveConfiguration}
-                                                                         disabled={!isChangedQuad || isSavingQuad}
+                                                                        onClick={currentUser !== 'Read-only' ? handleSaveConfiguration : undefined}
+                                                                         disabled={!isChangedQuad || isSavingQuad || isReadOnly}
                                                                         style={{
                                                                             pointerEvents: (!isChangedQuad || isSavingQuad) ? 'none' : 'auto',
                                                                             opacity: (!isChangedQuad || isSavingQuad) ? 0.6 : 1          
@@ -914,8 +916,8 @@ const rebootRstpTranscoderService = async () => {
                                                                        <button
                                                                             className="createbtn"
                                                                             type="button"
-                                                                            disabled={!isApplyQuad}
-                                                                            onClick={rebootQuadTranscoderService}
+                                                                            disabled={!isApplyQuad || isReadOnly}
+                                                                            onClick={currentUser !== 'Read-only' ? rebootQuadTranscoderService : undefined}
                                                                             style={{
                                                                                 pointerEvents: (!isApplyQuad) ? 'none' : 'auto',
                                                                                 opacity: (!isApplyQuad) ? 0.6 : 1
@@ -1002,8 +1004,8 @@ const rebootRstpTranscoderService = async () => {
                                                                         <button
                                                                             className="createbtn"
                                                                             type="button"
-                                                                        onClick={handleSaveConfiguration}
-                                                                       disabled={!isChangedRstpurl || isSavingRstpurl}
+                                                                        onClick={currentUser !== 'Read-only' ? handleSaveConfiguration : undefined}
+                                                                       disabled={!isChangedRstpurl || isSavingRstpurl || isReadOnly}
                                                                         style={{
                                                                             pointerEvents: (!isChangedRstpurl || isSavingRstpurl) ? 'none' : 'auto',
                                                                             opacity: (!isChangedRstpurl || isSavingRstpurl) ? 0.6 : 1          
@@ -1018,8 +1020,8 @@ const rebootRstpTranscoderService = async () => {
                                                                        <button
                                                                             className="createbtn"
                                                                             type="button"
-                                                                            onClick={rebootRstpTranscoderService}
-                                                                             disabled={!isApplyRstpurl}
+                                                                            onClick={currentUser !== 'Read-only' ? rebootRstpTranscoderService : undefined}
+                                                                             disabled={!isApplyRstpurl || isReadOnly}
                                                                             style={{
                                                                                 pointerEvents: (!isApplyRstpurl) ? 'none' : 'auto',
                                                                                 opacity: (!isApplyRstpurl) ? 0.6 : 1

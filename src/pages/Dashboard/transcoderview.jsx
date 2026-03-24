@@ -18,8 +18,8 @@ const TranscoderView = () => {
     const [currentTab, setCurrentTab] = useState('summary')
     const [transcoderData, setTranscoderData] = useState([]);
 
-    const nodeDataId = useSelector((state) => state.node?.node?.nodeId);
-    const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress) || localStorage.getItem('nodeIpaddress');
+    const nodeDataId = useSelector((state) => state.node?.node?.nodeId || state.node?.node?.id);
+    const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress || state.node?.node?.primaryIP);
      const nodeLocation = useSelector((state) => state.node?.node?.location);
 
 

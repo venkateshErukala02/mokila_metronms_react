@@ -1,6 +1,7 @@
 import { useState } from "react";
 import '../ornms.css';
 import './../Discovery/discovery.css';
+import { useSelector } from "react-redux";
 
 const DiscovContai = () => {
     const [discAddValue, setDiscAddValue] = useState('');
@@ -13,6 +14,9 @@ const DiscovContai = () => {
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+
+ const currentUser = useSelector((state) => state?.loginuser?.node?.role);
+        const isReadOnly = currentUser === 'Read-only';
 
 
     function disableInput() {
@@ -202,7 +206,12 @@ const DiscovContai = () => {
                                 />
                             </li>
                             <li>
-                                <button type="button" className="startdbtn" onClick={handleAddStart} disabled={loading}>
+                                <button type="button"
+                                 title={currentUser === "Read-only" ? "Permission required" : ""}
+                                className={`startdbtn ${
+                                        currentUser === "Read-only" ? "btndisable" : ""
+                                    }`} 
+                                 onClick={currentUser !== "Read-only" ? handleAddStart : undefined} disabled={loading || isReadOnly}>
                                     {loading ? 'Starting...' : 'Start'}
                                 </button>
                             </li>
@@ -234,7 +243,12 @@ const DiscovContai = () => {
                                 />
                             </li>
                             <li>
-                                <button type="button" className="startdbtn" onClick={handleIpAddStart} disabled={loading}>
+                                <button type="button"
+                                
+                                className={`startdbtn ${
+                                        currentUser === "Read-only" ? "btndisable" : ""
+                                    }`} 
+                                 onClick={currentUser !== "Read-only" ? handleIpAddStart :undefined} disabled={loading || isReadOnly}>
                                     Start
                                 </button>
                             </li>
@@ -266,9 +280,22 @@ const DiscovContai = () => {
                                 id="hiddenFileInput"
                                 style={{ display: "none" }}
                             />
-                            <button onClick={() => document.getElementById("hiddenFileInput").click()} className="attachcl">
-                                <i className="fa-solid fa-paperclip"></i></button>
-                            <button onClick={handleUpload} className="uploadcl"><i className="fa-solid fa-upload"></i></button>
+                            <button 
+                             onClick={
+                                currentUser !== "Read-only"
+                                ? () => document.getElementById("hiddenFileInput").click()
+                                : undefined
+                            }
+                            title={currentUser === "Read-only" ? "Permission required" : ""}
+                                    disabled={isReadOnly} 
+                            className="attachcl">
+                                <i className="fa-solid fa-paperclip"
+                                ></i></button>
+                            <button 
+                             onClick={currentUser !== 'Read-only' ? handleUpload : undefined}
+                             title={currentUser === "Read-only" ? "Permission required" : ""}
+                                    disabled={isReadOnly} className="uploadcl"><i className="fa-solid fa-upload"
+                            ></i></button>
                             <button onClick={downloadSampleCSV} className="createbtn">Sample.csv<i className="fa fa-file-text" aria-hidden="true"></i></button>
 
                         </article>

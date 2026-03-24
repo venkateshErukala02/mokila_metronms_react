@@ -20,7 +20,10 @@ const ObcSummaryTab = ({ nodeItemDt, currentTab }) => {
   // const [diskData, setDiskData] = useState("");
   const [currentObcsubTab, setCurrentObcsubTab] = useState('obc')
 
-  const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress) || localStorage.getItem('nodeIpaddress');
+  const nodeDataId = useSelector((state) => state.node?.node?.nodeId || state.node?.node?.id)
+  
+    const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress || state.node?.node?.primaryIP);
+  
 
   useEffect(() => {
     if (nodeIpaddress) {
@@ -34,13 +37,13 @@ const ObcSummaryTab = ({ nodeItemDt, currentTab }) => {
     setIsLoading(true);
     setIsError({ status: false, msg: "" });
     try {
-      const username = "admin";
-      const password = "admin";
-      const token = btoa(`${username}:${password}`);
+      // const username = "admin";
+      // const password = "admin";
+      // const token = btoa(`${username}:${password}`);
       const options = {
         method: "GET",
         headers: {
-          "Authorization": `Basic ${token}`,
+          // "Authorization": `Basic ${token}`,
           "Content-Type": "application/json",
         },
       };

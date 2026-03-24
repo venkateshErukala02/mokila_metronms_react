@@ -3,6 +3,7 @@ import '../ornms.css'
 import LocationSubCont from "./stationsubpage";
 import GroupSubCont from "./groupsubpage";
 import './../Settings/settings.css';
+import { useSelector } from "react-redux";
 
 const GroupContainer=()=>{
         const [profileStatusCont, setProfileStatusCont] = useState(true);
@@ -12,7 +13,9 @@ const GroupContainer=()=>{
         const [isError, setIsError] = useState({ status: false, msg: "" }); 
         const [editGroup,setEditGroup] = useState(null); 
         const [mode, setMode] = useState(null); 
-
+        const currentUser = useSelector((state) => state?.loginuser?.node?.role);
+        const isReadOnly = currentUser === 'Read-only';
+        
         const getGroupData = async (url) => {
             setIsLoading(true);
             setIsError({ status: false, msg: "" });
@@ -201,9 +204,17 @@ const GroupContainer=()=>{
                                             <td>{item.name}</td>
                                             <td>{item.comments}</td>
                                            
-                                            <td ><i className="fas fa-edit" onClick={()=> handleEditSectionDt(item)}></i></td>
+                                            <td ><i className="fas fa-edit" onClick={ currentUser !== 'Read-only' ? ()=> handleEditSectionDt(item) : undefined}></i></td>
                                             <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" 
-                                             onClick={()=> handleDeleteGroup(item)}
+                                             onClick={ currentUser !== 'Read-only' ?()=> handleDeleteGroup(item) : undefined}
+
+                                              style={{
+                                                cursor: isReadOnly ? "not-allowed" : "pointer" ,
+                                                color: isReadOnly ? "black" : "#ef0808",
+                                                opacity: isReadOnly ? 0.6 :1 
+                                            }}
+                                            title={isReadOnly ? "Permission required" :''}
+
                                             ></i></td>
                                         </tr>
                                     ))}

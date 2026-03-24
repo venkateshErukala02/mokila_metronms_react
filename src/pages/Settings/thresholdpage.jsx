@@ -3,6 +3,7 @@ import '../ornms.css'
 import LocationSubCont from "./stationsubpage";
 import './../Settings/settings.css';
 import ThresholdSubCont from "./thresholdsubpage";
+import { useSelector } from "react-redux";
 
 const ThresholdContainer=()=>{
         const [profileStatusCont, setProfileStatusCont] = useState(false);
@@ -15,7 +16,8 @@ const ThresholdContainer=()=>{
         const [reloadTable,setReloadTable] = useState(0);
         // const [reloadConfigDt,setReloadConfigDt] = useState([]);
         const[reloadConfig,setReloadConfig] =  useState();
-
+        const currentUser = useSelector((state) => state?.loginuser?.node?.role);
+        const isReadOnly = currentUser === 'Read-only';
 
         const getThresholdData = async (url) => {
             setIsLoading(true);
@@ -169,7 +171,7 @@ const ThresholdContainer=()=>{
                                             <td>{item.value}</td>
                                             <td>{item.rearm}</td>
                                             <td>{item.trigger}</td>
-                                            <td ><i className="fas fa-edit" onClick={()=>handleEditThresholdDt(item,index)}></i></td>
+                                            <td ><i className="fas fa-edit" onClick={currentUser !== 'Read-only' ?()=>handleEditThresholdDt(item,index): undefined}></i></td>
                                         </tr>
                                     ))}
                                        

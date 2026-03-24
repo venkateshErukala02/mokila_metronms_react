@@ -124,7 +124,7 @@ const EventPg = () => {
                                 </article>
                         </article>
                         <article style={{clear:"both"}}>
-                            {/* <h1 className="evntsheadcl border-allsd">Export Cab Logs</h1> */}
+                            <h1 className="evntsheadcl" style={{border:'none'}}>Fetch Logs</h1>
                         <article style={{padding:"12px"}}>
                         <article>
                              <label className="settinglabelsub">Start Date</label>
@@ -132,7 +132,7 @@ const EventPg = () => {
                             selected={selectedStartDate}
                             // showTimeSelect
                             dateFormat="yyyy-MM-dd"
-                            placeholderText="yyyy-MM-dd"
+                            placeholderText="Start Date"
                             onChange={handleStartDateChange}
                             className="myDatepickercl" 
                             calendarContainer={({ children }) => (
@@ -149,7 +149,7 @@ const EventPg = () => {
                             selected={selectedEndDate}
                             // showTimeSelect
                             dateFormat="yyyy-MM-dd"
-                            placeholderText="yyyy-MM-dd"
+                            placeholderText="End Date"
                             onChange={handleEndDateChange}
                             className="myDatepickercl" 
                             calendarContainer={({ children }) => (

@@ -26,6 +26,7 @@ const WaysideTagContainer=()=>{
         const [tagIdText,setTagIdText] = useState('');
         const [searchTrigger, setSearchTrigger] = useState(0);
         const currentUser = useSelector((state) => state?.loginuser?.node?.role);
+        const isReadOnly = currentUser === 'Read-only';
 
         const value = priorityChecked ? "highpriority" : "none";
 
@@ -317,9 +318,13 @@ const WaysideTagContainer=()=>{
                                         id="hiddenFileInput"
                                         style={{ display: "none" }}
                                     />
-                                    <button type="button" onClick={() => document.getElementById("hiddenFileInput").click()} className="attachcl-wayside-setting" disabled={currentUser === "Read-only"}>
+                                    <button type="button" onClick={() => document.getElementById("hiddenFileInput").click()} className="attachcl-wayside-setting" disabled={isReadOnly}
+                                           title={currentUser === "Read-only" ? "Permission required" : ""}
+                                        >
                                         <i className="fa-solid fa-paperclip"></i></button>
-                                    <button type="button" onClick={handleUpload} className="uploadcl-wayside-setting" disabled={currentUser === "Read-only"}><i className="fa-solid fa-upload"></i></button>
+                                    <button type="button" onClick={handleUpload} className="uploadcl-wayside-setting"
+                                       title={currentUser === "Read-only" ? "Permission required" : ""}
+                                    disabled={isReadOnly}><i className="fa-solid fa-upload"></i></button>
                                        </article>
                             <article className="row custom-row border-tlr">
                                 <article className="col-8">
@@ -430,8 +435,22 @@ const WaysideTagContainer=()=>{
                                                     setReportChecked(!reportChecked)}
                                                 }
                                             /></td>
-                                            <td ><i className="fas fa-edit" onClick={()=> handleEditUserDt(item)}></i></td>
-                                            <td><i className="fa fa-trash"></i></td>
+                                            <td ><i className="fas fa-edit"
+                                             style={{
+                                                cursor: isReadOnly ? "not-allowed" : "pointer" ,
+                                                color: isReadOnly ? "black" : "#ef0808",
+                                                opacity: isReadOnly ? 0.6 :1 
+                                            }}
+                                            title={isReadOnly ? "Permission required" :''}
+                                            onClick={currentUser !== 'Read-only' ? ()=> handleEditUserDt(item) : undefined}></i></td>
+                                            <td><i className="fa fa-trash"
+                                             style={{
+                                                cursor: isReadOnly ? "not-allowed" : "pointer" ,
+                                                color: isReadOnly ? "black" : "#ef0808",
+                                                opacity: isReadOnly ? 0.6 :1 
+                                            }}
+                                            title={isReadOnly ? "Permission required" :''}
+                                            ></i></td>
                                         </tr>
                                     ))}
                                        

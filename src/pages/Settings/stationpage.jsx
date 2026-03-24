@@ -4,6 +4,7 @@ import StationSubCont from "./stationsubpage";
 import './../Settings/settings.css';
 import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useSelector } from "react-redux";
 
 const StationContainer=()=>{
         const [profileStatusCont, setProfileStatusCont] = useState(true);
@@ -15,7 +16,9 @@ const StationContainer=()=>{
         const [mode,setMode] =  useState(null);
         const [sortField, setSortField] = useState('name');
         const [sortOrder, setSortOrder] = useState('asc');
-        
+        const currentUser = useSelector((state) => state?.loginuser?.node?.role);
+        const isReadOnly = currentUser === 'Read-only';
+
         const getStationData = async (url) => {
             setIsLoading(true);
             setIsError({ status: false, msg: "" });
@@ -167,7 +170,7 @@ const StationContainer=()=>{
                                             <td>{item.name}</td>
                                             <td>{item.regionName}</td>
                                             <td>{item.locationName}</td>
-                                            <td ><i className="fas fa-edit" onClick={()=> handleEditStationDt(item)}></i></td>
+                                            <td ><i className="fas fa-edit" onClick={currentUser !== "Read-only" ? ()=> handleEditStationDt(item) : undefined}></i></td>
                                         </tr>
                                     ))}
                                        

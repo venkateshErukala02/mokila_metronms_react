@@ -4,6 +4,7 @@ import './../Settings/settings.css';
 import NotificationSubCont from "./notificationcreatesubpage";
 import NotificationCreateSubCont from "./notificationcreatesubpage";
 import NotificationPathSubCont from "./notificationpathsubpage";
+import { useSelector } from "react-redux";
 
 const NotificationContainer=()=>{
         const [profileStatusCont, setProfileStatusCont] = useState(true);
@@ -28,7 +29,8 @@ const NotificationContainer=()=>{
         const [name,setName] = useState("");
         const [initialDelayProp,setInitialDelayProp] = useState("");
         const [notifiGroupUserData,setNotifiGroupUserData] = useState("");
-
+        const currentUser = useSelector((state) => state?.loginuser?.node?.role);
+        const isReadOnly = currentUser === 'Read-only';
 
          useEffect(() => {                  
             const url='api/v2/eventnotice/ugrlist?_s=&limit=10&offset=0&order=asc&orderBy=name';
@@ -544,9 +546,16 @@ const NotificationContainer=()=>{
                                     <span className="notifichecking"></span>
                                     <span className="labeltext">on</span>
                                 </label></> </td>
-                                            <td><i className="fas fa-edit" onClick={()=> handleEditSnmpDt(item)}></i></td>
+                                            <td><i className="fas fa-edit" onClick={currentUser !== 'Read-only' ? ()=> handleEditSnmpDt(item) : undefined}></i></td>
                                             <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" 
-                                            onClick={()=> handleDeleteNotifiConfig(item)}
+                                            onClick={currentUser !== 'Read-only' ?()=> handleDeleteNotifiConfig(item) : undefined}
+                                            style={{
+                                                cursor: isReadOnly ? "not-allowed" : "pointer" ,
+                                                color: isReadOnly ? "black" : "#ef0808",
+                                                opacity: isReadOnly ? 0.6 :1 
+                                            }}
+                                            title={isReadOnly ? "Permission required" :''}
+
                                             ></i></td>
 
                                         </tr>

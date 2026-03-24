@@ -18,6 +18,10 @@ const TrainConfigurationTab = ({  }) => {
      const nodeDataId = useSelector((state) => state.node?.node?.nodeId || state.node?.node?.id) ?? localStorage.getItem('nodeId');
      const nodeLocation = useSelector((state) => state.node.node.location) || localStorage.getItem('nodeLocation');
         const nodeIpaddress = useSelector((state) => state.node.node.ipAddress) || localStorage.getItem('nodeIpaddress');
+
+        const currentUser = useSelector((state) => state?.loginuser?.node?.role);
+          const isReadOnly = currentUser === 'Read-only';
+        
     
         useEffect(()=>{
             if(nodeDataId){
@@ -298,13 +302,9 @@ useEffect(() => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
-          const username = "admin";
-          const password = "admin";
-          const token = btoa(`${username}:${password}`);
           const options = {
             method: "GET",
             headers: {
-              "Authorization": `Basic ${token}`,
               "Content-Type": "application/json",
             },
           };
@@ -339,14 +339,10 @@ useEffect(() => {
   try {
     setIsApplying(true);
 
-    const username = "admin";
-    const password = "admin";
-    const token = btoa(`${username}:${password}`);
 
     const options = {
       method: "GET",
       headers: {
-        Authorization: `Basic ${token}`,
         "Content-Type": "application/json",
       },
     };
@@ -579,13 +575,9 @@ useEffect(() => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
-            const username = "admin";
-            const password = "admin";
-            const token = btoa(`${username}:${password}`);
             const options = {
                 method: "GET",
                 headers: {
-                    "Authorization": `Basic ${token}`,
                     "Content-Type": "application/json",
                 },
             };
@@ -1068,8 +1060,8 @@ useEffect(() => {
                                                                         <button
                                                                             className="createbtn"
                                                                             type="button"
-                                                                        onClick={handleSaveConfiguration}
-                                                                         disabled={!isChanged || isSaving}
+                                                                        onClick={currentUser !== 'Read-only' ?handleSaveConfiguration : undefined}
+                                                                         disabled={!isChanged || isSaving || isReadOnly}
                                                                         style={{
                                                                             pointerEvents: (!isChanged || isSaving) ? 'none' : 'auto',
                                                                             opacity: (!isChanged || isSaving) ? 0.6 : 1          
@@ -1083,8 +1075,8 @@ useEffect(() => {
                                                                        <button
                                                                             className="createbtn"
                                                                             type="button"
-                                                                            disabled={!canApply || isApplying}
-                                                                            onClick={handleApplyConfiguration}
+                                                                            disabled={!canApply || isApplying || isReadOnly}
+                                                                            onClick={currentUser !== 'Read-only' ? handleApplyConfiguration : undefined}
                                                                             style={{
                                                                                 pointerEvents: (!canApply || isApplying) ? 'none' : 'auto',
                                                                                 opacity: (!canApply || isApplying) ? 0.6 : 1
@@ -1108,8 +1100,8 @@ useEffect(() => {
                                                         <button
                                                                             className="createbtn"
                                                                             type="button"
-                                                                        onClick={handleSaveConfiguration}
-                                                                         disabled={!isChanged || isSaving}
+                                                                        onClick={currentUser !== 'Read-only' ?  handleSaveConfiguration : undefined}
+                                                                         disabled={!isChanged || isSaving || isReadOnly}
                                                                         style={{
                                                                             pointerEvents: (!isChanged || isSaving) ? 'none' : 'auto',
                                                                             opacity: (!isChanged || isSaving) ? 0.6 : 1          
@@ -1123,8 +1115,8 @@ useEffect(() => {
                                                          <button
                                                             className="createbtn"
                                                             type="button"
-                                                            disabled={!canApply || isApplying}
-                                                            onClick={handleApplyConfiguration}
+                                                            disabled={!canApply || isApplying || isReadOnly}
+                                                            onClick={currentUser !== 'Read-only' ?  handleApplyConfiguration : undefined}
                                                             style={{
                                                                 pointerEvents: (!canApply || isApplying) ? 'none' : 'auto',
                                                                 opacity: (!canApply || isApplying) ? 0.6 : 1

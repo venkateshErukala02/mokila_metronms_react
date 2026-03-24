@@ -3,6 +3,7 @@ import './../Discovery/discovery.css';
 import '../ornms.css'
 import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useSelector } from "react-redux";
 
 
 const ProvisionTb = ({ getProviContData }) => {
@@ -59,6 +60,8 @@ const ProvisionTb = ({ getProviContData }) => {
   const [stationNameSel,setStationNameSel] = useState('-1');
   const [positionNameSel,setPositionNameSel] = useState('-1');
   const [success, setSuccess] = useState('');
+  const currentUser = useSelector((state) => state?.loginuser?.node?.role);
+  const isReadOnly = currentUser === 'Read-only';
 
    useEffect(()=>{
     if(lineNameSel === '-1') return;
@@ -373,7 +376,6 @@ const ProvisionTb = ({ getProviContData }) => {
               }} />
               <button type="button" className="createbtn" onClick={handleFirmIP} style={{ marginLeft: '7px' }}>Search</button>
               <button type="button" className="createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
-              <button type="button" className="createbtn m-l10">Upgrade</button>
               <article  style={{display:'inline-block',position:'relative'}} ref={columnWrapperRef} >
               <span className="addcloum" style={{ marginLeft: '5px' }}>Select Columns   </span><span className="glyphicon glyphicon-tasks" onClick={(e) => { e.stopPropagation(); handleAddColumn()}}></span>
             
@@ -555,7 +557,13 @@ const ProvisionTb = ({ getProviContData }) => {
                       <option value="SBTC" label="Transcoder-SB">Transcoder-SB</option><option value="NBTC" label="Transcoder-NB">Transcoder-NB</option><option value="SBE" label="Encoder-SB">Encoder-SB</option><option value="NBE" label="Encoder-NB">Encoder-NB</option></select>
                     </td>
                      <td style={{ paddingLeft: '18px' }}>
-                      <button type="button" className="createbtn" onClick={() => handleDiscoveryConfig(node)}>Save</button>
+                      <button type="button"
+                      disabled={currentUser === "Read-only"}
+                      title={currentUser === "Read-only" ? "Permission required" : ""} 
+                      className={`createbtn ${
+                                        currentUser === "Read-only" ? "btndisable" : ""
+                                    }`} 
+                      onClick={currentUser !== "Read-only" ? () => handleDiscoveryConfig(node): undefined}>Save</button>
                     </td>
                   </tr>
                   ));
