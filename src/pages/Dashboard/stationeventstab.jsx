@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import DatePicker from "react-datepicker";
@@ -12,7 +12,7 @@ const SnEventTab=()=>{
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [typevalueSel, setTypevalueSel] = useState('events');
     const [typelabelSel, setTypelabelSel] = useState('Events');
-    // const [selectedDuration, setSelectedDuration] = useState(86400000); 
+    const [selectedDuration, setSelectedDuration] = useState(86400000); 
     const [eventtimeSel, setEventtimeSel] = useState(Date.now() - 86400000);
     const [eventmainSeverityValueSel, setEventmainSeverityValueSel] = useState('');
     const [eventmainSeverityLabelSel, setEventmainSeverityLabelSel] = useState('All');
@@ -29,12 +29,21 @@ const SnEventTab=()=>{
       const [eventipText, setEventipText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
-     const [selectedDuration, setSelectedDuration] = useState("now-1h");
+    //  const [selectedDuration, setSelectedDuration] = useState("now-1h");
      const [isLastPage, setIsLastPage] = useState(false);
+    const [showEventPopup,setShowEventPopup] = useState(false);
+    const [eventpopupData,setEventpopupData] = useState([]);
+    const popupRef = useRef(null);
 
  const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
 
  const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress)|| localStorage.getItem('nodeIpaddress');
+
+
+  useEffect(() => {
+         const newTimestamp = Date.now() - selectedDuration;
+         setEventtimeSel(newTimestamp);
+     }, [selectedDuration]);
 
          useEffect(() => {
            if (nodeIpaddress) {
@@ -118,12 +127,12 @@ const SnEventTab=()=>{
 
         switch (typevalueSel) {
             case 'events':
-               url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${effectiveDate}&limit=${eventmainLimitValueSel}&offset=0`;
+               url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitValueSel}&offset=0`;
                 break;
 
             case 'syslogd':
                 // url='api/v2/essearch/search';
-                url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${effectiveDate}&limit=${eventmainLimitValueSel}&offset=0`;
+                url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitValueSel}&offset=0`;
 
                 break;
             case 'auditlog':
@@ -142,7 +151,7 @@ const SnEventTab=()=>{
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
 
-    }, [typevalueSel,nodeDataId,selectedDuration,eventmainLimitLabelSel,fromValue,pageSize,eventmainSeverityValueSel]);
+    }, [typevalueSel,nodeDataId,eventmainLimitLabelSel,fromValue,pageSize,eventmainSeverityValueSel,eventtimeSel]);
 
     const formatTime = (timestamp) => {
         const date = new Date(timestamp);
@@ -307,6 +316,34 @@ const SnEventTab=()=>{
         }
     };
 
+     useEffect(() => {
+    const handleClickOutside = (event) => {
+        if (
+            showEventPopup &&
+            popupRef.current &&
+            !popupRef.current.contains(event.target)
+        ) {
+            setShowEventPopup(false);
+        }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+    };
+}, [showEventPopup]);
+
+
+    const handleEventPopup=(event)=>{
+        setShowEventPopup(true);
+        setEventpopupData(event)
+    }
+
+    const handleEventPopupClose=()=>{
+        setShowEventPopup(false);
+    }
+
     return (
         <>
          <article className="row">
@@ -362,10 +399,10 @@ const SnEventTab=()=>{
 
 
                             <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
-                                <option value='now-1h' label="Last hour">Last hour</option>
-                                <option value="now-8h" label="8 hours">8 hours</option>
-                                <option value="now-1d" label="24 hours">24 hours</option>
-                                <option value="now-2d" label="48 hours">48 hours</option>
+                                 <option value="3600000" label="Last hour">Last hour</option>
+                                <option value="28800000" label="8 hours">8 hours</option>
+                                <option value="86400000" label="24 hours">24 hours</option>
+                                <option value="172800000" label="48 hours">48 hours</option>
                             </select>
                             <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
                                 <option value="25" label="25">25</option>
@@ -424,7 +461,7 @@ const SnEventTab=()=>{
                             )}
                             {Array.isArray(eventmainData) && eventmainData.length > 0 ? (
                                 eventmainData.map((event) => (
-                                    <tr key={event.id}>
+                                    <tr key={event.id} onClick={()=>handleEventPopup(event)}>
                                         <td>{formatTime(event.time)}</td>
                                         <td>{event.severity}</td>
                                         <td>{event.logMessage}</td>
@@ -444,18 +481,17 @@ const SnEventTab=()=>{
                     <table className="col-12">
                         <thead className="stationeventsthtb">
                             <tr>
-
-                                <th>Ip Address</th>
                                 <th>Time</th>
-                                <th>Log Message</th>
+                                <th>Severity</th>
+                                <th>Message</th>
                             </tr>
                         </thead>
                         <tbody className="stationeventstbdtb">
                             {Array.isArray(eventmainData) && eventmainData.length > 0 ? (
                                 eventmainData.map((event) => (
-                                    <tr key={event.id}>
-                                        <td>{event.source}</td>
+                                    <tr key={event.id} onClick={()=>handleEventPopup(event)}>
                                         <td>{formatTime(event.time)}</td>
+                                        <td>{event.severity}</td>
                                          <td>{event.logMessage}</td>
                                     </tr>
                                 ))
@@ -470,7 +506,55 @@ const SnEventTab=()=>{
             </article>)}
             </article>
             </article>
-        
+                        
+            
+             {showEventPopup  && <article className="eventpopupcont">
+                    <article className="eventboxstyle" ref={popupRef}>
+                        {eventpopupData &&(
+                            <article>
+                                <article className="evntdetailtitle">
+                                    Event details
+                                </article>
+                                <article style={{fontSize:'15px',padding:'15px 14px 0 14px'}}>
+                                    <fieldset className="ip-fieldset">
+                                        {/* <legend>{eventpopupData.nodeLabel}</legend> */}
+                                    <h4>{eventpopupData.nodeLabel}</h4>
+                                    <article className="col-12 row">
+                                <div className="col-3">
+                                    <label className="eventpopuplabel">Event Id:</label>
+                                </div>
+                                <div className="col-9 eventpopuplabel">
+                                    {eventpopupData.id}
+                                </div>
+                                </article>
+
+                                <article className="col-12 row">
+                                <div className="col-3">
+                                    <label className="eventpopuplabel">Event Time:</label>
+                                </div>
+                                <div className="col-9 eventpopuplabel">
+                                    {new Date(eventpopupData.createTime).toLocaleString()}
+                                </div>
+                                </article>
+
+                                <article className="col-12 row">
+                                <div className="col-3">
+                                    <label className="eventpopuplabel">Severity:</label>
+                                </div>
+                                <div className="col-9 eventpopuplabel">
+                                    {eventpopupData.severity}
+                                </div>
+                                </article>
+                                <p className="eventpopupdescrpt">{eventpopupData.description}</p>
+                                </fieldset>
+                                </article>
+                                <article style={{textAlign:'center',marginBottom:'12px'}}>
+                                    <button className="createbtn" type="button" onClick={handleEventPopupClose}>Close</button>
+                                </article>
+                            </article>
+                        ) }
+                    </article>
+                </article>}
         </>
     )
 }

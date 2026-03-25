@@ -113,7 +113,7 @@ const SnmpContainer=()=>{
                                 </article>
                             </article>
 
-                            <article className="row border-allsd" style={{ height: '50vh' }}>
+                            <article className="row border-allsd">
                                 <table className="col-12" style={{ height: '0vh' }}>
                                     <thead className="settingthtb">
                                         <tr>

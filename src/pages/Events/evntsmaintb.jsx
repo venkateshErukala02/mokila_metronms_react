@@ -503,8 +503,8 @@ const EventMainTB = () => {
                         </button>
                         <button type="button" className="numcl"><span>{pageSize}</span></button>
                         <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
-                        <span className="eventscp">Scope : </span>
-                        <span className="eventgolcl" onClick={toggleDropdown} >Golbal <span className="fa fa-chevron-down highlightText v-align-tt iconsy"></span></span>
+                        {/* <span className="eventscp">Scope : </span>
+                        <span className="eventgolcl" onClick={toggleDropdown} >Golbal <span className="fa fa-chevron-down highlightText v-align-tt iconsy"></span></span> */}
 
                         <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
                         <button type="button" className="createbtn" onClick={() => { handleRadialIP();}} >Search</button>

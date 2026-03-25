@@ -199,7 +199,7 @@ useEffect(()=>{
                                 
                                 <hr className="hrnote" />
                                 <center className="d-f">
-                                        <button className="cancelbtn" type="button" onClick={handleProfileContclose}>Cancle</button>
+                                        <button className="cancelbtn" type="button" onClick={handleProfileContclose}>Cancel</button>
                                         <button onClick={handleAddNotification} 
                                         className={`creatsetingbtn ${
                                         currentUser === "Read-only" ? "btndisable" : ""

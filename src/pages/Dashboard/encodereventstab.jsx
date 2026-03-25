@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import DatePicker from "react-datepicker";
@@ -31,6 +31,9 @@ const EncoderEventTab=()=>{
     const [isError, setIsError] = useState({ status: false, msg: "" });
      const [selectedDuration, setSelectedDuration] = useState("now-1h");
      const [isLastPage, setIsLastPage] = useState(false);
+    const [showEventPopup,setShowEventPopup] = useState(false);
+    const [eventpopupData,setEventpopupData] = useState([]);
+    const popupRef = useRef(null);
 
  const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
 
@@ -224,6 +227,34 @@ const EncoderEventTab=()=>{
                 setIsLastPage(true);
             }
 
+             useEffect(() => {
+            const handleClickOutside = (event) => {
+                if (
+                    showEventPopup &&
+                    popupRef.current &&
+                    !popupRef.current.contains(event.target)
+                ) {
+                    setShowEventPopup(false);
+                }
+            };
+        
+            document.addEventListener("mousedown", handleClickOutside);
+        
+            return () => {
+                document.removeEventListener("mousedown", handleClickOutside);
+            };
+        }, [showEventPopup]);
+        
+        
+            const handleEventPopup=(event)=>{
+                setShowEventPopup(true);
+                setEventpopupData(event)
+            }
+        
+            const handleEventPopupClose=()=>{
+                setShowEventPopup(false);
+            }
+
     return (
         <>
          <article className="row">
@@ -338,7 +369,7 @@ const EncoderEventTab=()=>{
                             )}
                             {Array.isArray(eventmainData) && eventmainData.length > 0 ? (
                                 eventmainData.map((event) => (
-                                    <tr key={event.id}>
+                                    <tr key={event.id} onClick={()=>handleEventPopup(event)}>
                                         <td>{formatTime(event.time)}</td>
                                         <td>{event.severity}</td>
                                         <td>{event.logMessage}</td>
@@ -358,18 +389,17 @@ const EncoderEventTab=()=>{
                     <table className="col-12">
                         <thead className="stationeventsthtb">
                             <tr>
-
-                                <th>Ip Address</th>
                                 <th>Time</th>
-                                <th>Log Message</th>
+                                <th>Severity</th>
+                                <th>Message</th>
                             </tr>
                         </thead>
                         <tbody className="stationeventstbdtb">
                             {Array.isArray(eventmainData) && eventmainData.length > 0 ? (
                                 eventmainData.map((event) => (
-                                    <tr key={event.id}>
-                                        <td>{event.source}</td>
+                                    <tr key={event.id} onClick={()=>handleEventPopup(event)}>
                                         <td>{formatTime(event.timestamp)}</td>
+                                        <td>{event.severity}</td>
                                          <td>{event.message}</td>
                                     </tr>
                                 ))
@@ -384,6 +414,54 @@ const EncoderEventTab=()=>{
             </article>)}
             </article>
             </article>
+
+                  {showEventPopup  && <article className="eventpopupcont">
+                    <article className="eventboxstyle" ref={popupRef}>
+                        {eventpopupData &&(
+                            <article>
+                                <article className="evntdetailtitle">
+                                    Event details
+                                </article>
+                                <article style={{fontSize:'15px',padding:'15px 14px 0 14px'}}>
+                                    <fieldset className="ip-fieldset">
+                                        {/* <legend>{eventpopupData.nodeLabel}</legend> */}
+                                    <h4>{eventpopupData.nodeLabel}</h4>
+                                    <article className="col-12 row">
+                                <div className="col-3">
+                                    <label className="eventpopuplabel">Event Id:</label>
+                                </div>
+                                <div className="col-9 eventpopuplabel">
+                                    {eventpopupData.id}
+                                </div>
+                                </article>
+
+                                <article className="col-12 row">
+                                <div className="col-3">
+                                    <label className="eventpopuplabel">Event Time:</label>
+                                </div>
+                                <div className="col-9 eventpopuplabel">
+                                    {new Date(eventpopupData.createTime).toLocaleString()}
+                                </div>
+                                </article>
+
+                                <article className="col-12 row">
+                                <div className="col-3">
+                                    <label className="eventpopuplabel">Severity:</label>
+                                </div>
+                                <div className="col-9 eventpopuplabel">
+                                    {eventpopupData.severity}
+                                </div>
+                                </article>
+                                <p className="eventpopupdescrpt">{eventpopupData.description}</p>
+                                </fieldset>
+                                </article>
+                                <article style={{textAlign:'center',marginBottom:'12px'}}>
+                                    <button className="createbtn" type="button" onClick={handleEventPopupClose}>Close</button>
+                                </article>
+                            </article>
+                        ) }
+                    </article>
+                </article>}
         
         </>
     )

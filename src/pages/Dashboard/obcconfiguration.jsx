@@ -659,7 +659,8 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                                          disabled={!isChanged || isReadOnly}
                                                                         style={{
                                                                             pointerEvents: (!isChanged) ? 'none' : 'auto',
-                                                                            opacity: (!isChanged) ? 0.6 : 1          
+                                                                              cursor: isReadOnly ? "not-allowed" : "pointer" ,
+                                                                            opacity: (!isChanged || isReadOnly) ? 0.6 : 1          
                                                                         }}
                                                                         >
                                                                             Save
@@ -673,7 +674,8 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                                             onClick={currentUser !== 'Read-only' ? handleApplyConfiguration : undefined}
                                                                             style={{
                                                                                 pointerEvents: (!canApply || isApplying) ? 'none' : 'auto',
-                                                                                opacity: (!canApply || isApplying) ? 0.6 : 1
+                                                                                  cursor: isReadOnly ? "not-allowed" : "pointer" ,
+                                                                                opacity: (!canApply || isApplying || isReadOnly) ? 0.6 : 1
                                                                             }}
                                                                         >
                                                                             {isApplying ? "Applying..." : "Apply"}

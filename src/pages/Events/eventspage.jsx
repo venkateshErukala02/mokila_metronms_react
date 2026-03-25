@@ -130,34 +130,22 @@ const EventPg = () => {
                              <label className="settinglabelsub">Start Date</label>
                             <DatePicker
                             selected={selectedStartDate}
-                            // showTimeSelect
-                            dateFormat="yyyy-MM-dd"
+                            showTimeSelect
+                            dateFormat="yyyy-MM-dd HH:mm"
                             placeholderText="Start Date"
                             onChange={handleStartDateChange}
                             className="myDatepickercl" 
-                            calendarContainer={({ children }) => (
-                                <div style={{ display: 'flex' }}>
-                                <div style={{ display: 'inline-block',background:"white" ,border:"1px solid #aeaeae"}}>{children}</div>
-                                <div style={{ display: 'none' }} /> 
-                                </div>
-                            )}
                             />
                             </article>
                             <article className="labelaligncl">
                                 <label className="settinglabelsub">End Date</label>
                            <DatePicker
                             selected={selectedEndDate}
-                            // showTimeSelect
-                            dateFormat="yyyy-MM-dd"
+                            showTimeSelect
+                            dateFormat="yyyy-MM-dd HH:mm"
                             placeholderText="End Date"
                             onChange={handleEndDateChange}
                             className="myDatepickercl" 
-                            calendarContainer={({ children }) => (
-                                <div style={{ display: 'flex' }}>
-                                <div style={{ display: 'inline-block',background:"white"  ,border:"1px solid #aeaeae"}}>{children}</div>
-                                <div style={{ display: 'none' }} />
-                                </div>
-                            )}
                             />
                         </article>
                         <article className="f-r labelaligncl">

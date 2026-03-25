@@ -173,7 +173,7 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
                                 </ul>
                                 <hr className="hrnote" />
                                 <center className="d-f">
-                                        <button className="cancelbtn" onClick={handleProfileContclose}>Cancle</button>
+                                        <button className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
                                         <button type="button" onClick={handleAddGroup}
                                         disabled={currentUser === "Read-only"}
                                         className={`creatsetingbtn ${

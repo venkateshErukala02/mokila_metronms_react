@@ -535,7 +535,7 @@ const InventRpt = () => {
 
                                         </li>
                                         <li>
-                                            <button type="button" className="createbtn" onClick={getRfTagData}>RF TAG report
+                                            <button type="button" className="createbtn" onClick={getRfTagData}>RF TAG Report
                                                 <i className="fa fa-file-text" aria-hidden="true"></i>
                                             </button>
 

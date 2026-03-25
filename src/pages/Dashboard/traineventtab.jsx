@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import DatePicker from "react-datepicker";
@@ -10,8 +10,8 @@ const TrainEventTab = () => {
 
     const [eventmainData, setEventmainData] = useState([]);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
-    const [typevalueSel, setTypevalueSel] = useState('syslogd');
-    const [typelabelSel, setTypelabelSel] = useState('Syslogs');
+    const [typevalueSel, setTypevalueSel] = useState('events');
+    const [typelabelSel, setTypelabelSel] = useState('Events');
     const [selectedDuration, setSelectedDuration] = useState(86400000);
     const [eventtimeSel, setEventtimeSel] = useState(Date.now() - 86400000);
     const [eventmainSeverityValueSel, setEventmainSeverityValueSel] = useState('');
@@ -28,7 +28,17 @@ const TrainEventTab = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
 
+    const [showEventPopup,setShowEventPopup] = useState(false);
+    const [eventpopupData,setEventpopupData] = useState([]);
+    const popupRef = useRef(null);
+
+
     const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
+
+    useEffect(() => {
+        const newTimestamp = Date.now() - selectedDuration;
+        setEventtimeSel(newTimestamp);
+    }, [selectedDuration]);
 
     const getDataEvntMain = async (url) => {
         setIsLoading(true);
@@ -111,15 +121,15 @@ const TrainEventTab = () => {
 
         switch (typevalueSel) {
             case 'events':
-               url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${effectiveDate}&limit=50&offset=0`;
+               url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitValueSel}&offset=0`;
                 break;
 
             case 'syslogd':
-                url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${effectiveDate}&limit=50&offset=0`;
+                url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitValueSel}&offset=0`;
 
                 break;
             case 'auditlog':
-                url = '/api/v2/audit/list?_s=&limit=50&offset=0&order=desc&orderBy=id';
+                url = `/api/v2/audit/list?_s=&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`;
                 break;
 
             default:
@@ -134,7 +144,7 @@ const TrainEventTab = () => {
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
 
-    }, [typevalueSel, nodeDataId,eventmainSeverityValueSel]);
+    }, [typevalueSel, nodeDataId,eventmainSeverityValueSel,eventtimeSel,eventmainLimitValueSel]);
 
     const formatTime = (timestamp) => {
         const date = new Date(timestamp);
@@ -275,11 +285,40 @@ const TrainEventTab = () => {
         }
     };
 
+    
+     useEffect(() => {
+    const handleClickOutside = (event) => {
+        if (
+            showEventPopup &&
+            popupRef.current &&
+            !popupRef.current.contains(event.target)
+        ) {
+            setShowEventPopup(false);
+        }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+    };
+}, [showEventPopup]);
+
+
+    const handleEventPopup=(event)=>{
+        setShowEventPopup(true);
+        setEventpopupData(event)
+    }
+
+    const handleEventPopupClose=()=>{
+        setShowEventPopup(false);
+    }
+
 
     return (
         <>
             <article className="row">
-                <article className="border-tlr custom-row" style={{ textAlign: 'center' }}>
+                {/* <article className="border-tlr custom-row" style={{ textAlign: 'center' }}>
 
                     <label className="radiolabel" style={logsMode === 'LOGS' ? { fontWeight: 700, color: '#495057', marginRight: '10px' } : { marginRight: '10px' }}>
                         <input
@@ -303,8 +342,8 @@ const TrainEventTab = () => {
                         Events
                     </label>
                    
-                </article>
-                 {logsMode !== 'LOGS' ? (
+                </article> */}
+                 {/* {logsMode !== 'LOGS' ? ( */}
                         <article className="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12" style={{ padding: '0' }}>
                             <article className="row border-tlr custom-row">
                                 <article className="col-sm-4 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
@@ -354,7 +393,7 @@ const TrainEventTab = () => {
                                                 <option value="2" label="Cleared">Cleared</option>
                                                 <option value="1" label="Indeterminate">Indeterminate</option>
                                             </select>
-                                            <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
+                                            {/* <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
 
                                             <article className="trans-datepickerbg" style={{ display: 'inline-block' }}>
                                                 <DatePicker
@@ -369,13 +408,23 @@ const TrainEventTab = () => {
                                              <button type="button" className="createbtn" style={{marginLeft:'10px'}} onClick={()=>{
                         setDate(selectedDate)
                     }
-                    }>Search</button>
+                    }>Search</button> */}
+
+                     <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
+
+
+                            <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
+                                <option value="3600000" label="Last hour">Last hour</option>
+                                <option value="28800000" label="8 hours">8 hours</option>
+                                <option value="86400000" label="24 hours">24 hours</option>
+                                <option value="172800000" label="48 hours">48 hours</option>
+                            </select>
 
                                             <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
-                                                <option value="0" label="25">25</option>
-                                                <option value="1" label="50">50</option>
-                                                <option value="2" label="100">100</option>
-                                                <option value="3" label="500">500</option>
+                                                <option value="25" label="25">25</option>
+                                                <option value="50" label="50">50</option>
+                                                <option value="100" label="100">100</option>
+                                                <option value="500" label="500">500</option>
                                             </select>
                                         </article>
                                         <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
@@ -428,7 +477,7 @@ const TrainEventTab = () => {
                                                 )}
                                                 {Array.isArray(eventmainData) && eventmainData.length > 0 ? (
                                                     eventmainData.map((event) => (
-                                                        <tr key={event.id}>
+                                                        <tr key={event.id} onClick={()=>handleEventPopup(event)}>
                                                             <td>{formatTime(event.time)}</td>
                                                             <td>{event.severity}</td>
                                                             <td>{event.logMessage}</td>
@@ -458,7 +507,7 @@ const TrainEventTab = () => {
                                             <tbody className="stationeventstbdtb">
                                                 {Array.isArray(eventmainData) && eventmainData.length > 0 ? (
                                                     eventmainData.map((event) => (
-                                                        <tr key={event.id}>
+                                                        <tr key={event.id} onClick={()=>handleEventPopup(event)}>
                                                             <td>{event.date}</td>
                                                             <td>{event.type}</td>
                                                             <td>{event.user}</td>
@@ -474,11 +523,60 @@ const TrainEventTab = () => {
                                         </table>
                                     </article>
                                 </article>)}
-                        </article>) : (
+                        </article>
+                        {/* ) : (
                         <article className="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12" style={{ padding: '0' }}>
                             <TranscoderEventLog currentTab='transcoder'/>
-                        </article>)}
+                        </article>)} */}
             </article>
+
+                {showEventPopup  && <article className="eventpopupcont">
+                    <article className="eventboxstyle" ref={popupRef}>
+                        {eventpopupData &&(
+                            <article>
+                                <article className="evntdetailtitle">
+                                    Event details
+                                </article>
+                                <article style={{fontSize:'15px',padding:'15px 14px 0 14px'}}>
+                                    <fieldset className="ip-fieldset">
+                                        {/* <legend>{eventpopupData.nodeLabel}</legend> */}
+                                    <h4>{eventpopupData.nodeLabel}</h4>
+                                    <article className="col-12 row">
+                                <div className="col-3">
+                                    <label className="eventpopuplabel">Event Id:</label>
+                                </div>
+                                <div className="col-9 eventpopuplabel">
+                                    {eventpopupData.id}
+                                </div>
+                                </article>
+
+                                <article className="col-12 row">
+                                <div className="col-3">
+                                    <label className="eventpopuplabel">Event Time:</label>
+                                </div>
+                                <div className="col-9 eventpopuplabel">
+                                    {new Date(eventpopupData.createTime).toLocaleString()}
+                                </div>
+                                </article>
+
+                                <article className="col-12 row">
+                                <div className="col-3">
+                                    <label className="eventpopuplabel">Severity:</label>
+                                </div>
+                                <div className="col-9 eventpopuplabel">
+                                    {eventpopupData.severity}
+                                </div>
+                                </article>
+                                <p className="eventpopupdescrpt">{eventpopupData.description}</p>
+                                </fieldset>
+                                </article>
+                                <article style={{textAlign:'center',marginBottom:'12px'}}>
+                                    <button className="createbtn" type="button" onClick={handleEventPopupClose}>Close</button>
+                                </article>
+                            </article>
+                        ) }
+                    </article>
+                </article>}
 
         </>
     )

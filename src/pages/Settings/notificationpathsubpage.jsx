@@ -268,7 +268,7 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
                                 </article>
                                 <article style={{padding:'15px 0'}}>
                                 <center className="d-f">
-                                        <button className="cancelbtn" type="button" onClick={handleProfileContclose}>Cancle</button>
+                                        <button className="cancelbtn" type="button" onClick={handleProfileContclose}>Cancel</button>
                                         <button type="buttton" onClick={handleCreateDestinPath}
                                         disabled={currentUser === "Read-only"}
                                         className={`creatsetingbtn ${

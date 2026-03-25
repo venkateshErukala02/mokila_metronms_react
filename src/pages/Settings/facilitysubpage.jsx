@@ -107,7 +107,7 @@ const FacilitySubCont=({handleSubContainer})=>{
                                 </ul>
                                 <hr className="hrnote" />
                                 <center>
-                                        <button className="cancelbtn">Cancle</button>
+                                        <button className="cancelbtn">Cancel</button>
                                         <button className="creatsetingbtn">Create</button>
                                 </center>
                                 <hr className="hrnote" />

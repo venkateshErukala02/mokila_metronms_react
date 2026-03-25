@@ -904,7 +904,8 @@ const rebootRstpTranscoderService = async () => {
                                                                          disabled={!isChangedQuad || isSavingQuad || isReadOnly}
                                                                         style={{
                                                                             pointerEvents: (!isChangedQuad || isSavingQuad) ? 'none' : 'auto',
-                                                                            opacity: (!isChangedQuad || isSavingQuad) ? 0.6 : 1          
+                                                                             cursor: isReadOnly ? "not-allowed" : "pointer" ,
+                                                                            opacity: (!isChangedQuad || isSavingQuad || isReadOnly) ? 0.6 : 1          
                                                                         }}
                                                                         >
                                                                             Save
@@ -920,7 +921,8 @@ const rebootRstpTranscoderService = async () => {
                                                                             onClick={currentUser !== 'Read-only' ? rebootQuadTranscoderService : undefined}
                                                                             style={{
                                                                                 pointerEvents: (!isApplyQuad) ? 'none' : 'auto',
-                                                                                opacity: (!isApplyQuad) ? 0.6 : 1
+                                                                                 cursor: isReadOnly ? "not-allowed" : "pointer" ,
+                                                                                opacity: (!isApplyQuad || isReadOnly) ? 0.6 : 1
                                                                             }}
                                                                         >
                                                                             {isApplyingQuad ? "Applying..." : "Apply"}
@@ -1008,7 +1010,8 @@ const rebootRstpTranscoderService = async () => {
                                                                        disabled={!isChangedRstpurl || isSavingRstpurl || isReadOnly}
                                                                         style={{
                                                                             pointerEvents: (!isChangedRstpurl || isSavingRstpurl) ? 'none' : 'auto',
-                                                                            opacity: (!isChangedRstpurl || isSavingRstpurl) ? 0.6 : 1          
+                                                                             cursor: isReadOnly ? "not-allowed" : "pointer" ,
+                                                                            opacity: (!isChangedRstpurl || isSavingRstpurl || isReadOnly) ? 0.6 : 1          
                                                                         }}
                                                                         >
                                                                             {/* {isSaving ? "Saving..." : "Save"} */}
@@ -1024,7 +1027,8 @@ const rebootRstpTranscoderService = async () => {
                                                                              disabled={!isApplyRstpurl || isReadOnly}
                                                                             style={{
                                                                                 pointerEvents: (!isApplyRstpurl) ? 'none' : 'auto',
-                                                                                opacity: (!isApplyRstpurl) ? 0.6 : 1
+                                                                                 cursor: isReadOnly ? "not-allowed" : "pointer" ,
+                                                                                opacity: (!isApplyRstpurl || isReadOnly) ? 0.6 : 1
                                                                             }}
                                                                         >
                                                                             {isApplyingRstpurl ? "Applying..." : "Apply"}

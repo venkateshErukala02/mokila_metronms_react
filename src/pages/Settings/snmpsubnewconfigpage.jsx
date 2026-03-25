@@ -234,7 +234,7 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
 
                                 <hr className="hrnote" />
                                 <center className="d-f">
-                                    <button className="cancelbtn" type="button" onClick={handleProfileNewconfigContclose}>Cancle</button>
+                                    <button className="cancelbtn" type="button" onClick={handleProfileNewconfigContclose}>Cancel</button>
                                     <button type="button" onClick={handleAddSnmpConfig}
                                     disabled={currentUser === "Read-only"}
                                     className={`creatsetingbtn ${

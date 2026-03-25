@@ -213,7 +213,7 @@ const WaysideTagSubCont = ({ handleSubContainer, refreshTagData, mode, user }) =
                             <article className="uploadcont">
 
                                 <center className="d-f">
-                                    <button className="cancelbtn" onClick={handleProfileContclose}>Cancle</button>
+                                    <button className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
                                     <button onClick={handleAddUser}
                                     className={`creatsetingbtn ${
                                         currentUser === "Read-only" ? "btndisable" : ""

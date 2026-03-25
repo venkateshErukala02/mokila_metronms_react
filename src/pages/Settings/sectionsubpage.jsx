@@ -183,8 +183,8 @@ useEffect(()=>{
                                 </ul>
                                 <hr className="hrnote" />
                                 <center className="d-f">
-                                        <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancle</button>
-                                        <button type="button" onClick={handleAddSection}
+                                        <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
+                                        <button type="button" onClick={currentUser !== "Read-only" ? handleAddSection : undefined}
                                         className={`creatsetingbtn ${
                                         currentUser === "Read-only" ? "btndisable" : ""
                                     }`}

@@ -71,7 +71,7 @@ if (response.ok) {
                         <thead className="yardtb">
                             <tr>
                                 <th>
-                                    Ip Address</th>
+                                    IP Address</th>
                                 <th>Time</th>
                                 <th>Severity</th>
                                 <th>Message</th>

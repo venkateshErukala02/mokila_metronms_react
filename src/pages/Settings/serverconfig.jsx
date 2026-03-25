@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 
 const ServerConfigContainer = () => {
     const currentUser = useSelector((state) => state?.loginuser?.node?.role);
+    const isReadOnly = currentUser === 'Read-only';
 
     const [userFtp, setUserFtp] = useState();
     const [serverDropdw, setServerDropdw] = useState(true);
@@ -368,16 +369,17 @@ const ServerConfigContainer = () => {
                                                             <label htmlFor="" className="col-4 traplabel">
                                                             </label>
                                                             <article className="col-sm-4 col-md-4 col-lg-5" style={{ textAlign: 'right' }}>
-                                                                <button className={`createbtn ${!isFormValid() ? 'disabled' : ''}`}
+                                                                <button className={`createbtn ${isReadOnly ? 'disabled' : ''}`}
                                                                     style={{
                                                                         textAlign: 'right',
-                                                                        backgroundColor: !isFormValid() ? '#ccc' : 'rgb(0 111 255)',  
-                                                                        color: !isFormValid() ? '#666' : '#fff',  
+                                                                        backgroundColor: isReadOnly ? '#ccc' : 'rgb(0 111 255)',  
+                                                                        color: isReadOnly ? '#666' : '#fff',  
                                                                         border: 'none',
-                                                                        cursor: !isFormValid() ? 'not-allowed' : 'pointer',
-                                                                        opacity: !isFormValid() ? 0.6 : 1  
-                                                                    }} type="button"
-                                                                 disabled={!isFormValid() || currentUser === "Read-only"}  onClick={()=>handleAddServerConfig(serverConfigDt)}>Save</button>
+                                                                        cursor: isReadOnly ? 'not-allowed' : 'pointer',
+                                                                        opacity: isReadOnly ? 0.6 : 1  
+                                                                    }} 
+                                                                    type="button"
+                                                                 disabled={currentUser === "Read-only"}  onClick={currentUser !== "Read-only" ? ()=>handleAddServerConfig(serverConfigDt): undefined}>Save</button>
                                                             </article>
                                                         </article>
 
@@ -495,14 +497,14 @@ const ServerConfigContainer = () => {
                                                                 <button type = "button" className="createbtn" 
                                                                 style={{
                                                                         textAlign: 'right',
-                                                                        backgroundColor: !isEmailFormValid() ? '#ccc' : 'rgb(0 111 255)',  
-                                                                        color: !isEmailFormValid() ? '#666' : '#fff',  
+                                                                        backgroundColor: isReadOnly ? '#ccc' : 'rgb(0 111 255)',  
+                                                                        color: isReadOnly ? '#666' : '#fff',  
                                                                         border: 'none',
-                                                                        cursor: !isEmailFormValid() ? 'not-allowed' : 'pointer',
-                                                                        opacity: !isEmailFormValid() ? 0.6 : 1  
+                                                                        cursor: isReadOnly ? 'not-allowed' : 'pointer',
+                                                                        opacity: isReadOnly ? 0.6 : 1  
                                                                     }} 
-                                                                disabled ={!isEmailFormValid() || currentUser === "Read-only"}
-                                                                onClick={handleAddEmailConfig}>Save</button>
+                                                                disabled ={currentUser === "Read-only"}
+                                                                onClick={currentUser !== "Read-only" ?handleAddEmailConfig : undefined}>Save</button>
                                                             </article>
                                                         </article>
                                                     </div>

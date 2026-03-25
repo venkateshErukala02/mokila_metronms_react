@@ -275,25 +275,46 @@ useEffect(() => {
             { label: "Mini", value: 5 },
             { label: "Micro", value: 6 }
         ];
+
         const dataStreamsOptions = [
-            { label: "Single", value: 1 },
-            { label: "Dual", value: 2 },
-            { label: "Auto", value: 3 }
+        { label: "Single", value: 1 },
+        { label: "Dual", value: 2 },
+        { label: "Auto", value: 3 }
         ];
-        const singleStOptions = ['MCS0  (13.5Mbps)', 'MCS1  (27Mbps) ', 'MCS2  (40.5Mbps)', 'MCS3  (54Mbps)', 'MCS4  (81Mbps)', 'MCS5  (108Mbps)', 'MCS6  (121.5Mbps)', 'MCS7  (135Mbps)']
-        const dualStOptions = ['MCS8  (27Mbps)', 'MCS9  (54Mbps)', 'MCS10 (81Mbps)', 'MCS11 (108Mbps)', 'MCS12 (121.5Mbps)', 'MCS13 (135Mbps)', 'MCS14 (202.5Mbps)', 'MCS15 (270Mbps)']
+        const singleStOptions = [
+        { label: "MCS0 (13.5Mbps)", value: 0 },
+        { label: "MCS1 (27Mbps)", value: 1 },
+        { label: "MCS2 (40.5Mbps)", value: 2 },
+        { label: "MCS3 (54Mbps)", value: 3 },
+        { label: "MCS4 (81Mbps)", value: 4 },
+        { label: "MCS5 (108Mbps)", value: 5 },
+        { label: "MCS6 (121.5Mbps)", value: 6 },
+        { label: "MCS7 (135Mbps)", value: 7 }
+        ];
+        const dualStOptions = [
+        { label: "MCS8 (27Mbps)", value: 8 },
+        { label: "MCS9 (54Mbps)", value: 9 },
+        { label: "MCS10 (81Mbps)", value: 10 },
+        { label: "MCS11 (108Mbps)", value: 11 },
+        { label: "MCS12 (121.5Mbps)", value: 12 },
+        { label: "MCS13 (135Mbps)", value: 13 },
+        { label: "MCS14 (202.5Mbps)", value: 14 },
+        { label: "MCS15 (270Mbps)", value: 15 }
+        ];
         const autoStOptions = [...singleStOptions, ...dualStOptions]
         const channelOptions = ["Auto", "36", "40", "44", "48", "149", "153", "157", "158", "161"];
     
         const [dataStream, setDataStream] = useState("Single");
     
     
+       
         const getDdrsOptions = () => {
-            if (dataStream === "Single") return singleStOptions;
-            if (dataStream === "Dual") return dualStOptions;
-            return autoStOptions;
+        if (dataStream === 1) return singleStOptions; // Single
+        if (dataStream === 2) return dualStOptions;   // Dual
+        if (dataStream === 3) return autoStOptions;   // Auto
+        return [];
         };
-    
+
 
 
       const getConfigSummaryDt = async (url) => {
@@ -519,6 +540,12 @@ useEffect(() => {
    const handleApplyConfiguration = async () => {
   try {
     setIsApplying(true);
+    
+    const commitResponse = await handleCommit();
+
+    if (!commitResponse?.ok) {
+      throw new Error("Commit failed. Cannot apply configuration.");
+    }
 
     const options = {
       method: "GET",
@@ -576,17 +603,16 @@ useEffect(() => {
 
             if (response?.ok === true || response.status === 200) {
                 setIsLoading(false);
-                setCanApply(true);
-                 setIsSaving(false);
-                 setIsChanged(false);
                 setIsError({ status: false, msg: "" });
+                return response;
             } else {
                 throw new Error("Data not found");
             }
         } catch (error) {
             setIsLoading(false);
-            setIsSaving(false);
+            // setIsSaving(false);
             setIsError({ status: true, msg: error.message });
+             return null;
         }
     }
 
@@ -614,8 +640,9 @@ const handleSaveConfiguration = async () => {
 
             if (response?.ok === true || response?.status === 200) {
                 setIsLoading(false);
-               await handleCommit();
-
+                 setCanApply(true);
+                 setIsSaving(false);
+                 setIsChanged(false);
                 // setConfigData(data);
                 setIsError({ status: false, msg: "" });
             } else {
@@ -957,7 +984,7 @@ const handleSaveConfiguration = async () => {
                                                             </article>
                                                         )}
                                                         {configTab === 'advance' && (
-                                                            <article className="card-sub config-tab-wh">
+                                                            <article className="card-sub config-tab-wh" style={{ minHeight:"265px",maxHeight:"300px"}}>
                                                                 <article className="form-row-config "><label for="" className="col-5 config-label">DDRS Status</label><article className="col-sm-4 col-md-4 col-lg-4">
                                                                     <select
                                                                         className="config-input"
@@ -983,9 +1010,14 @@ const handleSaveConfiguration = async () => {
                                                                     <select
                                                                         className="config-input"
                                                                         value={configData?.dataStreams ?? ""}
-                                                                        onChange={(e) =>
+                                                                        onChange={(e) =>{
+                                                                             handleStationConfigChange(
+                                                                                "dataStreams",
+                                                                                e.target.value === "" ? null : Number(e.target.value)
+                                                                            )
                                                                             setDataStream(e.target.value === "" ? null : Number(e.target.value))
                                                                         }
+                                                                    }
                                                                     >
                                                                         <option value="">Select Data Stream</option>
 
@@ -997,27 +1029,49 @@ const handleSaveConfiguration = async () => {
                                                                     </select>
                                                                 </article>
                                                                 </article>
-                                                                <article className="form-row-config "><label for="" className="col-5 config-label">DDRS Maximum Data Rate</label><article className="col-sm-4 col-md-4 col-lg-4">
-                                                                    <input type="text" className="config-input"  value={
-                                                                                !configData?.ddrsMaxDataRate || configData.ddrsMaxDataRate === "noSuchInstance"
-                                                                                ? ""
-                                                                                : configData.ddrsMaxDataRate
-                                                                            }
-                                                                        disabled
-                                                                    />
+                                                             {configData?.ddrsStatus != null && Number(configData.ddrsStatus) === 1 && (   <article className="form-row-config "><label for="" className="col-5 config-label">DDRS Maximum Data Rate</label><article className="col-sm-4 col-md-4 col-lg-4">
+
+                                                                    <select
+                                                                        className="config-input"
+                                                                        value={configData?.ddrsMaxDataRate ?? ""}
+                                                                        onChange={(e) =>
+                                                                            handleStationConfigChange(
+                                                                                "ddrsMaxDataRate",
+                                                                                e.target.value === "" ? null : e.target.value
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        <option value="">Select Status</option>
+
+                                                                        {getDdrsOptions().map(opt => (
+                                                                            <option key={opt.value} value={opt.value}>
+                                                                                {opt.label}
+                                                                            </option>
+                                                                        ))}
+                                                                    </select>
                                                                 </article>
+                                                                </article>)}
+                                                         {configData?.ddrsStatus != null && Number(configData.ddrsStatus) === 1 &&(   <article className="form-row-config "><label for="" className="col-5 config-label">DDRS Minimum Data Rate</label><article className="col-sm-4 col-md-4 col-lg-4">
+                                                                    <select
+                                                                        className="config-input"
+                                                                        value={configData?.ddrsMinDataRate ?? ""}
+                                                                        onChange={(e) =>
+                                                                            handleStationConfigChange(
+                                                                                "ddrsMinDataRate",
+                                                                                e.target.value === "" ? null : e.target.value
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        <option value="">Select Status</option>
+
+                                                                        {getDdrsOptions().map(opt => (
+                                                                            <option key={opt.value} value={opt.value}>
+                                                                                {opt.label}
+                                                                            </option>
+                                                                        ))}
+                                                                    </select>
                                                                 </article>
-                                                                <article className="form-row-config "><label for="" className="col-5 config-label">DDRS Minimum Data Rate</label><article className="col-sm-4 col-md-4 col-lg-4">
-                                                                    <input type="text" className="config-input"
-                                                                       value={
-                                                                                !configData?.ddrsMinDataRate || configData.ddrsMinDataRate === "noSuchInstance"
-                                                                                ? ""
-                                                                                : configData.ddrsMinDataRate
-                                                                            }
-                                                                        disabled
-                                                                    />
-                                                                </article>
-                                                                </article>
+                                                                </article>)}
                                                                 <article className="form-row-config "><label for="" className="col-5 config-label">ATPC Status</label><article className="col-sm-4 col-md-4 col-lg-4">
                                                                     <select
                                                                         className="config-input"
@@ -1093,7 +1147,8 @@ const handleSaveConfiguration = async () => {
                                                                             onClick={ currentUser !== 'Read-only' ? handleApplyConfiguration : undefined}
                                                                             style={{
                                                                                 pointerEvents: (!canApply || isApplying) ? 'none' : 'auto',
-                                                                                opacity: (!canApply || isApplying) ? 0.6 : 1
+                                                                                 cursor: isReadOnly ? "not-allowed" : "pointer" ,
+                                                                                opacity: (!canApply || isApplying || isReadOnly) ? 0.6 : 1
                                                                             }}
                                                                         >
                                                                             {isApplying ? "Applying..." : "Apply"}
@@ -1118,7 +1173,8 @@ const handleSaveConfiguration = async () => {
                                                             disabled={!isChanged || isSaving || isReadOnly}
                                                         style={{
                                                             pointerEvents: (!isChanged || isSaving) ? 'none' : 'auto',
-                                                            opacity: (!isChanged || isSaving) ? 0.6 : 1          
+                                                             cursor: isReadOnly ? "not-allowed" : "pointer" ,
+                                                            opacity: (!isChanged || isSaving || isReadOnly) ? 0.6 : 1          
                                                         }}
                                                         >
                                                             {isSaving ? "Saving..." : "Save"}
@@ -1133,7 +1189,8 @@ const handleSaveConfiguration = async () => {
                                                             onClick={currentUser !== 'Read-only' ? handleApplyConfiguration : undefined}
                                                             style={{
                                                                 pointerEvents: (!canApply || isApplying) ? 'none' : 'auto',
-                                                                opacity: (!canApply || isApplying) ? 0.6 : 1
+                                                                 cursor: isReadOnly ? "not-allowed" : "pointer" ,
+                                                                opacity: (!canApply || isApplying || isReadOnly) ? 0.6 : 1
                                                             }}
                                                         >
                                                             {isApplying ? "Applying..." : "Apply"}

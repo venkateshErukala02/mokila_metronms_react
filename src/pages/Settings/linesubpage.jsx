@@ -104,10 +104,10 @@ const LineSubCont = ({ handleSubContainer,refreshLineData,mode,line }) => {
                                 </ul>
                                 <hr className="hrnote" />
                                 <center className="d-f">
-                                    <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancle</button>
+                                    <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
                                     <button type="button"   className={`creatsetingbtn ${
                                         currentUser === "Read-only" ? "btndisable" : ""
-                                    }`} onClick={currentUser === "Read-only" ? handleAddLine :undefined}
+                                    }`} onClick={currentUser !== "Read-only" ? handleAddLine :undefined}
                                     disabled={currentUser === "Read-only"}
                                     title={currentUser === "Read-only" ? "Permission required" : ""}
                                     >

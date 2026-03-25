@@ -162,11 +162,11 @@ const GroupContainer=()=>{
                                 </article>
                             </article>
 
-                            <article className="row border-allsd" style={{ height: '50vh' }}>
+                            <article className="row border-allsd">
                                 <table className="col-12" style={{ height: '0vh' }}>
                                     <thead className="settingthtb">
                                         <tr>
-                                            <th>GroupName</th>
+                                            <th>Group Name</th>
                                             <th>Comments</th>
                                             <th>Edit </th>
                                             <th>Delete</th>
@@ -210,7 +210,7 @@ const GroupContainer=()=>{
 
                                               style={{
                                                 cursor: isReadOnly ? "not-allowed" : "pointer" ,
-                                                color: isReadOnly ? "black" : "#ef0808",
+                                                color: isReadOnly ? "black" : "",
                                                 opacity: isReadOnly ? 0.6 :1 
                                             }}
                                             title={isReadOnly ? "Permission required" :''}

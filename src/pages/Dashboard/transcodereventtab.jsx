@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import DatePicker from "react-datepicker";
@@ -27,7 +27,16 @@ const TcEventTab=()=>{
    
     const [date, setDate] = useState(null);
 
+    const [showEventPopup,setShowEventPopup] = useState(false);
+    const [eventpopupData,setEventpopupData] = useState([]);
+    const popupRef = useRef(null);
+
  const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
+
+ useEffect(() => {
+         const newTimestamp = Date.now() - selectedDuration;
+         setEventtimeSel(newTimestamp);
+     }, [selectedDuration]);
 
     const getDataEvntMain = async (url) => {
         setIsLoading(true);
@@ -108,19 +117,19 @@ const TcEventTab=()=>{
 
         switch (typevalueSel) {
             case 'events':
-                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${effectiveDate}&limit=50&offset=0`;
+                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitLabelSel}&offset=0`;
                 break;
 
             case 'syslogd':
-                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${effectiveDate}&limit=50&offset=0`;
+                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitLabelSel}&offset=0`;
 
                 break;
             case 'auditlog':
-                url = '/api/v2/audit/list?_s=&limit=50&offset=0&order=desc&orderBy=id';
+                url = `/api/v2/audit/list?_s=&limit=${eventmainLimitLabelSel}&offset=0&order=desc&orderBy=id`;
                 break;
 
             default:
-                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd&limit=50&offset=0`;
+                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd&limit=${eventmainLimitLabelSel}&offset=0`;
                 break;
         }
         getDataEvntMain(url);
@@ -130,7 +139,7 @@ const TcEventTab=()=>{
       const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
 
-    }, [typevalueSel,nodeDataId,date,eventmainSeverityValueSel]);
+    }, [typevalueSel,nodeDataId,date,eventmainSeverityValueSel,eventtimeSel,eventmainLimitLabelSel]);
 
     const formatTime = (timestamp) => {
         const date = new Date(timestamp);
@@ -204,6 +213,37 @@ const TcEventTab=()=>{
       const handleChange = (event) => {
         setLogsMode(event.target.value);
         };
+
+
+        
+             useEffect(() => {
+            const handleClickOutside = (event) => {
+                if (
+                    showEventPopup &&
+                    popupRef.current &&
+                    !popupRef.current.contains(event.target)
+                ) {
+                    setShowEventPopup(false);
+                }
+            };
+        
+            document.addEventListener("mousedown", handleClickOutside);
+        
+            return () => {
+                document.removeEventListener("mousedown", handleClickOutside);
+            };
+        }, [showEventPopup]);
+        
+        
+            const handleEventPopup=(event)=>{
+                setShowEventPopup(true);
+                setEventpopupData(event)
+            }
+        
+            const handleEventPopupClose=()=>{
+                setShowEventPopup(false);
+            }
+        
 
     return (
         <>
@@ -279,7 +319,7 @@ const TcEventTab=()=>{
                                 <option value="2" label="Cleared">Cleared</option>
                                 <option value="1" label="Indeterminate">Indeterminate</option>
                             </select>
-                            <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
+                            {/* <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
 
                         <article className="trans-datepickerbg" style={{display:'inline-block'}}>
                         <DatePicker
@@ -293,8 +333,14 @@ const TcEventTab=()=>{
                          <button type="button" className="createbtn" style={{marginLeft:'10px'}} onClick={()=>{
                         setDate(selectedDate)
                     }
-                    }>Search</button>
-                          
+                    }>Search</button> */}
+                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
+                            <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
+                                <option value="3600000" label="Last hour">Last hour</option>
+                                <option value="28800000" label="8 hours">8 hours</option>
+                                <option value="86400000" label="24 hours">24 hours</option>
+                                <option value="172800000" label="48 hours">48 hours</option>
+                            </select>
                           
 
                             <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
@@ -350,7 +396,7 @@ const TcEventTab=()=>{
                             )}
                             {Array.isArray(eventmainData) && eventmainData.length > 0 ? (
                                 eventmainData.map((event) => (
-                                    <tr key={event.id}>
+                                    <tr key={event.id} onClick={()=>handleEventPopup(event)}>
                                         <td>{formatTime(event.time)}</td>
                                         <td>{event.severity}</td>
                                         <td>{event.logMessage}</td>
@@ -380,7 +426,7 @@ const TcEventTab=()=>{
                         <tbody className="tncodereventstbdtb">
                             {Array.isArray(eventmainData) && eventmainData.length > 0 ? (
                                 eventmainData.map((event) => (
-                                    <tr key={event.id}>
+                                    <tr key={event.id} onClick={()=>handleEventPopup(event)}>
                                         <td>{event.date}</td>
                                         <td>{event.type}</td>
                                         <td>{event.user}</td>
@@ -404,6 +450,55 @@ const TcEventTab=()=>{
               )}
             </article>
         
+         {showEventPopup  && <article className="eventpopupcont">
+                    <article className="eventboxstyle" ref={popupRef}>
+                        {eventpopupData &&(
+                            <article>
+                                <article className="evntdetailtitle">
+                                    Event details
+                                </article>
+                                <article style={{fontSize:'15px',padding:'15px 14px 0 14px'}}>
+                                    <fieldset className="ip-fieldset">
+                                        {/* <legend>{eventpopupData.nodeLabel}</legend> */}
+                                    <h4>{eventpopupData.nodeLabel}</h4>
+                                    <article className="col-12 row">
+                                <div className="col-3">
+                                    <label className="eventpopuplabel">Event Id:</label>
+                                </div>
+                                <div className="col-9 eventpopuplabel">
+                                    {eventpopupData.id}
+                                </div>
+                                </article>
+
+                                <article className="col-12 row">
+                                <div className="col-3">
+                                    <label className="eventpopuplabel">Event Time:</label>
+                                </div>
+                                <div className="col-9 eventpopuplabel">
+                                    {new Date(eventpopupData.createTime).toLocaleString()}
+                                </div>
+                                </article>
+
+                                <article className="col-12 row">
+                                <div className="col-3">
+                                    <label className="eventpopuplabel">Severity:</label>
+                                </div>
+                                <div className="col-9 eventpopuplabel">
+                                    {eventpopupData.severity}
+                                </div>
+                                </article>
+                                <p className="eventpopupdescrpt">{eventpopupData.description}</p>
+                                </fieldset>
+                                </article>
+                                <article style={{textAlign:'center',marginBottom:'12px'}}>
+                                    <button className="createbtn" type="button" onClick={handleEventPopupClose}>Close</button>
+                                </article>
+                            </article>
+                        ) }
+                    </article>
+                </article>}
+
+
         </>
     )
 }

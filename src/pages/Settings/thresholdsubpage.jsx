@@ -152,7 +152,7 @@ const ThresholdSubCont = ({ handleSubContainer, refreshThresholdData,threshold,m
                                 
                                 <hr className="hrnote" />
                                 <center className="d-f">
-                                    <button className="cancelbtn">Cancle</button>
+                                    <button className="cancelbtn">Cancel</button>
                                     <button type="button" onClick={handleAddThreshold}
                                     disabled={currentUser === "Read-only"}
                                     className={`creatsetingbtn ${

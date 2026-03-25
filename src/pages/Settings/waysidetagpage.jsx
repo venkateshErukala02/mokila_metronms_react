@@ -318,11 +318,11 @@ const WaysideTagContainer=()=>{
                                         id="hiddenFileInput"
                                         style={{ display: "none" }}
                                     />
-                                    <button type="button" onClick={() => document.getElementById("hiddenFileInput").click()} className="attachcl-wayside-setting" disabled={isReadOnly}
+                                    <button type="button" onClick={currentUser !== "Read-only" ? () => document.getElementById("hiddenFileInput").click() : undefined} className="attachcl-wayside-setting" disabled={isReadOnly}
                                            title={currentUser === "Read-only" ? "Permission required" : ""}
                                         >
                                         <i className="fa-solid fa-paperclip"></i></button>
-                                    <button type="button" onClick={handleUpload} className="uploadcl-wayside-setting"
+                                    <button type="button" onClick={currentUser !== "Read-only" ? handleUpload :undefined} className="uploadcl-wayside-setting"
                                        title={currentUser === "Read-only" ? "Permission required" : ""}
                                     disabled={isReadOnly}><i className="fa-solid fa-upload"></i></button>
                                        </article>
@@ -369,7 +369,7 @@ const WaysideTagContainer=()=>{
                                             <th>Location	 </th>
                                             <th>Direction </th>
                                             <th>Position</th>
-                                            <th>Tagtype</th>
+                                            <th>Tag Type</th>
                                             <th>Priority</th>
                                             <th>Send Mail</th>
                                             <th>Report Alarm </th>
@@ -438,7 +438,7 @@ const WaysideTagContainer=()=>{
                                             <td ><i className="fas fa-edit"
                                              style={{
                                                 cursor: isReadOnly ? "not-allowed" : "pointer" ,
-                                                color: isReadOnly ? "black" : "#ef0808",
+                                                color: isReadOnly ? "black" : "",
                                                 opacity: isReadOnly ? 0.6 :1 
                                             }}
                                             title={isReadOnly ? "Permission required" :''}

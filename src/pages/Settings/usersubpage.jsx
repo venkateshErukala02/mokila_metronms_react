@@ -358,7 +358,7 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
                                 </ul>
                                 <hr className="hrnote" />
                                 <center className="d-f">
-                                    <button className="cancelbtn">Cancle</button>
+                                    <button className="cancelbtn">Cancel</button>
                                     <button type="button"  disabled={!!emailError || currentUser === "Read-only" } onClick={handleAddUser}
                                     className={`creatsetingbtn ${
                                         currentUser === "Read-only" ? "btndisable" : ""

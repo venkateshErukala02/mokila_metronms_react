@@ -170,7 +170,7 @@ const DashBoardPage = () => {
                                     </li>
 
 
-                                    <div className="node-card" style={{ display: 'flex', marginLeft: '170px', float: 'right' }}>
+                                    {/* <div className="node-card" style={{ display: 'flex', marginLeft: '170px', float: 'right' }}>
                                         <div className="node-section">
                                             <button className="nodebuu">
                                                 {serverStatus.nodeNameone}:
@@ -189,7 +189,7 @@ const DashBoardPage = () => {
                                                 Address: <span style={{ fontWeight: '500', color: '#6c757d' }}>{serverStatus.serverNametwo}</span>
                                             </h6>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </ul>
                             </article>
                             {renderDashboardCont()}

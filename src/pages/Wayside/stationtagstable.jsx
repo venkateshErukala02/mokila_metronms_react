@@ -221,7 +221,7 @@ const StationTagsTable = ({ circleId, lineId,textName,selectedTab,rdDataRef}) =>
 
                         <thead className="statustagthtb">
                             <tr>
-                                <th>TagId</th>
+                                <th>Tag Id</th>
                                 <th>Direction</th>
                                 <th>Position</th>
                                 <th style={{width:'132px'}}>(Work <i className="fa-solid fa-arrow-up" style={{color:""}}></i> ,Def <i className="fa-solid fa-arrow-down" style={{color:""}}></i>)</th>

@@ -327,8 +327,8 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
                                 <article className="uploadcont">
                                 <hr className="hrnote" />
                                 <center className="d-f">
-                                        <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancle</button>
-                                        <button type="button" onClick={handleAddStation}
+                                        <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
+                                        <button type="button" onClick={currentUser !== "Read-only" ? handleAddStation : undefined}
                                         className={`creatsetingbtn ${
                                         currentUser === "Read-only" ? "btndisable" : ""
                                     }`} title={currentUser === "Read-only" ? "Permission required" : ""}
@@ -351,9 +351,10 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
                                 id="hiddenFileInput"
                                 style={{ display: "none" }}
                             />
-                                     <button type="button" onClick={() => document.getElementById("hiddenFileInput").click()} className="attachcl"  disabled={currentUser === "Read-only"}>
+                                     <button type="button" 
+                                     onClick={currentUser !== "Read-only" ? () => document.getElementById("hiddenFileInput").click(): undefined} className="attachcl"  disabled={currentUser === "Read-only"}>
                                 <i className="fa-solid fa-paperclip"></i></button>
-                            <button type="button" onClick={handleUpload}   disabled={currentUser === "Read-only"} className="uploadcl"><i className="fa-solid fa-upload"></i></button>
+                            <button type="button" onClick={currentUser !== "Read-only" ? handleUpload : undefined}   disabled={currentUser === "Read-only"} className="uploadcl"><i className="fa-solid fa-upload"></i></button>
                             <button type="button" onClick={downloadSampleCSV} className="createbtn">Sample.csv<i className="fa fa-file-text" aria-hidden="true"></i></button>
 
                                 </article>} 
