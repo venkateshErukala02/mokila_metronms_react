@@ -5,7 +5,7 @@ import northgreen from '../../assets/Train_northboundgreen.svg'
 import southred from '../../assets/Train_southboundgreen copy.svg'
 import { Prev } from "react-bootstrap/esm/PageItem";
 
-const TrainView=({textName})=>{
+const TrainView=({textName,parentTextName,childrenTextName})=>{
 
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
@@ -14,7 +14,7 @@ const TrainView=({textName})=>{
     const svgContainerRef = useRef(null);
     const [limitValueSel,setLimitValueSel] =  useState('2');
     const [limitLabelSel,setLimitLabelSel] = useState('45');
-     const [trainValueSel,setTrainValueSel] =  useState('2');
+     const [trainValueSel,setTrainValueSel] =  useState('select');
     const [trainLabelSel,setTrainLabelSel] = useState('Select');
     const [offsetValueDisplay,setOffsetValueDisplay] = useState(1);
     const [offsetValue,setOffsetValue] = useState(0);
@@ -35,74 +35,73 @@ const [table3, setTable3] = useState([]);
 
 
 useEffect(() => {
-    let newUrl = "";
-
-    switch (textName.data.mode) {
-        case "Trains":
-            setTrainValueSel("2");
-            setTrainLabelSel("Select");
-            newUrl = `api/v2/treeview/alltrains/2?_s=&limit=45&offset=0`;
-            break;
-
-        case "mainline":
-            setTrainValueSel("2");
-            setTrainLabelSel("Select");
-            newUrl = `api/v2/treeview/alltrains/2?_s=&limit=45&offset=0`;
-            break;
-
-        default:
-            return;
-    }
-
-    setApiUrl(newUrl); 
-}, [textName]);
-
-useEffect(() => {
-    const newUrl = `api/v2/treeview/alltrains/${trainValueSel}?_s=&limit=${limitLabelSel}&offset=${offsetValue}`;
-    setApiUrl(newUrl);
-}, [trainValueSel, limitLabelSel, offsetValue]);
-
-
-useEffect(() => {
-    if (!apiUrl) return; 
-
-    const controller = new AbortController();
-    const signal = controller.signal;
-
     const fetchData = async () => {
-        setIsLoading(true);
-        setIsError({ status: false, msg: "" });
+        let url = "";
 
-        try {
-            const token = btoa("admin:admin");
+        // 👉 Case 1: No selection → Parent API
+        if (!trainValueSel || trainValueSel === 'select') {
+            const facId = parentTextName?.data?.id ?? '';
+            url = `api/v2/treeview/alltrains/${facId}?_s=&limit=${limitLabelSel}&offset=${offsetValue}`;
+        }
 
-            const response = await fetch(apiUrl, {
-                method: "GET",
-                headers: { Authorization: `Basic ${token}` },
-                signal,
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                setTrainData(data || []);
-            } else {
-                throw new Error("data not found");
+        // 👉 Case 2: Mainline selected
+        else if (trainValueSel === 'mainline') {
+            const node = childrenTextName.find(n => n?.data?.mode === 'mainline');
+            if (node) {
+                url = `api/v2/treeview/alltrains/${node.data.id}?_s=&limit=${limitLabelSel}&offset=${offsetValue}`;
             }
-        } catch (err) {
-            if (err.name !== "AbortError") {
-                setIsError({ status: true, msg: err.message });
+        }
+
+        // 👉 Case 3: Yard selected
+        else if (trainValueSel === 'yard') {
+            const node = childrenTextName.find(n => n?.data?.mode === 'yard');
+            if (node) {
+                url = `api/v2/treeview/alltrains/${node.data.id}?_s=&limit=${limitLabelSel}&offset=${offsetValue}`;
             }
-        } finally {
-            setIsLoading(false);
+        }
+
+        if (url) {
+            await getTopotrainMainlineData(url);
         }
     };
 
     fetchData();
+}, [trainValueSel, parentTextName, childrenTextName, limitLabelSel, offsetValue]);
+
+
+const getTopotrainMainlineData = async (apiUrl) => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    setIsLoading(true);
+    setIsError({ status: false, msg: "" });
+
+    try {
+        const token = btoa("admin:admin");
+
+        const response = await fetch(apiUrl, {
+            method: "GET",
+            headers: { Authorization: `Basic ${token}` },
+            signal,
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            setTrainData(data || []);
+        } else {
+            throw new Error("data not found");
+        }
+    } catch (err) {
+        if (err.name !== "AbortError") {
+            setIsError({ status: true, msg: err.message });
+        }
+    } finally {
+        setIsLoading(false);
+    }
 
     return () => controller.abort();
-}, [apiUrl]);
-    
+};
 
 useEffect(() => {
     const controller = new AbortController();
@@ -287,9 +286,9 @@ useEffect(() => {
       const handleTrains=(event)=>{
         let selectedIndex = event.target.selectedIndex;
         let value = event.target.options[selectedIndex].value;
-        setTrainValueSel(value)
+        setTrainValueSel(value);
         let label = event.target.options[selectedIndex].label;
-        setTrainLabelSel(label)
+        setTrainLabelSel(label);
     }
 
 
@@ -362,9 +361,9 @@ useEffect(() => {
                                 <article className="trainsel">
                                 <label for="" className="selectlbl">Select Section :</label>
                                 <select className="form-controll1" value={trainValueSel} onChange={handleTrains} style={{ width: "auto", display: 'inline-block' }} aria-invalid="false">
-                                    <option value="2" label="Select">Select</option>
-                                    <option value="11" label="Mainline">Mainline</option>
-                                    <option value="12" label="Yard">Yard</option>
+                                    <option value="select" label="Select" disabled>Select</option>
+                                    <option value="mainline" label="Mainline">Mainline</option>
+                                    <option value="yard" label="Yard">Yard</option>
                                 </select>
                                 </article>
                            {trainLabelSel !== 'Mainline' && trainLabelSel !== 'Yard' ? (

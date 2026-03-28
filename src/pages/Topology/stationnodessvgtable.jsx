@@ -107,7 +107,7 @@ const StationNodesvgTable=({textName,yardfacilitieData})=>{
                                 .filter(node => !['obc', 'sta', 'ioc'].includes(node.type?.toLowerCase()))
                                 .map((node, index) => (
                                     <tr key={index}>
-                                        <td>{node.systemName}</td>
+                                        <td> <a href={`http://${node.ipAddress}`} target="_blank" rel="noreferrer">{node.systemName}</a></td>
                                         <td  className="highlightText"  onClick={() => handleRowClick(node)}>{node.ipAddress}</td>
                                         <td>{node.type}</td>
                                         <td>{node.status}</td>

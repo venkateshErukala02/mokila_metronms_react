@@ -33,75 +33,122 @@ const [table1, setTable1] = useState([]);
 const [table2, setTable2] = useState([]);
 const [table3, setTable3] = useState([]);
 
-
 useEffect(() => {
-    let newUrl = "";
-
-    switch (textName.data.mode) {
-        case "Trains":
-            setTrainValueSel("2");
-            setTrainLabelSel("Select");
-            newUrl = `api/v2/treeview/alltrains/2?_s=&limit=45&offset=0`;
-            break;
-
-        case "mainline":
-            setTrainValueSel("2");
-            setTrainLabelSel("Select");
-            newUrl = `api/v2/treeview/alltrains/2?_s=&limit=45&offset=0`;
-            break;
-
-        default:
-            return;
-    }
-
-    setApiUrl(newUrl);
-}, [textName]);
-
-useEffect(() => {
-    const newUrl = `api/v2/treeview/alltrains/${trainValueSel}?_s=&limit=${limitLabelSel}&offset=${offsetValue}`;
-    setApiUrl(newUrl);
-}, [trainValueSel, limitLabelSel, offsetValue]);
-
-
-useEffect(() => {
-    if (!apiUrl) return; 
-
-    const controller = new AbortController();
-    const signal = controller.signal;
-
     const fetchData = async () => {
-        setIsLoading(true);
-        setIsError({ status: false, msg: "" });
+        const facId = textName?.data?.id ?? '';
 
-        try {
-            const token = btoa("admin:admin");
+        const url = `api/v2/treeview/alltrains/${facId}?_s=&limit=${limitLabelSel}&offset=${offsetValue}`;
 
-            const response = await fetch(apiUrl, {
-                method: "GET",
-                headers: { Authorization: `Basic ${token}` },
-                signal,
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                setTrainData(data || []);
-            } else {
-                throw new Error("data not found");
-            }
-        } catch (err) {
-            if (err.name !== "AbortError") {
-                setIsError({ status: true, msg: err.message });
-            }
-        } finally {
-            setIsLoading(false);
-        }
+        await getTopotrainMainlineData(url);
     };
 
     fetchData();
+}, [textName, limitLabelSel, offsetValue]);
+
+
+const getTopotrainMainlineData = async (apiUrl) => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    setIsLoading(true);
+    setIsError({ status: false, msg: "" });
+
+    try {
+        const token = btoa("admin:admin");
+
+        const response = await fetch(apiUrl, {
+            method: "GET",
+            headers: { Authorization: `Basic ${token}` },
+            signal,
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            setTrainData(data || []);
+        } else {
+            throw new Error("data not found");
+        }
+    } catch (err) {
+        if (err.name !== "AbortError") {
+            setIsError({ status: true, msg: err.message });
+        }
+    } finally {
+        setIsLoading(false);
+    }
 
     return () => controller.abort();
-}, [apiUrl]);
+};
+
+
+// useEffect(() => {
+//     let newUrl = "";
+
+//     switch (textName.data.mode) {
+//         case "Trains":
+//             setTrainValueSel(`${textName?.data?.id}`);
+//             setTrainLabelSel("Select");
+//             // newUrl = `api/v2/treeview/alltrains/2?_s=&limit=45&offset=0`;
+//             break;
+
+//         case "mainline":
+//             setTrainValueSel(`${textName?.data?.id}`);
+//             setTrainLabelSel("Select");
+//             // newUrl = `api/v2/treeview/alltrains/2?_s=&limit=45&offset=0`;
+//             break;
+
+//         default:
+//             return;
+//     }
+
+//     setApiUrl(newUrl);
+// }, [textName]);
+
+// useEffect(() => {
+//     const newUrl = `api/v2/treeview/alltrains/${trainValueSel}?_s=&limit=${limitLabelSel}&offset=${offsetValue}`;
+//     setApiUrl(newUrl);
+// }, [trainValueSel, limitLabelSel, offsetValue]);
+
+
+// useEffect(() => {
+//     if (!apiUrl) return; 
+
+//     const controller = new AbortController();
+//     const signal = controller.signal;
+
+//     const fetchData = async () => {
+//         setIsLoading(true);
+//         setIsError({ status: false, msg: "" });
+
+//         try {
+//             const token = btoa("admin:admin");
+
+//             const response = await fetch(apiUrl, {
+//                 method: "GET",
+//                 headers: { Authorization: `Basic ${token}` },
+//                 signal,
+//             });
+
+//             const data = await response.json();
+
+//             if (response.ok) {
+//                 setTrainData(data || []);
+//             } else {
+//                 throw new Error("data not found");
+//             }
+//         } catch (err) {
+//             if (err.name !== "AbortError") {
+//                 setIsError({ status: true, msg: err.message });
+//             }
+//         } finally {
+//             setIsLoading(false);
+//         }
+//     };
+
+//     fetchData();
+
+//     return () => controller.abort();
+// }, [apiUrl]);
 
 
 
@@ -285,13 +332,13 @@ useEffect(() => {
         setLimitLabelSel(label)
     }
 
-      const handleTrains=(event)=>{
-        let selectedIndex = event.target.selectedIndex;
-        let value = event.target.options[selectedIndex].value;
-        setTrainValueSel(value)
-        let label = event.target.options[selectedIndex].label;
-        setTrainLabelSel(label)
-    }
+    //   const handleTrains=(event)=>{
+    //     let selectedIndex = event.target.selectedIndex;
+    //     let value = event.target.options[selectedIndex].value;
+    //     setTrainValueSel(value)
+    //     let label = event.target.options[selectedIndex].label;
+    //     setTrainLabelSel(label)
+    // }
 
       const getServerStatusDt = async (url) => {
     setIsLoading(true);
@@ -360,12 +407,12 @@ useEffect(() => {
                                     <option value="2" label="45">45</option>
                                 </select>
                                 <article className="trainsel">
-                                <label for="" className="selectlbl">Select Section :</label>
+                                {/* <label for="" className="selectlbl">Select Section :</label>
                                 <select className="form-controll1" value={trainValueSel} onChange={handleTrains} style={{ width: "auto", display: 'inline-block' }} aria-invalid="false">
                                     <option value="2" label="Select">Select</option>
                                     <option value="11" label="Mainline">Mainline</option>
                                     <option value="12" label="Yard">Yard</option>
-                                </select>
+                                </select> */}
                                 </article>
 
                            {trainLabelSel !== 'Mainline' && trainLabelSel !== 'Yard' ? (

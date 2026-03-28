@@ -204,19 +204,17 @@ const resetTrainLayers = (svgRoot) => {
          const el = svgRoot.querySelector(`#${item.position}`);
             const title = svgRoot.querySelector(`#ts-${item.position}`);
                 if (item.type !== 'sta') {
-                    if (item.type=='transcoder' && posttext) {
-                        posttext.textContent = 'T' 
-                    } else if (item.type=='encoder' && posttext) {
-                        posttext.textContent = 'E' 
+                     if (posttext) {
+                        if (item.type=='transcoder') {
+                            posttext.firstChild.nodeValue = 'T';
+                        } else if (item.type=='encoder') {
+                            posttext.firstChild.nodeValue = 'E';
+                        }
                     }
-                    //  posttext.textContent =
-                    // item.type === 'transcoder' ? 'T' :
-                    // item.type === 'encoder' ? 'E' :
-                    // '';
                     if (title) {
                             title.textContent = item.ipAddress;
                         } else {
-                            console.warn(`Element with id ts-${item.position} not found`);
+                            console.log(`Element with id ts-${item.position} not found`);
                         }
                     // title.textContent = item.ipAddress;
                 if (el) {

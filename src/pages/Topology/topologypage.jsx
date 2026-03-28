@@ -28,6 +28,8 @@ import MainlineView from "./mainlinetrainview";
 const TopoPg = () => {
 
     const [textName, setTextName] = useState(null);
+    const [parentTextName,setParentTextName] = useState(null);
+    const [childrenTextName,setChildrenTextName] = useState(null);
     const [lineId, setLineId] = useState('');
     const [circleId, setCircleId] = useState('');
     const [stationCount, setStationCount] = useState(false);
@@ -65,7 +67,7 @@ const TopoPg = () => {
     const hasRun = useRef(false);
     const [enableStationPolling, setEnableStationPolling] = useState(true);
 
-    const handleNodeClick = (value) => {
+    const handleNodeClick = (value,parent) => {
         setTextNameChanged(true); 
         
         setCircleId('');
@@ -76,6 +78,7 @@ const TopoPg = () => {
         setTrainView(false);
 
         setTextName({...value});
+        setParentTextName(parent);
         setTimeLeft(30);
         // nodeData
          setSelectedPrevNodeId({
@@ -219,7 +222,9 @@ useEffect(()=>{
         if(!stationId || selectedTab !== 'tagtable') {
         const urlStation= `api/v2/treeview/station/${stationId}`;
         const urlTrains = `api/v2/treeview/trains/${stationId}`;
-         if (textNameIntervalRef.current) clearInterval(textNameIntervalRef.current);
+         if (textNameIntervalRef.current) {
+            clearInterval(textNameIntervalRef.current)
+        };
         getYardfacilitieData(urlStation);
         getTrainData(urlTrains);
 
@@ -231,12 +236,12 @@ useEffect(()=>{
 
          return () => {
              if (textNameIntervalRef.current) {
-      clearInterval(textNameIntervalRef.current);
-      textNameIntervalRef.current = null;
-    }
+            clearInterval(textNameIntervalRef.current);
+            textNameIntervalRef.current = null;
+            }
         };
 
-    },[textName?.data?.id,textName?.data?.mode,selectedTab]); 
+    },[textName,selectedTab]); 
 
 // const prevStationIdRef = useRef(null);
 // const stationIdRef = useRef(null);
@@ -454,15 +459,15 @@ useEffect(() => {
             }
                 break;
             case 'Trains':
-                return  <TrainView textName={textName}/>
+                return  <TrainView textName={textName} parentTextName={parentTextName} childrenTextName={childrenTextName}/>
                     break;
             case 'mainline':
                 return  <MainlineView textName={textName}/>
                     break;
             case 'yard':
                 return  <>
-                <TopoSvgViewer yardfacilitieData={yardfacilitieData}  textName={textName}/>
-                <YardTbone yardfacilitieData={yardfacilitieData} textName={textName} />
+                <TopoSvgViewer yardfacilitieData={yardfacilitieData}  textName={textName} childrenTextName={childrenTextName}/>
+                <YardTbone yardfacilitieData={yardfacilitieData} textName={textName} childrenTextName={childrenTextName}/>
             {/* <YardTbtwo textName={textName}/> */}
                 </>
                     break;
@@ -767,6 +772,9 @@ useEffect(() => {
 
     const canGoBack = Boolean(previousViewRef.current);
 
+    const handleChildrenData = (data) => {
+        setChildrenTextName(data);
+    };
 
     return (
         <article className="display-f">
@@ -814,7 +822,8 @@ useEffect(() => {
                         <hr  className="hrll" style={{marginBottom:'0px'}}/>
                         <article>
                         <TreeList getElementAtEvent={handleNodeClick} selectedNodeId={selectedTreeNodeId} circleId={circleId} onStationResolved={setStationNode} selectedPrevNodeId={selectedPrevNodeId} prevIdActive={prevIdActive}  onStationCircleIdChange={setStationIdFromSvg} stationRefreshKey={stationRefreshKey}
-                        />
+                       onChildrenData={handleChildrenData}
+                       />
                             </article>
                             <article>
                             </article>

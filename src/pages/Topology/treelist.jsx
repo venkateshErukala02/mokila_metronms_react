@@ -4,7 +4,7 @@ import './../Topology/topology.css';
 
 
 
-const TreeList = ({ getElementAtEvent,selectedNodeId,circleId,onStationResolved ,selectedTreeNodeId,selectedPrevNodeId,prevIdActive,onStationCircleIdChange,stationRefreshKey}) => {
+const TreeList = ({ getElementAtEvent,selectedNodeId,circleId,onStationResolved ,selectedTreeNodeId,selectedPrevNodeId,prevIdActive,onStationCircleIdChange,stationRefreshKey,onChildrenData}) => {
   const [nodeData, setNodeData] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   const [treeData, setTreeData] = useState([
@@ -433,7 +433,7 @@ const getDatanodesLine = async (url, targetNode) => {
     const data = await res.json();
     const children = (Array.isArray(data) ? data : []).map(n => ({ ...n, children: [] }));
     console.log('ppppppp', children);
-
+    onChildrenData?.(children);
     // Use the immutable attachChildren
     setTreeData(prev => attachChildren(prev, targetNode, children));
     return children; // ✅ return the loaded children

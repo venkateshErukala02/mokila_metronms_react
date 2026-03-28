@@ -31,7 +31,7 @@ const Tree = ({ data,getElementAtEvent,selectedNode,setSelectedNode,isLastChild,
           <TreeNode
              key={tree.label? tree.label: tree.text}
             node={tree}
-            //  parent ={null}
+            parent ={null}
             selectedNode={selectedNode}
             setSelectedNode={setSelectedNode}
             //onNodeClick={handleClickNode}
@@ -50,7 +50,7 @@ const Tree = ({ data,getElementAtEvent,selectedNode,setSelectedNode,isLastChild,
 };
 
 
-const TreeNode = ({ node, selectedNode, setSelectedNode,getElementAtEvent,isLastChild,dataName,selectedTreeNodeId,selectedPrevNodeId,prevIdActive }) => {
+const TreeNode = ({ node,parentNode, selectedNode, setSelectedNode,getElementAtEvent,isLastChild,dataName,selectedTreeNodeId,selectedPrevNodeId,prevIdActive }) => {
 //   const [childVisible, setChildVisibility] = useState(
 //   selectedNode?.text === dataName
 // );
@@ -124,7 +124,7 @@ useEffect(() => {
     e.stopPropagation(); // Prevent event bubbling
     setChildVisible(prevState => !prevState); // Toggle the visibility of children
     setSelectedNode(node); // Update the selected node state
-    getElementAtEvent(node); // Call the function passed as prop
+    getElementAtEvent(node,parentNode); // Call the function passed as prop
   };
 
 const isSelected = prevIdActive
@@ -245,6 +245,7 @@ const isSelected = prevIdActive
             <TreeNode
               key={child.label || child.text}
               node={child}
+              parentNode={node}
               selectedNode={selectedNode}
               setSelectedNode={setSelectedNode}
               getElementAtEvent={getElementAtEvent}
