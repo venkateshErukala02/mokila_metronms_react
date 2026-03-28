@@ -193,8 +193,8 @@ const Tableone = () => {
                     </article>
                 </article>
             </article>
-            <article className="eventstbart">
-                <table className="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12 bordeer-allsd" style={{ height: '90vh' }}>
+            <article className={`eventstbart ${(!eventData || !eventData.event || eventData.event.length === 0) ? 'no-scroll' : ''}`}>
+                <table className="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12 bordeer-allsd table-fixed">
                     <thead>
                         <tr>
 

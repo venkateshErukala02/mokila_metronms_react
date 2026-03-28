@@ -31,6 +31,9 @@ const NotificationContainer=()=>{
         const [notifiGroupUserData,setNotifiGroupUserData] = useState("");
         const currentUser = useSelector((state) => state?.loginuser?.node?.role);
         const isReadOnly = currentUser === 'Read-only';
+        const [itemToDelete, setItemToDelete] = useState(null);
+        const [showDeletePopup, setShowDeletePopup] = useState(false);
+        const [showDeleteSuccessPopup, setShowDeleteSuccessPopup] = useState(false);
 
          useEffect(() => {                  
             const url='api/v2/eventnotice/ugrlist?_s=&limit=10&offset=0&order=asc&orderBy=name';
@@ -322,8 +325,6 @@ const NotificationContainer=()=>{
 
        const handleDeleteNotifiConfig = async (item) => {
         const method = 'POST';
-        const confirmDel = window.confirm("Are you sure you want to delete this notification config?");
-    if (!confirmDel) return;
         try {
             const username = 'admin';
             const password = 'admin';
@@ -341,6 +342,7 @@ const NotificationContainer=()=>{
             const text = await response.text();
 
             if (response.ok) {
+                  setShowDeleteSuccessPopup(true);
                const url='api/v2/eventnotice/list?limit=10&offset=0&sort=asc'
             getNotificatioData(url);
             } else {
@@ -548,7 +550,14 @@ const NotificationContainer=()=>{
                                 </label></> </td>
                                             <td><i className="fas fa-edit" onClick={currentUser !== 'Read-only' ? ()=> handleEditSnmpDt(item) : undefined}></i></td>
                                             <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" 
-                                            onClick={currentUser !== 'Read-only' ?()=> handleDeleteNotifiConfig(item) : undefined}
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (currentUser !== 'Read-only') {
+                                                setItemToDelete(item);
+                                                setShowDeletePopup(true);
+                                                }
+                                            }}
+                                          
                                             style={{
                                                 cursor: isReadOnly ? "not-allowed" : "pointer" ,
                                                 color: isReadOnly ? "black" : "#ef0808",
@@ -687,6 +696,49 @@ const NotificationContainer=()=>{
                         {renderNotificationSubCont()}
                     </article> 
                     </article>
+                      {showDeletePopup && itemToDelete && <>
+                            <article className="confirmdeletepopup">
+                                <article className="confirmdeletepopupboxstyle">
+                                <h1 className="confirmdeletetitle">Are you sure you want to delete this notificaton?</h1>
+                                <article className="f-r">
+                                     <button
+                                        className="confirmdeletebtn"
+                                        onClick={() => setShowDeletePopup(false)}
+                                        >
+                                        NO
+                                        </button>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={async () => {
+                                            await handleDeleteNotifiConfig(itemToDelete);
+                                            setShowDeletePopup(false);
+                                        }}
+                                        >
+                                        YES
+                                        </button>
+                                </article>
+                                </article>
+                            </article>
+                            </>}
+
+                             {showDeleteSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">The notificaton has been deleted successfully.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => setShowDeleteSuccessPopup(false)}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
         </>
     )
 }

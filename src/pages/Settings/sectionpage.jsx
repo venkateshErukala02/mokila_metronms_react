@@ -17,7 +17,12 @@ const SectionContainer=()=>{
         const [sortField, setSortField] = useState('name');
         const [sortOrder, setSortOrder] = useState('asc');
         const currentUser = useSelector((state) => state?.loginuser?.node?.role);
-        const isReadOnly = currentUser === 'Read-only'
+        const isReadOnly = currentUser === 'Read-only';
+
+         const [itemToDelete, setItemToDelete] = useState(null);
+        const [showDeletePopup, setShowDeletePopup] = useState(false);
+        const [showDeleteSuccessPopup, setShowDeleteSuccessPopup] = useState(false);
+
         const getSectionData = async (url) => {
             setIsLoading(true);
             setIsError({ status: false, msg: "" }); 
@@ -110,6 +115,7 @@ const SectionContainer=()=>{
             const text = await response.text();
 
             if (response.ok) {
+                setShowDeleteSuccessPopup(true);
                 const url=`api/v2/locations?_s=&limit=${cityLimitValueSel}&offset=0&order=${sortOrder}&orderBy=${sortField}`
                 getSectionData(url);
             } else {
@@ -216,7 +222,13 @@ const SectionContainer=()=>{
                                             <td>{item.parent}</td>
                                             <td ><i className="fas fa-edit" onClick={currentUser !== 'Read-only' ? ()=> handleEditSectionDt(item) :undefined}></i></td>
                                             <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" 
-                                             onClick={currentUser !== 'Read-only' ? ()=> handleDeleteSection(item):undefined}
+                                             onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (currentUser !== 'Read-only') {
+                                                setItemToDelete(item);
+                                                setShowDeletePopup(true);
+                                                }
+                                            }}
 
                                              style={{
                                                 cursor: isReadOnly ? "not-allowed" : "pointer" ,
@@ -244,6 +256,50 @@ const SectionContainer=()=>{
                         />
                     </article> 
                     </article>
+
+                     {showDeletePopup && itemToDelete && <>
+                            <article className="confirmdeletepopup">
+                                <article className="confirmdeletepopupboxstyle">
+                                <h1 className="confirmdeletetitle">Are you sure you want to delete this section?</h1>
+                                <article className="f-r">
+                                     <button
+                                        className="confirmdeletebtn"
+                                        onClick={() => setShowDeletePopup(false)}
+                                        >
+                                        NO
+                                        </button>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={async () => {
+                                            await handleDeleteSection(itemToDelete);
+                                            setShowDeletePopup(false);
+                                        }}
+                                        >
+                                        YES
+                                        </button>
+                                </article>
+                                </article>
+                            </article>
+                            </>}
+
+                             {showDeleteSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">The section has been deleted successfully.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => setShowDeleteSuccessPopup(false)}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
         </>
     )
 }

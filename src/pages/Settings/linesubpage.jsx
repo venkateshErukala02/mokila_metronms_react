@@ -12,6 +12,8 @@ const LineSubCont = ({ handleSubContainer,refreshLineData,mode,line }) => {
     const [lineName, setLineName] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [showAddedSuccessPopup, setShowAddedSuccessPopup] = useState(false);
+    
 
 
     const handleProfileContclose = () => {
@@ -50,8 +52,8 @@ const LineSubCont = ({ handleSubContainer,refreshLineData,mode,line }) => {
             });
             if (response.ok) {
                 // setSuccess('Discovery started successfully');
-                alert('Created line successfully');
                 handleProfileContclose();
+                setShowAddedSuccessPopup(true);
                 if (refreshLineData) refreshLineData();
                 setLineName('')
             } else {
@@ -120,6 +122,24 @@ const LineSubCont = ({ handleSubContainer,refreshLineData,mode,line }) => {
 
                 </article>
             </article>
+            {showAddedSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">The line has been created successfully.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => setShowAddedSuccessPopup(false)}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
 
         </>
     )

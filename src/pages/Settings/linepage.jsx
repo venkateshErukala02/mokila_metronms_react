@@ -18,6 +18,9 @@ const LineContainer=()=>{
         const [sortOrder, setSortOrder] = useState('asc');
         const currentUser = useSelector((state) => state?.loginuser?.node?.role);
         const isReadOnly = currentUser === 'Read-only';
+        const [itemToDelete, setItemToDelete] = useState(null);
+        const [showDeletePopup, setShowDeletePopup] = useState(false);
+        const [showDeleteSuccessPopup, setShowDeleteSuccessPopup] = useState(false);
 
         const getLineData = async (url) => {
             setIsLoading(true);
@@ -95,8 +98,8 @@ const LineContainer=()=>{
         const handleDeleteLine = async (item) => {
         const method = 'DELETE';
         // const url= isEditMode  ? `rest/users/${user["user-id"]}` :'rest/users';
-        const confirmDel = window.confirm("Are you sure you want to delete this line?");
-    if (!confirmDel) return;
+    //     const confirmDel = window.confirm("Are you sure you want to delete this line?");
+    // if (!confirmDel) return;
         // const requestBody ={
         // //    firmware: "16_314_Sample.bin"
         //    firmware: `${item.version}_${item.fileName}`
@@ -121,6 +124,7 @@ const LineContainer=()=>{
 
             if (response.ok) {
                 // alert("Are you sure you want to delete this firmware?")
+                setShowDeleteSuccessPopup(true);
                  let url =`api/v2/regions?_s=&limit=${regionLimitValueSel}&offset=0&order=${sortOrder}&orderBy=${sortField}`
             getLineData(url);
             } else {
@@ -221,7 +225,13 @@ const LineContainer=()=>{
                                             <td>{item.name}</td>
                                             <td><i className="fas fa-edit" onClick={currentUser !== 'Read-only' ? () => handleEditLineDt(item) : undefined}></i></td>
                                             <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" 
-                                             onClick={currentUser !== 'Read-only' ? ()=> handleDeleteLine(item) : undefined}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (currentUser !== 'Read-only') {
+                                                setItemToDelete(item);
+                                                setShowDeletePopup(true);
+                                                }
+                                            }}
 
                                              style={{
                                                 cursor: isReadOnly ? "not-allowed" : "pointer" ,
@@ -249,6 +259,50 @@ const LineContainer=()=>{
                         />
                     </article> 
                     </article>
+
+                     {showDeletePopup && itemToDelete && <>
+                            <article className="confirmdeletepopup">
+                                <article className="confirmdeletepopupboxstyle">
+                                <h1 className="confirmdeletetitle">Are you sure you want to delete this line?</h1>
+                                <article className="f-r">
+                                     <button
+                                        className="confirmdeletebtn"
+                                        onClick={() => setShowDeletePopup(false)}
+                                        >
+                                        NO
+                                        </button>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={async () => {
+                                            await handleDeleteLine(itemToDelete);
+                                            setShowDeletePopup(false);
+                                        }}
+                                        >
+                                        YES
+                                        </button>
+                                </article>
+                                </article>
+                            </article>
+                            </>}
+
+                             {showDeleteSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">The line has been deleted successfully.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => setShowDeleteSuccessPopup(false)}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
         </>
     )
 }

@@ -17,6 +17,9 @@ const UserContainer=()=>{
         const [sortOrder, setSortOrder] = useState('asc');
         const currentUser = useSelector((state) => state?.loginuser?.node?.role);
         const isReadOnly = currentUser === 'Read-only';
+        const [itemToDelete, setItemToDelete] = useState(null);
+        const [showDeletePopup, setShowDeletePopup] = useState(false);
+        const [showDeleteSuccessPopup, setShowDeleteSuccessPopup] = useState(false);
 
         const getUserData = async (url) => {
             setIsLoading(true);
@@ -91,8 +94,7 @@ const UserContainer=()=>{
 
       const handleDeleteUser = async (item) => {
         const method = 'DELETE';
-        const confirmDel = window.confirm("Are you sure you want to delete this user?");
-    if (!confirmDel) return;
+       
         try {
             const username = 'admin';
             const password = 'admin';
@@ -110,6 +112,7 @@ const UserContainer=()=>{
             const text = await response.text();
 
             if (response.ok) {
+                setShowDeleteSuccessPopup(true);
                 const url=`rest/users/list?limit=${userLimitValueSel}&offset=0&sort=${sortOrder}`
                 getUserData(url);
             } else {
@@ -212,7 +215,14 @@ const UserContainer=()=>{
                                             <td>{item.role}</td>
                                             <td>{item["region-name"]}</td>
                                             <td ><i className="fas fa-edit" onClick={currentUser !== 'Read-only' ? ()=> handleEditUserDt(item) : undefined}></i></td>
-                                            <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" onClick={currentUser !== 'Read-only' ? ()=> handleDeleteUser(item) : undefined}
+                                            <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" 
+                                             onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (currentUser !== 'Read-only') {
+                                                setItemToDelete(item);
+                                                setShowDeletePopup(true);
+                                                }
+                                            }}
                                                 style={{
                                                 cursor: isReadOnly ? "not-allowed" : "pointer" ,
                                                 color: isReadOnly ? "black" : "#ef0808",
@@ -237,6 +247,50 @@ const UserContainer=()=>{
                         />
                     </article> 
                     </article>
+
+                     {showDeletePopup && itemToDelete && <>
+                            <article className="confirmdeletepopup">
+                                <article className="confirmdeletepopupboxstyle">
+                                <h1 className="confirmdeletetitle">Are you sure you want to delete this user?</h1>
+                                <article className="f-r">
+                                     <button
+                                        className="confirmdeletebtn"
+                                        onClick={() => setShowDeletePopup(false)}
+                                        >
+                                        NO
+                                        </button>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={async () => {
+                                            await handleDeleteUser(itemToDelete);
+                                            setShowDeletePopup(false);
+                                        }}
+                                        >
+                                        YES
+                                        </button>
+                                </article>
+                                </article>
+                            </article>
+                            </>}
+
+                             {showDeleteSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">The user has been deleted successfully.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => setShowDeleteSuccessPopup(false)}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
         </>
     )
 }

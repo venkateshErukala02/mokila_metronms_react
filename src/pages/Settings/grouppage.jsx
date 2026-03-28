@@ -15,6 +15,9 @@ const GroupContainer=()=>{
         const [mode, setMode] = useState(null); 
         const currentUser = useSelector((state) => state?.loginuser?.node?.role);
         const isReadOnly = currentUser === 'Read-only';
+        const [itemToDelete, setItemToDelete] = useState(null);
+        const [showDeletePopup, setShowDeletePopup] = useState(false);
+        const [showDeleteSuccessPopup, setShowDeleteSuccessPopup] = useState(false);
         
         const getGroupData = async (url) => {
             setIsLoading(true);
@@ -84,8 +87,7 @@ const GroupContainer=()=>{
 
       const handleDeleteGroup = async (item) => {
         const method = 'DELETE';
-        const confirmDel = window.confirm("Are you sure you want to delete this group?");
-    if (!confirmDel) return;
+      
         try {
             const username = 'admin';
             const password = 'admin';
@@ -103,6 +105,7 @@ const GroupContainer=()=>{
             const text = await response.text();
 
             if (response.ok) {
+                setShowDeleteSuccessPopup(true);
                 const url=`rest/groups?limit=${groupLimitValueSel}&offset=0&sort=asc`;
                 getGroupData(url);
             } else {
@@ -206,7 +209,13 @@ const GroupContainer=()=>{
                                            
                                             <td ><i className="fas fa-edit" onClick={ currentUser !== 'Read-only' ? ()=> handleEditSectionDt(item) : undefined}></i></td>
                                             <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" 
-                                             onClick={ currentUser !== 'Read-only' ?()=> handleDeleteGroup(item) : undefined}
+                                             onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (currentUser !== 'Read-only') {
+                                                setItemToDelete(item);
+                                                setShowDeletePopup(true);
+                                                }
+                                            }}
 
                                               style={{
                                                 cursor: isReadOnly ? "not-allowed" : "pointer" ,
@@ -235,6 +244,50 @@ const GroupContainer=()=>{
                         />
                     </article> 
                     </article>
+
+                        {showDeletePopup && itemToDelete && <>
+                            <article className="confirmdeletepopup">
+                                <article className="confirmdeletepopupboxstyle">
+                                <h1 className="confirmdeletetitle">Are you sure you want to delete this group?</h1>
+                                <article className="f-r">
+                                     <button
+                                        className="confirmdeletebtn"
+                                        onClick={() => setShowDeletePopup(false)}
+                                        >
+                                        NO
+                                        </button>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={async () => {
+                                            await handleDeleteGroup(itemToDelete);
+                                            setShowDeletePopup(false);
+                                        }}
+                                        >
+                                        YES
+                                        </button>
+                                </article>
+                                </article>
+                            </article>
+                            </>}
+
+                             {showDeleteSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">The group has been deleted successfully.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => setShowDeleteSuccessPopup(false)}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
         </>
     )
 }
