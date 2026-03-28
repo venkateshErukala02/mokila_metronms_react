@@ -76,10 +76,10 @@ const LeftNavList = () => {
                     <a>   <i className={`fas fa-lg fa-file-alt ${activeIndex === 5 ? 'activee' : ''}`}></i>
                         <span className="tooltipcll">Inventory Reports</span></a>
                     </li>
-                    <li onClick={() => handleClick("/Setting")}>
+                  {currentUser !== "Read-only" && (  <li onClick={() => handleClick("/Setting")}>
                     <a>   <i className={`fas fa-lg fa-cog ${activeIndex === 6 ? 'activee' : ''}`}></i>
                         <span className="tooltipcll">Settings</span></a>
-                    </li>
+                    </li> )}
                 </ul>
             </article>
     );

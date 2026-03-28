@@ -39,7 +39,7 @@ const RoutesPage = () => {
            {currentUser !== "Read-only" && ( <Route  path="/Config" element={<ConfigPage />} />)}
             <Route  path="/Event" element={<EventPg />} />
             <Route path="/Inventory" element={<InventRpt />} />
-            <Route path="/Setting" element={<SettPage />} />
+            {currentUser !== "Read-only" && ( <Route path="/Setting" element={<SettPage />} />)}
             <Route path="*" element={<p>Error Not Found</p>} />
          </Routes>
       </Router>
