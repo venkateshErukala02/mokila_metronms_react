@@ -7,9 +7,10 @@ import StationNodeTable from "./stationNodetableview";
 import { useLayoutEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import {handleStationCircleId} from '../Action/action'
+import YardTbone from "./yardonetb";
 
 
-const TopoSvgViewer = ({textName,yardfacilitieData,setTrainView,setStationView,setTrainLabelDiply,setTrainId,getCircleId,getLineId,setStationTagview,setLineTagview}) => {
+const TopoSvgViewer = ({textName,yardfacilitieData,setTrainView,setStationView,setTrainLabelDiply,setTrainId,getCircleId,getLineId,setStationTagview,setLineTagview,childrenTextName,parentTextName}) => {
  const [svgContent, setSvgContent] = useState("");
   const [error, setError] = useState("");
   const svgContainerRef = useRef(null);
@@ -25,6 +26,7 @@ const TopoSvgViewer = ({textName,yardfacilitieData,setTrainView,setStationView,s
     const [circleId,setCircleId] = useState(null);
     const [success, setSuccess] = useState('');
     const [svgVersion, setSvgVersion] = useState(0);
+    const [yardData,setYardData] = useState('');
 
     const fetchSvg = async (url, signal) => {
         try {
@@ -82,6 +84,128 @@ const TopoSvgViewer = ({textName,yardfacilitieData,setTrainView,setStationView,s
         setIsError({ status: true, msg: error.message });
     }
 };
+
+  const getYardData = async (urlStation) => {
+    setIsLoading(true);
+    setIsError({ status: false, msg: "" });
+    try {
+        const response = await fetch(urlStation, {
+            method: "GET",
+            headers: {
+                'Authorization': `Basic ${btoa('admin:admin')}`
+            }
+        });
+        const data = await response.json();
+        if (response.ok) {
+            setYardData(data || []);
+            //  yardfacilitieDataRef.current=data;
+            setIsError({ status: false, msg: "" });
+        } else {
+            throw new Error("Data not found");
+        }
+    } catch (error) {
+        setIsError({ status: true, msg: error.message });
+    } finally {
+        setIsLoading(false);
+    }
+};
+
+ const yardTextNameIntervalRef = useRef(null);
+
+useEffect(()=>{
+        if (!textName?.data) return;
+        setTrainData('');
+        if (circleId) return;
+        if(textName?.data?.mode !== 'yard') return;
+        let intervalId;
+        const stationId = textName?.data?.id;
+        if (!stationId) return;
+        if (stationId === null) return;
+        if( textName?.data?.mode !== 'yard' || childrenTextName[0]?.data?.mode !== 'facility' ) return;
+        if(!stationId  !== 'tagtable') {
+        const urlStation= `api/v2/treeview/station/${childrenTextName[0]?.data?.id}`;
+        // const urlTrains = `api/v2/treeview/trains/${stationId}`;
+         if (yardTextNameIntervalRef.current) {
+            clearInterval(yardTextNameIntervalRef.current)
+        };
+        getYardData(urlStation);
+        // getTrainData(urlTrains);
+
+          yardTextNameIntervalRef.current  = setInterval(() => {
+            getYardData(urlStation);
+            // getTrainData(urlTrains);
+        }, 30000);
+        }
+
+         return () => {
+             if (yardTextNameIntervalRef.current) {
+            clearInterval(yardTextNameIntervalRef.current);
+            yardTextNameIntervalRef.current = null;
+            }
+        };
+
+    },[childrenTextName,parentTextName]); 
+
+
+    useEffect(() => {
+
+  const svgRoot = svgContainerRef.current;
+  if (!svgRoot || !Array.isArray(yardData)) return;
+
+  const resetSVGStyles = () => {
+    const svgRoot = svgContainerRef.current; 
+     const ids = ['FTT1', 'FTT2', 'FTT3'];
+   ids.forEach((id) => {
+    const rectElement = svgRoot.querySelector(`#${id}`);
+    if (rectElement) {
+      rectElement.setAttribute('fill', 'red');
+      rectElement.setAttribute('stroke', '#231F20');
+      rectElement.setAttribute('stroke-width', '0.5');
+      rectElement.setAttribute('width', '15');
+      rectElement.setAttribute('height', '15');
+    }
+
+    const titleElement = svgRoot.querySelector(`#${id} + title`);
+    if (titleElement) {
+      titleElement.textContent = ''; 
+    }
+   })
+  };
+
+  resetSVGStyles();
+
+  yardData.forEach((yarditem) => {
+     const position = yarditem.position;
+     if(position === '-'){
+      return;
+     }
+    const el = svgRoot.querySelector(`#${position}`);
+    if (el){
+    if (yarditem.status === "down") {
+      el.setAttribute("fill", "red");
+    } else if (yarditem.status === "up") {
+      el.setAttribute("fill", "rgb(102, 204, 51)");
+    }
+
+      const titleEl = svgRoot.querySelector(`#${position} + title`);
+      if (titleEl) {
+        titleEl.textContent = `${yarditem.systemName} ${yarditem.ipAddress}`;
+      }
+      
+    const textElements = svgRoot.querySelectorAll('.yardtexsty');
+      textElements.forEach((textElement) => {
+        textElement.style.fontSize = '20px';  
+      });
+    }
+
+
+     return () => {
+    resetSVGStyles(); 
+  };
+     
+  });
+}, [svgContent, yardData]);
+
 
  const getTrainData = async () => {
     setIsLoading(true);
@@ -898,6 +1022,9 @@ return (
   <article className="border-allsd" style={{textAlign:'center',paddingTop:'20px',paddingBottom:'20px'}}>
     <div ref={svgContainerRef} dangerouslySetInnerHTML={{ __html: svgContent }} />
    </article>
+   <article>
+    {textName?.data?.mode === 'yard' && <YardTbone yardData={yardData} yardfacilitieData={yardfacilitieData} textName={textName}/> }
+    </article>
     </>
 
 );

@@ -3,7 +3,7 @@ import React,{useState,useEffect, useMemo} from "react";
 import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const YardTbone=({textName,yardfacilitieData})=>{
+const YardTbone=({textName,yardfacilitieData,yardData})=>{
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [linkData,setLinkData] = useState({});
@@ -11,6 +11,9 @@ const YardTbone=({textName,yardfacilitieData})=>{
     const [sortOrder, setSortOrder] = useState('asc'); 
     const [sortField, setSortField] = useState('');
 
+   const dataToUse = (yardfacilitieData && yardfacilitieData.length > 0) 
+    ? yardfacilitieData 
+    : (yardData && yardData.length > 0 ? yardData : []);
 
       const getYardLinkData = async (url, nodeId) => {
         try {
@@ -40,18 +43,18 @@ const YardTbone=({textName,yardfacilitieData})=>{
      useEffect(() => {
     const fetchData = async () => {
 
-        if (!yardfacilitieData || yardfacilitieData.length === 0) {
+        if (!dataToUse || dataToUse.length === 0) {
             return;
         }
-        setSortedData([...yardfacilitieData]);
-        for (const node of yardfacilitieData) {
+        setSortedData([...dataToUse]);
+        for (const node of dataToUse) {
             // const url = `api/v2/nodelinks/linkstatstest?nodeId=0`; // test API
             const url = `api/v2/nodelinks/linkstats?nodeId=${node.nodeId}`; // working API
             await getYardLinkData(url, node.nodeId);
         }
     };
     fetchData();
-}, [yardfacilitieData]);
+}, [dataToUse]);
 
     useEffect(() => {
         setSortField('');
@@ -74,7 +77,7 @@ const YardTbone=({textName,yardfacilitieData})=>{
 
  useEffect(() => {
         window.scrollTo(0, 0);  
-    }, [textName?.data?.display,yardfacilitieData]); 
+    }, [textName?.data?.display,dataToUse]); 
 
   
 
@@ -85,7 +88,7 @@ const YardTbone=({textName,yardfacilitieData})=>{
     setSortOrder(newSortOrder);
     setSortField(field); 
 
-    const sortedArray = [...yardfacilitieData].sort((a, b) => {
+    const sortedArray = [...dataToUse].sort((a, b) => {
       if (field === 'status') {
         const statusOrder = { 'up': 1, 'down': 0 };
         return (statusOrder[a.status] - statusOrder[b.status]) * (newSortOrder === 'asc' ? 1 : -1);

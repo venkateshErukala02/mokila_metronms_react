@@ -214,6 +214,7 @@ useEffect(()=>{
         if (!textName?.data) return;
         setTrainData('');
         if (circleId) return;
+        if(textName?.data?.mode === 'yard') return;
         if(textName?.data?.mode !== 'facility') return;
         let intervalId;
         const stationId = textName?.data?.id;
@@ -226,11 +227,15 @@ useEffect(()=>{
             clearInterval(textNameIntervalRef.current)
         };
         getYardfacilitieData(urlStation);
-        getTrainData(urlTrains);
+        if (!(parentTextName?.data?.mode === 'yard' && childrenTextName[0]?.data?.mode === 'facility')) {
+                getTrainData(urlTrains);
+            }
 
           textNameIntervalRef.current  = setInterval(() => {
             getYardfacilitieData(urlStation);
-            getTrainData(urlTrains);
+             if (!(parentTextName?.data?.mode === 'yard' && childrenTextName[0]?.data?.mode === 'facility')) {
+                getTrainData(urlTrains);
+            }
         }, 30000);
         }
 
@@ -466,8 +471,8 @@ useEffect(() => {
                     break;
             case 'yard':
                 return  <>
-                <TopoSvgViewer yardfacilitieData={yardfacilitieData}  textName={textName} childrenTextName={childrenTextName}/>
-                <YardTbone yardfacilitieData={yardfacilitieData} textName={textName} childrenTextName={childrenTextName}/>
+                <TopoSvgViewer yardfacilitieData={yardfacilitieData}  textName={textName} childrenTextName={childrenTextName} parentTextName={parentTextName}/>
+                {/* <YardTbone yardfacilitieData={yardfacilitieData} textName={textName} childrenTextName={childrenTextName}/> */}
             {/* <YardTbtwo textName={textName}/> */}
                 </>
                     break;
