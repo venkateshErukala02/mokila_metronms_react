@@ -17,8 +17,8 @@ const SectionSubCont=({handleSubContainer,refreshSectionData,mode,section})=>{
  const [isLoading, setIsLoading] = useState(false);
         const [isError, setIsError] = useState({ status: false, msg: "" });
     const [lineLabelSel,setLineLabelSel] = useState('');
-
-
+ const [showAddedSuccessPopup, setShowAddedSuccessPopup] = useState(false);
+const [showSuccessMessage,setShowScuccessMessage] = useState('');
 
 
     const handleProfileContclose=()=>{
@@ -101,8 +101,13 @@ const SectionSubCont=({handleSubContainer,refreshSectionData,mode,section})=>{
             });
             if (response.ok) {
                 // setSuccess('Discovery started successfully');
-                alert('Section Created successfully')
-                handleProfileContclose();
+                // alert('Section Created successfully')
+                // handleProfileContclose();
+                 setShowScuccessMessage(
+                    isEditMode ? 'The section has been updated successfully.':
+                    'The section has been created successfully.'
+                )
+                 setShowAddedSuccessPopup(true);
                 if(refreshSectionData) refreshSectionData();
                 setSectionName('');
                 setLineNameSele('');
@@ -201,6 +206,27 @@ useEffect(()=>{
 
                         </article>
         </article>
+
+         {showAddedSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">{showSuccessMessage}</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() =>{ setShowAddedSuccessPopup(false);
+                                            handleProfileContclose();
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
         
         </>
     )

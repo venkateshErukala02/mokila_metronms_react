@@ -35,7 +35,12 @@ const ServerConfigContainer = () => {
     const [sslEnableValueSel,setSslEnableValueSel] = useState(true);
     const [sslEnableLabelSel,setSslEnableLabelSel] =  useState('')
     const [tlsEnableValueSel,setTlsEnableValueSel] = useState(false);
-    const [tlsEnableLabelSel,setTlsEnableLabelSel] = useState('')
+    const [tlsEnableLabelSel,setTlsEnableLabelSel] = useState('');
+    const [itemToSave, setItemToSave] = useState(null);
+    const [itemToSaveEmail,setItemToSaveEmail] = useState(false);
+    const [showSavePopup, setShowSavePopup] = useState(false);
+    const [showSavePopupEmail, setShowSavePopupEmail] = useState(false);
+    const [showSaveSuccessPopup, setShowSaveSuccessPopup] = useState(false);
 
     const handleCheckboxChange = () => {
         setUserFtp(!userFtp)
@@ -171,7 +176,8 @@ const ServerConfigContainer = () => {
             const text = await response.text();
 
             if (response.ok) {
-                alert('Server Configuration Added successfully')
+                setShowSaveSuccessPopup(true);
+                // alert('Server Configuration Added successfully')
                 // if(refreshUserData) refreshUserData();
             //    setUserName('');
             //    setFullName('');
@@ -216,7 +222,9 @@ const ServerConfigContainer = () => {
             const text = await response.text();
 
             if (response.ok) {
-                alert('Server Configuration Added successfully')
+                 setShowSaveSuccessPopup(true);
+                // alert('Server Configuration Added successfully')
+
                 // if(refreshUserData) refreshUserData();
             //    setUserName('');
             //    setFullName('');
@@ -379,7 +387,16 @@ const ServerConfigContainer = () => {
                                                                         opacity: isReadOnly ? 0.6 : 1  
                                                                     }} 
                                                                     type="button"
-                                                                 disabled={currentUser === "Read-only"}  onClick={currentUser !== "Read-only" ? ()=>handleAddServerConfig(serverConfigDt): undefined}>Save</button>
+                                                                 disabled={currentUser === "Read-only"}
+                                                                  onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        if (currentUser !== 'Read-only') {
+                                                                        setItemToSave(serverConfigDt);
+                                                                        setShowSavePopup(true);
+                                                                        }
+                                                                    }}
+                                                                //  onClick={currentUser !== "Read-only" ? ()=>handleAddServerConfig(serverConfigDt): undefined}
+                                                                >Save</button>
                                                             </article>
                                                         </article>
 
@@ -504,7 +521,15 @@ const ServerConfigContainer = () => {
                                                                         opacity: isReadOnly ? 0.6 : 1  
                                                                     }} 
                                                                 disabled ={currentUser === "Read-only"}
-                                                                onClick={currentUser !== "Read-only" ?handleAddEmailConfig : undefined}>Save</button>
+                                                                 onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        if (currentUser !== 'Read-only') {
+                                                                        setItemToSaveEmail(serverConfigDt);
+                                                                        setShowSavePopupEmail(true);
+                                                                        }
+                                                                    }}
+                                                                // onClick={currentUser !== "Read-only" ?handleAddEmailConfig : undefined}
+                                                                >Save</button>
                                                             </article>
                                                         </article>
                                                     </div>
@@ -525,6 +550,75 @@ const ServerConfigContainer = () => {
 
 
             </article>
+
+               {showSavePopupEmail && itemToSaveEmail && <>
+                            <article className="confirmdeletepopup">
+                                <article className="confirmdeletepopupboxstyle">
+                                <h1 className="confirmdeletetitle">Are you sure you want to save the email configuration?</h1>
+                                <article className="f-r">
+                                     <button
+                                        className="confirmdeletebtn"
+                                        onClick={() => setShowSavePopupEmail(false)}
+                                        >
+                                        NO
+                                        </button>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={async () => {
+                                            await handleAddEmailConfig(itemToSaveEmail);
+                                            setShowSavePopupEmail(false);
+                                        }}
+                                        >
+                                        YES
+                                        </button>
+                                </article>
+                                </article>
+                            </article>
+                            </>}
+
+                                  {showSavePopup && itemToSave && <>
+                            <article className="confirmdeletepopup">
+                                <article className="confirmdeletepopupboxstyle">
+                                <h1 className="confirmdeletetitle">Are you sure you want to save the server configuration?</h1>
+                                <article className="f-r">
+                                     <button
+                                        className="confirmdeletebtn"
+                                        onClick={() => setShowSavePopup(false)}
+                                        >
+                                        NO
+                                        </button>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={async () => {
+                                            await handleAddServerConfig(itemToSave);
+                                            setShowSavePopup(false);
+                                        }}
+                                        >
+                                        YES
+                                        </button>
+                                </article>
+                                </article>
+                            </article>
+                            </>}
+
+                             {showSaveSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">The configuration added successfully</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => setShowSaveSuccessPopup(false)}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
         </>
     )
 }

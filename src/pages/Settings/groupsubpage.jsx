@@ -15,6 +15,8 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const allUsers = ["admin", "rtc"];
     const currentUser = useSelector((state) => state?.loginuser?.node?.role);
+    const [showAddedSuccessPopup, setShowAddedSuccessPopup] = useState(false);
+    const [showSuccessMessage,setShowScuccessMessage] = useState('');
 
 
     const handleProfileContclose=()=>{
@@ -72,7 +74,12 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
             if (response.ok) {
                 // setSuccess('Discovery started successfully');
                 // alert('Discovery started successfully')
-                handleProfileContclose();
+                // handleProfileContclose();
+                  setShowScuccessMessage(
+                    isEditMode ? 'The group has been updated successfully.':
+                    'The group has been created successfully.'
+                )
+                  setShowAddedSuccessPopup(true);
                 if(refreshGroupData) refreshGroupData();
                 setGroupName('');
                 setComment('');
@@ -189,6 +196,26 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
 
                         </article>
         </article>
+               {showAddedSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">{showSuccessMessage}</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() =>{ setShowAddedSuccessPopup(false);
+                                            handleProfileContclose();
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
         
         </>
     )

@@ -535,14 +535,14 @@ const NotificationContainer=()=>{
                                             <td><><label className="radiolabelnotifipg">
                                         <input type="radio" 
                                         checked={item.status === 'off'}
-                                        onChange={() => handleToggleStatus(item)}
+                                        onChange={currentUser !== 'Read-only' ?() => handleToggleStatus(item) : undefined}
                                     />
                                     <span className="notifichecking"></span>
                                     <span className="labeltext">off</span>
                                 </label></> <>
                                 <label className="radiolabelnotifipg">
                                     <input type="radio" 
-                                        onChange={() => handleToggleStatus(item)}
+                                        onChange={currentUser !== 'Read-only' ? () => handleToggleStatus(item) : undefined}
                                         checked={item.status === 'on'}
                                         />
                                     <span className="notifichecking"></span>

@@ -17,6 +17,8 @@ const ThresholdSubCont = ({ handleSubContainer, refreshThresholdData,threshold,m
     const [threshdTrigger,setThreshdTrigger] =  useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
+    const [showAddedSuccessPopup, setShowAddedSuccessPopup] = useState(false);
+    const [showSuccessMessage,setShowScuccessMessage] = useState('');
    
 
 //    const url='api/v2/threshold/update/threshold/0';
@@ -58,7 +60,12 @@ const ThresholdSubCont = ({ handleSubContainer, refreshThresholdData,threshold,m
         if (response.ok) {
             // setSuccess('Discovery started successfully');
             // alert('Discovery started successfully')
-            handleProfileContclose();
+             setShowScuccessMessage(
+                    isEditMode ? 'The threshold has been updated successfully.':
+                    ''
+                )
+                  setShowAddedSuccessPopup(true);
+            // handleProfileContclose();/
             if(refreshThresholdData) refreshThresholdData();
             // setSectionName('');
         } else {
@@ -152,7 +159,7 @@ const ThresholdSubCont = ({ handleSubContainer, refreshThresholdData,threshold,m
                                 
                                 <hr className="hrnote" />
                                 <center className="d-f">
-                                    <button className="cancelbtn">Cancel</button>
+                                    <button className="cancelbtn" onClick={ handleProfileContclose}>Cancel</button>
                                     <button type="button" onClick={handleAddThreshold}
                                     disabled={currentUser === "Read-only"}
                                     className={`creatsetingbtn ${
@@ -169,6 +176,26 @@ const ThresholdSubCont = ({ handleSubContainer, refreshThresholdData,threshold,m
 
                 </article>
             </article>
+              {showAddedSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">{showSuccessMessage}</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() =>{ setShowAddedSuccessPopup(false);
+                                            handleProfileContclose();
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
 
         </>
     )

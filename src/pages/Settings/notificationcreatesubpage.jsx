@@ -17,6 +17,8 @@ const NotificationCreateSubCont=({handleSubContainer,notification,mode,notificat
     const [shortMessage, setShortMessage] =  useState('');
     const [email, setEmail] =  useState('');
     const [emailError, setEmailError] =  useState('');
+    const [showAddedSuccessPopup, setShowAddedSuccessPopup] = useState(false);
+    const [showSuccessMessage,setShowScuccessMessage] = useState('');
 
  const [isLoading, setIsLoading] = useState(false);
  const [isError, setIsError] = useState({ status: false, msg: "" });
@@ -74,8 +76,13 @@ const validateEmail = (email) => {
             body: JSON.stringify(requestBody),
         });
         if (response.ok) {
+             setShowScuccessMessage(
+                    isEditMode ? 'The created notification has been updated successfully.':
+                    'The created notification has been updated successfully.'
+                )
+                  setShowAddedSuccessPopup(true);
             // setSuccess('Discovery started successfully');
-            handleProfileContclose();
+            // handleProfileContclose();
             // if(refreshSectionData) refreshSectionData();
             // setSectionName('')
         } else {
@@ -234,6 +241,27 @@ useEffect(()=>{
 
                         </article>
         </article>
+
+         {showAddedSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">{showSuccessMessage}</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() =>{ setShowAddedSuccessPopup(false);
+                                            handleProfileContclose();
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
         
         </>
     )

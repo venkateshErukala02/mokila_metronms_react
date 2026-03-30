@@ -13,7 +13,7 @@ const LineSubCont = ({ handleSubContainer,refreshLineData,mode,line }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [showAddedSuccessPopup, setShowAddedSuccessPopup] = useState(false);
-    
+    const [showSuccessMessage,setShowScuccessMessage] = useState('');
 
 
     const handleProfileContclose = () => {
@@ -52,7 +52,11 @@ const LineSubCont = ({ handleSubContainer,refreshLineData,mode,line }) => {
             });
             if (response.ok) {
                 // setSuccess('Discovery started successfully');
-                handleProfileContclose();
+                // handleProfileContclose();
+                setShowScuccessMessage(
+                    isEditMode ? 'The line has been updated successfully.':
+                    'The line has been created successfully.'
+                )
                 setShowAddedSuccessPopup(true);
                 if (refreshLineData) refreshLineData();
                 setLineName('')
@@ -127,12 +131,14 @@ const LineSubCont = ({ handleSubContainer,refreshLineData,mode,line }) => {
                                     <article className="confirmsuccesspopupboxstyle">
                                         <article className="success-cont">
                                     <h1 className="confirmtitlesucess">Success</h1>
-                                    <p className="confirmtextsucess">The line has been created successfully.</p>
+                                    <p className="confirmtextsucess">{showSuccessMessage}</p>
                                     </article>
                                     <article style={{ textAlign: 'end' }}>
                                         <button
                                         className="confirmdeletebtn confirmdeletebtnyes"
-                                        onClick={() => setShowAddedSuccessPopup(false)}
+                                        onClick={() =>{ setShowAddedSuccessPopup(false);
+                                            handleProfileContclose();
+                                        }}
                                         >
                                         OK
                                         </button>

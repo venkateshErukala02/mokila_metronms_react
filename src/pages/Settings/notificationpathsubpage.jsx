@@ -12,6 +12,10 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
     const [initialDelay,setInitialDelay] = useState('');
     const [localName,setLocalName] = useState("");
     const currentUser = useSelector((state) => state?.loginuser?.node?.role);
+    const [showAddedSuccessPopup, setShowAddedSuccessPopup] = useState(false);
+    const [showSuccessMessage,setShowScuccessMessage] = useState('');
+    const [showDeletePopup, setShowDeletePopup] = useState(false);
+    const [showDeleteSuccessPopup, setShowDeleteSuccessPopup] = useState(false);
 
     const handleProfileContclose=()=>{
         handleSubContainer();
@@ -49,7 +53,8 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
                 const data = await response.json();
     
                 if (response.ok) {
-                    handleProfileContclose();
+                    setShowDeleteSuccessPopup(true);
+                    // handleProfileContclose();
                     setLoading(false);
                     setError({ status: false, msg: "" });
                 } else {
@@ -128,7 +133,12 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
                 body: JSON.stringify(requestBody),
             });
             if (response.ok) {
-                handleProfileContclose();
+                   setShowScuccessMessage(
+                    editMode ? 'The created destination path has been updated successfully.':
+                    'The created destination path has been updated successfully.'
+                )
+                  setShowAddedSuccessPopup(true);
+                // handleProfileContclose();
                 // if(refreshStationData) refreshStationData();
                 setLocalName("");
             } else {
@@ -182,7 +192,14 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
                                 </article>
                                   <article style={{padding:'15px 0'}}>
                                   <center>
-                                        <button type="button" onClick={handleDeletePath} disabled={currentUser === "Read-only"}
+                                        <button type="button" 
+                                         onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (currentUser !== 'Read-only') {
+                                                setShowDeletePopup(true);
+                                                }
+                                            }}
+                                        // onClick={handleDeletePath} disabled={currentUser === "Read-only"}
                                         className={`cancelbtn ${
                                         currentUser === "Read-only" ? "btndisable" : ""
                                     }`} title={currentUser === "Read-only" ? "Permission required" : ""}>Delete</button>
@@ -284,7 +301,74 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
 
                         </article>
         </article>
+
+
+              {showAddedSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">{showSuccessMessage}</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() =>{ setShowAddedSuccessPopup(false);
+                                            handleProfileContclose();
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
+
+                                     {showDeletePopup && <>
+                            <article className="confirmdeletepopup">
+                                <article className="confirmdeletepopupboxstyle">
+                                <h1 className="confirmdeletetitle">Are you sure you want to delete this notificaton?</h1>
+                                <article className="f-r">
+                                     <button
+                                        className="confirmdeletebtn"
+                                        onClick={() => setShowDeletePopup(false)}
+                                        >
+                                        NO
+                                        </button>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={async () => {
+                                            await handleDeletePath();
+                                            setShowDeletePopup(false);
+                                        }}
+                                        >
+                                        YES
+                                        </button>
+                                </article>
+                                </article>
+                            </article>
+                            </>}
         
+                       {showDeleteSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">The destination path has been deleted successfully.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => {setShowDeleteSuccessPopup(false);
+                                            handleProfileContclose();
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
         </>
     )
 }

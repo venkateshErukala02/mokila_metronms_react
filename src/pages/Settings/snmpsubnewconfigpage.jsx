@@ -17,6 +17,8 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
     const [authProtocolLabel,setAuthProtocolLabel] = useState('AES-128');
     const [privacyProtocolValue,setPrivacyProtocolValue] = useState('3');
     const [privacyProtocolLabel,setPrivacyProtocolLabel] = useState('SHA');
+    const [showAddedSuccessPopup, setShowAddedSuccessPopup] = useState(false);
+    const [showSuccessMessage,setShowScuccessMessage] = useState('');
 
 
     const isEditMode =  mode === 'edit';
@@ -110,7 +112,12 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
                 body: JSON.stringify(requestBody),
             });
             if (response.ok) {
-                handleSubNewconfigContainer();
+                   setShowScuccessMessage(
+                    isEditMode ? 'The SNMP configuration has been updated successfully.':
+                    'The SNMP configuration has been updated successfully.'
+                )
+                  setShowAddedSuccessPopup(true);
+                // handleSubNewconfigContainer();
                 if(refreshSnmpData) refreshSnmpData();
                 setBeginIp('');
                 setEndIp('');
@@ -250,6 +257,28 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
 
                         </article>
         </article>
+
+              {showAddedSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">{showSuccessMessage}</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() =>{ setShowAddedSuccessPopup(false);
+                                            handleSubNewconfigContainer();
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
+
         
         </>
     )

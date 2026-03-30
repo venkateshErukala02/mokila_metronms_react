@@ -17,6 +17,7 @@ import Wayside from '../pages/Wayside/wayside';
 import ConfigPage from '../pages/Config/configpage';
 import EncoderNodeView from '../pages/Dashboard/encodernodeview';
 import { useSelector } from 'react-redux';
+import IoboxNodeView from '../pages/Dashboard/ioboxnodeview';
 
 
 const RoutesPage = () => {
@@ -32,6 +33,7 @@ const RoutesPage = () => {
             <Route path="/TR-view" element={<TrainNodeView />} />
             <Route path="/obc-view" element={<ObcNodeView />} />
             <Route path="/encoder-view" element={<EncoderNodeView />} />
+            <Route path="/iobox-view" element={<IoboxNodeView />} />
             <Route path="/Discovery" element={<DiscovPag />} />
             <Route  path="/Topology" element={<TopoPg />} />
             <Route  path="/Wayside" element={<Wayside />} />

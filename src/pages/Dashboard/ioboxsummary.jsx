@@ -2,13 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import obcimage from '../../assets/img/obcimg1.png'
 import EncoderTxChart from "./encodertxrxgraph";
+import LatencyChart from "./latencychart";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import LatencyChart from "./latencychart";
 
-
-
-const EncoderSummaryTab = ({currentTab }) => {
+const IoboxSummaryTab = ({currentTab }) => {
   const [upTimeData, setUpTimeData] = useState([]);
   const [isLoading, setIsLoading] = useState("");
   const [isError, setIsError] = useState("");
@@ -17,8 +15,10 @@ const EncoderSummaryTab = ({currentTab }) => {
   const [nodeItemDt, setNodeItemDt] = useState([]);
   const [graphOption, setGraphOption] = useState('live');
   const [graphOptionValue, setGraphOptionValue] = useState('1l');
- const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+  const [eventmainData,setEventmainData] = useState([]);
+
   const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress) || localStorage.getItem('nodeIpaddress');
 
     const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
@@ -175,7 +175,6 @@ const EncoderSummaryTab = ({currentTab }) => {
     setGraphOptionValue(numb);
   }
 
-
   const handleDate=()=>{
 if(startDate && endDate !== null){
   const stDate = Date.parse(startDate);
@@ -205,8 +204,8 @@ if(startDate && endDate !== null){
                     <article style={{ margin: "auto", textAlign: 'center' }}>
                       <img className="nodeimg" style={{ width: '70px', height: '58px' }} src={obcimage} alt="node" />
                       {/* <label className="summarymode"> {nodeItemDt.nodeDesc}</label> */}
-                      <label className="summarymode" style={{ display: 'block' }}> Cab - {nodeItemDt?.carnumber || "loading.."}</label>
-                      <label className="summarysytem"><i className="fas fa-arrow-up fa-1x ng-scope "></i>{upTimeData}</label>
+                      <label className="summarymode" style={{ display: 'block' }}> Cab - {nodeItemDt?.carnumber || ""}</label>
+                      {/* <label className="summarysytem"><i className="fas fa-arrow-up fa-1x ng-scope "></i>{upTimeData}</label> */}
                     </article>
                     <article style={{ margin: "auto" }}>
                       <article>
@@ -219,7 +218,7 @@ if(startDate && endDate !== null){
                         </article>
                       </article>
 
-                      <ul className="summarylist">
+                      {/* <ul className="summarylist">
                         <li>
                           <h6> SystemName<span> {nodeItemDt.systemName}</span></h6></li>
                         <li>
@@ -233,7 +232,7 @@ if(startDate && endDate !== null){
                         <li>
                           <h6>SoftwareVersion<span> {nodeItemDt.softwareVersion}</span></h6></li>
                        
-                      </ul>
+                      </ul> */}
                     </article>
                   </article>
                 </article>
@@ -250,44 +249,61 @@ if(startDate && endDate !== null){
                   <article style={{padding:'15px'}}>
                     <article className="row">
                         <article className="col-md-12">
-                          <article className="col-12">
-                            <h3 class="configlinktitle">Camera Connectivity Status</h3>
-                            <article style={{paddingLeft:'72px'}}>
-                            <table className="col-6 w-full table-fixed border-allsd">
-                            <thead className="encodertbtwo">
-                                <tr>
-                                <th>Camera</th>
-                                <th>Description</th>
-                                <th>Status</th>
-                                </tr>
-                            </thead>
 
-                            <tbody className="encodertbbdtwo">
-                                <tr>
-                                <td>Camera 1</td>
-                                <td>{nodeItemDt.camDesc1}</td>
-                                <td>{nodeItemDt.camStatus1}</td>
-                                </tr>
-                                <tr>
-                                <td>Camera 2</td>
-                                <td>{nodeItemDt.camDesc2}</td>
-                                <td>{nodeItemDt.camStatus2}</td>
-                                </tr>
-                                <tr>
-                                <td>Camera 3</td>
-                                <td>{nodeItemDt.camDesc3}</td>
-                                <td>{nodeItemDt.camStatus3}</td>
-                                </tr>
-                                <tr>
-                                <td>Camera 4</td>
-                                <td>{nodeItemDt.camDesc4}</td>
-                                <td>{nodeItemDt.camStatus4}</td>
-                                </tr>
-                            </tbody>
-                            </table> 
-                            </article>   
+                            <article>
+                                <article className="row" style={{padding:'38px 0 38px 128px'}}>
+                                    <article className="col-6">
+                                         <span class="scopesel">Cab:</span>
+                                         <input type="text" className="form-controldis searchbar" style={{margin:'0 12px'}} name="" id="" />
+                                         <button className="createbtn">Verify</button>
+                                    </article> 
+                                </article>
                             </article>
-                            <article style={{margin :'48px 0 20px 0'}}>
+                          
+                          <article>
+                     <article className="row">
+                    <table className="col-12" style={{ border: '1px solid rgba(33, 35, 39, 0.07)' }}>
+                        <thead className="ioboxeventsthtb">
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Tx-byte</th>
+                                <th>Rx-byte</th>
+                            </tr>
+                        </thead>
+                        <tbody className="ioboxeventstbdtb">
+                            {!isLoading && !isError.status && eventmainData.length === 0 && (
+                                <tr>
+                                    <td colSpan="8" style={{ textAlign: "center" }}>
+                                        No Data Available
+                                    </td>
+                                </tr>
+                            )}
+                            {Array.isArray(eventmainData) && eventmainData.length > 0 ? (
+                                eventmainData.map((event) => (
+                                    <tr key={event.id} onClick=''>
+                                        <td>{(event.time)}</td>
+                                        <td>{event.severity}</td>
+                                        <td>{event.logMessage}</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="5" className="datacl centered-text">No Data</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </article>
+            
+                            </article>
+                          <article>
+                          </article>
+                          </article>
+                          </article>
+                          </article>
+                             <article style={{margin :'48px 0 20px 0'}}>
                           <article>
 
                              <article className="container-fluid">
@@ -367,10 +383,6 @@ if(startDate && endDate !== null){
                           </article>
                           </article>
                           </article>
-                           
-                           </article>
-                    </article>
-                  </article>
                 </article>
               </article>
             </article>
@@ -382,4 +394,4 @@ if(startDate && endDate !== null){
   )
 }
 
-export default EncoderSummaryTab;
+export default IoboxSummaryTab;

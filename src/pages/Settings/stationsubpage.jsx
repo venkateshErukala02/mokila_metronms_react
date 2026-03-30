@@ -20,8 +20,8 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
             const [selStationData,setSelStationData] = useState('');
             const [stationName,setStationName] = useState('');
             const [stationCode,setStationCode] = useState('');
-    
-
+            const [showAddedSuccessPopup, setShowAddedSuccessPopup] = useState(false);
+            const [showSuccessMessage,setShowScuccessMessage] = useState('');
     const handleProfileContclose=()=>{
         handleSubContainer();
         setStationName('');
@@ -74,9 +74,11 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
             });
     
             if (response.ok) {
-                setSuccess('Discovery started successfully');
-                alert('Discovery started successfully')
-
+                // setSuccess('Discovery started successfully');
+                // alert('Discovery started successfully')
+            setShowScuccessMessage(
+                    'The file upload has been updated successfully.'                )
+                  setShowAddedSuccessPopup(true);
                 setSelectedFile(null);
             } else {
                 const errText = await response.text();
@@ -234,8 +236,12 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
             });
             if (response.ok) {
                
-                alert(isEditMode ? 'Station updated successfully' : 'Station created successfully')
-                handleProfileContclose();
+                // handleProfileContclose();
+                 setShowScuccessMessage(
+                    isEditMode ? 'The station has been updated successfully.':
+                    'The station has been created successfully.'
+                )
+                  setShowAddedSuccessPopup(true);
                 if(refreshStationData) refreshStationData();
                 setStationName('');
                 setLinenameSel('');
@@ -365,6 +371,27 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
 
                         </article>
         </article>
+
+            {showAddedSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">{showSuccessMessage}</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() =>{ setShowAddedSuccessPopup(false);
+                                            handleProfileContclose();
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
         
         </>
     )

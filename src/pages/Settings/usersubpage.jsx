@@ -27,6 +27,8 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
     const [userData,setUserData] =useState([]);
     const [passwordError, setPasswordError] = useState('');
     const [emailError, setEmailError] = useState('');
+    const [showAddedSuccessPopup, setShowAddedSuccessPopup] = useState(false);
+    const [showSuccessMessage,setShowScuccessMessage] = useState('');
 
     const validateEmail = (email) => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -157,8 +159,13 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
 
             if (response.ok) {
                 // setSuccess('Discovery started successfully');
-                alert('User Created successfully')
-                handleProfileContclose();
+                // alert('User Created successfully')
+                // handleProfileContclose();
+                  setShowScuccessMessage(
+                    isEditMode ? 'The user has been updated successfully.':
+                    'The user has been created successfully.'
+                )
+                  setShowAddedSuccessPopup(true);
                 if(refreshUserData) refreshUserData();
                setUserName('');
                setFullName('');
@@ -374,6 +381,26 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
 
                 </article>
             </article>
+                {showAddedSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">{showSuccessMessage}</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() =>{ setShowAddedSuccessPopup(false);
+                                            handleProfileContclose();
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
 
         </>
     )
