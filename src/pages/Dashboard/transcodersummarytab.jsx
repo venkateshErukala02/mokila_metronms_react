@@ -63,6 +63,11 @@ const [isChangedQuad,setIsChangedQuad] = useState(false);
 const [isChangedRstpurl,setIsChangedRstpurl] = useState(false);
 const [triggerConfig,setTriggerConfig] = useState(0);
 
+ const [showSavePopup, setShowSavePopup] = useState(false);
+    const [showSaveSuccessPopup, setShowSaveSuccessPopup] = useState(false);
+     const [showApplyPopup, setShowApplyPopup] = useState(false);
+    const [showApplySuccessPopup, setShowApplySuccessPopup] = useState(false);
+
 
 
  const nodeDataId = useSelector((state) => state.node?.node?.nodeId);
@@ -578,7 +583,8 @@ const rebootQuadTranscoderService = async () => {
     // Show alert only if both requests succeeded
     setIsApplyQuad(false);
     setIsApplyingQuad(false);
-    alert("Configuration applied successfully");
+    setShowApplySuccessPopup(true);
+    // alert("Configuration applied successfully");
      setTriggerConfig((prev) => prev +1);
   } catch (error) {
     console.error("Error rebooting transcoder:", error);
@@ -614,7 +620,8 @@ const rebootRstpTranscoderService = async () => {
     // Show alert only if both requests succeeded
     setIsApplyRstpurl(false);
     setIsApplyingRstpurl(false);
-    alert("Configuration applied successfully");
+    setShowApplySuccessPopup(true);
+    // alert("Configuration applied successfully");
      setTriggerConfig((prev) => prev +1);
   } catch (error) {
     console.error("Error rebooting transcoder:", error);
@@ -654,11 +661,12 @@ const rebootRstpTranscoderService = async () => {
         }
 
             if (response?.ok === true || response?.status === 200) {
+                 setShowSaveSuccessPopup(true);
                 setIsLoading(false);
                 setIsSavingQuad(false);
                 setIsChangedQuad(false);
                 setIsApplyQuad(true);
-                    alert("Configuration Saved successfully")
+                    // alert("Configuration Saved successfully")
                 // await rebootTranscoderService();
             //    await handleCommit();
 
@@ -701,7 +709,8 @@ const rebootRstpTranscoderService = async () => {
         }
 
             if (response?.ok === true || response?.status === 200) {
-                    alert("Configuration Saved successfully")
+                   setShowSaveSuccessPopup(true);
+                    // alert("Configuration Saved successfully")
                 setIsLoading(false);
             //    await handleCommit();
 
@@ -900,7 +909,13 @@ const rebootRstpTranscoderService = async () => {
                                                                         <button
                                                                             className="createbtn"
                                                                             type="button"
-                                                                        onClick={currentUser !== 'Read-only' ? handleSaveConfiguration : undefined}
+                                                                                onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                if (currentUser !== 'Read-only') {
+                                                                                setShowSavePopup(true);
+                                                                                }
+                                                                            }}
+                                                                        // onClick={currentUser !== 'Read-only' ? handleSaveConfiguration : undefined}
                                                                          disabled={!isChangedQuad || isSavingQuad || isReadOnly}
                                                                         style={{
                                                                             pointerEvents: (!isChangedQuad || isSavingQuad) ? 'none' : 'auto',
@@ -918,7 +933,13 @@ const rebootRstpTranscoderService = async () => {
                                                                             className="createbtn"
                                                                             type="button"
                                                                             disabled={!isApplyQuad || isReadOnly}
-                                                                            onClick={currentUser !== 'Read-only' ? rebootQuadTranscoderService : undefined}
+                                                                              onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                if (currentUser !== 'Read-only') {
+                                                                                setShowApplyPopup(true);
+                                                                                }
+                                                                            }}
+                                                                            // onClick={currentUser !== 'Read-only' ? rebootQuadTranscoderService : undefined}
                                                                             style={{
                                                                                 pointerEvents: (!isApplyQuad) ? 'none' : 'auto',
                                                                                  cursor: isReadOnly ? "not-allowed" : "pointer" ,
@@ -931,6 +952,96 @@ const rebootRstpTranscoderService = async () => {
                                                                     </article>
 
                                                                 </article>
+                                                                  {showSavePopup && <>
+                                    <article className="confirmdeletepopup">
+                                        <article className="confirmdeletepopupboxstyle">
+                                        <h1 className="confirmdeletetitle">Are you sure you want to Save configuration?</h1>
+                                        <article className="f-r">
+                                            <button
+                                                className="confirmdeletebtn"
+                                                onClick={() => setShowSavePopup(false)}
+                                                >
+                                                NO
+                                                </button>
+                                                <button
+                                                className="confirmdeletebtn confirmdeletebtnyes"
+                                                onClick={async () => {
+                                                    await handleSaveConfiguration();
+                                                    setShowSavePopup(false);
+                                                }}
+                                                >
+                                                YES
+                                                </button>
+                                        </article>
+                                        </article>
+                                    </article>
+                                    </>}
+
+                                      {showSaveSuccessPopup && (
+                                    <article className="confirmsuccesspopup">
+                                        <article className="confirmsuccesspopupboxstyle">
+                                            <article className="success-cont">
+                                        <h1 className="confirmtitlesucess">Success</h1>
+                                        <p className="confirmtextsucess">The configuration has been saved successfully.</p>
+                                        </article>
+                                        <article style={{ textAlign: 'end' }}>
+                                            <button
+                                            className="confirmdeletebtn confirmdeletebtnyes"
+                                            onClick={() => setShowSaveSuccessPopup(false)}
+                                            >
+                                            OK
+                                            </button>
+                                        </article>
+                                        </article>
+                                    </article>
+                                    )}
+
+
+
+                                       {showApplyPopup && <>
+                                    <article className="confirmdeletepopup">
+                                        <article className="confirmdeletepopupboxstyle">
+                                        <h1 className="confirmdeletetitle">Are you sure you want to Apply configuration?</h1>
+                                        <article className="f-r">
+                                            <button
+                                                className="confirmdeletebtn"
+                                                onClick={() => setShowApplyPopup(false)}
+                                                >
+                                                NO
+                                                </button>
+                                                <button
+                                                className="confirmdeletebtn confirmdeletebtnyes"
+                                                onClick={async () => {
+                                                    await rebootQuadTranscoderService();
+                                                    setShowApplyPopup(false);
+                                                    setShowApplySuccessPopup(true);
+                                                }}
+                                                >
+                                                YES
+                                                </button>
+                                        </article>
+                                        </article>
+                                    </article>
+                                    </>}
+
+                                      {showApplySuccessPopup && (
+                                    <article className="confirmsuccesspopup">
+                                        <article className="confirmsuccesspopupboxstyle">
+                                            <article className="success-cont">
+                                        <h1 className="confirmtitlesucess">Success</h1>
+                                        <p className="confirmtextsucess">The configuration has been applied successfully.</p>
+                                        </article>
+                                        <article style={{ textAlign: 'end' }}>
+                                            <button
+                                            className="confirmdeletebtn confirmdeletebtnyes"
+                                            onClick={() => setShowApplySuccessPopup(false)}
+                                            >
+                                            OK
+                                            </button>
+                                        </article>
+                                        </article>
+                                    </article>
+                                    )}
                                                     </article>
                                                 </article>
                                               
@@ -1006,7 +1117,13 @@ const rebootRstpTranscoderService = async () => {
                                                                         <button
                                                                             className="createbtn"
                                                                             type="button"
-                                                                        onClick={currentUser !== 'Read-only' ? handleSaveConfiguration : undefined}
+                                                                             onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                if (currentUser !== 'Read-only') {
+                                                                                setShowSavePopup(true);
+                                                                                }
+                                                                            }}
+                                                                        // onClick={currentUser !== 'Read-only' ? handleSaveConfiguration : undefined}
                                                                        disabled={!isChangedRstpurl || isSavingRstpurl || isReadOnly}
                                                                         style={{
                                                                             pointerEvents: (!isChangedRstpurl || isSavingRstpurl) ? 'none' : 'auto',
@@ -1023,7 +1140,13 @@ const rebootRstpTranscoderService = async () => {
                                                                        <button
                                                                             className="createbtn"
                                                                             type="button"
-                                                                            onClick={currentUser !== 'Read-only' ? rebootRstpTranscoderService : undefined}
+                                                                             onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                if (currentUser !== 'Read-only') {
+                                                                                setShowApplyPopup(true);
+                                                                                }
+                                                                            }}
+                                                                            // onClick={currentUser !== 'Read-only' ? rebootRstpTranscoderService : undefined}
                                                                              disabled={!isApplyRstpurl || isReadOnly}
                                                                             style={{
                                                                                 pointerEvents: (!isApplyRstpurl) ? 'none' : 'auto',
@@ -1036,6 +1159,50 @@ const rebootRstpTranscoderService = async () => {
                                                                     </article>
 
                                                                 </article>
+                                                                     {showApplyPopup && <>
+                                    <article className="confirmdeletepopup">
+                                        <article className="confirmdeletepopupboxstyle">
+                                        <h1 className="confirmdeletetitle">Are you sure you want to Apply configuration?</h1>
+                                        <article className="f-r">
+                                            <button
+                                                className="confirmdeletebtn"
+                                                onClick={() => setShowApplyPopup(false)}
+                                                >
+                                                NO
+                                                </button>
+                                                <button
+                                                className="confirmdeletebtn confirmdeletebtnyes"
+                                                onClick={async () => {
+                                                    await rebootRstpTranscoderService();
+                                                    setShowApplyPopup(false);
+                                                    setShowApplySuccessPopup(true);
+                                                }}
+                                                >
+                                                YES
+                                                </button>
+                                        </article>
+                                        </article>
+                                    </article>
+                                    </>}
+
+                                      {showApplySuccessPopup && (
+                                    <article className="confirmsuccesspopup">
+                                        <article className="confirmsuccesspopupboxstyle">
+                                            <article className="success-cont">
+                                        <h1 className="confirmtitlesucess">Success</h1>
+                                        <p className="confirmtextsucess">The configuration has been applied successfully.</p>
+                                        </article>
+                                        <article style={{ textAlign: 'end' }}>
+                                            <button
+                                            className="confirmdeletebtn confirmdeletebtnyes"
+                                            onClick={() => setShowApplySuccessPopup(false)}
+                                            >
+                                            OK
+                                            </button>
+                                        </article>
+                                        </article>
+                                    </article>
+                                    )}
                                                     </article>
                                                 </article>
                                             </article>

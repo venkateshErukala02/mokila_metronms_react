@@ -71,6 +71,11 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
     const [isChanged,setIsChanged] = useState(false)
     const [canApply, setCanApply] = useState(false);
     const [isApplying,setIsApplying] = useState(false);
+    const [showSavePopup, setShowSavePopup] = useState(false);
+    const [showSaveSuccessPopup, setShowSaveSuccessPopup] = useState(false);
+    const [showApplyPopup, setShowApplyPopup] = useState(false);
+    const [showApplySuccessPopup, setShowApplySuccessPopup] = useState(false);
+    const [showUploadSuccessPopup,setShowUploadSuccessPopup] = useState(false);
 
     const handleUpload = async (e) => {
         e.preventDefault();
@@ -98,8 +103,9 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
             });
 
             if (response.ok) {
+                setShowUploadSuccessPopup(true);
                 setSuccess('File Uploaded successfully');
-                alert('File Uploaded successfully')
+                // alert('File Uploaded successfully')
 
                 setSelectedFile(null);
             } else {
@@ -458,6 +464,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
         }
 
             if (response?.ok === true || response?.status === 200) {
+                setShowSaveSuccessPopup(true);
                 setIsLoading(false);
 
                 // setConfigData(data);
@@ -493,7 +500,8 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
         setIsApplying(false); 
         setCanApply(false);
       setIsError({ status: false, msg: "" });
-      alert("Configuration applied successfully");
+       setShowApplySuccessPopup(true);
+    //   alert("Configuration applied successfully");/
          setTriggerConfig((prev) => prev +1);
     } else {
       throw new Error("Data not found");
@@ -655,7 +663,13 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                                         <button
                                                                             className="createbtn"
                                                                             type="button"
-                                                                           onClick={currentUser !== 'Read-only' ?handleSaveConfiguration : undefined}
+                                                                              onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                if (currentUser !== 'Read-only') {
+                                                                                setShowSavePopup(true);
+                                                                                }
+                                                                            }}
+                                                                        //    onClick={currentUser !== 'Read-only' ?handleSaveConfiguration : undefined}
                                                                          disabled={!isChanged || isReadOnly}
                                                                         style={{
                                                                             pointerEvents: (!isChanged) ? 'none' : 'auto',
@@ -670,8 +684,14 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                                         <button
                                                                             className="createbtn"
                                                                             type="button"
+                                                                             onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                if (currentUser !== 'Read-only') {
+                                                                                setShowApplyPopup(true);
+                                                                                }
+                                                                            }}
                                                                             disabled={!canApply || isApplying || isReadOnly}
-                                                                            onClick={currentUser !== 'Read-only' ? handleApplyConfiguration : undefined}
+                                                                            // onClick={currentUser !== 'Read-only' ? handleApplyConfiguration : undefined}
                                                                             style={{
                                                                                 pointerEvents: (!canApply || isApplying) ? 'none' : 'auto',
                                                                                   cursor: isReadOnly ? "not-allowed" : "pointer" ,
@@ -683,6 +703,114 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                                     </article>
 
                                                                 </article>
+                                                                 {showSavePopup && <>
+                                    <article className="confirmdeletepopup">
+                                        <article className="confirmdeletepopupboxstyle">
+                                        <h1 className="confirmdeletetitle">Are you sure you want to Save configuration?</h1>
+                                        <article className="f-r">
+                                            <button
+                                                className="confirmdeletebtn"
+                                                onClick={() => setShowSavePopup(false)}
+                                                >
+                                                NO
+                                                </button>
+                                                <button
+                                                className="confirmdeletebtn confirmdeletebtnyes"
+                                                onClick={async () => {
+                                                    await handleSaveConfiguration();
+                                                    setShowSavePopup(false);
+                                                }}
+                                                >
+                                                YES
+                                                </button>
+                                        </article>
+                                        </article>
+                                    </article>
+                                    </>}
+                                     {/* {loading && <div className="loader"></div>} */}
+
+
+                                      {showSaveSuccessPopup && (
+                                    <article className="confirmsuccesspopup">
+                                        <article className="confirmsuccesspopupboxstyle">
+                                            <article className="success-cont">
+                                        <h1 className="confirmtitlesucess">Success</h1>
+                                        <p className="confirmtextsucess">The configuration has been saved successfully.</p>
+                                        </article>
+                                        <article style={{ textAlign: 'end' }}>
+                                            <button
+                                            className="confirmdeletebtn confirmdeletebtnyes"
+                                            onClick={() => setShowSaveSuccessPopup(false)}
+                                            >
+                                            OK
+                                            </button>
+                                        </article>
+                                        </article>
+                                    </article>
+                                    )}
+
+                                     {showApplyPopup && <>
+                                    <article className="confirmdeletepopup">
+                                        <article className="confirmdeletepopupboxstyle">
+                                        <h1 className="confirmdeletetitle">Are you sure you want to Apply configuration?</h1>
+                                        <article className="f-r">
+                                            <button
+                                                className="confirmdeletebtn"
+                                                onClick={() => setShowApplyPopup(false)}
+                                                >
+                                                NO
+                                                </button>
+                                                <button
+                                                className="confirmdeletebtn confirmdeletebtnyes"
+                                                onClick={async () => {
+                                                    await handleApplyConfiguration();
+                                                    setShowApplyPopup(false);
+                                                    setShowApplySuccessPopup(true);
+                                                }}
+                                                >
+                                                YES
+                                                </button>
+                                        </article>
+                                        </article>
+                                    </article>
+                                    </>}
+
+                                      {showApplySuccessPopup && (
+                                    <article className="confirmsuccesspopup">
+                                        <article className="confirmsuccesspopupboxstyle">
+                                            <article className="success-cont">
+                                        <h1 className="confirmtitlesucess">Success</h1>
+                                        <p className="confirmtextsucess">The configuration has been applied successfully.</p>
+                                        </article>
+                                        <article style={{ textAlign: 'end' }}>
+                                            <button
+                                            className="confirmdeletebtn confirmdeletebtnyes"
+                                            onClick={() => setShowApplySuccessPopup(false)}
+                                            >
+                                            OK
+                                            </button>
+                                        </article>
+                                        </article>
+                                    </article>
+                                    )}
+                                         {showUploadSuccessPopup && (
+                                    <article className="confirmsuccesspopup">
+                                        <article className="confirmsuccesspopupboxstyle">
+                                            <article className="success-cont">
+                                        <h1 className="confirmtitlesucess">Success</h1>
+                                        <p className="confirmtextsucess">The file has been uploaded successfully.</p>
+                                        </article>
+                                        <article style={{ textAlign: 'end' }}>
+                                            <button
+                                            className="confirmdeletebtn confirmdeletebtnyes"
+                                            onClick={() => setShowUploadSuccessPopup(false)}
+                                            >
+                                            OK
+                                            </button>
+                                        </article>
+                                        </article>
+                                    </article>
+                                    )}
                                                             </article>
                                                             </article>
                                                             <article className="col-6">

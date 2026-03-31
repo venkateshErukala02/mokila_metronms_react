@@ -14,6 +14,8 @@ const DiscovContai = () => {
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [showUploadSuccessPopup,setShowUploadSuccessPopup] = useState(false);
+    const [showDiscoverySuccessPopup,setShowDiscoverySuccessPopup] = useState(false)
 
  const currentUser = useSelector((state) => state?.loginuser?.node?.role);
         const isReadOnly = currentUser === 'Read-only';
@@ -51,9 +53,10 @@ const DiscovContai = () => {
             const ddtt = response;
 
             if (response.ok) {
-                alert('Discovery started successfully')
+                setShowDiscoverySuccessPopup(true);
+                // alert('Discovery started successfully')
 
-                setSuccess('Discovery started successfully');
+                // setSuccess('Discovery started successfully');
                 setDiscAddValue('');
             } else {
                 setError('Error starting discovery');
@@ -88,8 +91,9 @@ const DiscovContai = () => {
                 body: JSON.stringify(requestBody),
             });
             if (response.ok) {
+                setShowDiscoverySuccessPopup(true);
                 // setSuccess('Discovery started successfully');
-                alert('Discovery started successfully')
+                // alert('Discovery started successfully')
                 setIpEndValue('');
                 setIpbeginValue('')
             } else {
@@ -153,8 +157,9 @@ const DiscovContai = () => {
             });
     
             if (response.ok) {
-                setSuccess('Discovery started successfully');
-                alert('Discovery started successfully')
+                setShowUploadSuccessPopup(true);
+                // setSuccess('Discovery started successfully');
+                // alert('Discovery started successfully')
 
                 setSelectedFile(null);
             } else {
@@ -303,6 +308,43 @@ const DiscovContai = () => {
 
                     )}
                 </article>
+                {showDiscoverySuccessPopup && (
+                                    <article className="confirmsuccesspopup">
+                                        <article className="confirmsuccesspopupboxstyle">
+                                            <article className="success-cont">
+                                        <h1 className="confirmtitlesucess">Success</h1>
+                                        <p className="confirmtextsucess">The discovery started successfully</p>
+                                        </article>
+                                        <article style={{ textAlign: 'end' }}>
+                                            <button
+                                            className="confirmdeletebtn confirmdeletebtnyes"
+                                            onClick={() => setShowDiscoverySuccessPopup(false)}
+                                            >
+                                            OK
+                                            </button>
+                                        </article>
+                                        </article>
+                                    </article>
+                                    )}
+
+                     {showUploadSuccessPopup && (
+                                    <article className="confirmsuccesspopup">
+                                        <article className="confirmsuccesspopupboxstyle">
+                                            <article className="success-cont">
+                                        <h1 className="confirmtitlesucess">Success</h1>
+                                        <p className="confirmtextsucess">The file has been uploaded successfully.</p>
+                                        </article>
+                                        <article style={{ textAlign: 'end' }}>
+                                            <button
+                                            className="confirmdeletebtn confirmdeletebtnyes"
+                                            onClick={() => setShowUploadSuccessPopup(false)}
+                                            >
+                                            OK
+                                            </button>
+                                        </article>
+                                        </article>
+                                    </article>
+                                    )}
 
 
             </article>

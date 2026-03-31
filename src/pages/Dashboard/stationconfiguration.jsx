@@ -75,6 +75,11 @@ const [isApplying, setIsApplying] = useState(false);
 const [triggerConfig,setTriggerConfig] = useState(0);
   const [nodeItemDt, setNodeItemDt] = useState([]);
 
+  const [showSavePopup, setShowSavePopup] = useState(false);
+    const [showSaveSuccessPopup, setShowSaveSuccessPopup] = useState(false);
+     const [showApplyPopup, setShowApplyPopup] = useState(false);
+    const [showApplySuccessPopup, setShowApplySuccessPopup] = useState(false);
+
 
     useEffect(() => {
     if (nodeDataId) {
@@ -567,8 +572,9 @@ useEffect(() => {
     }
 
     if (response.ok) {
+         setShowApplySuccessPopup(true);
       setIsError({ status: false, msg: "" });
-      alert("Configuration applied successfully");
+    //   alert("Configuration applied successfully");
       setCanApply(false);
         setTriggerConfig((prev) => prev +1);
       setTimeout(() => {
@@ -639,6 +645,7 @@ const handleSaveConfiguration = async () => {
         }
 
             if (response?.ok === true || response?.status === 200) {
+                setShowSaveSuccessPopup(true);
                 setIsLoading(false);
                  setCanApply(true);
                  setIsSaving(false);
@@ -1126,7 +1133,13 @@ const handleSaveConfiguration = async () => {
                                                                         <button
                                                                             className="createbtn"
                                                                             type="button"
-                                                                        onClick={currentUser !== 'Read-only' ? handleSaveConfiguration : undefined}
+                                                                             onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                if (currentUser !== 'Read-only') {
+                                                                                setShowSavePopup(true);
+                                                                                }
+                                                                            }}
+                                                                        // onClick={currentUser !== 'Read-only' ? handleSaveConfiguration : undefined}
                                                                          disabled={!isChanged || isSaving || isReadOnly}
                                                                         style={{
                                                                             pointerEvents: (!isChanged || isSaving) ? 'none' : 'auto',
@@ -1144,7 +1157,14 @@ const handleSaveConfiguration = async () => {
                                                                             className="createbtn"
                                                                             type="button"
                                                                             disabled={!canApply || isApplying || isReadOnly}
-                                                                            onClick={ currentUser !== 'Read-only' ? handleApplyConfiguration : undefined}
+
+                                                                            onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                if (currentUser !== 'Read-only') {
+                                                                                setShowApplyPopup(true);
+                                                                                }
+                                                                            }}
+                                                                            // onClick={ currentUser !== 'Read-only' ? handleApplyConfiguration : undefined}
                                                                             style={{
                                                                                 pointerEvents: (!canApply || isApplying) ? 'none' : 'auto',
                                                                                  cursor: isReadOnly ? "not-allowed" : "pointer" ,
@@ -1160,8 +1180,95 @@ const handleSaveConfiguration = async () => {
 
                                                         )}
 
+                                                         {showApplyPopup && <>
+                                    <article className="confirmdeletepopup">
+                                        <article className="confirmdeletepopupboxstyle">
+                                        <h1 className="confirmdeletetitle">Are you sure you want to Apply configuration?</h1>
+                                        <article className="f-r">
+                                            <button
+                                                className="confirmdeletebtn"
+                                                onClick={() => setShowApplyPopup(false)}
+                                                >
+                                                NO
+                                                </button>
+                                                <button
+                                                className="confirmdeletebtn confirmdeletebtnyes"
+                                                onClick={async () => {
+                                                    await handleApplyConfiguration();
+                                                    setShowApplyPopup(false);
+                                                }}
+                                                >
+                                                YES
+                                                </button>
+                                        </article>
+                                        </article>
+                                    </article>
+                                    </>}
+
+                                      {showApplySuccessPopup && (
+                                    <article className="confirmsuccesspopup">
+                                        <article className="confirmsuccesspopupboxstyle">
+                                            <article className="success-cont">
+                                        <h1 className="confirmtitlesucess">Success</h1>
+                                        <p className="confirmtextsucess">The configuration has been applied successfully.</p>
+                                        </article>
+                                        <article style={{ textAlign: 'end' }}>
+                                            <button
+                                            className="confirmdeletebtn confirmdeletebtnyes"
+                                            onClick={() => setShowApplySuccessPopup(false)}
+                                            >
+                                            OK
+                                            </button>
+                                        </article>
+                                        </article>
+                                    </article>
+                                    )}
+
 
                                                     </article>
+                                                    {showSavePopup && <>
+                                    <article className="confirmdeletepopup">
+                                        <article className="confirmdeletepopupboxstyle">
+                                        <h1 className="confirmdeletetitle">Are you sure you want to Save configuration?</h1>
+                                        <article className="f-r">
+                                            <button
+                                                className="confirmdeletebtn"
+                                                onClick={() => setShowSavePopup(false)}
+                                                >
+                                                NO
+                                                </button>
+                                                <button
+                                                className="confirmdeletebtn confirmdeletebtnyes"
+                                                onClick={async () => {
+                                                    await handleSaveConfiguration();
+                                                    setShowSavePopup(false);
+                                                }}
+                                                >
+                                                YES
+                                                </button>
+                                        </article>
+                                        </article>
+                                    </article>
+                                    </>}
+
+                                      {showSaveSuccessPopup && (
+                                    <article className="confirmsuccesspopup">
+                                        <article className="confirmsuccesspopupboxstyle">
+                                            <article className="success-cont">
+                                        <h1 className="confirmtitlesucess">Success</h1>
+                                        <p className="confirmtextsucess">The configuration has been saved successfully.</p>
+                                        </article>
+                                        <article style={{ textAlign: 'end' }}>
+                                            <button
+                                            className="confirmdeletebtn confirmdeletebtnyes"
+                                            onClick={() => setShowSaveSuccessPopup(false)}
+                                            >
+                                            OK
+                                            </button>
+                                        </article>
+                                        </article>
+                                    </article>
+                                    )}
 
                                                 </article>
                                                 {configTab === 'basic' && <article className="config-savebtn">
@@ -1169,7 +1276,13 @@ const handleSaveConfiguration = async () => {
                                                         <button
                                                             className="createbtn"
                                                             type="button"
-                                                        onClick={currentUser !== 'Read-only' ? handleSaveConfiguration : undefined}
+                                                             onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                if (currentUser !== 'Read-only') {
+                                                                                setShowSavePopup(true);
+                                                                                }
+                                                                            }}
+                                                        // onClick={currentUser !== 'Read-only' ? handleSaveConfiguration : undefined}
                                                             disabled={!isChanged || isSaving || isReadOnly}
                                                         style={{
                                                             pointerEvents: (!isChanged || isSaving) ? 'none' : 'auto',
@@ -1186,7 +1299,13 @@ const handleSaveConfiguration = async () => {
                                                             className="createbtn"
                                                             type="button"
                                                             disabled={!canApply || isApplying || isReadOnly}
-                                                            onClick={currentUser !== 'Read-only' ? handleApplyConfiguration : undefined}
+                                                             onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                if (currentUser !== 'Read-only') {
+                                                                                setShowApplyPopup(true);
+                                                                                }
+                                                                            }}
+                                                            // onClick={currentUser !== 'Read-only' ? handleApplyConfiguration : undefined}
                                                             style={{
                                                                 pointerEvents: (!canApply || isApplying) ? 'none' : 'auto',
                                                                  cursor: isReadOnly ? "not-allowed" : "pointer" ,

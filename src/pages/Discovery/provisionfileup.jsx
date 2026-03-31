@@ -11,7 +11,7 @@ const ProvisionFileUp = () => {
     const [success, setSuccess] = useState('');
     const currentUser = useSelector((state) => state?.loginuser?.node?.role);
     const isReadOnly = currentUser === 'Read-only';
-
+    const [showUploadSuccessPopup,setShowUploadSuccessPopup] = useState(false);
 
     const handleUpload = async (e) => {
         e.preventDefault();
@@ -41,8 +41,9 @@ const ProvisionFileUp = () => {
             });
 
             if (response.ok) {
-                setSuccess('File Uploaded successfully');
-                alert('File Uploaded successfully')
+                 setShowUploadSuccessPopup(true);
+                // setSuccess('File Uploaded successfully');
+                // alert('File Uploaded successfully')
 
                 setSelectedFile(null);
             } else {
@@ -107,7 +108,27 @@ const ProvisionFileUp = () => {
                 <button onClick={downloadSampleCSV} className="createbtn">Sample.csv<i className="fa fa-file-text" aria-hidden="true"></i></button>
 
             </article>
+              {showUploadSuccessPopup && (
+                                    <article className="confirmsuccesspopup">
+                                        <article className="confirmsuccesspopupboxstyle">
+                                            <article className="success-cont">
+                                        <h1 className="confirmtitlesucess">Success</h1>
+                                        <p className="confirmtextsucess">The file has been uploaded successfully.</p>
+                                        </article>
+                                        <article style={{ textAlign: 'end' }}>
+                                            <button
+                                            className="confirmdeletebtn confirmdeletebtnyes"
+                                            onClick={() => setShowUploadSuccessPopup(false)}
+                                            >
+                                            OK
+                                            </button>
+                                        </article>
+                                        </article>
+                                    </article>
+                                    )}
         </div>
+
+        
     );
 };
 

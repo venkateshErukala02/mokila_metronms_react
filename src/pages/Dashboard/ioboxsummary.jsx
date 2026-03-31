@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import obcimage from '../../assets/img/obcimg1.png'
-import EncoderTxChart from "./encodertxrxgraph";
-import LatencyChart from "./latencychart";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+
 
 const IoboxSummaryTab = ({currentTab }) => {
   const [upTimeData, setUpTimeData] = useState([]);
@@ -13,10 +10,6 @@ const IoboxSummaryTab = ({currentTab }) => {
   const [diskData, setDiskData] = useState("");
   const [currentObcsubTab, setCurrentObcsubTab] = useState('obc')
   const [nodeItemDt, setNodeItemDt] = useState([]);
-  const [graphOption, setGraphOption] = useState('live');
-  const [graphOptionValue, setGraphOptionValue] = useState('1l');
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
   const [eventmainData,setEventmainData] = useState([]);
 
   const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress) || localStorage.getItem('nodeIpaddress');
@@ -166,25 +159,16 @@ const IoboxSummaryTab = ({currentTab }) => {
 
 
 
-  const handleRowClick = (value) => {
-    setCurrentObcsubTab(value);
-  }
+//   const handleRowClick = (value) => {
+//     setCurrentObcsubTab(value);
+//   }
 
- const handleGraphopt = (value, numb) => {
-    setGraphOption(value);
-    setGraphOptionValue(numb);
-  }
+//  const handleGraphopt = (value, numb) => {
+//     setGraphOption(value);
+//     setGraphOptionValue(numb);
+//   }
 
-  const handleDate=()=>{
-if(startDate && endDate !== null){
-  const stDate = Date.parse(startDate);
-  const edDate = Date.parse(endDate);
-  setGraphOption('custom');
-  setGraphOptionValue(`1c&start=${stDate}&end=${edDate}`);
-  setStartDate('');
-  setEndDate('');
-}  
-}
+ 
 
   return (
     <>
@@ -303,86 +287,7 @@ if(startDate && endDate !== null){
                           </article>
                           </article>
                           </article>
-                             <article style={{margin :'48px 0 20px 0'}}>
-                          <article>
-
-                             <article className="container-fluid">
-                            <article className="row">
-                              <article className="col-md-3">
-                                <div className="btn-group" data-toggle="buttons" style={{ marginLeft: '100px', marginBottom: '10px' }}>
-                                  <label className={`btngrphopt ${graphOption === 'live' ? 'active' : ''}`} onClick={() => handleGraphopt('live','1l')} role="button" tabindex="0">
-
-                                    Live
-                                  </label>
-                                  <label className={`btngrphopt ${graphOption === 'onehour' ? 'active' : ''}`} onClick={() => handleGraphopt('onehour', '1h')} role="button" tabindex="0">
-                                    1 Hour </label>
-                                  <label className={`btngrphopt ${graphOption === 'oneday' ? 'active' : ''}`} onClick={() => handleGraphopt('oneday', '1d')} role="button" tabindex="0">
-                                    1 Day </label>
-                                  <label className={`btngrphopt ${graphOption === 'oneweek' ? 'active' : ''}`} onClick={() => handleGraphopt('oneweek', '1w')} role="button" tabindex="0">
-                                    1 Week </label>
-                                  <label className={`btngrphopt ${graphOption === 'onemonth' ? 'active' : ''}`} onClick={() => handleGraphopt('onemonth', '1m')} role="button" tabindex="0">
-                                    1 Month </label>
-                                </div>
-                              </article>
-                              <article className="col-md-3">
-                                <article className="flex-row">
-                                  <article className="container-fluid">
-                                    <article className="row">
-                                      <label htmlFor="" className="col-md-4">Start Date:</label>
-                                      <article className="col-md-7" style={{ position: 'relative' }}>
-                                        <DatePicker
-                                          selected={startDate}
-                                          showTimeSelect
-                                          dateFormat="yyyy-MM-dd HH:mm"
-                                          onChange={(date) => setStartDate(date)} />
-                                      </article>
-                                    </article>
-                                  </article>
-                                </article>
-                              </article>
-                              <article className="col-md-3">
-                                <article className="flex-row">
-                                  <article className="container-fluid">
-                                    <article className="row">
-                                      <label htmlFor="" className="col-md-4">End Date:</label>
-                                      <article className="col-md-7">
-                                        <DatePicker
-                                          selected={endDate}
-                                          showTimeSelect
-                                          dateFormat="yyyy-MM-dd HH:mm"
-                                          onChange={(date) => setEndDate(date)} />
-                                      </article>
-                                    </article>
-                                  </article>
-                                </article>
-                              </article>
-                              <article className="col-md-3">
-                                <button className="createbtn" type="submit" onClick={handleDate}>Custom</button>
-                              </article>
-                            </article>
-                          </article>
-                        </article>
-                        <article>
-                        </article>
-                        <article>
-                          <article className="container-fluid">
-                            <article className="row">
-                              <article className="col-md-12 graphbord2">
-                                <article className="latencyfullwidthcl">
-                                            <EncoderTxChart graphOption={graphOption} graphOptionValue={graphOptionValue}/>
-
-                                </article>
-                              
-                              </article>
-                              <article className="col-md-12 graphbord2" style={{marginTop:'25px'}}>
-                                <article className="latencyfullwidthcl">
-                                  <LatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue} />
-                                </article>
-                              </article>
-                            </article>
-                          </article>
-                          </article>
-                          </article>
+                 
                 </article>
               </article>
             </article>

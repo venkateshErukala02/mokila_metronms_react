@@ -7,6 +7,7 @@ import EncoderSummaryTab from "./encodersummarytab";
 import LeftNavList from "../Navbar/leftnavpage";
 import EncoderEventTab from "./encodereventstab";
 import IoboxSummaryTab from "./ioboxsummary";
+import IoboxMonitoringTab from "./ioboxmonitoring";
 
 
 const IoboxNodeView = () => {
@@ -93,6 +94,9 @@ const IoboxNodeView = () => {
       case 'summary':
         return <IoboxSummaryTab currentTab='iobox'/>
         break;
+      case 'monitoring':
+        return <IoboxMonitoringTab currentTab='iobox'/>
+        break;
       case 'events':
         // return <EncoderEventTab />
         break;
@@ -120,6 +124,7 @@ const IoboxNodeView = () => {
                 <li><a>Node View</a></li>
                 <li><a href={`http://${nodeIpaddress}`} target="_blank">{nodeIpaddress}</a></li>
                 <li onClick={() => handleRowClick('summary')} className={`${currentTab === 'summary' ? 'active' : ''}`}> <a> <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Summary</a></li>
+                <li onClick={() => handleRowClick('monitoring')} className={`${currentTab === 'monitoring' ? 'active' : ''}`}> <a> <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Monitoring</a></li>
                 <li onClick={() => handleRowClick('events')} className={`${currentTab === 'events' ? 'active' : ''}`}> <a> <i
                   className="fas fa-chart-area Monitor-icon"
                   style={{ fontSize: "22px" }}
