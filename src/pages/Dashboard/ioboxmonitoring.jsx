@@ -5,6 +5,7 @@ import LatencyChart from "./latencychart";
 import { useSelector } from "react-redux";
 import '../ornms.css';
 import LocalSnr from "./localsnr";
+import EncoderTxChart from "./encodertxrxgraph";
 
 
 const IoboxMonitoringTab = () => {
@@ -64,9 +65,12 @@ return(
           className="col-md-12"
           style={{ padding: "10px", backgroundColor: "#cccccc" }}
         >
-      <article>
         <article className="container-fluid">
           <article className="row">
+            <article className="col-12" style={{background:'white',minHeight:'840px',maxHeight:'890px'}}>
+
+              <article className="container-fluid" style={{marginTop:'20px'}}>
+                <article className="row">
             <article className="col-md-3">
               <div className="btn-group" data-toggle="buttons" style={{ marginLeft: '100px', marginBottom: '10px' }}>
                 <label className={`btngrphopt ${graphOption === 'live' ? 'active' : ''}`} onClick={() => handleGraphopt('live','1l')} role="button" tabindex="0">
@@ -118,17 +122,14 @@ return(
             <article className="col-md-3">
               <button className="createbtn" type="submit" onClick={handleDate}>Custom</button>
             </article>
-          </article>
-        </article>
-      </article>
-      <article>
-      </article>
-      <article>
+            </article>
+            </article>
+        
         <article className="container-fluid">
           <article className="row">
             <article className="col-md-12 graphbord1">
               <article className="latencyfullwidthcl-monitortab">
-                          <LocalSnr graphOption={graphOption} graphOptionValue={graphOptionValue} />
+                          <EncoderTxChart graphOption={graphOption} graphOptionValue={graphOptionValue} />
 
               </article>
              
@@ -147,6 +148,8 @@ return(
             </article>
           </article>
         </article>
+      </article>
+      </article>
       </article>
       </article>
       </article>

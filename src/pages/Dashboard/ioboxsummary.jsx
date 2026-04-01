@@ -10,7 +10,7 @@ const IoboxSummaryTab = ({currentTab }) => {
   const [diskData, setDiskData] = useState("");
   const [currentObcsubTab, setCurrentObcsubTab] = useState('obc')
   const [nodeItemDt, setNodeItemDt] = useState([]);
-  const [eventmainData,setEventmainData] = useState([]);
+  const [eventmainData,setEventMainData] = useState([]);
 
   const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress) || localStorage.getItem('nodeIpaddress');
 
@@ -168,6 +168,99 @@ const IoboxSummaryTab = ({currentTab }) => {
 //     setGraphOptionValue(numb);
 //   }
 
+
+useEffect(() => {
+  setEventMainData(myData.interfaces);
+}, []);
+
+
+const myData = {
+    "status": "success",
+    "host_used": "10.205.8.10",
+    "interfaces": [
+        {
+            "name": "ether1",
+            "type": "ether",
+            "running": "true",
+            "mtu": "1500",
+            "rx-byte": "360.67 mbps",
+            "tx-byte": "3984.13 mbps",
+            "rx-packet": "336325",
+            "tx-packet": "3765665"
+        },
+        {
+            "name": "ether2",
+            "type": "ether",
+            "running": "false",
+            "mtu": "1500",
+            "rx-byte": 0,
+            "tx-byte": 0,
+            "rx-packet": "0",
+            "tx-packet": "0"
+        },
+        {
+            "name": "ether3",
+            "type": "ether",
+            "running": "true",
+            "mtu": "1500",
+            "rx-byte": "43.70 mbps",
+            "tx-byte": "482.81 mbps",
+            "rx-packet": "328416",
+            "tx-packet": "354144"
+        },
+        {
+            "name": "ether4",
+            "type": "ether",
+            "running": "false",
+            "mtu": "1500",
+            "rx-byte": "129.68 mbps",
+            "tx-byte": "46.25 mbps",
+            "rx-packet": "37403",
+            "tx-packet": "19265"
+        },
+        {
+            "name": "ether5",
+            "type": "ether",
+            "running": "false",
+            "mtu": "1500",
+            "rx-byte": 0,
+            "tx-byte": 0,
+            "rx-packet": "0",
+            "tx-packet": "0"
+        },
+        {
+            "name": "sfp1",
+            "type": "ether",
+            "running": "true",
+            "mtu": "1500",
+            "rx-byte": 0,
+            "tx-byte": "424.52 mbps",
+            "rx-packet": "0",
+            "tx-packet": "5070166"
+        },
+        {
+            "name": "bridge",
+            "type": "bridge",
+            "running": "true",
+            "mtu": "auto",
+            "rx-byte": "314.96 mbps",
+            "tx-byte": "0.06 mbps",
+            "rx-packet": "4792993",
+            "tx-packet": "422"
+        },
+        {
+            "name": "lo",
+            "type": "loopback",
+            "running": "true",
+            "mtu": "65536",
+            "rx-byte": 0,
+            "tx-byte": 0,
+            "rx-packet": "0",
+            "tx-packet": "0"
+        }
+    ]
+}
+
  
 
   return (
@@ -181,7 +274,7 @@ const IoboxSummaryTab = ({currentTab }) => {
 
           <article className="container-fluid">
             <article className="row" style={{ display: "flex" }}>
-              <article className="col-md-2" id="summary-1 div1" style={{ minHeight: '850px', maxHeight: '934px', background: 'white' }}>
+              <article className="col-md-2" id="summary-1 div1" style={{ minHeight: '840px', maxHeight: '890px', background: 'white' }}>
                 <article>
 
                   <article className="card" id="div2">
@@ -222,7 +315,7 @@ const IoboxSummaryTab = ({currentTab }) => {
                 </article>
               </article>
 
-              <article className="col-md-10" style={{ background: 'white', borderLeft: '10px solid #cccccc', minHeight: '934px' }}>
+              <article className="col-md-10" style={{ background: 'white', borderLeft: '10px solid #cccccc', minHeight: '840px' }}>
                 <article
                   style={{
                     backgroundColor: "white",
@@ -257,7 +350,7 @@ const IoboxSummaryTab = ({currentTab }) => {
                             </tr>
                         </thead>
                         <tbody className="ioboxeventstbdtb">
-                            {!isLoading && !isError.status && eventmainData.length === 0 && (
+                            {!isLoading && !isError.status && eventmainData.length === 0  && !eventmainData.length && (
                                 <tr>
                                     <td colSpan="8" style={{ textAlign: "center" }}>
                                         No Data Available
@@ -265,11 +358,17 @@ const IoboxSummaryTab = ({currentTab }) => {
                                 </tr>
                             )}
                             {Array.isArray(eventmainData) && eventmainData.length > 0 ? (
-                                eventmainData.map((event) => (
-                                    <tr key={event.id} onClick=''>
-                                        <td>{(event.time)}</td>
-                                        <td>{event.severity}</td>
-                                        <td>{event.logMessage}</td>
+                                eventmainData
+                                 .filter(item => item.type === "ether")
+                                .map((item,index) => (
+                                     <tr key={index}>
+                                      <td>{item.name}</td>
+                                      <td>{item.type}</td>
+                                      <td style={{ color: item.running === "true" ? "green" : "red" }}>
+                                        {item.running === "true" ? "Running" : "Down"}
+                                      </td>
+                                      <td>{item["tx-byte"] || 0}</td>
+                                      <td>{item["rx-byte"] || 0}</td>
                                     </tr>
                                 ))
                             ) : (
