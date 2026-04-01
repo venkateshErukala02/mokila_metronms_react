@@ -23,6 +23,7 @@ import LineTagSvg from "../Wayside/linetagsvg";
 import StationTagsTable from "../Wayside/stationtagstable";
 import YardSvgViewer from "./yardsvg";
 import MainlineView from "./mainlinetrainview";
+import { useLocation } from "react-router-dom";
 
 
 const TopoPg = () => {
@@ -66,6 +67,8 @@ const TopoPg = () => {
     const [stationRefreshKey, setStationRefreshKey] = useState(0);
     const hasRun = useRef(false);
     const [enableStationPolling, setEnableStationPolling] = useState(true);
+    const [expandedTreeDt,setExpandedTreeDt] = useState(null);
+    const [prevTreeDt,setPrevTreeDt] = useState([]);
 
     const handleNodeClick = (value,parent) => {
         setTextNameChanged(true); 
@@ -458,7 +461,7 @@ useEffect(() => {
                     )
                 }else{
                     return ( <> <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg}/>
-              <StationNodeTableView  yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} />
+              <StationNodeTableView  yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt}/>
                       </> );
                 }
             }
@@ -640,6 +643,24 @@ useEffect(() => {
   setTrainView(false);
 };
 
+const previousView = useSelector(state => state.selectedPrevNode.node);
+
+useEffect(() => {
+  if (previousView) {
+    setTextName(previousView.textName);
+    setStationView(previousView.stationView);
+    setStationTagview(previousView.stationTagview);
+    setLineTagview(previousView.lineTagview);
+    setTrainView(previousView.trainView);
+    setPrevTreeDt(previousView.expandedTreeDt || []);
+    setSelectedTreeNodeId({ id: previousView.textName.data.id,
+            path: ["global", "region", "location"]});
+    
+  }
+}, [previousView]);
+
+
+
     const handleStationVwVisible=()=>{
         setTrainView(false);
         setStationView(true);
@@ -781,6 +802,10 @@ useEffect(() => {
         setChildrenTextName(data);
     };
 
+    const handleExpandedPrevTreeData=(data)=>{
+        setExpandedTreeDt(data);
+    }
+
     return (
         <article className="display-f">
            
@@ -826,8 +851,8 @@ useEffect(() => {
                         </article> */}
                         <hr  className="hrll" style={{marginBottom:'0px'}}/>
                         <article>
-                        <TreeList getElementAtEvent={handleNodeClick} selectedNodeId={selectedTreeNodeId} circleId={circleId} onStationResolved={setStationNode} selectedPrevNodeId={selectedPrevNodeId} prevIdActive={prevIdActive}  onStationCircleIdChange={setStationIdFromSvg} stationRefreshKey={stationRefreshKey}
-                       onChildrenData={handleChildrenData}
+                        <TreeList onTreeDataChange={handleExpandedPrevTreeData} getElementAtEvent={handleNodeClick} selectedNodeId={selectedTreeNodeId} circleId={circleId} onStationResolved={setStationNode} selectedPrevNodeId={selectedPrevNodeId} prevIdActive={prevIdActive}  onStationCircleIdChange={setStationIdFromSvg} stationRefreshKey={stationRefreshKey}
+                       onChildrenData={handleChildrenData} prevTreeDt={prevTreeDt} selectedTreeNodeId ={selectedTreeNodeId}
                        />
                             </article>
                             <article>

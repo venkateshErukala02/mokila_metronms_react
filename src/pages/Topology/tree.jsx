@@ -54,7 +54,11 @@ const TreeNode = ({ node,parentNode, selectedNode, setSelectedNode,getElementAtE
 //   const [childVisible, setChildVisibility] = useState(
 //   selectedNode?.text === dataName
 // );
-const [childVisible, setChildVisible] = useState(false);
+const [childVisible, setChildVisible] = useState(node.expanded||false);
+
+ useEffect(() => {
+    setChildVisible(node.expanded || false);
+  }, [node.expanded]);
 
 useEffect(() => {
     // Expand if this node is the selected one

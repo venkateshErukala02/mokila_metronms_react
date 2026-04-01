@@ -1,10 +1,10 @@
 import {useState,useEffect} from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { handleNodeData } from "../Action/action";
+import { handleNodeData, handlePreviousNodeselTree } from "../Action/action";
 
 
-const StationNodesvgTable=({textName,yardfacilitieData})=>{
+const StationNodesvgTable=({textName,yardfacilitieData,stationView, stationTagview,lineTagview,trainView, selectedTreeNodeId,expandedTreeDt})=>{
     const [sectionTbData,setSectionTbData] = useState('');
     const [limitValueSel, setLimitValueSel] = useState('');
     const [limitValueSelLabel, setLimitValueSelLabel] = useState('50');
@@ -15,16 +15,40 @@ const StationNodesvgTable=({textName,yardfacilitieData})=>{
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-      const handleRowClick = (node) => {
-        dispatch(handleNodeData(node))
-              if (`${node.type}` === 'AP') {
-                  navigate('/SN-view', { replace: true })
+    //   const handleRowClick = (node) => {
+    //     dispatch(handleNodeData(node))
+    //           if (`${node.type}` === 'AP') {
+    //               navigate('/SN-view')
                   
-              } else {
-                  navigate(`/${node.type}-view`, { state: { node } , replace: true });
-              }
+    //           } else {
+    //               navigate(`/${node.type}-view`, { state: { node } });
+    //           }
       
-          };
+    //       };
+
+    const handleRowClick = (node) => {
+  const previousState = {
+    textName,
+    stationView,
+    stationTagview,
+    lineTagview,
+    trainView,
+    selectedTreeNodeId,
+    expandedTreeDt
+  };
+
+  dispatch(handlePreviousNodeselTree(previousState));
+
+  dispatch(handleNodeData(node));
+
+  if (`${node.type}` === 'AP') {
+    navigate('/SN-view', { state: { previousState } });
+  } else {
+    navigate(`/${node.type}-view`, {
+      state: { node, previousState },
+    });
+  }
+};
 
     return(
         <>

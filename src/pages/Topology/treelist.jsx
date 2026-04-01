@@ -4,21 +4,33 @@ import './../Topology/topology.css';
 
 
 
-const TreeList = ({ getElementAtEvent,selectedNodeId,circleId,onStationResolved ,selectedTreeNodeId,selectedPrevNodeId,prevIdActive,onStationCircleIdChange,stationRefreshKey,onChildrenData}) => {
+const TreeList = ({ getElementAtEvent,selectedNodeId,circleId,onStationResolved ,selectedTreeNodeId,selectedPrevNodeId,prevIdActive,onStationCircleIdChange,stationRefreshKey,onChildrenData,onTreeDataChange,prevTreeDt}) => {
   const [nodeData, setNodeData] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
-  const [treeData, setTreeData] = useState([
-    {
-      key: "0", 
-      text: "Global",
-      data: {mode: "global", display: "Global", id: 0, type: "region"},
-      selected: "",
-      icon: "globimg",
-      children: [
+  const defaultTree = [
+  {
+    key: "0",
+    text: "Global",
+    data: { mode: "global", display: "Global", id: 0, type: "region" },
+    selected: "",
+    icon: "globimg",
+    children: [],
+  },
+];
+// const [treeData,setTreeData]= (defaultTree);
+const [treeData, setTreeData] = useState(() => structuredClone(defaultTree));
+  // const [treeData, setTreeData] = useState([
+  //   {
+  //     key: "0", 
+  //     text: "Global",
+  //     data: {mode: "global", display: "Global", id: 0, type: "region"},
+  //     selected: "",
+  //     icon: "globimg",
+  //     children: [
       
-      ],
-    },
-  ]);
+  //     ],
+  //   },
+  // ]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState({ status: false, msg: "" });
@@ -41,6 +53,36 @@ const TreeList = ({ getElementAtEvent,selectedNodeId,circleId,onStationResolved 
     setSelectedNode(node); // update internal state
   }
 }, [selectedTreeNodeId, treeData]);
+
+useEffect(() => {
+  if (!prevTreeDt || prevTreeDt.length === 0) {
+    setTreeData(structuredClone(defaultTree));
+    return;
+  }
+
+  const expandAllWithChildren = (nodes) => {
+    return nodes.map(node => {
+      const hasChildren = node.children && node.children.length > 0;
+      return {
+        ...node,
+        expanded: hasChildren,
+        children: hasChildren ? expandAllWithChildren(node.children) : []
+      };
+    });
+  };
+
+  const expandedTree = expandAllWithChildren(structuredClone(prevTreeDt));
+
+  setTreeData(expandedTree);
+
+  const node = findNodeById(expandedTree, selectedTreeNodeId?.id);
+  if (node) {
+    setSelectedNode(node);
+  }
+
+  hasExpandedRef.current = true;
+
+}, [prevTreeDt, selectedTreeNodeId]);
 
 
 
@@ -602,6 +644,12 @@ useEffect(() => {
 
   expandSelectedNode();
 }, [selectedNode]);
+
+useEffect(() => {
+  if (onTreeDataChange) {
+    onTreeDataChange(treeData);
+  }
+}, [treeData]);
 
 
   return (

@@ -6,7 +6,7 @@ import NorthBoundTb from "./northboundtb";
 import StationNodesvgTable from "./stationnodessvgtable";
 
 
-const StationNodeTableView=({textName , rdDataRef,yardfacilitieData})=>{
+const StationNodeTableView=({textName , rdDataRef,yardfacilitieData,stationView, stationTagview,lineTagview,trainView, selectedTreeNodeId,expandedTreeDt})=>{
     const [sectionTbData,setSectionTbData] = useState('');
     const [limitValueSel, setLimitValueSel] = useState('');
     const [limitValueSelLabel, setLimitValueSelLabel] = useState('50');
@@ -22,7 +22,9 @@ const StationNodeTableView=({textName , rdDataRef,yardfacilitieData})=>{
         <article className="piechtcont">
                 <article className="row border-lrr">
                     <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6" style={{padding:'5px'}}>
-                       <StationNodesvgTable yardfacilitieData={yardfacilitieData} textName={textName}/>
+                       <StationNodesvgTable yardfacilitieData={yardfacilitieData} textName={textName} 
+                       stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} 
+                       expandedTreeDt={expandedTreeDt}/>
                        <article>
                        </article>
                     </article>
