@@ -352,10 +352,10 @@ const InventRpt = () => {
 
       const handleRowClick = (node) => {
               if (`${node.deviceType}` === 'AP') {
-                  navigate('/SN-view', { replace: true })
+                  navigate('/SN-view')
                   dispatch(handleNodeData(node))
               } else {
-                  navigate(`/${node.deviceType}-view`, { state: { node } , replace: true });
+                  navigate(`/${node.deviceType}-view`, { state: { node }});
                   dispatch(handleNodeData(node))
               }
       

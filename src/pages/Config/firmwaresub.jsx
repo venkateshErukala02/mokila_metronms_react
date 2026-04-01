@@ -15,7 +15,7 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
     const [success, setSuccess] = useState('');
     const [selectedDate, setSelectedDate] = useState(null);
     const [invenData,setInvenData] = useState('');
-    const [role, setRole] = useState("fileupload");
+    const [role, setRole] = useState("searchlist");
     const [isImmediate, setIsImmediate] = useState(true);
     const [versionData, setVersionData] = useState('')
     const [versionTitle,setVersionTitle] = useState('');
@@ -30,7 +30,14 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
     const [timestamp,setTimestamp] = useState('');
     const [deviceTypeRequired,setDeviceTypeRequired] = useState(true);
     const [selectedIps, setSelectedIps] = useState([]);
-
+    const [lineData, setLineData] = useState([]);
+    const [stationData,setStationData] = useState([]);
+    const [lineNameSele,setLineNameSele] =useState('');
+    const [lineLabelSel,setLineLabelSel] = useState('');
+    const [selSubLine,setSelSubLine] = useState('');
+    const [subLineSel,setSubLineSel] = useState('');
+    const [stationSel,setStationSel] = useState('');
+    const [stationIpsData,setStationIpsData] = useState([]);
 
     const handleProfileContclose = () => {
         handleSubContainer(true);
@@ -77,13 +84,10 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
         formData.append('upfile', selectedFile);
 
         try {
-            const username = 'admin';
-            const password = 'admin';
-            const token = btoa(`${username}:${password}`)
             const response = await fetch(`api/v2/firmware/uploaddiscctx/16_314`, {
                 method: "POST",
                 headers: {
-                    'Authorization': `Basic ${token}`
+                    // 'Authorization': `Basic ${token}`
                 },
                 body: formData,
             });
@@ -144,13 +148,9 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
         setLoading(true);
         setError({ status: false, msg: "" });
         try {
-            const username = 'admin';
-            const password = 'admin';
-            const token = btoa(`${username}:${password}`)
             const options = {
                 method: "GET",
                 headers: {
-                    'Authorization': `Basic ${token}`,
                     "Content-Type": "application/json",
                 },
 
@@ -288,13 +288,9 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
 
             let url= `api/v2/bulk/applyFirmware`;
             try {
-                const username = 'admin';
-                const password = 'admin';
-                const token = btoa(`${username}:${password}`)
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {
-                        // 'Authorization': `Basic ${token}`,
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify(requestBody),
@@ -372,6 +368,199 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
             };
 
 
+              const getLineData = async (url) => {
+                    setLoading(true);
+                    setError({ status: false, msg: "" });
+                    try {
+                        const options = {
+                            method: "GET",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                      
+            
+                        };
+                        const response = await fetch(url, options);
+            
+                        const data = await response.json();
+            
+                        if (response.ok) {
+                            setLoading(false);
+                            setLineData(data);
+                            setError({ status: false, msg: "" });
+                        } else {
+                            throw new Error("data not found");
+                        }
+                    } catch (error) {
+                        setLoading(false);
+                        setError({ status: true, msg: error.message });
+                    }
+                };
+            
+                useEffect(()=>{
+                    const url= 'api/v2/treeview/regions'
+                    getLineData(url)
+                },[])
+
+
+                const handleSelectLine=(e)=>{
+                    const selectedValue = Number(e.target.value);
+                    const selectedText = e.target.options[e.target.selectedIndex].text;
+                    setLineNameSele(selectedValue);
+                    setLineLabelSel(selectedText);  
+                }
+
+
+                const getSellineData = async (url) => {
+                        setLoading(true);
+                        setError({ status: false, msg: "" });
+                        try {
+                            const options = {
+                                method: "GET",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                          
+                
+                            };
+                            const response = await fetch(url, options);
+                
+                            const data = await response.json();
+                
+                            if (response.ok) {
+                                setLoading(false);
+                                setSelSubLine(data);
+                                setError({ status: false, msg: "" });
+                            } else {
+                                throw new Error("data not found");
+                            }
+                        } catch (error) {
+                            setLoading(false);
+                            setError({ status: true, msg: error.message });
+                        }
+                    };
+                
+                    useEffect(()=>{
+                        if(lineNameSele && lineNameSele !== '-1'){
+                            const url=`api/v2/treeview/regions/${lineNameSele}/locations`;
+                
+                            getSellineData(url);
+                        }
+                       
+                    },[lineNameSele]);
+
+                     const handleSelectSubLine=(e)=>{
+                            setSubLineSel(Number(e.target.value))
+                        }
+
+
+                          const getSelStationData = async (url) => {
+                        setLoading(true);
+                        setError({ status: false, msg: "" });
+                        try {
+                            const options = {
+                                method: "GET",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                        
+
+                            };
+                            const response = await fetch(url, options);
+
+                            const data = await response.json();
+
+                            if (response.ok) {
+                                setLoading(false);
+                                setStationData(data);
+                                setError({ status: false, msg: "" });
+                            } else {
+                                throw new Error("data not found");
+                            }
+                        } catch (error) {
+                            setLoading(false);
+                            setError({ status: true, msg: error.message });
+                        }
+                    };
+
+                useEffect(()=>{
+                if(subLineSel === '-1') return;
+                    if(subLineSel && subLineSel !== ''){
+                        const url=`api/v2/treeview/locations/${subLineSel}/facilitiesn?show=all`;
+            
+                        getSelStationData(url);
+                    }
+         
+                 },[subLineSel])
+
+                   const handleSelectStation=(e)=>{
+                            setStationSel(Number(e.target.value))
+                        }
+
+
+                          const getSelStationIpsData = async (url) => {
+                        setLoading(true);
+                        setError({ status: false, msg: "" });
+                        try {
+                            const options = {
+                                method: "GET",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                        
+
+                            };
+                            const response = await fetch(url, options);
+
+                            const data = await response.json();
+
+                            if (response.ok) {
+                                setLoading(false);
+                                setStationIpsData(data);
+                                setError({ status: false, msg: "" });
+                            } else {
+                                throw new Error("data not found");
+                            }
+                        } catch (error) {
+                            setLoading(false);
+                            setError({ status: true, msg: error.message });
+                        }
+                    };
+
+                useEffect(()=>{
+                if(stationSel === '-1') return;
+                    if(stationSel && stationSel !== ''){
+                        const url=`api/v2/treeview/station/${stationSel}`;
+            
+                        getSelStationIpsData(url);
+                    }
+         
+                 },[stationSel])
+
+                        
+                    // const [checkedItems, setCheckedItems] = useState([]);
+                    const handleCheckboxChange = (event, item) => {
+                        if (event.target.checked) {
+                            setAddedItems(prev => [...prev, item.nodeId]);
+                        } else {
+                             setAddedItems(prev =>
+                                prev.filter(id => id !== item.nodeId)
+                            );
+                        }
+                    }; 
+
+                    const handleSelectAllDeviceIp = (e) => {
+                        if (e.target.checked) {
+                            const allNodeIds = stationIpsData.map(item => item.nodeId);
+                            setAddedItems(allNodeIds);
+                        } else {
+                            setAddedItems([]);
+                        }
+                     };
+
+
+
+
     return (
 
         <>
@@ -433,7 +622,7 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                                 </article>
                             </article>}
                             <article style={{ position: 'relative' }}>
-                                <label className="radiolabelcl">
+                                {/* <label className="radiolabelcl">
                                     <input type="radio" name="role"
                                         value='fileupload'
                                         checked={role === 'fileupload'}
@@ -442,10 +631,19 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                                     />
                                     <span className="checking"></span>
                                     <span className="labeltext">File Upload</span>
-                                </label>
+                                </label> */}
                                 <label className="radiolabelcl">
                                     <input type="radio" name="role"
-                                        value='devicelist'
+                                        value='searchlist'
+                                        checked={role === 'searchlist'}
+                                        onChange={() => setRole('searchlist')}
+                                    />
+                                    <span className="checking"></span>
+                                    <span className="labeltext">Search List</span>
+                                </label>
+                                 <label className="radiolabelcl">
+                                    <input type="radio" name="role"
+                                        value='devicedlist'
                                         checked={role === 'devicelist'}
                                         onChange={() => setRole('devicelist')}
                                     />
@@ -454,7 +652,7 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                                 </label>
                             </article>
                             <hr />
-                            {role === 'fileupload' && <article className="uploadcont">
+                            {/* {role === 'fileupload' && <article className="uploadcont">
                                 <article className="regioncontw" style={{ paddingLeft: "20px", margin: '24px' }}>
                                     <label htmlFor="" className="disfilelabel" style={{ marginBottom: '1px' }}>Select your file</label>
                                     <div className="filename-display">
@@ -478,8 +676,8 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                                         {isEditMode ? 'Update' : 'Upload'}
                                     </button>
                                 </center>
-                            </article>}
-                            {role === 'devicelist' && <article>
+                            </article>} */}
+                            {role === 'searchlist' && <article>
                                  <article style={{ position: 'relative' }}>
                                 <ul className="regionlist">
                                     <li>
@@ -586,6 +784,101 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                             <center style={{ marginTop: '16px', marginBottom: '16px' }}>
                                 <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
                                 <button type="button" className="uploadsetingbtn" onClick={handleApplyFirmware} disabled={selectedItems.length === 0}>Apply</button>
+                            </center>
+                                </article>}
+
+                                  {role === 'devicelist' && <article>
+                                 <article style={{ position: 'relative' }}>
+                                      <label for="" className="traplabel">Search</label>
+                                <ul className="devicelist">
+                                    <li>
+                                         <label className="configlabel" style={{marginTop:'0'}}>Line</label>
+                                    <article>
+                                    <select className="configdropdowninput" defaultValue={-1}  value={lineNameSele} onChange={handleSelectLine}>
+                                           <option value="-1" defaultValue>Select</option>
+                                    {lineData && lineData.map((item,index) => (
+                                            <option key={index} value={item.data.id}>{item.data.display}</option>
+                                    ))}
+                                    </select>
+                                </article>
+                                    </li>
+                                     <li>
+                                         <label className="configlabel" style={{marginTop:'0'}}>Section</label>
+                                    <article>
+                                    <select className="configdropdowninput" defaultValue={-1} value={subLineSel} onChange={handleSelectSubLine}>
+                                        <option value="-1" defaultValue>Select</option>
+                                          {selSubLine && selSubLine.map((item,index)=>(
+                                            <option value={item.data.id} key={index} >{item.data.display}</option>
+                                          ))}
+                                    </select>
+                                </article>
+                                    </li>
+                                     <li>
+                                         <label className="configlabel" style={{marginTop:'0'}}>Station</label>
+                                    <article>
+                                    <select className="configdropdowninput" defaultValue={-1} value={stationSel} onChange={handleSelectStation}>
+                                         <option value="-1" defaultValue>Select</option>
+                                        {stationData && stationData.map((item,index)=>(
+                                            <option value={item.data.id} key={index}>{item.text}</option>
+                                        ))}
+                                    </select>
+                                </article>
+                                    </li>
+                                </ul>
+                            </article>
+                            <article className="row border-allsd" style={{ height: '16vh', overflow: 'hidden' }}>
+                                <table className="col-md-12 col-sm-12 col-lg-12 col-xl-12" style={{ tableLayout: 'fixed', width: '100%' }}>
+                                    <thead className="configthtb">
+                                        <tr style={{ textAlign: 'center' }}>
+                                             <th style={{paddingLeft:'34px'}}>
+                                                <input
+                                                    type="checkbox"
+                                                    onChange={handleSelectAllDeviceIp}
+                                                    checked={
+                                                        stationIpsData.length > 0 &&
+                                                        addedItems.length === stationIpsData.length
+                                                    }
+                                                />
+                                            </th>
+                                            <th>System Name</th>
+                                            <th>IP Address</th>
+                                            <th>Position</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+
+                                <div style={{ height: 'calc(16vh - 40px)', overflowY: 'auto' }}>
+                                    <table className="col-md-12 col-sm-12 col-lg-12 col-xl-12" style={{ tableLayout: 'fixed', width: '100%' }}>
+                                        <tbody className="configbdtb" style={{ textAlign: 'center' }}>
+                                            {Array.isArray(stationIpsData) && stationIpsData.length > 0 ? (
+                                                stationIpsData.map((event) => (
+                                                    <tr key={event.id}>
+                                                        <td style={{ width: '78px',paddingLeft:'36px' }}>
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={addedItems.includes(event.nodeId)}
+                                                                onChange={(e) => handleCheckboxChange(e, event)}
+                                                            />
+                                                        </td>
+                                                        <td style={{ width: '108px' ,paddingLeft:'26px'}}>{event.systemName}</td>
+                                                        <td style={{ width: '98px' }}>{event.ipAddress}</td>
+                                                        <td style={{ width: '72px' }}>{event.position}</td>
+                                                    </tr>
+                                                ))
+                                            ) : (
+                                                // <tr>
+                                                //     <td colSpan="4">No items found</td>
+                                                // </tr>
+                                                ''
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </article>
+
+                            <center style={{ marginTop: '16px', marginBottom: '16px' }}>
+                                <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
+                                <button type="button" className="uploadsetingbtn" onClick={handleApplyFirmware} disabled={addedItems.length === 0}>Apply</button>
                             </center>
                                 </article>}
                         </form>

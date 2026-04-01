@@ -3667,7 +3667,7 @@ svg *:focus {
     padding: 0;
     width: 100%;
 }
-.regionlist li {
+.regionlist>li {
     list-style-type: none;
     float: left;
     margin-left: 1%;
@@ -3676,7 +3676,27 @@ svg *:focus {
     font-family: "Lato-Regular";
     color: #495057;
 }
-.searchlist li {
+
+
+.devicelist{
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+.devicelist>li {
+    list-style-type: none;
+    float: left;
+    margin-left: 1%;
+    margin-right: 1%;
+    font-size: 15px;
+    font-family: "Lato-Regular";
+    color: #495057;
+    padding-bottom: 12px;
+    margin-right: 23px;
+}
+
+.searchlist>li {
     list-style-type: none;
     font-size: 15px;
     font-family: "Lato-Regular";
@@ -4472,6 +4492,28 @@ svg *:focus {
     border: none;
     cursor: not-allowed;
     opacity: 0.6;
+}
+
+.configlabel {
+    color: #212327;
+    font-family: Lato-Regular;
+    font-size: 15px;
+    font-weight: 100;
+    letter-spacing: .2px;
+    margin-right: 12px;
+}
+
+.configdropdowninput {
+    background-color: initial;
+    border: 1px solid #dddfe2;
+    border-radius: 5px;
+    color: #1d2129;
+    font-family: system-ui;
+    margin-top: 0 !important;
+    min-height: 32px;
+    padding: 0 0 0 10px;
+    min-width: 124px;
+    max-width: 130px;
 }
 
  /* width={700} height={240} */
