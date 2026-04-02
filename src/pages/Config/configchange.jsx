@@ -19,6 +19,12 @@ const ConfigChange = () => {
     const [showPopup,setShowPopup] = useState(false);
     const [configpopupData,setConfigpopupData] = useState([]);
     const columnWrapperRef =  useRef(null);
+    const [configToDelete, setConfigToDelete] = useState(null);
+    const [showDeletePopup, setShowDeletePopup] = useState(false);
+    const [showDeleteSuccessPopup, setShowDeleteSuccessPopup] = useState(false);
+    const [showBulkDeletePopup, setShowBulkDeletePopup] = useState(false);
+    const [showBulkDeleteSuccessPopup, setShowBulkDeleteSuccessPopup] = useState(false);
+
 
     const statuses = [
         { label: "All", value: 4 },
@@ -134,12 +140,12 @@ const ConfigChange = () => {
 
 
      const handleDeleteConfigChange = async (item) => {
-    const confirmDel = window.confirm("Are you sure you want to delete this config?");
+    // const confirmDel = window.confirm("Are you sure you want to delete this config?");
     if (item.status === 'Running') {
         alert("Running task cannot be cancelled.");
         return;
     }
-    if (!confirmDel) return;
+    // if (!confirmDel) return;
 
     setIsLoading(true);
 
@@ -164,6 +170,7 @@ const ConfigChange = () => {
         });
 
         if (response.ok) {
+            setShowDeleteSuccessPopup(true);
             await getConfigChangeData(
                 `api/v2/task/list?show=configpush&status=${selected}&offset=0&count=25`
             );
@@ -205,10 +212,10 @@ const toggleSelectAll = () => {
 const handleBulkDelete = async () => {
     if (selectedTasks.length === 0) return;
 
-    const confirmDel = window.confirm(
-        `Delete ${selectedTasks.length} selected tasks?`
-    );
-    if (!confirmDel) return;
+    // const confirmDel = window.confirm(
+    //     `Delete ${selectedTasks.length} selected tasks?`
+    // );
+    // if (!confirmDel) return;
 
     setIsLoading(true);
 
@@ -234,7 +241,7 @@ const handleBulkDelete = async () => {
         if (!response.ok) {
             throw new Error("Bulk delete failed");
         }
-
+        setShowBulkDeleteSuccessPopup(true);
         await getConfigChangeData(
                 `api/v2/task/list?show=configpush&status=${selected}&offset=0&count=25`
         );
@@ -269,7 +276,14 @@ const handleBulkDelete = async () => {
                                     <ul className="setttinglist">
                                          <li>
                                             <button className="createbtn" disabled={selectedTasks.length === 0}
-                                            onClick={handleBulkDelete}>Delete Selected</button>
+                                            // onClick={handleBulkDelete}>Delete Selected</button>
+                                             onClick={() => {
+                                                if (selectedTasks.length === 0) return;
+                                                setShowBulkDeletePopup(true);
+                                            }}
+                                            >
+                                                Delete Selected {selectedTasks.length === 0 ? '' : `${selectedTasks.length}`}</button>
+                                        
                                         </li>
                                         <li>
                                             <button className="createbtn" onClick={handleProfileContopen}>New Task</button>
@@ -360,12 +374,118 @@ const handleBulkDelete = async () => {
                                             <td>{item.task}</td>
                                             <td>{formatDateTime(item.dateNTime)}</td>
                                             <td>{item.status}</td>
-                                            <td onClick={(e)=>{  e.stopPropagation();}}><i className="fa fa-trash" onClick={() => handleDeleteConfigChange(item)}></i></td>
+                                            <td onClick={(e)=>{  e.stopPropagation();}}>
+                                                {/* <i className="fa fa-trash" onClick={() => handleDeleteConfigChange(item)}></i> */}
+                                                 <i
+                                                        className="fa fa-trash"
+                                                        onClick={() => {
+                                                            if (item.status === 'Running') {
+                                                            alert("Running task cannot be cancelled.");
+                                                            return;
+                                                            }
+                                                            setConfigToDelete(item);
+                                                            setShowDeletePopup(true);
+                                                        }}
+                                                        ></i>
+                                                </td>
                                         </tr>
                                     ))}
 
                                 </tbody>
                             </table>
+
+
+                            {showDeletePopup && configToDelete && (
+                                <article className="confirmdeletepopup">
+                                    <article className="confirmdeletepopupboxstyle">
+                                    <h1 className="confirmdeletetitle">Are you sure you want to delete this config?</h1>
+                                    <article className="f-r">
+                                        <button
+                                        className="confirmdeletebtn"
+                                        onClick={() => setShowDeletePopup(false)}
+                                        >
+                                        NO
+                                        </button>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={async () => {
+                                            await handleDeleteConfigChange(configToDelete);
+                                            setShowDeletePopup(false);
+                                        }}
+                                        >
+                                        YES
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
+
+                                {showDeleteSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">The config has been deleted successfully.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => setShowDeleteSuccessPopup(false)}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
+
+                                {showBulkDeletePopup && (
+                                <article className="confirmdeletepopup">
+                                    <article className="confirmdeletepopupboxstyle">
+                                    <h1 className="confirmdeletetitle">
+                                         Are you sure you want to Delete selected task{selectedTasks.length > 1 ? 's' : ''}?
+                                    </h1>
+
+                                    <article className="f-r">
+                                        <button
+                                        className="confirmdeletebtn"
+                                        onClick={() => setShowBulkDeletePopup(false)}
+                                        >
+                                        NO
+                                        </button>
+
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={async () => {
+                                            await handleBulkDelete();
+                                            setShowBulkDeletePopup(false);
+                                        }}
+                                        >
+                                        YES
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
+
+                                {showBulkDeleteSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                        <h1 className="confirmtitlesucess">Success</h1>
+                                        <p className="confirmtextsucess">{selectedTasks.length} task{selectedTasks.length > 1 ? 's have' : ' has'} been deleted successfully.</p>
+                                        </article>
+                                        <article style={{ textAlign: 'end' }}>
+                                            <button
+                                                className="confirmdeletebtn confirmdeletebtnyes"
+                                                onClick={() => setShowBulkDeleteSuccessPopup(false)}
+                                                >
+                                                OK
+                                            </button>
+                                        </article>
+                                    </article>
+                                </article>
+                                )}
                         </article>
                     </article>
                     {showPopup && (

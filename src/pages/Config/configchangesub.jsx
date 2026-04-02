@@ -33,6 +33,8 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
     const [selectedValue, setSelectedValue] = useState("");
     const [selectedLabel,setSelectedLabel] = useState('');
     const [timestamp, setTimestamp] = useState(Date.now());
+    const [showApplyPopup, setShowApplyPopup] = useState(false);
+    const [showApplySuccessPopup, setShowApplySuccessPopup] = useState(false);
 
     const handleProfileContclose = () => {
         handleSubContainer(true);
@@ -254,8 +256,9 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
                     body: JSON.stringify(requestBody),
                 });
                 if (response.ok) {
-                    alert('Firmware upload started successfully')
-                    handleProfileContclose();
+                    setShowApplySuccessPopup(true); 
+                    // alert('Firmware upload started successfully')
+                    // handleProfileContclose();
                     setDeviceType('');
                     setSearchValue('');
                     setSearchBtn(false);
@@ -548,9 +551,58 @@ const handleAddAll = () => {
 
                             <center style={{ marginTop: '16px', marginBottom: '16px' }}>
                                 <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
-                                <button type="button" className="creatsetingbtn" onClick={handleApplyConfigChange} disabled={selectedItems.length === 0}>Apply</button>
+                                <button type="button" className="creatsetingbtn" disabled={selectedItems.length === 0}
+                                 onClick={() => setShowApplyPopup(true)}
+                                >Apply</button>
                             </center>
                         </form>
+
+                         {showApplyPopup && <>
+                                    <article className="confirmdeletepopup">
+                                        <article className="confirmdeletepopupboxstyle">
+                                        <h1 className="confirmdeletetitle">Are you sure you want to Apply?</h1>
+                                        <article className="f-r">
+                                            <button
+                                                className="confirmdeletebtn"
+                                                onClick={() => setShowApplyPopup(false)}
+                                                >
+                                                NO
+                                                </button>
+                                                <button
+                                                className="confirmdeletebtn confirmdeletebtnyes"
+                                                onClick={async () => {
+                                                    await handleApplyConfigChange();
+                                                    setShowApplyPopup(false);
+                                                }}
+                                                >
+                                                YES
+                                                </button>
+                                        </article>
+                                        </article>
+                                    </article>
+                                    </>}
+
+                                      {showApplySuccessPopup && (
+                                    <article className="confirmsuccesspopup">
+                                        <article className="confirmsuccesspopupboxstyle">
+                                            <article className="success-cont">
+                                        <h1 className="confirmtitlesucess">Success</h1>
+                                        <p className="confirmtextsucess">The Apply has been successfully.</p>
+                                        </article>
+                                        <article style={{ textAlign: 'end' }}>
+                                            <button
+                                            className="confirmdeletebtn confirmdeletebtnyes"
+                                             onClick={() => {
+                                                setShowApplySuccessPopup(false);
+                                                handleProfileContclose();
+                                            }}
+                                            >
+                                            OK
+                                            </button>
+                                        </article>
+                                        </article>
+                                    </article>
+                                    )}
                     </article>
                 </article>
             </article>

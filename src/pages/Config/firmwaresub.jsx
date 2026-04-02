@@ -38,6 +38,8 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
     const [subLineSel,setSubLineSel] = useState('');
     const [stationSel,setStationSel] = useState('');
     const [stationIpsData,setStationIpsData] = useState([]);
+    const [showUploadPopup, setShowUploadPopup] = useState(false);
+    const [showUploadSuccessPopup, setShowUploadSuccessPopup] = useState(false);
 
     const handleProfileContclose = () => {
         handleSubContainer(true);
@@ -93,8 +95,9 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
             });
 
             if (response.ok) {
-                setSuccess('File upload has started.');
-                alert('File upload has started.')
+                // setSuccess('File upload has started.');
+                // alert('File upload has started.')
+                 setShowUploadSuccessPopup(true);
                 if (refreshLineData) refreshLineData();
                 handleProfileContclose();
                 setSelectedFile(null);
@@ -297,8 +300,9 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
                 });
                 if (response.ok) {
                     // setSuccess('Discovery started successfully');
-                    alert('Firmware upload started successfully')
-                    handleProfileContclose();
+                    // alert('Firmware upload started successfully')
+                    setShowUploadSuccessPopup(true);
+                    // handleProfileContclose();
                     setSelectedFile(null);
                     setDeviceType('');
                     setVersionTitle('');
@@ -783,7 +787,9 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
 
                             <center style={{ marginTop: '16px', marginBottom: '16px' }}>
                                 <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
-                                <button type="button" className="uploadsetingbtn" onClick={handleApplyFirmware} disabled={selectedItems.length === 0}>Apply</button>
+                                <button type="button" className="uploadsetingbtn" disabled={selectedItems.length === 0}
+                                onClick={() => setShowUploadPopup(true)}
+                                >Apply</button>
                             </center>
                                 </article>}
 
@@ -878,10 +884,54 @@ const FirmwareContainerSub = ({ handleSubContainer, refreshLineData, mode, line 
 
                             <center style={{ marginTop: '16px', marginBottom: '16px' }}>
                                 <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
-                                <button type="button" className="uploadsetingbtn" onClick={handleApplyFirmware} disabled={addedItems.length === 0}>Apply</button>
+                                <button type="button" className="uploadsetingbtn"  onClick={() => setShowUploadPopup(true)} disabled={addedItems.length === 0}>Apply</button>
                             </center>
                                 </article>}
                         </form>
+
+                         {showUploadPopup && (
+                                <article className="confirmdeletepopup">
+                                    <article className="confirmdeletepopupboxstyle">
+                                    <h1 className="confirmdeletetitle">Are you sure you want to apply firmware?</h1>
+                                    <article className="f-r">
+                                        <button
+                                        className="confirmdeletebtn"
+                                        onClick={() => setShowUploadPopup(false)}
+                                        >
+                                        NO
+                                        </button>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={async () => {
+                                            await handleApplyFirmware();
+                                            setShowUploadPopup(false);
+                                        }}
+                                        >
+                                        YES
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
+
+                                {showUploadSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">The firmware has been uploaded successfully.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() =>{ setShowUploadSuccessPopup(false);handleProfileContclose()}}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
                     </article>
                 </article>
             </article>

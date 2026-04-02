@@ -22,6 +22,9 @@ const HardwareReplacementContainer = () => {
     const statusTimeoutRef = useRef(null);
     const [timeLeft, setTimeLeft] = useState(30);
     const countdownRef = useRef(null);
+    const [showHardwareReplacementPopup, setShowHardwareReplacementPopup] = useState(false);
+    const [showHardwareReplacementSuccessPopup, setShowHardwareReplacementSuccessPopup] = useState(false);
+  
   
    useEffect(() => {
         return () => {
@@ -235,8 +238,9 @@ const HardwareReplacementContainer = () => {
             });
 
             if (response.ok) {
-                setSuccess('Hardware Replacement upload has started.');
-                alert('Hardware Replacement upload has started.');
+                // setSuccess('Hardware Replacement upload has started.');
+                // alert('Hardware Replacement upload has started.');
+                setShowHardwareReplacementSuccessPopup(true);
                 handleHardwareReplacementStatus();
                 setSelectedItems([]);
                 setSearchOldDeviceData([]);
@@ -435,6 +439,49 @@ const HardwareReplacementContainer = () => {
                                                 )}
                                             </tbody>
                                         </table>
+                                         {showHardwareReplacementPopup && (
+                                <article className="confirmdeletepopup">
+                                    <article className="confirmdeletepopupboxstyle">
+                                    <h1 className="confirmdeletetitle">Are you sure you want to HardWareReplacement?</h1>
+                                    <article className="f-r">
+                                        <button
+                                        className="confirmdeletebtn"
+                                        onClick={() => setShowHardwareReplacementPopup(false)}
+                                        >
+                                        NO
+                                        </button>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={async () => {
+                                            await handleHardwareReplacement();
+                                            setShowHardwareReplacementPopup(false);
+                                        }}
+                                        >
+                                        YES
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
+
+                                {showHardwareReplacementSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">The HardWareReplacement has been uploaded successfully.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => setShowHardwareReplacementSuccessPopup(false)}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
                                     </div>
                                 </article>
                             </article>
@@ -442,7 +489,10 @@ const HardwareReplacementContainer = () => {
                                  <h4 className="hardwaresttitle"><strong>Status: </strong> {statusData?.reason} <span>(Refreshing status in {timeLeft} secs..)</span></h4>
                                 </article>}
                             <article style={{textAlign:'center'}}>                              
-                                <button className="searchfirmbtn" type="button" onClick={handleHardwareReplacement}>Hardware Replacement</button>
+                                <button className="searchfirmbtn" type="button"
+                                onClick={() => setShowHardwareReplacementPopup(true)}
+                                // onClick={handleHardwareReplacement}
+                                >Hardware Replacement</button>
                             </article>
                             <article style={{margin:'12px 22px'}}>
                                 <h6 className="notehardpara">Note: </h6>

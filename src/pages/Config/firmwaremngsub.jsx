@@ -14,7 +14,8 @@ const FirmwareMngSubCont = ({ handleSubContainer, refreshLineData, mode, line })
     const [selectedFile, setSelectedFile] = useState(null);
     const [success, setSuccess] = useState('');
     const [deviceType,setDeviceType] = useState('');
-
+    const [showUploadPopup, setShowUploadPopup] = useState(false);
+    const [showUploadSuccessPopup, setShowUploadSuccessPopup] = useState(false);
 
 
     const handleProfileContclose = () => {
@@ -106,9 +107,10 @@ const FirmwareMngSubCont = ({ handleSubContainer, refreshLineData, mode, line })
             });
 
             if (response.ok) {
-                setSuccess('File upload is started.');
-                alert('Firmware upload is started.')
-                handleProfileContclose();
+                 setShowUploadSuccessPopup(true); 
+                // setSuccess('File upload is started.');
+                // alert('Firmware upload is started.')
+                // handleProfileContclose();
                 if (refreshLineData) refreshLineData();
                 setSelectedFile(null);
                 setDeviceType('');
@@ -180,12 +182,60 @@ const FirmwareMngSubCont = ({ handleSubContainer, refreshLineData, mode, line })
                                 <hr className="hrnote"></hr>
                                 <center className="d-f">
                                     <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
-                                    <button type="button" className="creatsetingbtn" onClick={handleUpload}>
+                                    <button type="button" className="creatsetingbtn"
+                                     onClick={() => setShowUploadPopup(true)}
+                                    // onClick={handleUpload} 
+                                    >
                                         {isEditMode ? 'Update' : 'Upload'}
                                     </button>
                                 </center>
                             </article>
                         </form>
+                         {showUploadPopup && (
+                                <article className="confirmdeletepopup">
+                                    <article className="confirmdeletepopupboxstyle">
+                                    <h1 className="confirmdeletetitle">Are you sure you want to upload?</h1>
+                                    <article className="f-r">
+                                        <button
+                                        className="confirmdeletebtn"
+                                        onClick={() => setShowUploadPopup(false)}
+                                        >
+                                        NO
+                                        </button>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={async () => {
+                                            await handleUpload();
+                                            setShowUploadPopup(false);
+                                        }}
+                                        >
+                                        YES
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
+
+                                {showUploadSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">The firmware has been uploaded successfully.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() =>{ setShowUploadSuccessPopup(false);
+                                                    handleProfileContclose()
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
                     </article>
 
                 </article>

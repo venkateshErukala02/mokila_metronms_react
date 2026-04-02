@@ -23,6 +23,7 @@ const FirmwareMng = () => {
     const [showConfirmDeletePopupStatus, setShowConfirmDeletePopupStatus] = useState(false);
     const [firmwareToDelete, setFirmwareToDelete] = useState(null);
     const columnWrapperRef =  useRef(null);
+    const [showConfirmDeleteSuccessPopupStatus, setShowConfirmDeleteSuccessPopupStatus] = useState(false);
 
 
        useEffect(()=>{
@@ -162,6 +163,8 @@ const FirmwareMng = () => {
 
 
            const handleConfirmDeleteFirmware = async () => {
+            setShowConfirmDeletePopupStatus(false);
+            
             if (!firmwareToDelete) return;
        
         const method = 'POST';
@@ -184,7 +187,7 @@ const FirmwareMng = () => {
             const text = await response.text();
 
             if (response.ok) {
-                setShowConfirmDeletePopupStatus(false);
+                setShowConfirmDeleteSuccessPopupStatus(true);
                 setFirmwareToDelete(null);
                 getVersionData('api/v2/firmware/firmwares?&page=1&limit=50&sort=fileName.asc')
                 // alert("Are you sure you want to delete this firmware?")
@@ -381,6 +384,19 @@ const FirmwareMng = () => {
                                 </article>
                             </article>
                             </>}
+                               {showConfirmDeleteSuccessPopupStatus && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">Firmware deleted successfully!</p>
+                                    </article>
+                                        <article className="f-r">
+                                            <button className="confirmdeletebtn confirmdeletebtnyes" type="button" onClick={() => setShowConfirmDeleteSuccessPopupStatus(false)}>OK</button>
+                                        </article>
+                                    </article>
+                                </article>
+                            )}
                         </article>
                     </article>
                 </article>
