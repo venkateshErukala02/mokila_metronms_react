@@ -42,10 +42,8 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
 
 
          const handleAddGroup = async () => {
-        // if (!group) {
-        //     alert("Please select a file first.");
-        //     return;
-        // }
+            if(!groupName?.trim()  || !selectedUsers) return;
+
         const requestBody = isEditMode ? {
            comments: comment,
             name : groupName,

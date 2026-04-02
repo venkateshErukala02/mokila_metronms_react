@@ -95,8 +95,8 @@ const SectionContainer=()=>{
 
      const handleDeleteSection = async (item) => {
         const method = 'DELETE';
-        const confirmDel = window.confirm("Are you sure you want to delete this section?");
-    if (!confirmDel) return;
+    //     const confirmDel = window.confirm("Are you sure you want to delete this section?");
+    // if (!confirmDel) return;
         
         try {
             const username = 'admin';

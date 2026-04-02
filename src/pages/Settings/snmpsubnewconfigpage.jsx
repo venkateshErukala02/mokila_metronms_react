@@ -73,6 +73,12 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
   }
 
   const handleAddSnmpConfig = async () => {
+     if (snmpVersValueSel === 'v2c') {
+        if (!beginIp?.trim() || !readCommunity?.trim() || !writeCommunity?.trim()) return;
+    } else {
+        if (!beginIp?.trim() || !authPassphrase?.trim() || !privacyPassphrase?.trim()) return;
+    }
+
         const requestBody = isEditMode ? {
         //    comments: comment,
         //     name : groupName,

@@ -24,10 +24,8 @@ const ThresholdSubCont = ({ handleSubContainer, refreshThresholdData,threshold,m
 //    const url='api/v2/threshold/update/threshold/0';
 
    const handleAddThreshold = async () => {
-    // if (!sectionName) {
-    //     alert("Please select a file first.");
-    //     return;
-    // }
+    if(!threshdRearm?.trim()  || !threshdValue?.trim()  || !threshdTrigger?.trim() ) return;
+    
     const requestBody = {
             description : threshdDescription,
             'ds-label': threshold.item['ds-label'],
@@ -116,6 +114,7 @@ const ThresholdSubCont = ({ handleSubContainer, refreshThresholdData,threshold,m
                                 value={threshdDescription}
                                 onChange={(e) => setThreshdDescription(e.target.value)}
                                 required
+                                disabled
                             />
                             <article>
                                 <label className="settinglabelsub">Threshold Type</label>
@@ -123,6 +122,7 @@ const ThresholdSubCont = ({ handleSubContainer, refreshThresholdData,threshold,m
                                     value={threshdType}
                                     onChange={(e) => setThreshdType(e.target.value)}
                                     required
+                                    disabled
                                 />
                             </article>
                             <article>

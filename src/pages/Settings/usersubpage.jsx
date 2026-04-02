@@ -130,10 +130,7 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
       
 
     const handleAddUser = async () => {
-        // if (!sectionName) {
-        //     alert("Please select a file first.");
-        //     return;
-        // }
+        if (!userName?.trim() || !password?.trim()  || !lineNameSele || !email?.trim()  || !role) return;
 
         const xmlpostPayload = buildpostXMLPayload();
         const xmlupdatePayload =buildupdateXMLPayload();

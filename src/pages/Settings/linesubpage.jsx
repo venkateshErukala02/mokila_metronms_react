@@ -22,10 +22,7 @@ const LineSubCont = ({ handleSubContainer,refreshLineData,mode,line }) => {
     }
 
     const handleAddLine = async () => {
-        if (!lineName) {
-            alert("Please fill the field.");
-            return;
-        }
+          if (!lineName?.trim() ) return;
         const requestBody = isEditMode ? {
             id: line.id,
             name: lineName,

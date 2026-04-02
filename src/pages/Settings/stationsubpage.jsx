@@ -48,10 +48,7 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
 
     const handleUpload = async (e) => {
         e.preventDefault();
-        if (!selectedFile) {
-            alert("Please select a file first.");
-            return;
-        }
+        if (!selectedFile) return;
     
         setLoading(true);
         setError('');
@@ -200,10 +197,7 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
 
 
     const handleAddStation = async () => {
-        if (!stationName) {
-            alert("Please select a file first.");
-            return;
-        }
+        if (!stationName?.trim()) return;
         const requestBody = isEditMode ? {
             id:station.id,
             latitude:'0',

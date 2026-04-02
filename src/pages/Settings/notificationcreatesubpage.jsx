@@ -40,6 +40,8 @@ const validateEmail = (email) => {
 
 
   const handleAddNotification = async () => {
+
+    if(!nameNotifi?.trim() || !description?.trim() || !eventPathSel || !shortMessage?.trim() || !email?.trim() || !textMessage?.trim() || !eventNotifiSel) return;
     
     const requestBody = isEditMode ? {
         description: description,

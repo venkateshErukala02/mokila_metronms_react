@@ -69,10 +69,7 @@ const [showSuccessMessage,setShowScuccessMessage] = useState('');
 
 
     const handleAddSection = async () => {
-        if (!sectionName) {
-            alert("Please select a file first.");
-            return;
-        }
+        if (!sectionName?.trim()) return;
         const requestBody = isEditMode ? {
             id: section.id,
             name: sectionName,

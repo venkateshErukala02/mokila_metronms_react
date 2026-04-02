@@ -149,6 +149,12 @@ const ServerConfigContainer = () => {
 
        const handleAddServerConfig = async (user) => {
        
+        if(!serverAddress?.trim()) return;
+        if (userFtp) {
+            if (!username?.trim() || !password?.trim()) {
+                return;
+            }
+        }
         const method = 'POST';
         // const url= isEditMode  ? `rest/users/${user["user-id"]}` :'rest/users';
         const requestBody ={
@@ -198,6 +204,7 @@ const ServerConfigContainer = () => {
     }
 
      const handleAddEmailConfig = async (user) => {
+        if(!hostName?.trim() || !fromAddress?.trim() || !smptPort?.trim() || !authUser?.trim() || !authUserPswd?.trim()) return;
        
         const method = 'POST';
         const requestBody ={
