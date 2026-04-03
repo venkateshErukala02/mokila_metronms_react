@@ -4,12 +4,12 @@ import './../Settings/settings.css';
 import { useSelector } from "react-redux";
  
 
-const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddTarget,handleAddEscalationTarget,selectedAddUsers,escalations,handleEditDestination,editMode,name,initialDelayProp})=>{
+const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddTarget,handleAddEscalationTarget,selectedAddUsers,escalations,handleEditDestination,editMode,name,initialDelayProp,targetInitialDelayAddEss,targetInitialDelay})=>{
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [path,setPath] = useState('');
-    const [initialDelay,setInitialDelay] = useState('');
+    const [initialDelay,setInitialDelay] = useState("0s");
     const [localName,setLocalName] = useState("");
     const currentUser = useSelector((state) => state?.loginuser?.node?.role);
     const [showAddedSuccessPopup, setShowAddedSuccessPopup] = useState(false);
@@ -96,12 +96,12 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
         }
 
         return {
-            delay: esc.delay || "0s",
+            delay: targetInitialDelayAddEss,
             targets
         };
     });
 
-    const initialDelay = selectedAddUsers.map(user => ({
+    const initialDelayTarget = selectedAddUsers.map(user => ({
         autoNotify: "on",
         interval: "0s",
         name: user,
@@ -113,8 +113,8 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
 
         // }: {
             escalations: escalationTargets,
-            initialDelay:"0s",
-            initialTargets: initialDelay,
+            initialDelay:initialDelay,
+            initialTargets: initialDelayTarget,
             name: localName,
             
         };

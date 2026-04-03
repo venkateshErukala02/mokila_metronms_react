@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import '../ornms.css'
 import './../Events/events.css';
+import DatePicker from "react-datepicker";
+import 'react-datepicker/dist/react-datepicker.css';
 
 
 const EventMainTB = () => {
@@ -29,6 +31,14 @@ const EventMainTB = () => {
     const [eventpopupData,setEventpopupData] = useState([]);
     const popupRef = useRef(null);
     const [date, setDate] = useState(null);
+
+    const [showCustomPopup, setShowCustomPopup] = useState(false);
+  const [customStartDate, setCustomStartDate] = useState(null);
+  const [customEndDate, setCustomEndDate] = useState(null);
+
+  const handleCustomSubmit = () => {
+    setShowCustomPopup(false);
+  };
 
 
     useEffect(() => {
@@ -233,8 +243,15 @@ const EventMainTB = () => {
 
 
     const handleMainEventTimestamp = (event) => {
+        const customvalue = event.target.value;
         const value = parseInt(event.target.value);
         setSelectedDuration(value);
+
+         if (customvalue === 'custom') {
+            setShowCustomPopup(true);
+            } else {
+            setShowCustomPopup(false);
+            }
     };
 
 
@@ -567,6 +584,7 @@ const EventMainTB = () => {
                                 <option value="28800000" label="8 hours">8 hours</option>
                                 <option value="86400000" label="24 hours">24 hours</option>
                                 <option value="172800000" label="48 hours">48 hours</option>
+                                <option value="custom" label="custom">Custom</option>
                             </select>
 
                             <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
@@ -592,6 +610,7 @@ const EventMainTB = () => {
                                 <option value="28800000" label="8 hours">8 hours</option>
                                 <option value="86400000" label="24 hours">24 hours</option>
                                 <option value="172800000" label="48 hours">48 hours</option>
+                                <option value="custom" label="custom">Custom</option>
                             </select>
 
                             <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
@@ -605,6 +624,13 @@ const EventMainTB = () => {
                     </article>
                 </article>
             </article>
+
+        {/* {isLoading && (
+        <div className="loader-container">
+            <div className="loader"></div>
+            <p>Loading...</p>
+        </div>
+        )} */}
             {typevalueSel !== 'auditlog' ? (
                 <article className="eventmaintable">
                     <article className="row">
@@ -778,6 +804,55 @@ const EventMainTB = () => {
                     <button type="button" className="cllbtn" onClick={toggleDropdown}>Close</button>
                 </div>
                     </article> */}
+
+                    {showCustomPopup && (
+                        <article className="confirmdeletepopup">
+                            <article className="">
+                <article className="custom-popup popupStyledate">
+                <h4 className="customheadtitle">Select Custom Range</h4>
+              <div className="row">
+                <div className="col-6" style={{ marginBottom: '8px' }}>
+                    <label htmlFor="startDate" className="settinglabelsub">
+                    Start:
+                    </label>
+                    <DatePicker
+                    id="startDate"
+                    selected={customStartDate}
+                    onChange={(date) => setCustomStartDate(date)}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={15}
+                    dateFormat="yyyy-MM-dd HH:mm"
+                    placeholderText="Select start date"
+                    className="myDatepickercl"
+                    />
+                </div>
+
+                <div className="col-6" style={{ marginBottom: '8px' }}>
+                    <label htmlFor="endDate" className="settinglabelsub">
+                    End:
+                    </label>
+                    <DatePicker
+                    id="endDate"
+                    selected={customEndDate}
+                    onChange={(date) => setCustomEndDate(date)}
+                    minDate={customStartDate}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={15}
+                    dateFormat="yyyy-MM-dd HH:mm"
+                    placeholderText="Select end date"
+                    className="myDatepickercl"
+                    />
+                </div>
+                </div>
+                <article className="f-r">
+                <button className="createbtn" onClick={handleCustomSubmit}>Submit</button>
+                </article>
+                </article>
+                </article>
+                </article>
+            )}
         </>
     )
 }

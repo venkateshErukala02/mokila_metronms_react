@@ -4,12 +4,17 @@ import logo from '../../assets/img/keywestlogo.png'
 import {  useDispatch } from 'react-redux';
 import { handleLoginUserData, toggleVisibility } from '../Action/action';
 import '../Navbar/navbarpage.css';
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
         const [userData, setUserData] = useState({});
         const [isLoading, setIsLoading] = useState(false)
         const [isError, setIsError] = useState({ status: false, msg: "" }) 
         const [userLoginData,setUserLoginData] = useState([])
+        const navigate = useNavigate();
+
+        let triggerCount = 12;
+
         const getData = async () => {
             setIsLoading(true);
             setIsError({ status: false, msg: "" })
@@ -41,6 +46,13 @@ const Navbar = () => {
                 }
     
             } catch (error) {
+                if(error.name === 'TypeError'){
+                    if(triggerCount === 0){
+                        window.location.href = 'login.jsp';
+                    }else{
+                        triggerCount--; 
+                    }
+                }
                 setIsLoading(false)
                 setIsError({ status: true, msg: error.message })
             }
@@ -132,7 +144,7 @@ const Navbar = () => {
                         <h6>{userLoginData.currentUser}</h6>
                     </li>
                     <li>
-                        <a href="login.jsp">
+                        <a href="j_spring_security_logout">
                     <i className="fa fa-sign-out fa-2x accentColor"></i>
                     </a>
                     </li>
