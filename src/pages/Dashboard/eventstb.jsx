@@ -26,6 +26,9 @@ const Tableone = () => {
     const getDataEvents = async (url) => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 45000); 
+
         try {
 
             const username = 'admin';
@@ -36,10 +39,11 @@ const Tableone = () => {
                 headers: {
                     'Authorization': `Basic ${token}`,
                     'Accept': 'application/json'
-                }
+                },
+                signal: controller.signal
             };
             const response = await fetch(url, options);
-
+                clearTimeout(timeoutId);
             if (response.status === 204) {
                 setIsLoading(false);
                 setEventData([]); 
@@ -56,8 +60,13 @@ const Tableone = () => {
                 throw new Error("Data not found");
             }
         } catch (error) {
+            clearTimeout(timeoutId);
+            if (error.name === "AbortError") {
+                setIsError({ status: true, msg: "API request timed out after 45 seconds" });
+            } else {
+                setIsError({ status: true, msg: error.message });
+            }
             setIsLoading(false);
-            setIsError({ status: true, msg: error.message });
         }
     };
 
@@ -79,7 +88,7 @@ const Tableone = () => {
 
         fetchData();
 
-        const intervalId  = setInterval(fetchData,30000);
+        const intervalId  = setInterval(fetchData,50000);
 
         return ()=> clearInterval(intervalId); 
 

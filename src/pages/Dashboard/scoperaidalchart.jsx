@@ -18,6 +18,8 @@ const BsChart = ({ getDataStatus }) => {
   const getData = async () => {
     setIsLoading(true);
     setIsError({ status: false, msg: "" });
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 25000);
     try {
       const username = 'admin';
       const password = 'admin';
@@ -30,9 +32,11 @@ const BsChart = ({ getDataStatus }) => {
           'Authorization': `Basic ${token}`,
           'Accept': 'application/json',
           'Content-Type': 'application/json'
-        }
+        },
+        signal: controller.signal
       };
       const response = await fetch(url, options);
+      clearTimeout(timeoutId);
       const data = await response.json();
       if (response.ok) {
         setIsLoading(false);
@@ -42,8 +46,13 @@ const BsChart = ({ getDataStatus }) => {
         throw new Error("data not found");
       }
     } catch (error) {
+      clearTimeout(timeoutId);
+      if (error.name === "AbortError") {
+          setIsError({ status: true, msg: "API timed out after 25 seconds" });
+        } else {
+          setIsError({ status: true, msg: error.message });
+        }
       setIsLoading(false);
-      setIsError({ status: true, msg: error.message });
     }
   };
 

@@ -35,13 +35,22 @@ const GdChart = ({ getDataStatus }) => {
           },
         }
       );
+      
+        const timeoutId = setTimeout(() => {
+          eventSource.close();
+          setIsLoading(false);
+          setIsError({ status: true, msg: "Connection timed out after 25 seconds" });
+        }, 25000);
 
       eventSource.onmessage = (event) => {
+        clearTimeout(timeoutId);
         const data = JSON.parse(event.data);
         setUserDatapie(data);
         setIsLoading(false);
+        eventSource.close();
       };
       eventSource.onerror = (error) => {
+        clearTimeout(timeoutId);
         setIsLoading(false);
         setIsError({ status: true, msg: "Error fetching data" });
         eventSource.close(); 

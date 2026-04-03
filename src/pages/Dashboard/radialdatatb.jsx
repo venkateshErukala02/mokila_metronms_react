@@ -70,6 +70,8 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
             setIsLoading(true);
             }
         setIsError({ status: false, msg: "" });
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 35000);
         try {
             const username = 'admin';
             const password = 'admin';
@@ -78,10 +80,11 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
                 method: "GET",
                 headers: {
                     'Authorization': `Basic ${token}`
-                }
-
+                },
+                signal: controller.signal 
             };
             const response = await fetch(url, options);
+            clearTimeout(timeoutId);
             const data = await response.json();
             if (response.ok) {
                 setRdData(data.nodes || []);
@@ -90,8 +93,13 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
                 throw new Error("data not found");
             }
         } catch (error) {
+            clearTimeout(timeoutId);
+             if (error.name === "AbortError") {
+                setIsError({ status: true, msg: "API timed out after 35 seconds" });
+                } else {
+                    setIsError({ status: true, msg: error.message });
+                }
             setIsLoading(false);
-            setIsError({ status: true, msg: error.message });
         }finally {
             if (firstLoadRef.current) {
             setIsLoading(false);
@@ -209,7 +217,7 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
     }
         fetchData();
 
-        const intervalId = setInterval(fetchData,30000);
+        const intervalId = setInterval(fetchData,40000);
 
         return ()=> clearInterval(intervalId);
 
