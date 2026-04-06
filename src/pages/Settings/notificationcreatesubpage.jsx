@@ -23,7 +23,8 @@ const NotificationCreateSubCont=({handleSubContainer,notification,mode,notificat
  const [isLoading, setIsLoading] = useState(false);
  const [isError, setIsError] = useState({ status: false, msg: "" });
                                  
-    const handleProfileContclose=()=>{
+    const handleProfileContclose=(e)=>{
+          e.preventDefault(); 
         handleSubContainer()
     }
 const handleEventNotiSel=(e)=>{
@@ -39,7 +40,8 @@ const validateEmail = (email) => {
   }
 
 
-  const handleAddNotification = async () => {
+  const handleAddNotification = async (e) => {
+      e.preventDefault(); 
 
     if(!nameNotifi?.trim() || !description?.trim() || !eventPathSel || !shortMessage?.trim() || !email?.trim() || !textMessage?.trim() || !eventNotifiSel) return;
     

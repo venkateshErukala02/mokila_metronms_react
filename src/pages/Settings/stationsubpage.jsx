@@ -22,7 +22,8 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
             const [stationCode,setStationCode] = useState('');
             const [showAddedSuccessPopup, setShowAddedSuccessPopup] = useState(false);
             const [showSuccessMessage,setShowScuccessMessage] = useState('');
-    const handleProfileContclose=()=>{
+    const handleProfileContclose=(e)=>{
+          e.preventDefault(); 
         handleSubContainer();
         setStationName('');
         setLinenameSel('');
@@ -196,7 +197,8 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
     }
 
 
-    const handleAddStation = async () => {
+    const handleAddStation = async (e) => {
+          e.preventDefault(); 
         if (!stationName?.trim()) return;
         const requestBody = isEditMode ? {
             id:station.id,

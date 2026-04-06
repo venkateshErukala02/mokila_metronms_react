@@ -16,12 +16,14 @@ const LineSubCont = ({ handleSubContainer,refreshLineData,mode,line }) => {
     const [showSuccessMessage,setShowScuccessMessage] = useState('');
 
 
-    const handleProfileContclose = () => {
+    const handleProfileContclose = (e) => {
+          e.preventDefault(); 
         handleSubContainer(lineName);
         setLineName('');
     }
 
-    const handleAddLine = async () => {
+    const handleAddLine = async (e) => {
+          e.preventDefault(); 
           if (!lineName?.trim() ) return;
         const requestBody = isEditMode ? {
             id: line.id,

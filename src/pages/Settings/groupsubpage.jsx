@@ -19,7 +19,8 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
     const [showSuccessMessage,setShowScuccessMessage] = useState('');
 
 
-    const handleProfileContclose=()=>{
+    const handleProfileContclose=(e)=>{
+          e.preventDefault(); 
         handleSubContainer()
     }
 
@@ -41,7 +42,8 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
         };
 
 
-         const handleAddGroup = async () => {
+         const handleAddGroup = async (e) => {
+              e.preventDefault(); 
             if(!groupName?.trim()  || !selectedUsers) return;
 
         const requestBody = isEditMode ? {

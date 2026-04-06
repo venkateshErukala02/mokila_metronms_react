@@ -23,7 +23,8 @@ const ThresholdSubCont = ({ handleSubContainer, refreshThresholdData,threshold,m
 
 //    const url='api/v2/threshold/update/threshold/0';
 
-   const handleAddThreshold = async () => {
+   const handleAddThreshold = async (e) => {
+      e.preventDefault(); 
     if(!threshdRearm?.trim()  || !threshdValue?.trim()  || !threshdTrigger?.trim() ) return;
     
     const requestBody = {
@@ -78,7 +79,8 @@ const ThresholdSubCont = ({ handleSubContainer, refreshThresholdData,threshold,m
 }
 
 
-    const handleProfileContclose = () => {
+    const handleProfileContclose = (e) => {
+          e.preventDefault(); 
         handleSubContainer()
     }
   

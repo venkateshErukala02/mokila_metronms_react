@@ -37,7 +37,8 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
       
 
 
-    const handleProfileContclose = () => {
+    const handleProfileContclose = (e) => {
+          e.preventDefault(); 
         handleSubContainer()
     }
 
@@ -129,7 +130,8 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
       
       
 
-    const handleAddUser = async () => {
+    const handleAddUser = async (e) => {
+          e.preventDefault(); 
         if (!userName?.trim() || !password?.trim()  || !lineNameSele || !email?.trim()  || !role) return;
 
         const xmlpostPayload = buildpostXMLPayload();
@@ -362,7 +364,7 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
                                 </ul>
                                 <hr className="hrnote" />
                                 <center className="d-f">
-                                    <button className="cancelbtn">Cancel</button>
+                                    <button className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
                                     <button type="button"  disabled={!!emailError || currentUser === "Read-only" } onClick={handleAddUser}
                                     className={`creatsetingbtn ${
                                         currentUser === "Read-only" ? "btndisable" : ""

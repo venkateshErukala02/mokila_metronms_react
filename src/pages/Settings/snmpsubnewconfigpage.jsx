@@ -32,7 +32,8 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
             const [snmpVersLabelSel, setSnmpVersLabelSel] =  useState('SNMPv1-v2c');
     
 
-    const handleProfileNewconfigContclose=()=>{
+    const handleProfileNewconfigContclose=(e)=>{
+          e.preventDefault(); 
         handleSubNewconfigContainer()
     }
 
@@ -72,7 +73,8 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
     setPrivacyProtocolLabel(e.target.options[e.target.selectedIndex].text);
   }
 
-  const handleAddSnmpConfig = async () => {
+  const handleAddSnmpConfig = async (e) => {
+      e.preventDefault(); 
      if (snmpVersValueSel === 'v2c') {
         if (!beginIp?.trim() || !readCommunity?.trim() || !writeCommunity?.trim()) return;
     } else {

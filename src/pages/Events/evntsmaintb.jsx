@@ -35,9 +35,37 @@ const EventMainTB = () => {
     const [showCustomPopup, setShowCustomPopup] = useState(false);
   const [customStartDate, setCustomStartDate] = useState(null);
   const [customEndDate, setCustomEndDate] = useState(null);
+  const [reportUrl, setReportUrl] = useState('');
 
   const handleCustomSubmit = () => {
     setShowCustomPopup(false);
+    if (!customStartDate || !customEndDate) {
+            alert("Please select both start and end dates");
+            return;
+        }
+
+        if (customEndDate <= customStartDate) {
+            alert("End date must be greater than start date");
+            return;
+        }
+
+        const startTimestamp = customStartDate.getTime(); // ms
+        const endTimestamp = customEndDate.getTime();  
+         let filterParts = [
+            "eventDisplay==Y",
+            typevalueSel === 'events' ? "eventSource!=syslogd" : 'eventSource==syslogd'
+            ];
+
+            if (eventmainSeverityValueSel) {
+            filterParts.push(`eventSeverity==${eventmainSeverityValueSel}`);
+            }
+
+        const filterString = filterParts.join(";");
+
+        let url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dlt%3D${startTimestamp};eventCreateTime%3Dgt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`
+        setReportUrl(url); 
+        getDataEvntMain(url);
+
   };
 
 
@@ -61,6 +89,7 @@ const EventMainTB = () => {
 
 
     const getDataEvntMain = async (url) => {
+        setReportUrl(url);
        if(eventipText === ''){
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
@@ -105,12 +134,17 @@ const EventMainTB = () => {
         } catch (error) {
             setIsLoading(false);
             setIsError({ status: true, msg: error.message });
+        }finally {
+            setCustomStartDate(null);
+            setCustomEndDate(null);
+            setIsLoading(false);
         }
     }
     };
 
 
     useEffect(() => {
+        if (selectedDuration == null || selectedDuration === '' || isNaN(selectedDuration)) return;
         const newTimestamp = Date.now() - selectedDuration;
         setEventtimeSel(newTimestamp);
     }, [selectedDuration]);
@@ -244,14 +278,24 @@ const EventMainTB = () => {
 
     const handleMainEventTimestamp = (event) => {
         const customvalue = event.target.value;
-        const value = parseInt(event.target.value);
-        setSelectedDuration(value);
 
-         if (customvalue === 'custom') {
-            setShowCustomPopup(true);
-            } else {
-            setShowCustomPopup(false);
-            }
+
+    if (customvalue === "custom") {
+        setSelectedDuration("custom");   // keep as string
+        setShowCustomPopup(true);        // optional
+    } else {
+        const value = parseInt(customvalue); // convert only numbers
+        setSelectedDuration(value);
+        setShowCustomPopup(false);       // optional
+    }
+        // const value = parseInt(event.target.value);
+        // setSelectedDuration(value);
+
+        //  if (customvalue === 'custom') {
+        //     setShowCustomPopup(true);
+        //     } else {
+        //     setShowCustomPopup(false);
+        //     }
     };
 
 
@@ -366,6 +410,9 @@ const EventMainTB = () => {
 
 
       const handleRadialIPa = async (url) => {
+        setReportUrl(url);
+        console.log('joojojooo',reportUrl);
+        console.log('kkpkkpkp',url);
         if (!eventipText) {
             alert("Please enter a search term");
             return;
@@ -429,42 +476,40 @@ const EventMainTB = () => {
     }
 
 
-      const getReportData = async () => {
-            let effectiveDate;
+      const getReportData = async (reportUrl) => {
 
-            if (date === null) {
-                const sixHoursInMs = 6 * 60 * 60 * 1000;
-                const now = new Date();
-                effectiveDate = now.getTime() - sixHoursInMs;
-            } else {
-                const formatDate = new Date(date);
-                effectiveDate = formatDate.getTime();
-            }
-            let url= ''
+            // let url= ''
 
-              let filterParts = [
-            "eventDisplay==Y",
-            typevalueSel === 'events' ? "eventSource!=syslogd" : 'eventSource==syslogd'
-            ];
+            //   let filterParts = [
+            // "eventDisplay==Y",
+            // typevalueSel === 'events' ? "eventSource!=syslogd" : 'eventSource==syslogd'
+            // ];
 
-            if (eventmainSeverityValueSel) {
-            filterParts.push(`eventSeverity==${eventmainSeverityValueSel}`);
-            }
+            // if (eventmainSeverityValueSel) {
+            // filterParts.push(`eventSeverity==${eventmainSeverityValueSel}`);
+            // }
 
-            // const regex = /^192\.168\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-            if (eventipText) {
-            filterParts.push(`eventLogMsg==*${eventipText}*`);
-            }
-            const filterString = filterParts.join(";");
+            // // const regex = /^192\.168\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+            // if (eventipText) {
+            // filterParts.push(`eventLogMsg==*${eventipText}*`);
+            // }
+            // const filterString = filterParts.join(";");
 
-            if(typevalueSel === 'events'){
-                url = `api/v2/events/export?_s=${encodeURIComponent(filterString)}&eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
-            }else if(typevalueSel==='syslogd'){
-                url=`api/v2/events/export?_s=${encodeURIComponent(filterString)}&eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
-            }
+            // if(typevalueSel === 'events'){
+            //     url = `api/v2/events/export?_s=${encodeURIComponent(filterString)}&eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
+            // }else if(typevalueSel==='syslogd'){
+            //     url=`api/v2/events/export?_s=${encodeURIComponent(filterString)}&eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
+            // }
     
         try {
-            const response = await fetch(url, {
+
+            if (!reportUrl) {
+            console.error("URL is missing");
+            return;
+        }
+
+          const updatedUrl = reportUrl.replace("events/list?_s", "events/export?_s");
+            const response = await fetch(updatedUrl, {
                 method: "GET",
                 headers: {
                     // 'Authorization': `Basic ${token}`
@@ -509,6 +554,8 @@ const EventMainTB = () => {
         setPageSize(1);
     },[typevalueSel]);
 
+    
+
 
     return (
         <>
@@ -526,7 +573,7 @@ const EventMainTB = () => {
                         <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
                         <button type="button" className="createbtn" onClick={() => { handleRadialIP();}} >Search</button>
                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
-                        <button type="button" className="createbtn" onClick={getReportData} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}>  <i class="fa-solid fa-download"></i></button>
+                        <button type="button" className="createbtn"  onClick={() => getReportData(reportUrl)} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}>  <i class="fa-solid fa-download"></i></button>
 
                     </article>
                     <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
@@ -548,6 +595,9 @@ const EventMainTB = () => {
                              {/* <button type="button" style={{marginRight:'12px'}} className="createbtn" onClick={getReportData}>Report 
                                     <i className="fa fa-file-text" aria-hidden="true"></i>
                                 </button> */}
+                                 <button type="button" className="createbtn"   onClick={() => reportUrl && getReportData(reportUrl)}
+  disabled={!reportUrl}   style={{ marginRight: '7px'}}>  <i class="fa-solid fa-download"></i></button>     
+                    
 
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Type:</label>
 
@@ -606,11 +656,11 @@ const EventMainTB = () => {
                             </select>
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
                             <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
-                                <option value="3600000" label="Last hour">Last hour</option>
-                                <option value="28800000" label="8 hours">8 hours</option>
-                                <option value="86400000" label="24 hours">24 hours</option>
-                                <option value="172800000" label="48 hours">48 hours</option>
-                                <option value="custom" label="custom">Custom</option>
+                                <option value="3600000">Last hour</option>
+                                <option value="28800000">8 hours</option>
+                                <option value="86400000">24 hours</option>
+                                <option value="172800000">48 hours</option>
+                                <option value="custom">Custom</option>
                             </select>
 
                             <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">

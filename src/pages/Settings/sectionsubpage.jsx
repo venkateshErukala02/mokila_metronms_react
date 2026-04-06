@@ -21,7 +21,8 @@ const SectionSubCont=({handleSubContainer,refreshSectionData,mode,section})=>{
 const [showSuccessMessage,setShowScuccessMessage] = useState('');
 
 
-    const handleProfileContclose=()=>{
+    const handleProfileContclose=(e)=>{
+          e.preventDefault(); 
         handleSubContainer();
         setSectionName('');
         setLineNameSele('');
@@ -68,7 +69,8 @@ const [showSuccessMessage,setShowScuccessMessage] = useState('');
     },[])
 
 
-    const handleAddSection = async () => {
+    const handleAddSection = async (e) => {
+          e.preventDefault(); 
         if (!sectionName?.trim()) return;
         const requestBody = isEditMode ? {
             id: section.id,

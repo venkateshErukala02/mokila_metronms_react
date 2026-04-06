@@ -235,7 +235,8 @@ const NotificationContainer=()=>{
     const handleAddEscalationTarget=()=>{
         setAddEscaltPopup(true);
     }
-    const handleAddEscaltTargetClose=()=>{
+    const handleAddEscaltTargetClose=(e)=>{
+        e.preventDefault(); 
         setAddEscaltPopup(false);
     }
 
@@ -452,7 +453,8 @@ const NotificationContainer=()=>{
         };
 
 
-        const handleAddEscalation = () => {
+        const handleAddEscalation = (e) => {
+              e.preventDefault(); 
             if (selectedEscUsers.length === 0 && selectedEscGroups.length === 0) return;
 
             setEscalations(prev => [

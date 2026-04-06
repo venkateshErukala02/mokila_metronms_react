@@ -17,7 +17,8 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
     const [showDeletePopup, setShowDeletePopup] = useState(false);
     const [showDeleteSuccessPopup, setShowDeleteSuccessPopup] = useState(false);
 
-    const handleProfileContclose=()=>{
+    const handleProfileContclose=(e)=>{
+          e.preventDefault(); 
         handleSubContainer();
         setLocalName("");
         setInitialDelay("");
@@ -68,8 +69,8 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
 
 
 
-    const handleCreateDestinPath = async () => {
-
+    const handleCreateDestinPath = async (e) => {
+              e.preventDefault(); 
         const escalationTargets = escalations.map(esc => {
         const targets = [];
 
