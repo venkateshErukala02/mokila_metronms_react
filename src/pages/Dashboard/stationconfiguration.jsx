@@ -843,7 +843,7 @@ const handleSaveConfiguration = async () => {
                                                                                 </select>
                                                                                 </article>
                                                                                 </article>
-                                                                                <article className="form-row-config "><label for="" className="col-5 config-label">Preferred Channel</label><article className="col-sm-4 col-md-4 col-lg-4">
+                                                                                <article className="form-row-config "><label for="" className="col-5 config-label">Preferred Channel Bandwidth</label><article className="col-sm-4 col-md-4 col-lg-4">
                                                                                     <select
                                                                                         className="config-input"
                                                                                         value={configData?.bandwidth ?? ""}

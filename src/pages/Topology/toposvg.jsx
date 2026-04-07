@@ -643,39 +643,39 @@ useEffect(() => {
       currentLine= 'all'
     }
 
-      fetch(`api/v2//dashboard/linestatus/${currentLine}`, options)
+      fetch(`api/v2/wayside/stationstatus?time=3600`, options)
         .then((res) => res.json())
         .then((response) => {
-          // const linesData = response.lines;
-          // const stationsData = response.stations;
-          // const svgRoot = svgContainerRef.current;
+          const linesData = response.lines;
+          const stationsData = response.stations;
+          const svgRoot = svgContainerRef.current;
 
-          // if (!svgRoot) return;
+          if (!svgRoot) return;
 
-          // stationsData.forEach(( stationObj ) => {
-          //    const stationId = Object.keys(stationObj)[0];   
-          //   const stationStatus = stationObj[stationId];
-          //   const el = svgRoot.querySelector(`#${stationId}`);
-          //   if (el) {
-          //     el.setAttribute("fill", stationStatus === "down" ? "red" : "green");
-          //   }
-          // });
+          stationsData.forEach(( stationObj ) => {
+             const stationId = Object.keys(stationObj)[0];   
+            const stationStatus = stationObj[stationId];
+            const el = svgRoot.querySelector(`#${stationId}`);
+            if (el) {
+              el.setAttribute("fill", stationStatus === "down" ? "red" : "green");
+            }
+          });
 
-          // linesData.forEach(( lineObj ) => {
-          //   const lineId = Object.keys(lineObj)[0];     
-          //   const lineStatus = lineObj[lineId];
-          //   const el = svgRoot.querySelector(`[id='${lineId}']`);
-          //   if (el) {
-          //     el.setAttribute("stroke", lineStatus === "down" ? "red" : "#ffcb09");
-          //   }
-          // });
+          linesData.forEach(( lineObj ) => {
+            const lineId = Object.keys(lineObj)[0];     
+            const lineStatus = lineObj[lineId];
+            const el = svgRoot.querySelector(`[id='${lineId}']`);
+            if (el) {
+              el.setAttribute("stroke", lineStatus === "down" ? "red" : "#ffcb09");
+            }
+          });
 
-          const data = response.data;
-        const svgRoot = svgContainerRef.current;
-        const circles = svgContainerRef.current.querySelectorAll("circle");
-        if(svgRoot !== null){
-          svgRoot.classList.add("special-svg");
-        }
+        //   const data = response.data;
+        // const svgRoot = svgContainerRef.current;
+        // const circles = svgContainerRef.current.querySelectorAll("circle");
+        // if(svgRoot !== null){
+        //   svgRoot.classList.add("special-svg");
+        // }
 
         // circles.forEach((circle, index) => {
         // circle.addEventListener("click", () => {
@@ -692,14 +692,14 @@ useEffect(() => {
         //               }
         //             });
         // });
-        data.forEach(({ station, status }) => {
-          const el = svgRoot.querySelector(`#${station}`);
-          if (el && status === "down") {
-            el.setAttribute("fill", "red");
-          }else if(el && status === "up") {
-             el.setAttribute("fill", "green");
-          }
-        });
+        // data.forEach(({ station, status }) => {
+        //   const el = svgRoot.querySelector(`#${station}`);
+        //   if (el && status === "down") {
+        //     el.setAttribute("fill", "red");
+        //   }else if(el && status === "up") {
+        //      el.setAttribute("fill", "green");
+        //   }
+        // });
 
         });
   }, [svgContent,textName]);

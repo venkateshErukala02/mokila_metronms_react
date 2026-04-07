@@ -37,7 +37,12 @@ const EventMainTB = () => {
   const [customEndDate, setCustomEndDate] = useState(null);
   const [reportUrl, setReportUrl] = useState('');
 
-  const handleCustomSubmit = () => {
+  const handleClosepopup  = ()=>{
+    setShowCustomPopup(false);
+  }
+
+  const handleCustomSubmit = (e) => {
+      e.preventDefault(); 
     setShowCustomPopup(false);
     if (!customStartDate || !customEndDate) {
             alert("Please select both start and end dates");
@@ -859,7 +864,16 @@ const EventMainTB = () => {
                         <article className="confirmdeletepopup">
                             <article className="">
                 <article className="custom-popup popupStyledate">
+                    <article className="row">
+                        <article className="col-11">
                 <h4 className="customheadtitle">Select Custom Range</h4>
+                        </article>
+
+                        <article className="col-1">
+                               <span><i className="fa fa-close noticlose" onClick={handleClosepopup} role="button"></i></span>
+                        </article>
+                        
+                </article>
               <div className="row">
                 <div className="col-6" style={{ marginBottom: '8px' }}>
                     <label htmlFor="startDate" className="settinglabelsub">

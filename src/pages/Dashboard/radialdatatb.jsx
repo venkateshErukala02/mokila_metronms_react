@@ -319,6 +319,9 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
     // const count = useSelector(state => state.count);
 
     const handleRowClick = (node) => {
+           if (!node?.productCode) {
+                return;
+            }
         if (`${node.productCode}` === 'AP') {
             navigate('/SN-view')
             dispatch(handleNodeData(node))

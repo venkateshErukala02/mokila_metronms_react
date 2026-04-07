@@ -116,6 +116,8 @@ const Navbar = () => {
 
   
   return (
+    <>
+    <article>
     <section className="container-fluid">
         <article className="row navheader" id='landpage' style={{position:"relative"}}> 
             <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
@@ -153,7 +155,8 @@ const Navbar = () => {
             </article>
         </article>
     </section>
-    
+    </article>
+    </>
    
   );
 };
