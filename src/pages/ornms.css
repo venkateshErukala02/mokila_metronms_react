@@ -997,7 +997,7 @@ tbody.statustagtbbd>tr>td>a{
     border: 1px solid transparent;
 }
 
-.eventmaintable{height: 86vh;overflow-y: auto;border: 1px solid rgb(33 35 39 / 7%);margin-bottom: 12px;}
+.eventmaintable{height: 85vh;overflow-y: auto;border: 1px solid rgb(33 35 39 / 7%);margin-bottom: 12px;}
 
 
 .bouneventtable{height: 19vh;overflow-y: auto;border: 1px solid rgb(33 35 39 / 7%);margin-bottom: 12px;}
@@ -2182,7 +2182,7 @@ min-width: 205px;
     display: flex;
 }
 .summarytbscroll{
-    height: 50vh;
+    height: 58vh;
     margin: 0 0 5px 5px;
     overflow-y: auto;
     border-top: 0;
@@ -4555,6 +4555,10 @@ svg *:focus {
 .customheadtitle {
     font-size: 20px;
     padding: 15px 0px;
+}
+
+body {
+  overflow: auto;
 }
 
  /* width={700} height={240} */

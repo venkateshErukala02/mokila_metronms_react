@@ -71,6 +71,8 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
 
     const handleCreateDestinPath = async (e) => {
               e.preventDefault(); 
+              if(!escalationTargets || !initialDelayTarget || !localName?.trim()) return;
+    
         const escalationTargets = escalations.map(esc => {
         const targets = [];
 

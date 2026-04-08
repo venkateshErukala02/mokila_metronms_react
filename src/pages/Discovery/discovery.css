@@ -151,7 +151,7 @@ tbody.distbbdtwo>tr{border-bottom: 1px solid rgb(33 35 39 / 7%);}
     padding: 10px;
 }
 .specicont {
-    padding-bottom: 50px;
+    padding-bottom: 80px;
 }
 
 .ipaddlistone {
@@ -252,7 +252,7 @@ tbody.distbbdtwo>tr{border-bottom: 1px solid rgb(33 35 39 / 7%);}
 .specicontupload {
     margin: auto;
     max-width: 430px;
-    padding-bottom: 21px;
+    padding-bottom: 23px;
 }
 
 .disfilelabel, .filelabel {
@@ -342,7 +342,7 @@ button i.fa-paperclip {
     margin: 5px 0px 0px 5px;
 }
 .provscont {
-        padding: 88px 82px;
+        padding: 103px 82px;
 }
 
 .custom-row {

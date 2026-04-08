@@ -185,6 +185,7 @@ const FirmwareMngSubCont = ({ handleSubContainer, refreshLineData, mode, line })
                                     <button type="button" className="creatsetingbtn"
                                      onClick={() => setShowUploadPopup(true)}
                                     // onClick={handleUpload} 
+                                     disabled={!selectedFile}
                                     >
                                         {isEditMode ? 'Update' : 'Upload'}
                                     </button>

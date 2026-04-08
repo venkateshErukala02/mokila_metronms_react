@@ -1019,7 +1019,7 @@ useEffect(() => {
 
 return (
   <>
-  <article className="border-allsd" style={{textAlign:'center',paddingTop:'20px',paddingBottom:'20px'}}>
+  <article className="" style={{textAlign:'center',paddingTop:'0px',paddingBottom:'0px'}}>
     <div ref={svgContainerRef} dangerouslySetInnerHTML={{ __html: svgContent }} />
    </article>
    <article>

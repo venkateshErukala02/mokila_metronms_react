@@ -53,6 +53,8 @@ const InventRpt = () => {
     const [visibleColumns, setVisibleColumns] = useState(DEFAULT_COLUMNS);
     const firstLoadRef = useRef(true);
     const [showConfirmDeletePopupStatus,setShowConfirmDeletePopupStatus] = useState(false);
+    const [showRescanSuccessPopup,setShowRescanSuccessPopup] = useState(false);
+    const [showDeleteSuccessPopup,setShowDeleteSuccessPopup] = useState(false);
 
      const currentUser = useSelector((state) => state?.loginuser?.node?.role);
             const isReadOnly = currentUser === 'Read-only';
@@ -237,9 +239,10 @@ const InventRpt = () => {
             });
 
             if (response.ok) {
-                setSuccess("Node deleted successfully");
+                // setSuccess("Node deleted successfully");
                 // alert('Node deleted successfully');
-                setShowConfirmDeletePopupStatus(false);
+                setShowDeleteSuccessPopup(true);
+                // setShowConfirmDeletePopupStatus(false);
                 const updatedNodes = invenData.node.filter(node =>  !idsToDelete.includes(node.id));
                 setInvenData(prev => ({
                     ...prev,
@@ -248,6 +251,31 @@ const InventRpt = () => {
                 }));
                 setSelectedRows([]);
                 getDataInvety();
+            } else {
+                setIsError({ status: true, msg: "Error deleting node" });
+            }
+        } catch (error) {
+            setIsError({ status: true, msg: "An error occurred while deleting node." });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
+        const handleActionRescan = async (node) => {
+
+        try {
+            const response = await fetch("api/v2/nodes/rescanNode", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: node.id
+            });
+
+            if (response.ok) {
+                setShowRescanSuccessPopup(true);
+                
             } else {
                 setIsError({ status: true, msg: "Error deleting node" });
             }
@@ -563,7 +591,7 @@ const InventRpt = () => {
                         </article>
 
 
-                        <article className="row border-lr" style={{height:'80vh'}}>
+                        <article className="row border-lr" style={{height:'85vh',overflow:'clip auto'}}>
                             <table className="col-md-12" style={{ height: '0vh' }}>
                                 <thead className="inventthtb tableheadpostion">
                                      <tr>
@@ -659,7 +687,14 @@ const InventRpt = () => {
                                         )}
                                             </td>
                                             ))}
-                                            <td><i className="fa fa-sync"></i></td>
+                                            <td><i className="fa fa-sync"  onClick={currentUser !== 'Read-only' ? () => handleActionRescan(node) : undefined}
+                                                 style={{
+                                                cursor: isReadOnly ? "not-allowed" : "pointer" ,
+                                                opacity: isReadOnly ? 0.6 :1 
+                                            }}
+                                               title={isReadOnly ? "Permission required" :''}
+
+                                                ></i></td>
                                             <td><i className="fa fa-trash" onClick={currentUser !== 'Read-only' ? handleBulkDelete : undefined} 
                                             style={{
                                                 cursor: isReadOnly ? "not-allowed" : "pointer" ,
@@ -684,11 +719,51 @@ const InventRpt = () => {
                                 <h1 className="confirmdeletetitle">All the device data will be lost. Are you sure you want to delete the device?</h1>
                                 <article className="f-r">
                                 <button className="confirmdeletebtn" type="button" onClick={handleClosePopup}>NO</button>
-                                <button className="confirmdeletebtn confirmdeletebtnyes" type="button" onClick={handleConfirmDelete}>YES</button>
+                                <button className="confirmdeletebtn confirmdeletebtnyes" type="button" onClick={async () => { 
+                                    await handleConfirmDelete();
+                                    setShowConfirmDeletePopupStatus(false)}}>YES</button>
                                 </article>
                                 </article>
                             </article>
                             </>}
+                              {showRescanSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">Rescanning of the node initiated</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => {setShowRescanSuccessPopup(false);
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
+                                {showDeleteSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">Node deleted successfully.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => {setShowDeleteSuccessPopup(false);
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
                              {/* {showSuccessPopupStatus && <>
                              <article className="confirmmsgsuccess">
                                 <article className="confirmmsgsuccessboxstyle">

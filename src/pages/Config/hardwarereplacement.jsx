@@ -442,7 +442,7 @@ const HardwareReplacementContainer = () => {
                                          {showHardwareReplacementPopup && (
                                 <article className="confirmdeletepopup">
                                     <article className="confirmdeletepopupboxstyle">
-                                    <h1 className="confirmdeletetitle">Are you sure you want to HardWareReplacement?</h1>
+                                    <h1 className="confirmdeletetitle">Are you sure you want to update the configuration to the new device?</h1>
                                     <article className="f-r">
                                         <button
                                         className="confirmdeletebtn"
@@ -469,7 +469,7 @@ const HardwareReplacementContainer = () => {
                                     <article className="confirmsuccesspopupboxstyle">
                                         <article className="success-cont">
                                     <h1 className="confirmtitlesucess">Success</h1>
-                                    <p className="confirmtextsucess">The HardWareReplacement has been uploaded successfully.</p>
+                                    <p className="confirmtextsucess">The configuration upgrade has been initialed.</p>
                                     </article>
                                     <article style={{ textAlign: 'end' }}>
                                         <button
@@ -491,6 +491,7 @@ const HardwareReplacementContainer = () => {
                             <article style={{textAlign:'center'}}>                              
                                 <button className="searchfirmbtn" type="button"
                                 onClick={() => setShowHardwareReplacementPopup(true)}
+                                disabled={selectedItems.length === 0 && addedItems.length === 0}
                                 // onClick={handleHardwareReplacement}
                                 >Hardware Replacement</button>
                             </article>

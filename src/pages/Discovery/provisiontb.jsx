@@ -423,7 +423,7 @@ const ProvisionTb = ({ getProviContData }) => {
           </article>
         </article>
       </article>
-      <article className="row border-allsd" style={{ height: '50vh', margin: '0px 0px 5px 5px' }}>
+      <article className="row border-allsd" style={{ height: '58vh', margin: '0px 0px 5px 5px' }}>
       <article className="table-scroll-x">
         <table className="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12 responsive-table" style={{ height: '0vh' }}>
           <thead className="disctb">
