@@ -265,7 +265,7 @@ const StationTagsTable = ({ circleId, lineId,textName,selectedTab,rdDataRef}) =>
                                     displayData.length !== 0 && displayData.map((value, index) => (
                                      <tr key={index}>
                                         <td style={{padding:"4px 6px"}}>{value[0]?.tag || value?.tag}</td>
-                                        <td style={{padding:"4px 6px"}}>{value.direction}</td>
+                                        <td style={{padding:"4px 6px"}}>{value.line}</td>
                                         <td style={{padding:"4px 6px"}} className="">{value.position}</td>
                                         <td style={{padding:"4px 48px"}}>{value.status === 'down' ? (<i className="fa-solid fa-arrow-down" style={{color:"red"}}></i> ): (<i className="fa-solid fa-arrow-up" style={{color:"green"}}></i>)}</td>
                                         <td><i className="fa fa-trash" style={{cursor:'pointer'}}  onClick={()=>handleDeleteTag(value)}></i></td>

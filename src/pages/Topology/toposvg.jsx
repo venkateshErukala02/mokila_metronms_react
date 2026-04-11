@@ -617,8 +617,106 @@ useEffect(() => {
 
 
 
-  useLayoutEffect(() => {
+  // useLayoutEffect(() => {
+  //   if (!svgContent) return;
+  //   const fetchData = () => {
+  //   const username = 'admin';
+  //   const password = 'admin';
+  //   const token = btoa(`${username}:${password}`);
+  //   const options = {
+  //     method: "GET",
+  //     headers: {
+  //       // 'Authorization': `Basic ${token}`
+  //     }
+  //   };
+
+  //   let currentLine =''
+
+  //   if(textName?.text == 'line1'){
+  //       currentLine= 'all'
+  //   }else if(textName?.text == 'line4'){
+  //       currentLine='line4-sec1'
+  //   }else if(textName?.text == 'line1-sec1'){
+  //       currentLine='line1-sec1'
+  //   }else if(textName?.text == 'line1-sec2'){
+  //       currentLine='line1-sec2'
+  //   }else{
+  //     currentLine= 'all'
+  //   }
+
+  //     // fetch(`api/v2/wayside/stationstatus?time=3600`, options)
+  //       fetch(`api/v2//dashboard/linestatus/${currentLine}`, options)
+  //       .then((res) => res.json())
+  //       .then((response) => {
+  //       //   const linesData = response.lines;
+  //       //   const stationsData = response.stations;
+  //       //   const svgRoot = svgContainerRef.current;
+
+  //       //   if (!svgRoot) return;
+
+  //       //   stationsData.forEach(( stationObj ) => {
+  //       //      const stationId = Object.keys(stationObj)[0];   
+  //       //     const stationStatus = stationObj[stationId];
+  //       //     const el = svgRoot.querySelector(`#${stationId}`);
+  //       //     if (el) {
+  //       //       el.setAttribute("fill", stationStatus === "down" ? "red" : "green");
+  //       //     }
+  //       //   });
+
+  //       //   linesData.forEach(( lineObj ) => {
+  //       //     const lineId = Object.keys(lineObj)[0];     
+  //       //     const lineStatus = lineObj[lineId];
+  //       //     const el = svgRoot.querySelector(`[id='${lineId}']`);
+  //       //     if (el) {
+  //       //       el.setAttribute("stroke", lineStatus === "down" ? "red" : "#ffcb09");
+  //       //     }
+  //       //   });
+
+  //         const data = response;
+  //       const svgRoot = svgContainerRef.current;
+  //       const circles = svgContainerRef.current.querySelectorAll("circle");
+  //       if(svgRoot){
+  //         svgRoot.classList.add("special-svg");
+        
+
+  //       // circles.forEach((circle, index) => {
+  //       // circle.addEventListener("click", () => {
+  //       //               const circleId  = circle.getAttribute('id');
+  //       //               if(scopeValueSel ==='line1-sec1'){
+  //       //                 getCurrentId(scopeValueSel,circleId);
+          
+  //       //               }else if(scopeValueSel ==='line1-sec2'){
+  //       //                 getCurrentId(scopeValueSel,circleId);
+          
+  //       //               }else{
+  //       //                 getCurrentId(scopeValueSel,circleId);
+          
+  //       //               }
+  //       //             });
+  //       // });
+  //       Object.entries(data).forEach(([station, color]) => {
+  //         const el = svgRoot.querySelector(`#${station}`);
+  //         if (el) {
+  //           el.setAttribute("fill", color);
+  //         }
+  //       });
+  //     }
+
+  //       })
+  //       .catch((err) => console.error(err));
+  //     }
+
+  //     fetchData();
+
+  // const intervalId = setInterval(fetchData, 30000);
+
+  // return () => clearInterval(intervalId);
+
+  // }, [svgContent,textName]);
+
+   useLayoutEffect(() => {
     if (!svgContent) return;
+    const fetchData = () => {
     const username = 'admin';
     const password = 'admin';
     const token = btoa(`${username}:${password}`);
@@ -643,7 +741,8 @@ useEffect(() => {
       currentLine= 'all'
     }
 
-      fetch(`api/v2/wayside/stationstatus?time=3600`, options)
+      // fetch(`api/v2/wayside/stationstatus?time=10`, options)
+       fetch(`api/v2//dashboard/linestatus/${currentLine}?time=3600`, options)
         .then((res) => res.json())
         .then((response) => {
           const linesData = response.lines;
@@ -657,7 +756,7 @@ useEffect(() => {
             const stationStatus = stationObj[stationId];
             const el = svgRoot.querySelector(`#${stationId}`);
             if (el) {
-              el.setAttribute("fill", stationStatus === "down" ? "red" : "green");
+              el.setAttribute("fill", stationStatus);
             }
           });
 
@@ -666,7 +765,7 @@ useEffect(() => {
             const lineStatus = lineObj[lineId];
             const el = svgRoot.querySelector(`[id='${lineId}']`);
             if (el) {
-              el.setAttribute("stroke", lineStatus === "down" ? "red" : "#ffcb09");
+              el.setAttribute("stroke",lineStatus);
             }
           });
 
@@ -701,7 +800,16 @@ useEffect(() => {
         //   }
         // });
 
-        });
+        })
+        .catch((err) => console.error(err));
+      }
+
+      fetchData();
+
+  const intervalId = setInterval(fetchData, 30000);
+
+  return () => clearInterval(intervalId);
+  
   }, [svgContent,textName]);
 
 
