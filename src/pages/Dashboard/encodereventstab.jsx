@@ -4,15 +4,16 @@ import { useSelector } from "react-redux";
 import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css';
 import TranscoderEventLog from "./transcoderEventslog";
+import EncoderEventLog from "./encodereventlogs";
 
 
 const EncoderEventTab=()=>{
 
  const [eventmainData, setEventmainData] = useState([]);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
-    const [typevalueSel, setTypevalueSel] = useState('syslogd');
-    const [typelabelSel, setTypelabelSel] = useState('Syslogs');
-    // const [selectedDuration, setSelectedDuration] = useState(86400000); 
+    const [typevalueSel, setTypevalueSel] = useState('events');
+    const [typelabelSel, setTypelabelSel] = useState('Events');
+    const [selectedDuration, setSelectedDuration] = useState(86400000); 
     const [eventtimeSel, setEventtimeSel] = useState(Date.now() - 86400000);
     const [eventmainSeverityValueSel, setEventmainSeverityValueSel] = useState('-1');
     const [eventmainSeverityLabelSel, setEventmainSeverityLabelSel] = useState('All');
@@ -29,7 +30,6 @@ const EncoderEventTab=()=>{
       const [eventipText, setEventipText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
-     const [selectedDuration, setSelectedDuration] = useState("now-1h");
      const [isLastPage, setIsLastPage] = useState(false);
     const [showEventPopup,setShowEventPopup] = useState(false);
     const [eventpopupData,setEventpopupData] = useState([]);
@@ -45,6 +45,11 @@ const EncoderEventTab=()=>{
            }
          }, [nodeIpaddress]);
 
+    useEffect(() => {
+         const newTimestamp = Date.now() - selectedDuration;
+         setEventtimeSel(newTimestamp);
+     }, [selectedDuration]);
+
     const getDataEvntMain = async (url) => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
@@ -52,14 +57,17 @@ const EncoderEventTab=()=>{
             const username = 'admin';
             const password = 'admin';
             const token = btoa(`${username}:${password}`)
-           let options = {
-        method: "GET",
-        headers: {
-            'Authorization': `Basic ${token}`,
-            "Content-Type": "application/json",
-        },
-        };
+            const options = {
+                method: "GET",
+                headers: {
+                    'Authorization': `Basic ${token}`,
+                    "Content-Type": "application/json",
+                },
+
+            };
             const response = await fetch(url, options);
+
+
 
             if (response.status === 204) {
                 setIsLoading(false);
@@ -78,8 +86,6 @@ const EncoderEventTab=()=>{
                 normalized = data.audits || [];
             } else if (data.event) {
                 normalized = data.event;
-            }else if(typevalueSel === 'syslogd'){
-                normalized = data.events;
             }
 
             setEventmainData(normalized);
@@ -95,8 +101,10 @@ const EncoderEventTab=()=>{
     };
 
     useEffect(() => {
+         const fetchData = () => {
 
-         let effectiveDate;
+
+          let effectiveDate;
 
             if (date === null) {
                 const sixHoursInMs = 6 * 60 * 60 * 1000;
@@ -106,31 +114,44 @@ const EncoderEventTab=()=>{
                 const formatDate = new Date(date);
                 effectiveDate = formatDate.getTime();
             }
+
         let url = '';
+
+        let filterParts = [
+            "eventDisplay==Y",
+            typevalueSel === 'events' ? "eventSource!=syslogd" : 'eventSource==syslogd'
+            ];
+
+            if (eventmainSeverityValueSel) {
+            filterParts.push(`eventSeverity==${eventmainSeverityValueSel}`);
+            }
+            const filterString = filterParts.join(";");
 
         switch (typevalueSel) {
             case 'events':
-               url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&limit=50&offset=0`;
-                getDataEvntMain(url);
+                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitLabelSel}&offset=0`;
                 break;
 
             case 'syslogd':
-                // url='api/v2/essearch/search';
-                url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource%3D%3Dsyslogd;eventCreateTime%3Dgt%3D${effectiveDate}&limit=50&offset=0`;
-                getDataEvntMain(url);
+                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitLabelSel}&offset=0`;
 
                 break;
             case 'auditlog':
-                url = '/api/v2/audit/list?_s=&limit=50&offset=0&order=desc&orderBy=id';
-                getDataEvntMain(url);
+                url = `/api/v2/audit/list?_s=&limit=${eventmainLimitLabelSel}&offset=0&order=desc&orderBy=id`;
                 break;
 
             default:
-                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd&limit=50&offset=0`;
-                getDataEvntMain(url);
+                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd&limit=${eventmainLimitLabelSel}&offset=0`;
                 break;
         }
-    }, [typevalueSel,nodeDataId,selectedDuration,eventmainLimitLabelSel,fromValue,pageSize]);
+        getDataEvntMain(url);
+    }
+    fetchData();
+
+      const interval = setInterval(fetchData, 30000);
+    return () => clearInterval(interval);
+
+    }, [typevalueSel,nodeDataId,date,eventmainSeverityValueSel,eventtimeSel,eventmainLimitLabelSel]);
 
     const formatTime = (timestamp) => {
         const date = new Date(timestamp);
@@ -255,18 +276,47 @@ const EncoderEventTab=()=>{
                 setShowEventPopup(false);
             }
 
+            
+
     return (
         <>
          <article className="row">
+             <article className="border-tlr custom-row" style={{textAlign:'center'}}>
+
+      <label className="radiolabel" style={logsMode === 'LOGS' ? {fontWeight:700,color:'#495057',marginRight:'10px'}:{marginRight:'10px'}}>
+        <input
+          type="radio"
+          value="LOGS"
+          checked={logsMode === 'LOGS'}
+          onChange={handleChange}
+          className="radiobtn"
+        />
+        Logs
+      </label>
+
+      <label className="radiolabel" style={logsMode === 'EVENTS' ? {fontWeight:700,color:'#495057'}:{}}>
+        <input
+          type="radio"
+          value="EVENTS"
+          checked={logsMode === 'EVENTS'}
+          onChange={handleChange}
+          className="radiobtn"
+        />
+        Events
+      </label>
+         
+            </article>
+              {logsMode !== 'LOGS' ? ( 
                  <article className="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-            <article className="row border-tlr custom-row">
+               <article className="row border-tlr custom-row">
                 <article className="col-sm-4 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
                     <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block' }}>
-                        <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
+                        <button type="button" className="arrowlf">
                             <i className="fa-solid fa-arrow-left"></i>
                         </button>
-                        <button type="button" className="numcl"><span>{pageSize}</span></button>
-                        <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>         
+                        <button type="button" className="numcl"><span>1</span></button>
+                        <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+            
                     </article>
                     <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
                         <button type="button" className="arrowlf">
@@ -275,7 +325,7 @@ const EncoderEventTab=()=>{
                         <button type="button" className="numcl"><span>1</span></button>
                         <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
 
-                        <input type="text" style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="IP Address " id="" className="form-contltranscd-evnt" />
+                        <input type="text" style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="IP Address " id="" className="form-controlevents" />
                         <button type="button" className="createbtn">Search</button>
                     </article>
 
@@ -283,7 +333,7 @@ const EncoderEventTab=()=>{
                 <article className="col-sm-8 col-md-8 col-lg-8 col-xl-8 col-xxl-8">
                     <article style={{ float: 'right' }}>
                         <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block' }}>
-                            <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Type:</label>
+                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Type:</label>
 
                             <select name="name" id="name" value={typevalueSel} onChange={handleType} className="form-controll1" style={{ maxWidth: '93px' }}>
                                 <option value="events" label="Events">Events</option>
@@ -302,16 +352,30 @@ const EncoderEventTab=()=>{
                                 <option value="2" label="Cleared">Cleared</option>
                                 <option value="1" label="Indeterminate">Indeterminate</option>
                             </select>
+                            {/* <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
 
-                            <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
+                        <article className="trans-datepickerbg" style={{display:'inline-block'}}>
+                        <DatePicker
+                        selected={selectedDate}
+                        showTimeSelect
+                         className="myDatepickercl"
+                        dateFormat="yyyy-MM-dd HH:mm"
+                        onChange={(date) => setSelectedDate(date)} />
 
-
+                        </article>
+                         <button type="button" className="createbtn" style={{marginLeft:'10px'}} onClick={()=>{
+                        setDate(selectedDate)
+                    }
+                    }>Search</button> */}
+                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
                             <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
-                                <option value='now-1h' label="Last hour">Last hour</option>
-                                <option value="now-8h" label="8 hours">8 hours</option>
-                                <option value="now-1d" label="24 hours">24 hours</option>
-                                <option value="now-2d" label="48 hours">48 hours</option>
+                                <option value="3600000" label="Last hour">Last hour</option>
+                                <option value="28800000" label="8 hours">8 hours</option>
+                                <option value="86400000" label="24 hours">24 hours</option>
+                                <option value="172800000" label="48 hours">48 hours</option>
                             </select>
+                          
+
                             <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
                                 <option value="0" label="25">25</option>
                                 <option value="1" label="50">50</option>
@@ -325,17 +389,13 @@ const EncoderEventTab=()=>{
                             <select name="name" id="name" value={typevalueSel} onChange={handleType} className="form-controll1" style={{ maxWidth: '93px' }}>
                                 <option value="events" label="Events">Events</option>
                                 <option value="syslogd" label="Syslogs">Syslogs</option>
-                               
+                                <option value="auditlog" label="Audit Log">Audit Log</option>
                             </select>
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
-                            <article className="trans-datepickerbg" style={{display:'inline-block'}}>
-                            <DatePicker
-                            selected={date}
-                            showTimeSelect
-                            dateFormat="yyyy-MM-dd HH:mm"
-                            onChange={(date) => setDate(date)} />
-
-                            </article>
+                            <select name="name" id="name" className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
+                                <option value="24 hours">24 hours</option>
+                                <option value="saab">Disable</option>
+                            </select>
 
                             <select className="form-controll1" value={eventauditLimitValueSel} onChange={handleMainAuditLimitValue}  style={{ width: 'auto' }} aria-invalid="false">
                             <option value="0" label="25">25</option>
@@ -348,18 +408,18 @@ const EncoderEventTab=()=>{
                     </article>
                 </article>
             </article>
-            {typevalueSel === 'events' ? (
+            {typevalueSel !== 'auditlog' ? (
             <article className="eventmaintable">
                 <article className="row">
                     <table className="col-12">
-                        <thead className="stationeventsthtb">
+                        <thead className="tncodereventsthtb">
                             <tr>
                                 <th>Time</th>
                                 <th>Severity</th>
                                 <th>Message</th>
                             </tr>
                         </thead>
-                        <tbody className="stationeventstbdtb">
+                        <tbody className="tncodereventstbdtb">
                             {!isLoading && !isError.status && eventmainData.length === 0 && (
                                 <tr>
                                     <td colSpan="8" style={{ textAlign: "center" }}>
@@ -387,20 +447,23 @@ const EncoderEventTab=()=>{
             <article className="eventmaintable">
                 <article className="row">
                     <table className="col-12">
-                        <thead className="stationeventsthtb">
+                        <thead className="tncodereventsthtb">
                             <tr>
-                                <th>Time</th>
-                                <th>Severity</th>
-                                <th>Message</th>
+
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>User</th>
+                                <th>Log</th>
                             </tr>
                         </thead>
-                        <tbody className="stationeventstbdtb">
+                        <tbody className="tncodereventstbdtb">
                             {Array.isArray(eventmainData) && eventmainData.length > 0 ? (
                                 eventmainData.map((event) => (
                                     <tr key={event.id} onClick={()=>handleEventPopup(event)}>
-                                        <td>{formatTime(event.timestamp)}</td>
-                                        <td>{event.severity}</td>
-                                         <td>{event.message}</td>
+                                        <td>{event.date}</td>
+                                        <td>{event.type}</td>
+                                        <td>{event.user}</td>
+                                        <td>{event.log}</td>
                                     </tr>
                                 ))
                             ) : (
@@ -411,8 +474,13 @@ const EncoderEventTab=()=>{
                         </tbody>
                     </table>
                 </article>
-            </article>)}
+            </article>)} 
             </article>
+              ): ( <article className="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12" style={{padding:'0'}}>
+                <article className="border-tlr" style={{minHeight:'85vh',maxHeight:'86vh'}}>
+                    <EncoderEventLog currentTab='encoder'/>
+                </article>
+              </article>)}
             </article>
 
                   {showEventPopup  && <article className="eventpopupcont">

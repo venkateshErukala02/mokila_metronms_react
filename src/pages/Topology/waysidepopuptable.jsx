@@ -143,9 +143,10 @@ const WaysidePopupTable = ({ currentTagid }) => {
             <article className="row">
                 <article style={{ height: "306px" }}>
                     <h1 className="topoheading"> {rdData[0]?.tag }</h1>
+                    <article style={{ height: "57vh", overflowY: 'auto', overflowX: 'clip' }}>
                     <table className="col-12 border-allsd table-fixed" style={{ height: '0vh' }}>
 
-                        <thead className="tbtwo">
+                        <thead className="tbtwo tableheadpostion">
                              {rdData && rdData.length > 0 ? (
                                 rdData.map((node, index) => (
                                     <tr>
@@ -204,6 +205,7 @@ const WaysidePopupTable = ({ currentTagid }) => {
 
                         </tbody>
                     </table>
+                    </article>
                 </article>
             </article>
         </>

@@ -279,8 +279,8 @@ useEffect(() => {
                             {node.tag}
                         </td>
                         <td>{node.time}</td>
-                        <td>{node.stationName}</td>
                         <td>{node.position}</td>
+                        <td></td>
                         </tr>
                     ))}
                 </tbody>

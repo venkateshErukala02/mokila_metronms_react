@@ -67,7 +67,7 @@ const EventMainTB = () => {
 
         const filterString = filterParts.join(";");
 
-        let url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dlt%3D${startTimestamp};eventCreateTime%3Dgt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`
+        let url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`
         setReportUrl(url); 
         getDataEvntMain(url);
 
@@ -285,8 +285,8 @@ const EventMainTB = () => {
         const customvalue = event.target.value;
 
 
-    if (customvalue === "custom") {
-        setSelectedDuration("custom");   // keep as string
+    if (customvalue === "Custom") {
+        setSelectedDuration("Custom");   // keep as string
         setShowCustomPopup(true);        // optional
     } else {
         const value = parseInt(customvalue); // convert only numbers
@@ -600,7 +600,7 @@ const EventMainTB = () => {
                              {/* <button type="button" style={{marginRight:'12px'}} className="createbtn" onClick={getReportData}>Report 
                                     <i className="fa fa-file-text" aria-hidden="true"></i>
                                 </button> */}
-                                 <button type="button" className="createbtn"   onClick={() => reportUrl && getReportData(reportUrl)}
+                                 <button type="button" className="createbtn"   title="Export"  onClick={() => reportUrl && getReportData(reportUrl)}
   disabled={!reportUrl}   style={{ marginRight: '7px'}}>  <i class="fa-solid fa-download"></i></button>     
                     
 
@@ -639,7 +639,7 @@ const EventMainTB = () => {
                                 <option value="28800000" label="8 hours">8 hours</option>
                                 <option value="86400000" label="24 hours">24 hours</option>
                                 <option value="172800000" label="48 hours">48 hours</option>
-                                <option value="custom" label="custom">Custom</option>
+                                <option value="Custom" label="Custom">Custom</option>
                             </select>
 
                             <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
@@ -665,7 +665,7 @@ const EventMainTB = () => {
                                 <option value="28800000">8 hours</option>
                                 <option value="86400000">24 hours</option>
                                 <option value="172800000">48 hours</option>
-                                <option value="custom">Custom</option>
+                                <option value="Custom">Custom</option>
                             </select>
 
                             <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
@@ -887,7 +887,7 @@ const EventMainTB = () => {
                     timeFormat="HH:mm"
                     timeIntervals={15}
                     dateFormat="yyyy-MM-dd HH:mm"
-                    placeholderText="Select start date"
+                    placeholderText="Select Start Date"
                     className="myDatepickercl"
                     />
                 </div>
@@ -905,7 +905,7 @@ const EventMainTB = () => {
                     timeFormat="HH:mm"
                     timeIntervals={15}
                     dateFormat="yyyy-MM-dd HH:mm"
-                    placeholderText="Select end date"
+                    placeholderText="Select End Date"
                     className="myDatepickercl"
                     />
                 </div>
