@@ -4561,11 +4561,20 @@ body {
   overflow: auto;
 }
 
-.line-four-sec1-style {
-  text-align: center;
-  min-height: 403px;
-  max-height: 403px;
-  padding-top: 62px;
+
+.selectedlogdropdown{
+    background-color: initial;
+    border: 1px solid #dddfe2;
+    border-radius: 5px;
+    color: #1d2129;
+    font-family: system-ui;
+    margin-top: 0 !important;
+    min-height: 37px;
+    padding: 0 0 0 10px;
+    min-width: 244px;
+    max-width: 250px;
+    display: inline-block;
+    font-size: 12px;
 }
 
  /* width={700} height={240} */
