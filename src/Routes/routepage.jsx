@@ -33,7 +33,7 @@ const RoutesPage = () => {
             <Route path="/TR-view" element={<TrainNodeView />} />
             <Route path="/obc-view" element={<ObcNodeView />} />
             <Route path="/encoder-view" element={<EncoderNodeView />} />
-            <Route path="/iobox-view" element={<IoboxNodeView />} />
+            <Route path="/ioc-view" element={<IoboxNodeView />} />
             <Route path="/Discovery" element={<DiscovPag />} />
             <Route  path="/Topology" element={<TopoPg />} />
             <Route  path="/Wayside" element={<Wayside />} />

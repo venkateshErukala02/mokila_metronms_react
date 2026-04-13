@@ -24,6 +24,7 @@ import StationTagsTable from "../Wayside/stationtagstable";
 import YardSvgViewer from "./yardsvg";
 import MainlineView from "./mainlinetrainview";
 import { useLocation } from "react-router-dom";
+import LineNodeTableView from "./linetagNodetableview";
 
 
 const TopoPg = () => {
@@ -101,11 +102,11 @@ const [stationView,setStationView]= useState(true);
 const [trainLabelDiply,setTrainLabelDiply] = useState(false);
 const [trainId,setTrainId] = useState('');
 
-useEffect(()=>{
-    if (!stationNode) return;
-    // setTextName(stationNode);
-     goToStationView(stationNode);
-},[stationNode]);
+// useEffect(()=>{
+//     if (!stationNode) return;
+//     // setTextName(stationNode);
+//      goToStationView(stationNode);
+// },[stationNode]);
 
 useEffect(()=>{
         if (!circleId) return;
@@ -487,13 +488,13 @@ useEffect(() => {
      const renderTagView = (stationTagview, lineTagview) => {
         if (stationTagview) {
             return <>
-                <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview} stationNode={stationNode}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData}  yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg}/>
+                <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef}  setLineTagview={setLineTagview} stationNode={stationNode}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData}  yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg}/>
               <StationNodeTableView yardfacilitieData={yardfacilitieData}  textName={textName} rdDataRef={rdDataRef} stationNode={stationNode} />
             </>
         } else if (lineTagview) {
             return <>
-               <LineTagSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef}  setStationTagview={setStationTagview} setLineTagview={setLineTagview} stationNode={stationNode}/>
-              <StationNodeTableView yardfacilitieData={yardfacilitieData}  textName={textName} rdDataRef={rdDataRef} stationNode={stationNode} />
+               <LineTagSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef}  setLineTagview={setLineTagview} stationNode={stationNode}/>
+              <LineNodeTableView yardfacilitieData={yardfacilitieData}  textName={textName} rdDataRef={rdDataRef} stationNode={stationNode} />
             </>;
         } else {
             return null;
@@ -607,8 +608,8 @@ useEffect(() => {
     setTextName(prev.textName);
     setStationView(prev.stationView);
     setTimeLeft(30);
-    // setStationTagview(prev.stationTagview);
-    setStationTagview(false);
+    setStationTagview(prev.stationTagview);
+    // setStationTagview(false);
     setLineTagview(prev.lineTagview);
     setTrainView(prev.trainView);
     setSelectedTreeNodeId(prev.selectedTreeNodeId);
@@ -706,13 +707,13 @@ useEffect(() => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
-            const username = 'admin';
-            const password = 'admin';
-            const token = btoa(`${username}:${password}`)
+            // const username = 'admin';
+            // const password = 'admin';
+            // const token = btoa(`${username}:${password}`)
             const options = {
                 method: "GET",
                 headers: {
-                    'Authorization': `Basic ${token}`
+                    // 'Authorization': `Basic ${token}`
                 }
 
             };
@@ -805,6 +806,12 @@ useEffect(() => {
     const handleExpandedPrevTreeData=(data)=>{
         setExpandedTreeDt(data);
     }
+
+    const hasTagView = stationTagview || lineTagview;
+
+    const hasMode =
+  textName?.data &&
+  ['facility', 'Trains', 'mainline', 'yard'].includes(textName.data.mode);
 
     return (
         <article className="display-f">
@@ -902,7 +909,7 @@ useEffect(() => {
                             type="button"
                             onClick={() => setShowPopup(false)}
                             className="createbtn"
-                            style={{ marginTop: '20px', float: 'right' }}
+                            style={{ marginTop: '32px', float: 'right' }}
                             >
                             Close
                             </button>
@@ -1013,14 +1020,14 @@ useEffect(() => {
                     ) : (
                         (stationTagview || lineTagview) && renderTagView(stationTagview, lineTagview)
                     )} */}
-                    {stationTagview || lineTagview
+                    {hasTagView
                         ? renderTagView(stationTagview, lineTagview)
-                        : stationView && (
-                            textName?.data &&
-                            ['facility', 'Trains', 'mainline', 'yard'].includes(textName.data.mode)
+                        : stationView
+                           ? hasMode
                                 ? renderSectFacility(textName)
                                 : renderSectComponent(textName)
-                            )
+                                : null
+                            
                         }
 
 

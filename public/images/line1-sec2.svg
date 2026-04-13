@@ -1,77 +1,653 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="600px" height="403px" viewBox="0 0 600 403" enable-background="new 0 0 600 403" xml:space="preserve">
-<path fill="none" stroke="#FFCB09" stroke-width="14" stroke-linecap="round" stroke-miterlimit="10" d="M281.857,366.648
-	c0,0,26.665,2.68,28.88-26.633c2.162-28.634,0-307.074,0-307.074"/>
-<circle id="king" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="338.349" r="3.747">
-<title>King</title>
-</circle>
-<circle id="queen" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="321.702" r="3.747">
-<title>Queen</title>
-</circle>
-<circle id="dundas" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="304.39" r="3.747">
-<title>Dundas</title>
-</circle>
-<circle id="college" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="287.909" r="3.747">
-<title>College</title>
-</circle>
-<circle id="wellesley" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="270.43" r="3.747">
-<title>Wellesley</title>
-</circle>
-<circle id="bloor_yonge" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="243.601" r="3.747">
-<title>Bloor Yonge</title>
-</circle>
-<circle id="rosedale" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="219.627" r="3.747">
-<title>Rosedale</title>
-</circle>
-<circle id="st_clair" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="185.063" r="3.747">
-<title>St Clair</title>
-</circle>
-<circle id="davisville" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="167.958" r="3.747">
-<title>Davisville</title>
-</circle>
-<circle id="eglinton" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="151.577" r="3.747">
-<title>Eglinton</title>
-</circle>
-<circle id="lawrence" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="123.583" r="3.747">
-<title>Lawrence</title>
-</circle>
-<circle id="york_mills" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="96.004" r="3.747">
-<title>York Mills</title>
-</circle>
-<circle id="sheppard_yonge" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="74.306" r="3.747">
-<title>Sheppard Yonge</title>
-</circle>
-<circle id="north_york_centre" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="50.501" r="3.747">
-<title>North York Center</title>
-</circle>
-<circle id="finch" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="31.274" r="3.747">
-<title>Flinch</title>
-</circle>
-<circle id="summerhill" fill="#FFFFFF" stroke="#333333" stroke-linecap="round" stroke-miterlimit="10" cx="310.707" cy="202.584" r="3.747">
-<title>Summerhill</title>
-</circle>
 
-	<text id="king_txt" transform="matrix(1 0 0 1 332.8887 342.0967)" font-family="'MyriadPro-Regular'" font-size="12.9847">King</text>
-	<text id="queen_txt" transform="matrix(1 0 0 1 332.8887 324.4512)" font-family="'MyriadPro-Regular'" font-size="12.9847">Queen</text>
-	<text id="dundas_txt" transform="matrix(1 0 0 1 332.8887 307.7178)" font-family="'MyriadPro-Regular'" font-size="12.9847">Dundas</text>
-	<text id="collage_txt" transform="matrix(1 0 0 1 332.8887 289.6592)" font-family="'MyriadPro-Regular'" font-size="12.9847">College</text>
-	<text id="wellesley_txt" transform="matrix(1 0 0 1 332.8887 272.1797)" font-family="'MyriadPro-Regular'" font-size="12.9847">Wellesley</text>
-	<text id="rosedale_txt" transform="matrix(1 0 0 1 332.8887 223.377)" font-family="'MyriadPro-Regular'" font-size="12.9847">Rosedale</text>
-	<text id="st_clair_txt" transform="matrix(1 0 0 1 332.8887 188.8115)" font-family="'MyriadPro-Regular'" font-size="12.9847">St. Clair</text>
-	<text id="eglinton_txt" transform="matrix(1 0 0 1 332.8887 155.3262)" font-family="'MyriadPro-Regular'" font-size="12.9847">Eglinton</text>
-	<text id="york_mills_txt" transform="matrix(1 0 0 1 334.8887 99.9502)" font-family="'MyriadPro-Regular'" font-size="12.9847">York Mills</text>
-	<text id="finch_txt" transform="matrix(1 0 0 1 334.8896 35.0234)" font-family="'MyriadPro-Regular'" font-size="12.9847">Finch</text>
-	<text id="north_york_centre_txt" transform="matrix(1 0 0 1 180.1104 54.417)" font-family="'MyriadPro-Regular'" font-size="12.9847">North York Centre</text>
-	<text id="sheppard_yonge_txt" transform="matrix(1 0 0 1 190.0654 78.8936)" font-family="'MyriadPro-Regular'" font-size="12.9847">Sheppard Yonge</text>
+<svg
+   version="1.1"
+   id="Layer_1"
+   x="0px"
+   y="0px"
+   width="600px"
+   height="403px"
+   viewBox="0 0 600 403"
+   enable-background="new 0 0 600 403"
+   xml:space="preserve"
+   sodipodi:docname="line1-sec2.svg"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs71"><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath395"><rect
+       style="fill:#ffd42a"
+       id="rect397"
+       width="21.830452"
+       height="21.504948"
+       x="297.634"
+       y="329.49603" /></clipPath><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath403"><rect
+       style="fill:#ffd42a"
+       id="rect405"
+       width="16.953779"
+       height="16.826975"
+       x="297.634"
+       y="312.66907" /></clipPath><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath411"><rect
+       style="fill:#ffd42a"
+       id="rect413"
+       width="21.457975"
+       height="17.022533"
+       x="297.634"
+       y="295.64655" /></clipPath><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath765"><rect
+       style="fill:#ffd42a"
+       id="rect767"
+       width="21.353926"
+       height="19.985374"
+       x="296.71768"
+       y="329.87952" /></clipPath><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath773"><rect
+       style="fill:#ffd42a"
+       id="rect775"
+       width="21.99645"
+       height="17.347551"
+       x="296.71768"
+       y="312.53195" /></clipPath><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath781"><rect
+       style="fill:#ffd42a"
+       id="rect783"
+       width="22.201883"
+       height="17.058735"
+       x="296.71768"
+       y="295.47321" /></clipPath><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath789"><rect
+       style="fill:#ffd42a"
+       id="rect791"
+       width="20.188267"
+       height="16.893316"
+       x="296.71768"
+       y="278.5799" /></clipPath><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath801"><rect
+       style="fill:#ffd42a"
+       id="rect803"
+       width="23.307444"
+       height="23.167536"
+       x="296.71768"
+       y="255.41235" /></clipPath><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath835"><rect
+       style="fill:#ffd42a"
+       id="rect837"
+       width="23.307434"
+       height="16.893311"
+       x="296.71768"
+       y="278.5799" /></clipPath><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath845"><rect
+       style="fill:#ffd42a"
+       id="rect847"
+       width="22.671881"
+       height="25.098724"
+       x="296.71768"
+       y="230.31363" /></clipPath><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath855"><rect
+       style="fill:#ffd42a"
+       id="rect857"
+       width="22.099735"
+       height="20.120512"
+       x="296.71768"
+       y="210.19312" /></clipPath><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath865"><rect
+       style="fill:#ffd42a"
+       id="rect867"
+       width="22.216164"
+       height="16.877182"
+       x="296.71768"
+       y="193.31593" /></clipPath><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath873"><rect
+       style="fill:#ffd42a"
+       id="rect875"
+       width="22.291761"
+       height="17.242964"
+       x="296.71768"
+       y="176.07297" /></clipPath><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath881"><rect
+       style="fill:#ffd42a"
+       id="rect883"
+       width="21.453184"
+       height="16.499001"
+       x="296.71768"
+       y="159.57396" /></clipPath><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath891"><rect
+       style="fill:#ffd42a"
+       id="rect893"
+       width="21.132343"
+       height="21.562105"
+       x="296.71768"
+       y="138.01186" /></clipPath><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath899"><rect
+       style="fill:#ffd42a"
+       id="rect901"
+       width="22.32921"
+       height="28.425587"
+       x="296.71768"
+       y="109.58627" /></clipPath><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath907"><rect
+       style="fill:#ffd42a"
+       id="rect909"
+       width="22.355352"
+       height="25.330496"
+       x="296.71768"
+       y="84.255775" /></clipPath><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath915"><rect
+       style="fill:#ffd42a"
+       id="rect917"
+       width="22.394609"
+       height="22.566706"
+       x="296.71768"
+       y="61.689072" /></clipPath><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath923"><rect
+       style="fill:#ffd42a"
+       id="rect925"
+       width="21.526335"
+       height="20.409611"
+       x="296.71768"
+       y="41.279461" /></clipPath><clipPath
+     clipPathUnits="userSpaceOnUse"
+     id="clipPath931"><rect
+       style="fill:#ffd42a"
+       id="rect933"
+       width="22.59943"
+       height="15.913041"
+       x="296.71768"
+       y="25.366419" /></clipPath></defs><sodipodi:namedview
+   id="namedview69"
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1.0"
+   inkscape:pageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   showgrid="false"
+   inkscape:zoom="2.0942928"
+   inkscape:cx="291.984"
+   inkscape:cy="201.26126"
+   inkscape:window-width="1850"
+   inkscape:window-height="1016"
+   inkscape:window-x="70"
+   inkscape:window-y="27"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="layer2" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<path
+   fill="none"
+   stroke="#ffcb09"
+   stroke-width="14"
+   stroke-linecap="round"
+   stroke-miterlimit="10"
+   d="m 281.857,366.648 c 0,0 26.665,2.68 28.88,-26.633 2.162,-28.634 0,-307.074 0,-307.074"
+   id="path2"
+   style="display:inline" /><text
+   id="king_txt"
+   transform="matrix(1 0 0 1 332.8887 342.0967)"
+   font-family="'MyriadPro-Regular'"
+   font-size="12.9847">King</text>
+	<text
+   id="queen_txt"
+   transform="matrix(1 0 0 1 332.8887 324.4512)"
+   font-family="'MyriadPro-Regular'"
+   font-size="12.9847">Queen</text>
+	<text
+   id="dundas_txt"
+   transform="matrix(1 0 0 1 332.8887 307.7178)"
+   font-family="'MyriadPro-Regular'"
+   font-size="12.9847">Dundas</text>
+	<text
+   id="collage_txt"
+   transform="matrix(1 0 0 1 332.8887 289.6592)"
+   font-family="'MyriadPro-Regular'"
+   font-size="12.9847">College</text>
+	<text
+   id="wellesley_txt"
+   transform="matrix(1 0 0 1 332.8887 272.1797)"
+   font-family="'MyriadPro-Regular'"
+   font-size="12.9847">Wellesley</text>
+	<text
+   id="rosedale_txt"
+   transform="matrix(1 0 0 1 332.8887 223.377)"
+   font-family="'MyriadPro-Regular'"
+   font-size="12.9847">Rosedale</text>
+	<text
+   id="st_clair_txt"
+   transform="matrix(1 0 0 1 332.8887 188.8115)"
+   font-family="'MyriadPro-Regular'"
+   font-size="12.9847">St. Clair</text>
+	<text
+   id="eglinton_txt"
+   transform="matrix(1 0 0 1 332.8887 155.3262)"
+   font-family="'MyriadPro-Regular'"
+   font-size="12.9847">Eglinton</text>
+	<text
+   id="york_mills_txt"
+   transform="matrix(1 0 0 1 334.8887 99.9502)"
+   font-family="'MyriadPro-Regular'"
+   font-size="12.9847">York Mills</text>
+	<text
+   id="finch_txt"
+   transform="matrix(1 0 0 1 334.8896 35.0234)"
+   font-family="'MyriadPro-Regular'"
+   font-size="12.9847">Finch</text>
+	<text
+   id="north_york_centre_txt"
+   transform="matrix(1 0 0 1 180.1104 54.417)"
+   font-family="'MyriadPro-Regular'"
+   font-size="12.9847">North York Centre</text>
+	<text
+   id="sheppard_yonge_txt"
+   transform="matrix(1 0 0 1 190.0654 78.8936)"
+   font-family="'MyriadPro-Regular'"
+   font-size="12.9847">Sheppard Yonge</text>
 <!--
 	<text transform="matrix(1 0 0 1 263.1514 94.4756)" font-family="'MyriadPro-Regular'" font-size="12.9847">Yonge</text>
 -->
-	<text id="lawrence_txt" transform="matrix(1 0 0 1 230.3623 127.332)" font-family="'MyriadPro-Regular'" font-size="12.9847">Lawrence</text>
-	<text id="davisville_txt" transform="matrix(1 0 0 1 230.1289 172.2002)" font-family="'MyriadPro-Regular'" font-size="12.9847">Davisville</text>
-	<text id="summerhill_txt" transform="matrix(1 0 0 1 220.8838 207.334)" font-family="'MyriadPro-Regular'" font-size="12.9847">Summerhill</text>
-	<text id="bloor_yonge_txt" transform="matrix(1 0 0 1 220.1377 247.873)"  font-family="'MyriadPro-Regular'" font-size="12.9847">Bloor- Yonge</text>
+	<text
+   id="lawrence_txt"
+   transform="matrix(1 0 0 1 230.3623 127.332)"
+   font-family="'MyriadPro-Regular'"
+   font-size="12.9847">Lawrence</text>
+	<text
+   id="davisville_txt"
+   transform="matrix(1 0 0 1 230.1289 172.2002)"
+   font-family="'MyriadPro-Regular'"
+   font-size="12.9847">Davisville</text>
+	<text
+   id="summerhill_txt"
+   transform="matrix(1 0 0 1 220.8838 207.334)"
+   font-family="'MyriadPro-Regular'"
+   font-size="12.9847">Summerhill</text><text
+   id="bloor_yonge_txt"
+   transform="translate(220.1377,247.873)"
+   font-family="MyriadPro-Regular"
+   font-size="12.9847px"
+   style="display:inline">Bloor- Yonge</text><g
+   inkscape:groupmode="layer"
+   id="layer2"
+   inkscape:label="Tracks"
+   style="display:inline"><path
+     fill="none"
+     stroke="#ffcb09"
+     stroke-width="14"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     d="m 281.857,366.648 c 0,0 26.665,2.68 28.88,-26.633 2.162,-28.634 0,-307.074 0,-307.074"
+     id="KNG"
+     style="display:inline"
+     clip-path="url(#clipPath765)"
+     inkscape:label="KNG" /><path
+     fill="none"
+     stroke="#ffcb09"
+     stroke-width="14"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     d="m 281.857,366.648 c 0,0 26.665,2.68 28.88,-26.633 2.162,-28.634 0,-307.074 0,-307.074"
+     id="QUN"
+     style="display:inline"
+     clip-path="url(#clipPath773)"
+     inkscape:label="QUN" /><path
+     fill="none"
+     stroke="#ffcb09"
+     stroke-width="14"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     d="m 281.857,366.648 c 0,0 26.665,2.68 28.88,-26.633 2.162,-28.634 0,-307.074 0,-307.074"
+     id="DUN"
+     style="display:inline"
+     clip-path="url(#clipPath781)"
+     inkscape:label="DUN" /><path
+     fill="none"
+     stroke="#ffcb09"
+     stroke-width="14"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     d="m 281.857,366.648 c 0,0 26.665,2.68 28.88,-26.633 2.162,-28.634 0,-307.074 0,-307.074"
+     id="WEL"
+     style="display:inline"
+     clip-path="url(#clipPath801)"
+     inkscape:label="WEL" /><path
+     fill="none"
+     stroke="#ffcb09"
+     stroke-width="14"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     d="m 281.857,366.648 c 0,0 26.665,2.68 28.88,-26.633 2.162,-28.634 0,-307.074 0,-307.074"
+     id="COL"
+     style="display:inline"
+     clip-path="url(#clipPath835)"
+     inkscape:label="COL" /><path
+     fill="none"
+     stroke="#ffcb09"
+     stroke-width="14"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     d="m 281.857,366.648 c 0,0 26.665,2.68 28.88,-26.633 2.162,-28.634 0,-307.074 0,-307.074"
+     id="BLY"
+     style="display:inline"
+     clip-path="url(#clipPath845)"
+     inkscape:label="BLY" /><path
+     fill="none"
+     stroke="#ffcb09"
+     stroke-width="14"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     d="m 281.857,366.648 c 0,0 26.665,2.68 28.88,-26.633 2.162,-28.634 0,-307.074 0,-307.074"
+     id="RSD"
+     style="display:inline"
+     clip-path="url(#clipPath855)"
+     inkscape:label="RSD" /><path
+     fill="none"
+     stroke="#ffcb09"
+     stroke-width="14"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     d="m 281.857,366.648 c 0,0 26.665,2.68 28.88,-26.633 2.162,-28.634 0,-307.074 0,-307.074"
+     id="SMH"
+     style="display:inline"
+     clip-path="url(#clipPath865)"
+     inkscape:label="SMH" /><path
+     fill="none"
+     stroke="#ffcb09"
+     stroke-width="14"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     d="m 281.857,366.648 c 0,0 26.665,2.68 28.88,-26.633 2.162,-28.634 0,-307.074 0,-307.074"
+     id="STC"
+     style="display:inline"
+     clip-path="url(#clipPath873)"
+     inkscape:label="STC" /><path
+     fill="none"
+     stroke="#ffcb09"
+     stroke-width="14"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     d="m 281.857,366.648 c 0,0 26.665,2.68 28.88,-26.633 2.162,-28.634 0,-307.074 0,-307.074"
+     id="DAV"
+     style="display:inline"
+     clip-path="url(#clipPath881)"
+     inkscape:label="DAV" /><path
+     fill="none"
+     stroke="#ffcb09"
+     stroke-width="14"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     d="m 281.857,366.648 c 0,0 26.665,2.68 28.88,-26.633 2.162,-28.634 0,-307.074 0,-307.074"
+     id="EGN"
+     style="display:inline"
+     clip-path="url(#clipPath891)"
+     inkscape:label="EGN" /><path
+     fill="none"
+     stroke="#ffcb09"
+     stroke-width="14"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     d="m 281.857,366.648 c 0,0 26.665,2.68 28.88,-26.633 2.162,-28.634 0,-307.074 0,-307.074"
+     id="LAW"
+     style="display:inline"
+     clip-path="url(#clipPath899)"
+     inkscape:label="LAW" /><path
+     fill="none"
+     stroke="#ffcb09"
+     stroke-width="14"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     d="m 281.857,366.648 c 0,0 26.665,2.68 28.88,-26.633 2.162,-28.634 0,-307.074 0,-307.074"
+     id="YRM"
+     style="display:inline"
+     clip-path="url(#clipPath907)"
+     inkscape:label="YRM" /><path
+     fill="none"
+     stroke="#ffcb09"
+     stroke-width="14"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     d="m 281.857,366.648 c 0,0 26.665,2.68 28.88,-26.633 2.162,-28.634 0,-307.074 0,-307.074"
+     id="SHY"
+     style="display:inline"
+     clip-path="url(#clipPath915)"
+     inkscape:label="SHY" /><path
+     fill="none"
+     stroke="#ffcb09"
+     stroke-width="14"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     d="m 281.857,366.648 c 0,0 26.665,2.68 28.88,-26.633 2.162,-28.634 0,-307.074 0,-307.074"
+     id="NYC"
+     style="display:inline"
+     clip-path="url(#clipPath923)"
+     inkscape:label="NYC" /><path
+     fill="none"
+     stroke="#ffcb09"
+     stroke-width="14"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     d="m 281.857,366.648 c 0,0 26.665,2.68 28.88,-26.633 2.162,-28.634 0,-307.074 0,-307.074"
+     id="FNC"
+     style="display:inline"
+     clip-path="url(#clipPath931)"
+     inkscape:label="FNC" /></g>
+	
 
-</svg>
+<g
+   inkscape:groupmode="layer"
+   id="layer1"
+   inkscape:label="Dots"
+   style="display:inline"><circle
+     id="north_york_centre"
+     fill="#ffffff"
+     stroke="#333333"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     cx="310.707"
+     cy="50.500999"
+     r="3.747">
+<title
+   id="title43">North York Center</title>
+</circle><circle
+     id="college"
+     fill="#ffffff"
+     stroke="#333333"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     cx="310.707"
+     cy="287.909"
+     r="3.747">
+<title
+   id="title13">College</title>
+</circle><circle
+     id="bloor_yonge"
+     fill="#ffffff"
+     stroke="#333333"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     cx="310.707"
+     cy="243.601"
+     r="3.747">
+<title
+   id="title19">Bloor Yonge</title>
+</circle><circle
+     id="davisville"
+     fill="#ffffff"
+     stroke="#333333"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     cx="310.707"
+     cy="167.95799"
+     r="3.747">
+<title
+   id="title28">Davisville</title>
+</circle><circle
+     id="dundas"
+     fill="#ffffff"
+     stroke="#333333"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     cx="310.707"
+     cy="304.39001"
+     r="3.747">
+<title
+   id="title10">Dundas</title>
+</circle><circle
+     id="wellesley"
+     fill="#ffffff"
+     stroke="#333333"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     cx="310.707"
+     cy="270.42999"
+     r="3.747">
+<title
+   id="title16">Wellesley</title>
+</circle><circle
+     id="st_clair"
+     fill="#ffffff"
+     stroke="#333333"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     cx="310.707"
+     cy="185.063"
+     r="3.747">
+<title
+   id="title25">St Clair</title>
+</circle><circle
+     id="sheppard_yonge"
+     fill="#ffffff"
+     stroke="#333333"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     cx="310.707"
+     cy="74.306"
+     r="3.747">
+<title
+   id="title40">Sheppard Yonge</title>
+</circle><circle
+     id="king"
+     fill="#ffffff"
+     stroke="#333333"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     cx="310.707"
+     cy="338.349"
+     r="3.747">
+<title
+   id="title4">King</title>
+</circle><circle
+     id="lawrence"
+     fill="#ffffff"
+     stroke="#333333"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     cx="310.707"
+     cy="123.583"
+     r="3.747">
+<title
+   id="title34">Lawrence</title>
+</circle><circle
+     id="queen"
+     fill="#ffffff"
+     stroke="#333333"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     cx="310.707"
+     cy="321.702"
+     r="3.747">
+<title
+   id="title7">Queen</title>
+</circle><circle
+     id="york_mills"
+     fill="#ffffff"
+     stroke="#333333"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     cx="310.707"
+     cy="96.003998"
+     r="3.747">
+<title
+   id="title37">York Mills</title>
+</circle><circle
+     id="finch"
+     fill="#ffffff"
+     stroke="#333333"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     cx="310.707"
+     cy="31.274"
+     r="3.747">
+<title
+   id="title46">Flinch</title>
+</circle><circle
+     id="rosedale"
+     fill="#ffffff"
+     stroke="#333333"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     cx="310.707"
+     cy="219.627"
+     r="3.747">
+<title
+   id="title22">Rosedale</title>
+</circle><circle
+     id="eglinton"
+     fill="#ffffff"
+     stroke="#333333"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     cx="310.707"
+     cy="151.577"
+     r="3.747">
+<title
+   id="title31">Eglinton</title>
+</circle><circle
+     id="summerhill"
+     fill="#ffffff"
+     stroke="#333333"
+     stroke-linecap="round"
+     stroke-miterlimit="10"
+     cx="310.707"
+     cy="202.584"
+     r="3.747">
+<title
+   id="title49">Summerhill</title>
+</circle></g></svg>

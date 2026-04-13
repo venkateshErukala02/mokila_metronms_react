@@ -276,7 +276,7 @@ const resetTrainLayers = (svgRoot) => {
         let svg = '';
 
         if (textName != "") {
-            if (textName?.data.mode == 'facility' && setStationStatus==='false') {
+            if (textName?.data.mode == 'facility') {
                 svg = 'Station_Line1.svg';
             }else{
                 svg = 'Station_Line1.svg'; 
