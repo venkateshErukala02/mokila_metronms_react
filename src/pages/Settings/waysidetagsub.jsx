@@ -23,9 +23,9 @@ const WaysideTagSubCont = ({ handleSubContainer, refreshTagData, mode, user }) =
     const [direction, setDirection] = useState('');
     const [position, setPosition] = useState('');
     const [tagtype, setTagtype] = useState('');
-    const [mailChecked, setMailChecked] = useState();
-    const [priorityChecked, setPriorityChecked] = useState();
-    const [reportChecked, setReportChecked] = useState();
+    const [mailChecked, setMailChecked] = useState(false);
+    const [priorityChecked, setPriorityChecked] = useState(false);
+    const [reportChecked, setReportChecked] = useState(false);
 
 
     const handleProfileContclose = () => {
@@ -38,8 +38,8 @@ const WaysideTagSubCont = ({ handleSubContainer, refreshTagData, mode, user }) =
         if (isEditMode && user) {
             setLocation(user.location || '');
             setTagtype(user.type || '');
-            setDirection(user.direction || '');
-            setPosition(user.position || '');
+            setDirection(user.line || '');
+            setPosition(user.postion || user.position || '');
             setPriorityChecked(user.priority || '');
             setMailChecked(user.sendMail || '');
             setReportChecked(user.reportAlarm || '');
@@ -106,9 +106,9 @@ const WaysideTagSubCont = ({ handleSubContainer, refreshTagData, mode, user }) =
             line:direction,
             postion:position,
             type:tagtype,
-            priority:priorityChecked === false ? 0 : 1,
-            sendMail:mailChecked,
-            reportAlarm:reportChecked
+            priority:priorityChecked ? 1 : 0,
+            sendMail: !!mailChecked,
+            reportAlarm:!!reportChecked
         }
 
         try {
@@ -170,35 +170,42 @@ const WaysideTagSubCont = ({ handleSubContainer, refreshTagData, mode, user }) =
                             <label className="settinglabelsub">Location</label>
                             <input type="text"
                                 value={location}
+                                disabled
                                 onChange={(e) => setLocation(e.target.value)}
                                 name="" placeholder="" id="" className="settinglabelsubinp" />
                             {/* <p className="firmwarenote">e.g. xx_xxx</p> */}
                             <label className="settinglabelsub">Direction</label>
                             <input type="text"
                                 value={direction}
+                                disabled
                                 onChange={(e) => setDirection(e.target.value)}
                                 name="" placeholder="" id="" className="settinglabelsubinp" />
                             <label className="settinglabelsub">Position</label>
                             <input type="text"
                                 value={position}
+                                disabled
                                 onChange={(e) => setPosition(e.target.value)}
                                 name="" placeholder="" id="" className="settinglabelsubinp" />
                             <label className="settinglabelsub">Tagtype</label>
                             <input type="text"
                                 value={tagtype}
+                                disabled
                                 onChange={(e) => setTagtype(e.target.value)}
                                 name="" placeholder="" id="" className="settinglabelsubinp" />
                             <label className="settinglabelsub">Priority</label>
                             <input type="checkbox" className="incl"
-                                checked={priorityChecked} onChange={() => setPriorityChecked(!priorityChecked)}
+                                checked={priorityChecked === 1}
+                                onChange={(e) =>
+                                    setPriorityChecked(e.target.checked ? 1 : 0)
+                                }
                             />
                             <label className="settinglabelsub">Send Mail</label>
                             <input type="checkbox" className="incl"
-                                checked={mailChecked} onChange={() => setMailChecked(!mailChecked)}
+                                checked={mailChecked} onChange={(e) => setMailChecked(e.target.checked)}
                             />
                             <label className="settinglabelsub">Report Alarm</label>
                             <input type="checkbox" className="incl"
-                                checked={reportChecked} onChange={() => setReportChecked(!reportChecked)}
+                                checked={reportChecked} onChange={(e) => setReportChecked(e.target.checked)}
                             />
                             {/* <select name="name" id="name" value={westSideView} onChange={handleWestside} className="vlaninput">
                                     {stationNamesData.length !== 0 && stationNamesData[0].map((station,index) => {

@@ -258,7 +258,7 @@ const WaysideTagContainer=()=>{
                             return;
                         }
                     const tgData = await response.json();
-                     const data = tgData?.[0];
+                     const data = tgData?.tags?.[0];
                     if (!data || (Array.isArray(data) && data.length === 0)) {
                     setIsLoading(false);
                     setTagData([]);
@@ -327,14 +327,14 @@ const WaysideTagContainer=()=>{
                                     disabled={isReadOnly}><i className="fa-solid fa-upload"></i></button>
                                        </article>
                             <article className="row custom-row border-tlr">
-                                <article className="col-8">
+                                <article className="col-4">
                                     <button type="button" className="arrowlf" onClick={handleDecrement}>
                                         <i className="fa-solid fa-arrow-left"></i>
                                     </button>
                                     <button type="button" className="numcl"><span>{pageCount}</span></button>
                                     <button type="button" className="arrowlf" onClick={handleIncrement}><i className="fa-solid fa-arrow-right"></i></button>
                                 </article>
-                                <article className="col-4">
+                                <article className="col-8">
                                     <article style={{ float: 'right'}}>
                                         <ul className="setttinglist">
                                             <li>
@@ -410,7 +410,7 @@ const WaysideTagContainer=()=>{
                                                 /></td>
                                             <td>{item.tag}</td>
                                             <td>{item.location}</td>
-                                            <td>{item.direction || item.line}</td>
+                                            <td>{item.line}</td>
                                             <td>
                                                 {item.position || item.postion}</td>
                                             <td>{item.type}</td>

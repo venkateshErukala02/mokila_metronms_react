@@ -77,35 +77,45 @@ const LineTagSvg = ({rdDataRef}) => {
             }else{
                   titleElement.textContent = 'N/A'
             }
-    
-        rdData[0]?.forEach((sb, index) => {
-            const position = sb.position?.trim().toUpperCase();
-            const status = sb.status?.trim().toUpperCase();
-            const linePos = position + (index + 1)
-            const color = status === "DOWN" ? "red" : "rgb(102, 204, 51)";
-            const titleElement = svgRoot.querySelector('#section_station_name');
-            if(titleElement){
-              titleElement.textContent =  `${rdDataRef.current[0].station}`;    
-            }else{
-                  titleElement.textContent = 'N/Adfvv'
-            }
-            let obj = svgRoot.querySelector(`#${position}`);
-            let lie = svgRoot.querySelector(`#${linePos}`);
-            let el = undefined;
-            if (obj) {
-                el = obj;
-                
-            } else if (lie){
-                el = lie;
-            }
 
-            if (el) {
+        const dataList = rdData?.[0] || [];
+        const sbList = dataList.filter(x => x.position?.trim().toUpperCase() === "SB");
+        const nbList = dataList.filter(x => x.position?.trim().toUpperCase() === "NB");
+
+        const sortByStatus = (a, b) => {
+            const aStatus = a.status?.trim().toUpperCase();
+            const bStatus = b.status?.trim().toUpperCase();
+
+            if (aStatus === bStatus) return 0;
+            if (aStatus === "DOWN") return -1;
+            if (bStatus === "DOWN") return 1;
+            return 0;
+            };
+
+        const applyTags = (list, prefix) => {
+            list
+            .sort(sortByStatus)
+            .forEach((sb, i) => {
+                const position = prefix + (i + 1); 
+                const status = sb.status?.trim().toUpperCase();
+                const color = status === "DOWN" ? "red" : "rgb(102, 204, 51)";
+
+                const el = svgRoot.querySelector(`#${position}`);
+
+                if (el) {
                 el.style.fill = color;
+
+                const oldTitle = el.querySelector("title");
+                if (oldTitle) oldTitle.remove();
+
                 const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
-                title.textContent = `${sb.tagId}`;
+                title.textContent = sb.tagId;
                 el.appendChild(title);
-            }
-        });
+                }
+            });
+            };
+            applyTags(sbList, "SB");
+            applyTags(nbList, "NB");
     }, [rdData, svgContent]);
     
 
