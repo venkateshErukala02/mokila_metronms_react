@@ -82,7 +82,7 @@ useEffect(() => {
         <>
         <section className="container-fluid">
             <article className="border-tlr custom-row">
-        <input
+        {/* <input
                                 type="text"
                                 placeholder="Search text"
                                 value={searchText}
@@ -110,7 +110,7 @@ useEffect(() => {
                             {(searchText !== '' || search !== '') && (<button type="button" className="createbtn" style={{ marginLeft: '10px' }}
                                 onClick={handleClearSearch}
                             >Clear Search</button>)}
-                        
+                         */}
                           </article>
 
                            <article className="row">

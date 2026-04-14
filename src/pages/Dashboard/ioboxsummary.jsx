@@ -22,47 +22,47 @@ const IoboxSummaryTab = ({currentTab }) => {
     }
   }, [nodeIpaddress]);
 
-  useEffect(() => {
-      const fetchData = async () => {
-       let url = `api/v2/nodemanageview/encodersum?nodeId=${nodeDataId}`;
-        // let url = `api/v2/nodemanageview/summarydb?nodeId=${nodeDataId}`;
-        await getServerStatusDt(url);
-      };
-      fetchData();
-    }, [nodeDataId]);
+  // useEffect(() => {
+  //     const fetchData = async () => {
+  //      let url = `api/v2/nodemanageview/encodersum?nodeId=${nodeDataId}`;
+  //       // let url = `api/v2/nodemanageview/summarydb?nodeId=${nodeDataId}`;
+  //       await getServerStatusDt(url);
+  //     };
+  //     fetchData();
+  //   }, [nodeDataId]);
 
 
 
-  const getServerStatusDt = async (url) => {
-    setIsLoading(true);
-    setIsError({ status: false, msg: "" });
-    try {
-      const username = "admin";
-      const password = "admin";
-      const token = btoa(`${username}:${password}`);
-      const options = {
-        method: "GET",
-         headers: {
-        //   "Authorization": `Basic ${token}`,
-          "Content-Type": "application/json",
-        },
-      };
-      const response = await fetch(url, options);
-      const data1 = await response.json();
-    //   const data = await JSON.parse(data1)
+  // const getServerStatusDt = async (url) => {
+  //   setIsLoading(true);
+  //   setIsError({ status: false, msg: "" });
+  //   try {
+  //     const username = "admin";
+  //     const password = "admin";
+  //     const token = btoa(`${username}:${password}`);
+  //     const options = {
+  //       method: "GET",
+  //        headers: {
+  //       //   "Authorization": `Basic ${token}`,
+  //         "Content-Type": "application/json",
+  //       },
+  //     };
+  //     const response = await fetch(url, options);
+  //     const data1 = await response.json();
+  //   //   const data = await JSON.parse(data1)
       
-      if (response.ok) {
-        setIsLoading(false);
-        setNodeItemDt(data1);
-        setIsError({ status: false, msg: "" });
-      } else {
-        throw new Error("Data not found");
-      }
-    } catch (error) {
-      setIsLoading(false);
-      setIsError({ status: true, msg: error.message });
-    }
-  };
+  //     if (response.ok) {
+  //       setIsLoading(false);
+  //       setNodeItemDt(data1);
+  //       setIsError({ status: false, msg: "" });
+  //     } else {
+  //       throw new Error("Data not found");
+  //     }
+  //   } catch (error) {
+  //     setIsLoading(false);
+  //     setIsError({ status: true, msg: error.message });
+  //   }
+  // };
 
 
 

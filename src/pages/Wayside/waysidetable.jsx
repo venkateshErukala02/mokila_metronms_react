@@ -238,7 +238,7 @@ useEffect(() => {
                     <th>Tags</th>
                     <th>Time</th>
                     <th>Station Name</th>
-                    <th>Position</th>
+                    <th>Type</th>
                     </tr>
                 </thead>
 
@@ -280,7 +280,7 @@ useEffect(() => {
                         </td>
                         <td>{node.time}</td>
                         <td>{node.position}</td>
-                        <td></td>
+                        <td>{node.type}</td>
                         </tr>
                     ))}
                 </tbody>

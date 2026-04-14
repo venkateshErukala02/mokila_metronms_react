@@ -132,9 +132,9 @@ const ObcSummaryTab = ({ nodeItemDt, currentTab }) => {
       case 'transcoder':
          return <TranscoderObcSubview />
         break;
-      case 'stationradio':
-         return <StationradioObcSubview />
-        break;
+      // case 'stationradio':
+      //    return <StationradioObcSubview />
+      //   break;
       case 'trainradio':
         return <TrainradioObcSubview />
         break
@@ -231,7 +231,7 @@ const ObcSummaryTab = ({ nodeItemDt, currentTab }) => {
                     <ul className="obcsublist">
                       <li  onClick={() => handleRowClick('obc')} className={`${currentObcsubTab === 'obc' ? 'active' : ''}`}><a>OBC</a></li>
                       <li  onClick={() => handleRowClick('transcoder')} className={`${currentObcsubTab === 'transcoder' ? 'active' : ''}`}><a>Transcoder</a></li>
-                      <li onClick={() => handleRowClick('stationradio')} className={`${currentObcsubTab === 'stationradio' ? 'active' : ''}`}> <a>Station Radio</a></li>
+                      {/* <li onClick={() => handleRowClick('stationradio')} className={`${currentObcsubTab === 'stationradio' ? 'active' : ''}`}> <a>Station Radio</a></li> */}
                       <li onClick={() => handleRowClick('trainradio')} className={`${currentObcsubTab === 'trainradio' ? 'active' : ''}`}> <a> Train Radio</a></li>
 
                     </ul>

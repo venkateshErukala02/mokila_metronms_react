@@ -17,6 +17,7 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
     const currentUser = useSelector((state) => state?.loginuser?.node?.role);
     const [showAddedSuccessPopup, setShowAddedSuccessPopup] = useState(false);
     const [showSuccessMessage,setShowScuccessMessage] = useState('');
+    const [groupSubData,setGroupSubData] = useState([]);
 
 
     const handleProfileContclose=(e)=>{
@@ -34,10 +35,13 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
         };
 
         const removeUser = () => {
-            if (selectedFromSelected) {
-            setSelectedUsers(
-                selectedUsers.filter((u) => u !== selectedFromSelected)
+           if (selectedFromSelected) {
+                 const updatedUsers = selectedUsers.filter(
+                (u) => u !== selectedFromSelected
             );
+
+            setSelectedUsers(updatedUsers);
+            setSelectedFromSelected(""); 
             }
         };
 
@@ -111,6 +115,54 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
         }
     },[group,mode])
 
+
+      const getGroupSubData = async (url) => {
+                setIsLoading(true);
+                setIsError({ status: false, msg: "" }); 
+                try {
+                    const username = 'admin';
+                    const password = 'admin';
+                    const token = btoa(`${username}:${password}`)
+                    const options = {
+                        method: "GET",
+                        headers: {
+                            'Authorization': `Basic ${token}`,
+                            "Content-Type": "application/json",
+                        },
+        
+                    };
+                    const response = await fetch(url, options);
+        
+                    const data = await response.json();
+        
+                    if (response.ok) {
+                        setIsLoading(false);
+                        setGroupSubData(data.users);
+                        setIsError({ status: false, msg: "" });
+                    } else {
+                        throw new Error("data not found");
+                    }
+                } catch (error) {
+                    setIsLoading(false);
+                    setIsError({ status: true, msg: error.message });
+                }
+            };
+    
+    
+         useEffect(() => {
+            const fetchGroupSubData=async()=>{
+            const url=`api/v2/eventnotice/ugrlist?_s=&limit=10&offset=0&order=asc&orderBy=name`
+                await getGroupSubData(url);
+            }
+    
+            fetchGroupSubData();
+    
+            const intervalId = setInterval(fetchGroupSubData,30000);
+    
+            return ()=> clearInterval(intervalId);
+        
+            }, []);
+
     return(
 
         <>
@@ -143,7 +195,7 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
                                     style={{ width: "100%" }}
                                     onChange={(e) => setSelectedFromUsers(e.target.value)}
                                     >
-                                    {allUsers.map((u) => (
+                                    {groupSubData.map((u) => (
                                         <option key={u} value={u}>{u}</option>
                                     ))}
                                     </select>
@@ -161,7 +213,7 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
                                     size="6"
                                     className="groupselect"
                                     style={{ width: "100%" }}
-                                    value={selectedFromSelected}
+                                    // value={selectedFromSelected}/
                                     onChange={(e) => setSelectedFromSelected(e.target.value)}
                                     >
                                     {selectedUsers.map((u) => (

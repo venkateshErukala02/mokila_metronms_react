@@ -488,8 +488,8 @@ useEffect(() => {
      const renderTagView = (stationTagview, lineTagview) => {
         if (stationTagview) {
             return <>
-                <StationSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef}  setLineTagview={setLineTagview} stationNode={stationNode}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData}  yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg}/>
-              <StationNodeTableView yardfacilitieData={yardfacilitieData}  textName={textName} rdDataRef={rdDataRef} stationNode={stationNode} />
+                <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg}/>
+              <StationNodeTableView yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} />
             </>
         } else if (lineTagview) {
             return <>
@@ -919,7 +919,7 @@ useEffect(() => {
                     </>
                 ) : (
                     <>
-                    {((!textName && stationTagview === true)) &&(
+                    {/* {((!textName && stationTagview === true)) &&(
                             <>
                             <article className="row">
                         <article className="col-4">
@@ -936,7 +936,6 @@ useEffect(() => {
                            ''
                             ) : (
                                 <>
-                              {/* {stationView === false ? <button className="createbtn" type="button" onClick={handleTrainVwVisible}>Back</button> : ''} */}
                               {canGoBack && (
   <button className="createbtn" onClick={handleTrainVwVisible}>
     Back
@@ -948,7 +947,7 @@ useEffect(() => {
                         </article>
                         </article>
                             </>
-                    )}
+                    )} */}
 
                     {((textName !== '' && stationTagview === true)) &&(
                             <>
@@ -987,7 +986,7 @@ useEffect(() => {
                             <h1 className="mapheading">Train View : {trainId}</h1>
                             ) : (
                                 <>
-                            <h1 className="mapheading">{getNodeLabel(textName)}</h1>
+                            {!stationTagview && <h1 className="mapheading">{getNodeLabel(textName)}</h1>}
                             </>
                             )}
                         </article>
