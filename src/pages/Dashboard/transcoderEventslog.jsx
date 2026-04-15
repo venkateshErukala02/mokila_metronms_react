@@ -40,6 +40,7 @@ const TranscoderEventLog = ({ currentTab, nodeItemDt }) => {
     const nodeDataId = useSelector((state) => state.node.node.nodeId) || localStorage.getItem('nodeId');
     const nodeIpaddress = useSelector((state) => state.node.node.ipAddress) || localStorage.getItem('nodeIpaddress');
   const [currentObcsubTab, setCurrentObcsubTab] = useState('obcbackup')
+  const [reportUrl, setReportUrl] = useState('');
 
 
     const getTranscoderLogData = async (url) => {
@@ -145,6 +146,7 @@ useEffect(() => {
   }
 
   if (url) {
+    setReportUrl(url); 
     getTranscoderLogData(url);
   }
 }, [executedSearch, executedDate, searchTrigger, nodeIpaddress, currentTab, nodeItemDt,currentObcsubTab]);
@@ -153,6 +155,50 @@ useEffect(() => {
 const handleRowClick = (value) => {
     setCurrentObcsubTab(value);
   }
+
+      const getReportData = async (reportUrl) => {
+    
+        try {
+
+            if (!reportUrl) {
+            console.error("URL is missing");
+            return;
+        }
+
+          const updatedUrl = reportUrl.replace("events/list?_s", "events/export?_s");
+            const response = await fetch(updatedUrl, {
+                method: "GET",
+                headers: {
+                    // 'Authorization': `Basic ${token}`
+                },
+                // body: formData, 
+            });
+    
+             if (!response.ok) {
+            const errText = await response.text();
+            setIsError(`Error starting download: ${errText}`);
+            return;
+        }
+
+        const blob = await response.blob();
+
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+
+        const filename = response.headers.get('Content-Disposition')?.split('filename=')[1] || 'report.csv';
+        a.href = downloadUrl;
+        a.download = filename.replace(/"/g, '');
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        window.URL.revokeObjectURL(downloadUrl);
+        } catch (error) {
+            setIsError('An error occurred while contacting the server.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <section className="container-fluid">
@@ -167,7 +213,11 @@ const handleRowClick = (value) => {
                             <option value="trainlogs" label="Trainlogs">Trainlogs</option>
                         </select>
                     </>)}
-                   {currentTab !== 'obc' && (<>  <input
+                   {currentTab !== 'obc' && (<> 
+                   
+                   <button type="button" className="createbtn"   title="Export"  onClick={() => reportUrl && getReportData(reportUrl)}
+                        disabled={!reportUrl}   style={{ marginRight: '7px'}}>  <i class="fa-solid fa-download"></i></button>
+                         <input
                         type="text"
                         placeholder="Search text"
                         value={searchText}

@@ -36,6 +36,8 @@ const EventMainTB = () => {
   const [customStartDate, setCustomStartDate] = useState(null);
   const [customEndDate, setCustomEndDate] = useState(null);
   const [reportUrl, setReportUrl] = useState('');
+  const [showCustomDateAlertPopup,setShowCustomDateAlertPopup] = useState(false);
+  const [showCustomDateLimitAlertPopup,setShowCustomDateLimitAlertPopup] = useState(false);
 
   const handleClosepopup  = ()=>{
     setShowCustomPopup(false);
@@ -45,12 +47,12 @@ const EventMainTB = () => {
       e.preventDefault(); 
     setShowCustomPopup(false);
     if (!customStartDate || !customEndDate) {
-            alert("Please select both start and end dates");
+            setShowCustomDateAlertPopup(true);
             return;
         }
 
         if (customEndDate <= customStartDate) {
-            alert("End date must be greater than start date");
+            setShowCustomDateLimitAlertPopup(true)
             return;
         }
 
@@ -70,7 +72,6 @@ const EventMainTB = () => {
         let url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`
         setReportUrl(url); 
         getDataEvntMain(url);
-
   };
 
 
@@ -117,6 +118,7 @@ const EventMainTB = () => {
             if (response.status === 204) {
                 setIsLoading(false);
                 setEventmainData([]);
+                // setSelectedDuration("86400000");
                 setIsError({ status: false, msg: '' });
                 return;
             }
@@ -140,8 +142,8 @@ const EventMainTB = () => {
             setIsLoading(false);
             setIsError({ status: true, msg: error.message });
         }finally {
-            setCustomStartDate(null);
-            setCustomEndDate(null);
+            // setCustomStartDate(null);
+            // setCustomEndDate(null);
             setIsLoading(false);
         }
     }
@@ -283,24 +285,14 @@ const EventMainTB = () => {
 
     const handleMainEventTimestamp = (event) => {
         const customvalue = event.target.value;
-
-
-    if (customvalue === "Custom") {
-        setSelectedDuration("Custom");   // keep as string
-        setShowCustomPopup(true);        // optional
-    } else {
-        const value = parseInt(customvalue); // convert only numbers
-        setSelectedDuration(value);
-        setShowCustomPopup(false);       // optional
-    }
-        // const value = parseInt(event.target.value);
-        // setSelectedDuration(value);
-
-        //  if (customvalue === 'custom') {
-        //     setShowCustomPopup(true);
-        //     } else {
-        //     setShowCustomPopup(false);
-        //     }
+        if (customvalue === "Custom") {
+            setSelectedDuration("Custom");  
+            setShowCustomPopup(true);       
+        } else {
+            const value = parseInt(customvalue); 
+            setSelectedDuration(value);
+            setShowCustomPopup(false);      
+        }
     };
 
 
@@ -353,6 +345,8 @@ const EventMainTB = () => {
     }
 
      const handleRadialIP = async () => {
+        const startTimestamp = customStartDate?.getTime();
+        const endTimestamp = customEndDate?.getTime();  
         if (!eventipText) {
             alert("Please enter a search term");
             return;
@@ -384,22 +378,30 @@ const EventMainTB = () => {
                             if (eventmainSeverityValueSel) {
                         filter  =  filter + '&eventSeverity==' + `${eventmainSeverityValueSel}`;
                         }
-                         if (eventtimeSel) {
+                         if (eventtimeSel && selectedDuration !== 'Custom') {
                     filter  =  filter +  '&eventCreateTime%3Dgt%3D' + `${eventtimeSel}`;
+                    }
+                    if(selectedDuration === 'Custom' && startTimestamp && endTimestamp){
+                        filter = filter + `eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}`;
                     }
                      if (eventmainLimitLabelSel != 'all') {
                     filter  =  filter +'&limit=' + `${eventmainLimitLabelSel}`;
                     }
                     url = start + filter + '&offset=0&order=desc&orderBy=id';
+                     setReportUrl(url);
                      handleRadialIPa(url);
                     }else{
                     filter  =  filter + `eventDisplay%3D%3DY%3BeventSource%3D%3Dsyslogd;` + `eventLogMsg%3D%3D` +`*${eventipText}*`;
                      if (eventmainSeverityValueSel) {
                         filter  =  filter + '&eventSeverity==' + `${eventmainSeverityValueSel}`;
                         }
-                         if (eventtimeSel) {
+                         if (eventtimeSel && selectedDuration !== 'Custom') {
                     filter  =  filter +  '&eventCreateTime%3Dgt%3D' + `${eventtimeSel}`;
                     }
+                     if(selectedDuration === 'Custom' && startTimestamp && endTimestamp){
+                        filter = filter + `eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}`;
+                    }
+
                      if (eventmainLimitLabelSel != 'all') {
                     filter  =  filter +'&limit=' + `${eventmainLimitLabelSel}`;
                     }
@@ -482,29 +484,6 @@ const EventMainTB = () => {
 
 
       const getReportData = async (reportUrl) => {
-
-            // let url= ''
-
-            //   let filterParts = [
-            // "eventDisplay==Y",
-            // typevalueSel === 'events' ? "eventSource!=syslogd" : 'eventSource==syslogd'
-            // ];
-
-            // if (eventmainSeverityValueSel) {
-            // filterParts.push(`eventSeverity==${eventmainSeverityValueSel}`);
-            // }
-
-            // // const regex = /^192\.168\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-            // if (eventipText) {
-            // filterParts.push(`eventLogMsg==*${eventipText}*`);
-            // }
-            // const filterString = filterParts.join(";");
-
-            // if(typevalueSel === 'events'){
-            //     url = `api/v2/events/export?_s=${encodeURIComponent(filterString)}&eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
-            // }else if(typevalueSel==='syslogd'){
-            //     url=`api/v2/events/export?_s=${encodeURIComponent(filterString)}&eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`
-            // }
     
         try {
 
@@ -578,7 +557,7 @@ const EventMainTB = () => {
                         <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
                         <button type="button" className="createbtn" onClick={() => { handleRadialIP();}} >Search</button>
                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
-                        <button type="button" className="createbtn"  onClick={() => getReportData(reportUrl)} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}>  <i class="fa-solid fa-download"></i></button>
+                        {/* <button type="button" className="createbtn"  onClick={() => getReportData(reportUrl)} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}>  <i class="fa-solid fa-download"></i></button> */}
 
                     </article>
                     <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
@@ -917,6 +896,36 @@ const EventMainTB = () => {
                 </article>
                 </article>
             )}
+            {showCustomDateAlertPopup && <>
+                            <article className="confirmdeletepopup">
+                                <article className="confirmdeletepopupboxstyle">
+                                <h1 className="confirmdeletetitle">Please select both start and end dates</h1>
+                                <article className="f-r">
+                                      <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() =>{ setShowCustomDateAlertPopup(false);setSelectedDuration("86400000");}}
+                                        >
+                                        OK
+                                        </button>
+                                </article>
+                                </article>
+                            </article>
+                            </>}
+                            {showCustomDateLimitAlertPopup && <>
+                            <article className="confirmdeletepopup">
+                                <article className="confirmdeletepopupboxstyle">
+                                <h1 className="confirmdeletetitle">End date must be greater than start date</h1>
+                                <article className="f-r">
+                                      <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => {setShowCustomDateLimitAlertPopup(false);setSelectedDuration("86400000");}}
+                                        >
+                                        OK
+                                        </button>
+                                </article>
+                                </article>
+                            </article>
+                            </>}
         </>
     )
 }

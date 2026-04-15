@@ -27,15 +27,59 @@ const TrainEventTab = () => {
     const [eventipText, setEventipText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
+    const [pageSize,setPageSize] = useState(1);
 
     const [showEventPopup,setShowEventPopup] = useState(false);
     const [eventpopupData,setEventpopupData] = useState([]);
     const popupRef = useRef(null);
     const [reportUrl, setReportUrl] = useState('');
+    const [showCustomPopup, setShowCustomPopup] = useState(false);
+    const [customStartDate, setCustomStartDate] = useState(null);
+    const [customEndDate, setCustomEndDate] = useState(null);
+    const [showCustomDateAlertPopup,setShowCustomDateAlertPopup] = useState(false);
+    const [showCustomDateLimitAlertPopup,setShowCustomDateLimitAlertPopup] = useState(false);
 
     const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
 
+
+     const handleClosepopup  = ()=>{
+    setShowCustomPopup(false);
+  }
+
+  const handleCustomSubmit = (e) => {
+      e.preventDefault(); 
+    setShowCustomPopup(false);
+    if (!customStartDate || !customEndDate) {
+            setShowCustomDateAlertPopup(true);
+            return;
+        }
+
+        if (customEndDate <= customStartDate) {
+            setShowCustomDateLimitAlertPopup(true)
+            return;
+        }
+
+        const startTimestamp = customStartDate.getTime(); // ms
+        const endTimestamp = customEndDate.getTime();  
+         let filterParts = [
+            "eventDisplay==Y",
+            typevalueSel === 'events' ? "eventSource!=syslogd" : 'eventSource==syslogd'
+            ];
+
+            if (eventmainSeverityValueSel) {
+            filterParts.push(`eventSeverity==${eventmainSeverityValueSel}`);
+            }
+
+        const filterString = filterParts.join(";");
+
+        let url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`
+        setReportUrl(url); 
+        getDataEvntMain(url);
+
+  };
+
     useEffect(() => {
+        if (selectedDuration == null || selectedDuration === '' || isNaN(selectedDuration)) return;
         const newTimestamp = Date.now() - selectedDuration;
         setEventtimeSel(newTimestamp);
     }, [selectedDuration]);
@@ -136,6 +180,7 @@ const TrainEventTab = () => {
                 url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd&limit=50&offset=0`;
                 break;
         }
+        setReportUrl(url);
           getDataEvntMain(url);
     }
 
@@ -190,8 +235,15 @@ const TrainEventTab = () => {
 
 
     const handleMainEventTimestamp = (event) => {
-        const value = parseInt(event.target.value);
-        setSelectedDuration(value);
+          const customvalue = event.target.value;
+            if (customvalue === "Custom") {
+                setSelectedDuration("Custom");   
+                setShowCustomPopup(true);        
+            } else {
+                const value = parseInt(customvalue); 
+                setSelectedDuration(value);
+                setShowCustomPopup(false);       
+            }
     };
 
 
@@ -220,17 +272,16 @@ const TrainEventTab = () => {
         setLogsMode(event.target.value);
     };
 
-          const getReportData = async (url) => {
+       const getReportData = async (reportUrl) => {
     
         try {
 
-            if (!url) {
+            if (!reportUrl) {
             console.error("URL is missing");
             return;
         }
 
-        const updatedUrl = url.replace("events?_s", "events/export?_s");
-
+          const updatedUrl = reportUrl.replace("events/list?_s", "events/export?_s");
             const response = await fetch(updatedUrl, {
                 method: "GET",
                 headers: {
@@ -299,6 +350,8 @@ const TrainEventTab = () => {
         alert("Please enter a search term");
         return;
     }
+    const startTimestamp = customStartDate?.getTime();
+    const endTimestamp = customEndDate?.getTime(); 
 
     let start = `api/v2/events?_s=node.id%3D%3D${nodeDataId}`;
     let filters = [];
@@ -317,8 +370,12 @@ const TrainEventTab = () => {
         filters.push(`eventSeverity==${eventmainSeverityValueSel}`);
     }
 
-    if (eventtimeSel) {
+    if (eventtimeSel  && selectedDuration !== 'Custom') {
         filters.push(`eventCreateTime%3Dgt%3D${eventtimeSel}`);
+    }
+
+     if(selectedDuration === 'Custom' && startTimestamp && endTimestamp){
+        filters.push(`eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}`)
     }
 
     let query = filters.join(";");
@@ -429,7 +486,7 @@ const TrainEventTab = () => {
                                          <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
                          <button type="button" className="createbtn" onClick={() => { handleRadialIP();}} >Search</button>
                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{ marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
-                        <button type="button" className="createbtn"  onClick={() => getReportData(reportUrl)} style={{ marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}>  <i class="fa-solid fa-download"></i></button>     
+                        {/* <button type="button" className="createbtn"  onClick={() => getReportData(reportUrl)} style={{ marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}>  <i class="fa-solid fa-download"></i></button>      */}
                     
 
                                     </article>
@@ -448,7 +505,8 @@ const TrainEventTab = () => {
                                 <article className="col-sm-8 col-md-8 col-lg-8 col-xl-8 col-xxl-8">
                                     <article style={{ float: 'right' }}>
                                         <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block' }}>
-
+                                        <button type="button" className="createbtn"   title="Export"  onClick={() => reportUrl && getReportData(reportUrl)}
+                                        disabled={!reportUrl}   style={{ marginRight: '7px'}}>  <i class="fa-solid fa-download"></i></button>
                                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Type:</label>
 
                                             <select name="name" id="name" value={typevalueSel} onChange={handleType} className="form-controll1" style={{ maxWidth: '93px' }}>
@@ -485,7 +543,7 @@ const TrainEventTab = () => {
                     }
                     }>Search</button> */}
 
-                     <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
+                     <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Timess:</label>
 
 
                             <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
@@ -493,6 +551,7 @@ const TrainEventTab = () => {
                                 <option value="28800000" label="8 hours">8 hours</option>
                                 <option value="86400000" label="24 hours">24 hours</option>
                                 <option value="172800000" label="48 hours">48 hours</option>
+                                <option value="Custom" label="Custom">Custom</option>
                             </select>
 
                                             <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
@@ -652,6 +711,96 @@ const TrainEventTab = () => {
                         ) }
                     </article>
                 </article>}
+
+                                    {showCustomPopup && (
+                                        <article className="confirmdeletepopup">
+                                            <article className="">
+                                <article className="custom-popup popupStyledate">
+                                    <article className="row">
+                                        <article className="col-11">
+                                <h4 className="customheadtitle">Select Custom Range</h4>
+                                        </article>
+                
+                                        <article className="col-1">
+                                               <span><i className="fa fa-close noticlose" onClick={handleClosepopup} role="button"></i></span>
+                                        </article>
+                                        
+                                </article>
+                              <div className="row">
+                                <div className="col-6" style={{ marginBottom: '8px' }}>
+                                    <label htmlFor="startDate" className="settinglabelsub">
+                                    Start:
+                                    </label>
+                                    <DatePicker
+                                    id="startDate"
+                                    selected={customStartDate}
+                                    onChange={(date) => setCustomStartDate(date)}
+                                    showTimeSelect
+                                    timeFormat="HH:mm"
+                                    timeIntervals={15}
+                                    dateFormat="yyyy-MM-dd HH:mm"
+                                    placeholderText="Select Start Date"
+                                    className="myDatepickercl"
+                                    />
+                                </div>
+                
+                                <div className="col-6" style={{ marginBottom: '8px' }}>
+                                    <label htmlFor="endDate" className="settinglabelsub">
+                                    End:
+                                    </label>
+                                    <DatePicker
+                                    id="endDate"
+                                    selected={customEndDate}
+                                    onChange={(date) => setCustomEndDate(date)}
+                                    minDate={customStartDate}
+                                    showTimeSelect
+                                    timeFormat="HH:mm"
+                                    timeIntervals={15}
+                                    dateFormat="yyyy-MM-dd HH:mm"
+                                    placeholderText="Select End Date"
+                                    className="myDatepickercl"
+                                    />
+                                </div>
+                                </div>
+                                <article className="f-r">
+                                <button className="createbtn" onClick={handleCustomSubmit}>Submit</button>
+                                </article>
+                                </article>
+                                </article>
+                                </article>
+                            )}
+
+
+                             {showCustomDateAlertPopup && <>
+                            <article className="confirmdeletepopup">
+                                <article className="confirmdeletepopupboxstyle">
+                                <h1 className="confirmdeletetitle">Please select both start and end dates</h1>
+                                <article className="f-r">
+                                      <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() =>{ setShowCustomDateAlertPopup(false);setSelectedDuration("86400000");}}
+                                        >
+                                        OK
+                                        </button>
+                                </article>
+                                </article>
+                            </article>
+                            </>}
+                            {showCustomDateLimitAlertPopup && <>
+                            <article className="confirmdeletepopup">
+                                <article className="confirmdeletepopupboxstyle">
+                                <h1 className="confirmdeletetitle">End date must be greater than start date</h1>
+                                <article className="f-r">
+                                      <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => {setShowCustomDateLimitAlertPopup(false);setSelectedDuration("86400000");}}
+                                        >
+                                        OK
+                                        </button>
+                                </article>
+                                </article>
+                            </article>
+                            </>}
 
         </>
     )
