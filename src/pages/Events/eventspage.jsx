@@ -27,6 +27,8 @@ const EventPg = () => {
     const [stationData,setStationData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
+    const [cabNumberIpsData,setCabNumberIpsData] = useState([]);
+    const [stationIpsData,setStationIpsData] = useState([]);
 
       const ALL_LINES = [
           { key: 'line1-sec1', label: 'Line1-Section1' },
@@ -43,6 +45,44 @@ const EventPg = () => {
           }
          
       },[lineNameSel])
+
+       useEffect(()=>{
+            if(selectedPosition ==='select') return;
+                if(selectedPosition && selectedPosition !== ''){
+                const url=`api/v2/treeview/stationfilter/${stationNameSel}?position=${selectedPosition}`;
+                handleStationIpsData(url);
+                }
+      },[selectedPosition]);
+
+
+           const handleStationIpsData = async (url) => {
+        setIsLoading(true);
+        setIsError({ status: false, msg: "" });
+        try {
+            const options = {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+          
+
+            };
+            const response = await fetch(url, options);
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setIsLoading(false);
+                setStationIpsData(data);
+                setIsError({ status: false, msg: "" });
+            } else {
+                throw new Error("data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message });
+        }
+    };
 
     const handleFromDateChange = (date) => {
             setSelectedFromDate(date);
@@ -120,13 +160,9 @@ const EventPg = () => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
-            const username = 'admin';
-                const password = 'admin';
-                const token = btoa(`${username}:${password}`)
             const options = {
                 method: "GET",
                 headers: {
-                    'Authorization': `Basic ${token}`,
                     "Content-Type": "application/json",
                 },
           
@@ -146,6 +182,45 @@ const EventPg = () => {
         } catch (error) {
             setIsLoading(false);
             setIsError({ status: true, msg: error.message });
+        }
+    };
+
+     const handleCabNumberIp = async () => {
+        if (!cabNumber) {
+            return;
+        }
+        setIsLoading(true);
+        setIsError({ status: false, msg: "" });
+
+        try {
+            const response = await fetch(`api/v2/treeview/train?trainId=${cabNumber}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            if (response.status === 204) {
+                setIsLoading(false);
+                setCabNumberIpsData([]);
+                return;
+            }
+
+            const data = await response.json(); // Only parse once
+
+            if (response.ok) {
+                setIsLoading(false);
+                setCabNumberIpsData(data || []);
+
+                setIsError({ status: false, msg: '' });
+            } else {
+                throw new Error("Data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message || "Something went wrong" });
         }
     };
 
@@ -176,11 +251,48 @@ const EventPg = () => {
                             </article>
                       {selectedLogVal === 'train' && <article style={{padding:"12px"}}>
                             <label className="settinglabelsub">Cab Number</label>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px',marginBottom:'12px' }}>
                             <input type="text"
                              value={cabNumber}
                                 required
                                 onChange={(e) => setCabNumber(e.target.value)}
                                 name="" placeholder="Enter Cab Number" id="" className="settinglabelsubinp" />
+                                <button type="button" className="createbtn" onClick={() => {
+                                    handleCabNumberIp();}}>run</button>
+                                </div>
+                                         <article className="row border-allsd" style={{ height: '16vh', overflow: 'hidden',position:'relative' }}>
+                                <table className="col-md-12 col-sm-12 col-lg-12 col-xl-12" style={{ tableLayout: 'fixed', width: '100%' }}>
+                                    <thead className="configthtb">
+                                        <tr style={{ textAlign: 'center' }}>
+                                            <th>System Name</th>
+                                            <th>IP Address</th>
+                                            {/* <th>Station</th> */}
+                                        </tr>
+                                    </thead>
+                                </table>
+
+                                <div style={{ height: 'calc(16vh - 40px)', overflowY: 'auto',width: '100%' }}>
+                                    <table className="col-md-12 col-sm-12 col-lg-12 col-xl-12" style={{ tableLayout: 'fixed', width: '100%' }}>
+                                        <tbody className="configbdtb" style={{ textAlign: 'center' }}>
+                                             {cabNumberIpsData && Object.keys(cabNumberIpsData).length > 0 ? (
+                                                Object.entries(cabNumberIpsData).map(([key, value], index) => (
+                                                <tr key={index}>
+                                                    <td style={{ width: '114px',paddingLeft:'19px' }}>{key}</td>
+                                                    <td style={{ width: '91px' }}>{value}</td>
+                                                </tr>
+                                                ))  
+                                            ) : (
+                                                // <tr>
+                                                //     <td colSpan="4">No items found</td>
+                                                // </tr>
+                                                ''
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </article>
+
+
                                 <article className="labelaligncl">
                             <DatePicker
                             selected={selectedFromDate}
@@ -239,6 +351,38 @@ const EventPg = () => {
                                             <option value="NBNE">NBNE</option>
                                         </select>
                                         </article>
+                            </article>
+
+                             <article className="row border-allsd" style={{ height: '16vh', overflow: 'hidden',position:'relative',marginTop:'8px'}}>
+                                <table className="col-md-12 col-sm-12 col-lg-12 col-xl-12" style={{ tableLayout: 'fixed', width: '100%' }}>
+                                    <thead className="configthtb">
+                                        <tr style={{ textAlign: 'center' }}>
+                                            <th>Type</th>
+                                            <th>IP Address</th>
+                                            {/* <th>Station</th> */}
+                                        </tr>
+                                    </thead>
+                                </table>
+
+                                <div style={{ height: 'calc(16vh - 40px)', overflowY: 'auto',width: '100%' }}>
+                                    <table className="col-md-12 col-sm-12 col-lg-12 col-xl-12" style={{ tableLayout: 'fixed', width: '100%' }}>
+                                        <tbody className="configbdtb" style={{ textAlign: 'center' }}>
+                                            {Array.isArray(stationIpsData) && stationIpsData.length > 0 ? (
+                                                stationIpsData.map((event) => (
+                                                    <tr key={event.id}>
+                                                        <td style={{ width: '114px',paddingLeft:'12px' }}>{event.type}</td>
+                                                        <td style={{ width: '91px' }}>{event.ipAddress}</td>
+                                                    </tr>
+                                                )) 
+                                            ) : (
+                                                // <tr>
+                                                //     <td colSpan="4">No items found</td>
+                                                // </tr>
+                                                ''
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </article>
                             
                        
