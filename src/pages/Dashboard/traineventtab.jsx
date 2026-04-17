@@ -28,6 +28,7 @@ const TrainEventTab = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [pageSize,setPageSize] = useState(1);
+    const [fromValue,setFromValue] =useState('0');
 
     const [showEventPopup,setShowEventPopup] = useState(false);
     const [eventpopupData,setEventpopupData] = useState([]);
@@ -72,7 +73,7 @@ const TrainEventTab = () => {
 
         const filterString = filterParts.join(";");
 
-        let url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`
+        let url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
         setReportUrl(url); 
         getDataEvntMain(url);
 
@@ -165,19 +166,19 @@ const TrainEventTab = () => {
 
         switch (typevalueSel) {
             case 'events':
-               url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitValueSel}&offset=0`;
+               url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitValueSel}&offset=${fromValue}`;
                 break;
 
             case 'syslogd':
-                url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitValueSel}&offset=0`;
+                url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitValueSel}&offset=${fromValue}`;
 
                 break;
             case 'auditlog':
-                url = `/api/v2/audit/list?_s=&limit=${eventmainLimitValueSel}&offset=0&order=desc&orderBy=id`;
+                url = `/api/v2/audit/list?_s=&limit=${eventmainLimitValueSel}&offset=${fromValue}&order=desc&orderBy=id`;
                 break;
 
             default:
-                url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd&limit=50&offset=0`;
+                url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd&limit=50&offset=${fromValue}`;
                 break;
         }
         setReportUrl(url);
@@ -189,7 +190,7 @@ const TrainEventTab = () => {
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
 
-    }, [typevalueSel, nodeDataId,eventmainSeverityValueSel,eventtimeSel,eventmainLimitValueSel,searchBtn]);
+    }, [typevalueSel, nodeDataId,eventmainSeverityValueSel,eventtimeSel,eventmainLimitValueSel,searchBtn,fromValue]);
 
     const formatTime = (timestamp) => {
         const date = new Date(timestamp);
@@ -370,9 +371,9 @@ const TrainEventTab = () => {
         filters.push(`eventSeverity==${eventmainSeverityValueSel}`);
     }
 
-    if (eventtimeSel  && selectedDuration !== 'Custom') {
-        filters.push(`eventCreateTime%3Dgt%3D${eventtimeSel}`);
-    }
+    // if (eventtimeSel  && selectedDuration !== 'Custom') {
+    //     filters.push(`eventCreateTime%3Dgt%3D${eventtimeSel}`);
+    // }
 
      if(selectedDuration === 'Custom' && startTimestamp && endTimestamp){
         filters.push(`eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}`)
@@ -444,6 +445,32 @@ const TrainEventTab = () => {
         }
     };
 
+     const handleIncreamentOffset=()=>{
+        setFromValue(parseInt(pageSize)* parseInt(eventmainLimitLabelSel));
+         // setFromValue(parseInt(pageSize)* parseInt(limitValueSelLabel));
+        if (eventmainData?.length === 0 || undefined) {
+            setPageSize(prevstate => prevstate);
+        } else if (eventmainData?.length > 0) {
+            setPageSize(prevstate => prevstate + 1);
+        }
+        // setPageSize(prevstate=>  prevstate +1);
+        
+    }
+
+    const handleDecrementOffset=()=>{
+          if(pageSize > 1){
+        setPageSize(prevPageSize => {
+        const newPageSize = prevPageSize - 1;
+        const fromCal = (parseInt(newPageSize)-1) * parseInt(eventmainLimitLabelSel);
+        setFromValue(fromCal);
+        return newPageSize;
+            });
+        }else{
+            setPageSize(1);
+                        // setFromValue('0');
+                }
+    }
+
 
     return (
         <>
@@ -478,11 +505,11 @@ const TrainEventTab = () => {
                             <article className="row border-tlr custom-row">
                                 <article className="col-sm-4 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
                                     <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block', float: 'left' }}>
-                                        <button type="button" className="arrowlf">
+                                        <button type="button" onClick={handleDecrementOffset} className="arrowlf">
                                             <i className="fa-solid fa-arrow-left"></i>
                                         </button>
-                                        <button type="button" className="numcl"><span>1</span></button>
-                                        <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                                        <button type="button" className="numcl"><span>{pageSize}</span></button>
+                                        <button type="button" onClick={handleIncreamentOffset} className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
                                          <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
                          <button type="button" className="createbtn" onClick={() => { handleRadialIP();}} >Search</button>
                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{ marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>

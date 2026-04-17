@@ -4577,6 +4577,16 @@ body {
     font-size: 12px;
 }
 
+.obcLogStyle {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 46px;
+};
+
+.defaultLogStyle {
+    padding-left: 60%;
+};
+
  /* width={700} height={240} */
 
 /*  */

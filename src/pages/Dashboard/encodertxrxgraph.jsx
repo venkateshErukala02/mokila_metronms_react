@@ -31,7 +31,7 @@ const EncoderTxChart = ({graphOption, graphOptionValue }) => {
       useEffect(() => {
       let url = '';
       if (graphOption === 'live') {
-         const url = `api/v2/nodemanageview/encodersum?nodeId=${nodeDataId}`;
+         const url = `api/v2/nodelinks/encoder/stats?nodeId=${nodeDataId}`;
       } else {
         // url = `rest/measurements/node%5B${nodeDataId}%5D.worpindex%5B1.1%5D?aggregation=AVERAGE&att=lsnr,rsnr,traincab&duration=${graphOptionValue}`;
       }
@@ -43,19 +43,21 @@ const EncoderTxChart = ({graphOption, graphOptionValue }) => {
       if (graphOption === 'live') {
         const defData = []
         for (let i = 0; i <= 360; i++) {
-          let arr = { "timestamp": 0, "index": i, "rxBit": 0, "txBit": 0, "camDesc1" : '',
-                    "camDesc2": '',
-                    "camDesc3" : '',
-                    "camDesc4": '',
-                    "camStatus1": '',
-                    "camStatus2": '',
-                    "camStatus3": '',
-                    "camStatus4": '',
-                    "systemName": '',
-                    "station": '',
-                    "serialNumber": '',
-                    "ethernetMAC" : '',
-                    "softwareVersion": '',}
+          let arr = { "timestamp": 0, "index": i, "rxBit": 0, "txBit": 0,
+                    //  "camDesc1" : '',
+                    // "camDesc2": '',
+                    // "camDesc3" : '',
+                    // "camDesc4": '',
+                    // "camStatus1": '',
+                    // "camStatus2": '',
+                    // "camStatus3": '',
+                    // "camStatus4": '',
+                    // "systemName": '',
+                    // "station": '',
+                    // "serialNumber": '',
+                    // "ethernetMAC" : '',
+                    // "softwareVersion": '',
+                  }
           defData.push(arr);
         }
         setTxrxData(defData)
@@ -66,7 +68,7 @@ const EncoderTxChart = ({graphOption, graphOptionValue }) => {
         interval = setInterval(() => {
           // api/v2/nodelinks/constats?nodeId=237
           //const url = `api/v2//nodelinks/linkstatstest?nodeId=${nodeDataId}`;
-          const url = `api/v2/nodemanageview/encodersum?nodeId=${nodeDataId}`;
+          const url = `api/v2/nodelinks/encoder/stats?nodeId=${nodeDataId}`;
           getServerStatusDt(url);
         }, 5000);
       }
@@ -108,39 +110,41 @@ const EncoderTxChart = ({graphOption, graphOptionValue }) => {
                 dataNew = {
                   rxBit: 0,
                   txBit: 0,
-                  camDesc1 : data.camDesc1,
-                  camDesc2: data.camDesc2,
-                  camDesc3 : data.camDesc3,
-                  camDesc4: data.camDesc4,
-                  camStatus1: data.camStatus1,
-                  camStatus2: data.camStatus2,
-                  camStatus3: data.camStatus3,
-                  camStatus4: data.camStatus4,
-                  systemName: data.systemName,
-                  station: data.station,
-                  serialNumber: data.serialNumber,
-                  ethernetMAC : data.ethernetMAC,
-                  softwareVersion: data.softwareVersion,
+                  // camDesc1 : data.camDesc1,
+                  // camDesc2: data.camDesc2,
+                  // camDesc3 : data.camDesc3,
+                  // camDesc4: data.camDesc4,
+                  // camStatus1: data.camStatus1,
+                  // camStatus2: data.camStatus2,
+                  // camStatus3: data.camStatus3,
+                  // camStatus4: data.camStatus4,
+                  // systemName: data.systemName,
+                  // station: data.station,
+                  // serialNumber: data.serialNumber,
+                  // ethernetMAC : data.ethernetMAC,
+                  // softwareVersion: data.softwareVersion,
                   timestamp: dt.getTime(),
                   index: counterRef.current,
                 }
                }else{
                 dataNew = {
-                  rxBit: data.rxBit === 'null' ? '0' : data.rxBit,
-                  txBit: data.txBit === 'null' ? '0' : data.txBit,
-                  camDesc1 : data.camDesc1,
-                  camDesc2: data.camDesc2,
-                  camDesc3 : data.camDesc3,
-                  camDesc4: data.camDesc4,
-                  camStatus1: data.camStatus1,
-                  camStatus2: data.camStatus2,
-                  camStatus3: data.camStatus3,
-                  camStatus4: data.camStatus4,
-                  systemName: data.systemName,
-                  station: data.station,
-                  serialNumber: data.serialNumber,
-                  ethernetMAC : data.ethernetMAC,
-                  softwareVersion: data.softwareVersion,
+                  // rxBit: data.rxBit === 'null' ? '0' : data.rxBit,
+                  // txBit: data.txBit === 'null' ? '0' : data.txBit,
+                  rxBit: Number(data.rxBit) || 0,
+                  txBit: Number(data.txBit) || 0,
+                  // camDesc1 : data.camDesc1,
+                  // camDesc2: data.camDesc2,
+                  // camDesc3 : data.camDesc3,
+                  // camDesc4: data.camDesc4,
+                  // camStatus1: data.camStatus1,
+                  // camStatus2: data.camStatus2,
+                  // camStatus3: data.camStatus3,
+                  // camStatus4: data.camStatus4,
+                  // systemName: data.systemName,
+                  // station: data.station,
+                  // serialNumber: data.serialNumber,
+                  // ethernetMAC : data.ethernetMAC,
+                  // softwareVersion: data.softwareVersion,
                   timestamp: dt.getTime(),
                   index: counterRef.current,
                 }
@@ -149,19 +153,19 @@ const EncoderTxChart = ({graphOption, graphOptionValue }) => {
                 dataNew = {
                   rxBit: 0,
                   txBit: 0,
-                  camDesc1 : data.camDesc1,
-                  camDesc2: data.camDesc2,
-                  camDesc3 : data.camDesc3,
-                  camDesc4: data.camDesc4,
-                  camStatus1: data.camStatus1,
-                  camStatus2: data.camStatus2,
-                  camStatus3: data.camStatus3,
-                  camStatus4: data.camStatus4,
-                  systemName: data.systemName,
-                  station: data.station,
-                  serialNumber: data.serialNumber,
-                  ethernetMAC : data.ethernetMAC,
-                  softwareVersion: data.softwareVersion,
+                  // camDesc1 : data.camDesc1,
+                  // camDesc2: data.camDesc2,
+                  // camDesc3 : data.camDesc3,
+                  // camDesc4: data.camDesc4,
+                  // camStatus1: data.camStatus1,
+                  // camStatus2: data.camStatus2,
+                  // camStatus3: data.camStatus3,
+                  // camStatus4: data.camStatus4,
+                  // systemName: data.systemName,
+                  // station: data.station,
+                  // serialNumber: data.serialNumber,
+                  // ethernetMAC : data.ethernetMAC,
+                  // softwareVersion: data.softwareVersion,
                   timestamp: dt.getTime(),
                   index: counterRef.current,
                 }
@@ -190,19 +194,19 @@ const EncoderTxChart = ({graphOption, graphOptionValue }) => {
           dataNew = {
                   rxBit: 0,
                   txBit: 0,
-                  camDesc1 : '',
-                  camDesc2: '',
-                  camDesc3 : '',
-                  camDesc4: '',
-                  camStatus1: '',
-                  camStatus2: '',
-                  camStatus3: '',
-                  camStatus4: '',
-                  systemName: '',
-                  station: '',
-                  serialNumber: '',
-                  ethernetMAC : '',
-                  softwareVersion: '',
+                  // camDesc1 : '',
+                  // camDesc2: '',
+                  // camDesc3 : '',
+                  // camDesc4: '',
+                  // camStatus1: '',
+                  // camStatus2: '',
+                  // camStatus3: '',
+                  // camStatus4: '',
+                  // systemName: '',
+                  // station: '',
+                  // serialNumber: '',
+                  // ethernetMAC : '',
+                  // softwareVersion: '',
                   timestamp: dt.getTime(),
                   index: counterRef.current,
                 }

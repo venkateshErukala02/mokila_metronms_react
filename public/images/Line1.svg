@@ -61,7 +61,7 @@
      clipPathUnits="userSpaceOnUse"
      id="clipPath122"><polyline
        fill="none"
-       stroke="#ffcb09"
+       stroke="#cccccc"
        stroke-width="20"
        stroke-linecap="round"
        stroke-miterlimit="10"
@@ -441,7 +441,7 @@
      maskUnits="userSpaceOnUse"
      id="mask2273"><polyline
        fill="none"
-       stroke="#ffcb09"
+       stroke="#cccccc"
        stroke-width="20"
        stroke-linecap="round"
        stroke-miterlimit="10"
@@ -451,7 +451,7 @@
      clipPathUnits="userSpaceOnUse"
      id="clipPath2553"><polyline
        fill="none"
-       stroke="#ffcb09"
+       stroke="#cccccc"
        stroke-width="20"
        stroke-linecap="round"
        stroke-miterlimit="10"
@@ -462,7 +462,7 @@
      clipPathUnits="userSpaceOnUse"
      id="clipPath3213"><polyline
        fill="none"
-       stroke="#ffcb09"
+       stroke="#cccccc"
        stroke-width="20"
        stroke-linecap="round"
        stroke-miterlimit="10"
@@ -473,7 +473,7 @@
      maskUnits="userSpaceOnUse"
      id="mask3407"><polyline
        fill="none"
-       stroke="#ffcb09"
+       stroke="#cccccc"
        stroke-width="20"
        stroke-linecap="round"
        stroke-miterlimit="10"
@@ -818,7 +818,7 @@
    inkscape:label="unused_layer"
    style="display:none;opacity:1"><polyline
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -827,7 +827,7 @@
      style="display:inline"
      clip-path="none" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -840,7 +840,7 @@
    sodipodi:insensitive="true">
 	<polyline
    fill="none"
-   stroke="#ffcb09"
+   stroke="#cccccc"
    stroke-width="20"
    stroke-linecap="round"
    stroke-miterlimit="10"
@@ -855,7 +855,7 @@
    sodipodi:insensitive="true">
 	<path
    fill="none"
-   stroke="#ffcb09"
+   stroke="#cccccc"
    stroke-width="20"
    stroke-linecap="round"
    stroke-miterlimit="10"
@@ -874,7 +874,7 @@
    inkscape:label="Tracks"
    style="display:inline"><polyline
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -884,7 +884,7 @@
      clip-path="url(#clipPath1331)"
      inkscape:label="VMC" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -894,7 +894,7 @@
      clip-path="url(#clipPath4075)"
      inkscape:label="FNC" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -904,7 +904,7 @@
      clip-path="url(#clipPath4066)"
      inkscape:label="NYC" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -914,7 +914,7 @@
      clip-path="url(#clipPath4057)"
      inkscape:label="SHY" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -924,7 +924,7 @@
      clip-path="url(#clipPath4048)"
      inkscape:label="YRM" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -934,7 +934,7 @@
      clip-path="url(#clipPath4039)"
      inkscape:label="LAW" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -944,7 +944,7 @@
      clip-path="url(#clipPath4030)"
      inkscape:label="EGN" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -954,7 +954,7 @@
      clip-path="url(#clipPath4021)"
      inkscape:label="DVL" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -964,7 +964,7 @@
      clip-path="url(#clipPath4012)"
      inkscape:label="STC" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -974,7 +974,7 @@
      clip-path="url(#clipPath4003)"
      inkscape:label="SMH" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -984,7 +984,7 @@
      clip-path="url(#clipPath3994)"
      inkscape:label="RSD" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -994,7 +994,7 @@
      clip-path="url(#clipPath3985)"
      inkscape:label="BLY" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1004,7 +1004,7 @@
      clip-path="url(#clipPath3976)"
      inkscape:label="WEL" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1014,7 +1014,7 @@
      clip-path="url(#clipPath3967)"
      inkscape:label="COL" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1024,7 +1024,7 @@
      clip-path="url(#clipPath3957)"
      inkscape:label="DUN" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1034,7 +1034,7 @@
      clip-path="url(#clipPath3948)"
      inkscape:label="QUN" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1044,7 +1044,7 @@
      clip-path="url(#clipPath3938)"
      inkscape:label="KNG" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1054,7 +1054,7 @@
      clip-path="url(#clipPath3846)"
      inkscape:label="STG" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1064,7 +1064,7 @@
      clip-path="url(#clipPath3837)"
      inkscape:label="SPA" /><polyline
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1074,7 +1074,7 @@
      clip-path="url(#clipPath3726)"
      inkscape:label="DUP" /><polyline
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1084,7 +1084,7 @@
      clip-path="url(#clipPath3703)"
      inkscape:label="CED" /><polyline
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1094,7 +1094,7 @@
      clip-path="url(#clipPath3694)"
      inkscape:label="GLN" /><polyline
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1104,7 +1104,7 @@
      clip-path="url(#clipPath3685)"
      inkscape:label="LWW" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1114,7 +1114,7 @@
      clip-path="url(#clipPath3882)"
      inkscape:label="OSG" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1124,7 +1124,7 @@
      clip-path="url(#clipPath3918)"
      inkscape:label="STA" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1134,7 +1134,7 @@
      clip-path="url(#clipPath3929)"
      inkscape:label="UNI" /><polyline
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1144,7 +1144,7 @@
      inkscape:label="YKD"
      clip-path="url(#clipPath3673)" /><polyline
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1154,7 +1154,7 @@
      clip-path="url(#clipPath3664)"
      inkscape:label="WIL" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1164,7 +1164,7 @@
      clip-path="url(#clipPath3864)"
      inkscape:label="QNP" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1174,7 +1174,7 @@
      clip-path="url(#clipPath3873)"
      inkscape:label="STP" /><polyline
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1184,7 +1184,7 @@
      clip-path="url(#clipPath3655)"
      inkscape:label="SHW" /><polyline
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1194,7 +1194,7 @@
      clip-path="url(#clipPath3646)"
      inkscape:label="DWP" /><polyline
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1204,7 +1204,7 @@
      clip-path="url(#clipPath3637)"
      inkscape:label="FNW" /><polyline
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1214,7 +1214,7 @@
      mask="url(#mask3593)"
      inkscape:label="PNV" /><polyline
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1224,7 +1224,7 @@
      clip-path="url(#clipPath3562)"
      inkscape:label="407" /><path
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1234,7 +1234,7 @@
      inkscape:label="MUS"
      clip-path="url(#clipPath3855)" /><polyline
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1244,7 +1244,7 @@
      mask="url(#mask3624)"
      inkscape:label="YKU" /><polyline
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"
@@ -1254,7 +1254,7 @@
      clip-path="url(#clipPath3715)"
      inkscape:label="SCW" /><polyline
      fill="none"
-     stroke="#ffcb09"
+     stroke="#cccccc"
      stroke-width="20"
      stroke-linecap="round"
      stroke-miterlimit="10"

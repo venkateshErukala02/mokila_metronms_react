@@ -156,53 +156,87 @@ const handleRowClick = (value) => {
     setCurrentObcsubTab(value);
   }
 
-      const getReportData = async (reportUrl) => {
+    //   const getReportData = async (reportUrl) => {
     
-        try {
+    //     try {
 
-            if (!reportUrl) {
-            console.error("URL is missing");
-            return;
-        }
+    //         if (!reportUrl) {
+    //         console.error("URL is missing");
+    //         return;
+    //     }
 
-          const updatedUrl = reportUrl.replace("events/list?_s", "events/export?_s");
-            const response = await fetch(updatedUrl, {
-                method: "GET",
-                headers: {
-                    // 'Authorization': `Basic ${token}`
-                },
-                // body: formData, 
-            });
+    //       const updatedUrl = reportUrl.replace("events/list?_s", "events/export?_s");
+    //         const response = await fetch(updatedUrl, {
+    //             method: "GET",
+    //             headers: {
+    //                 // 'Authorization': `Basic ${token}`
+    //             },
+    //             // body: formData, 
+    //         });
     
-             if (!response.ok) {
-            const errText = await response.text();
-            setIsError(`Error starting download: ${errText}`);
-            return;
-        }
+    //          if (!response.ok) {
+    //         const errText = await response.text();
+    //         setIsError(`Error starting download: ${errText}`);
+    //         return;
+    //     }
 
-        const blob = await response.blob();
+    //     const blob = await response.blob();
 
-        const downloadUrl = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
+    //     const downloadUrl = window.URL.createObjectURL(blob);
+    //     const a = document.createElement('a');
 
-        const filename = response.headers.get('Content-Disposition')?.split('filename=')[1] || 'report.csv';
-        a.href = downloadUrl;
-        a.download = filename.replace(/"/g, '');
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
+    //     const filename = response.headers.get('Content-Disposition')?.split('filename=')[1] || 'report.csv';
+    //     a.href = downloadUrl;
+    //     a.download = filename.replace(/"/g, '');
+    //     document.body.appendChild(a);
+    //     a.click();
+    //     a.remove();
 
-        window.URL.revokeObjectURL(downloadUrl);
-        } catch (error) {
-            setIsError('An error occurred while contacting the server.');
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    //     window.URL.revokeObjectURL(downloadUrl);
+    //     } catch (error) {
+    //         setIsError('An error occurred while contacting the server.');
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
+
+
+    const getReportData = async (reportUrl) => {
+  try {
+    const response = await fetch(reportUrl, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to download file");
+    }
+
+    const blob = await response.blob();
+
+    // Create a download link
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+
+    // File name
+    a.download = `logs_${Date.now()}.txt`;
+
+    document.body.appendChild(a);
+    a.click();
+
+    // Cleanup
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error("Download error:", error);
+  }
+};
 
     return (
         <section className="container-fluid">
-            <article className="border-tlr custom-row" style={{ paddingLeft: currentTab === 'obc' ? '0%' : '60%' }}>
+            <article className={`border-tlr custom-row ${currentTab === "obc" ? "obcLogStyle" : "defaultLogStyle"
+                 }`}
+            >
                 <>
                     {currentTab === 'obc' && (<>
                         <label for="name" className="selectlbl" style={{ display: 'inline-block',paddingLeft:'19px' }}>SelectLogs:</label>

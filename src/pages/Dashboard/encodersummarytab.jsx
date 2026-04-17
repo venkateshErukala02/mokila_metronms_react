@@ -5,6 +5,8 @@ import EncoderTxChart from "./encodertxrxgraph";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import LatencyChart from "./latencychart";
+import transcoderImage from "../../assets/img/transcoderimg.jpeg";
+
 
 
 
@@ -19,6 +21,7 @@ const EncoderSummaryTab = ({currentTab }) => {
   const [graphOptionValue, setGraphOptionValue] = useState('1l');
  const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [cameraData,setCameraData] = useState(null);
   const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress) || localStorage.getItem('nodeIpaddress');
 
     const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
@@ -72,20 +75,10 @@ const EncoderSummaryTab = ({currentTab }) => {
   };
 
 
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-      let url = `http://${nodeIpaddress}:8084/${currentTab}/api/v1/uptime`;
-      await getServerStatusUptimeDt(url);
-    };
-    fetchData();
-
-    const intervalId = setInterval(fetchData, 30000);
-
-  return () => clearInterval(intervalId);
-  }, [nodeIpaddress, currentTab]);
-
+//  useEffect(() => {
+//           const url = `api/v2/nodelinks/encoder/videostats?nodeId=${nodeDataId}`;
+//           getCameraData(url);
+//         }, []);
 
 
   const getServerStatusUptimeDt = async (url) => {
@@ -151,17 +144,17 @@ const EncoderSummaryTab = ({currentTab }) => {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      let url = `http://${nodeIpaddress}:8084/${currentTab}/api/v1/disk`;
-      await getDiskData(url);
-    };
-    fetchData();
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     let url = `http://${nodeIpaddress}:8084/${currentTab}/api/v1/disk`;
+  //     await getDiskData(url);
+  //   };
+  //   fetchData();
 
-    const intervalId = setInterval(fetchData, 30000);
+  //   const intervalId = setInterval(fetchData, 30000);
 
-  return () => clearInterval(intervalId);
-  }, [nodeIpaddress, currentTab]);
+  // return () => clearInterval(intervalId);
+  // }, [nodeIpaddress, currentTab]);
 
 
 
@@ -187,6 +180,67 @@ if(startDate && endDate !== null){
 }  
 }
 
+
+const getCameraData = async (url) => {
+            setIsLoading(true);
+            setIsError({ status: false, msg: "" });
+            try {
+                const options = {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+              
+    
+                };
+                const response = await fetch(url, options);
+    
+                const data = await response.json();
+                console.log('lplpplpl',data)
+    
+                if (response.ok) {
+                    setIsLoading(false);
+                    setCameraData(data);
+                    setIsError({ status: false, msg: "" });
+                } else {
+                    throw new Error("data not found");
+                }
+            } catch (error) {
+                setIsLoading(false);
+                setIsError({ status: true, msg: error.message });
+            }
+        };
+
+     useEffect(() => {
+       if (!nodeDataId) return;
+          const url = `api/v2/nodelinks/encoder/videostats?nodeId=${nodeDataId}`;
+          getCameraData(url);
+        }, []);
+
+        const formatUptime = (upTime) => {
+        if (!upTime || typeof upTime !== "string") {
+          // console.error("Invalid uptime format:", upTime);
+           return "No Data";  
+        }
+
+        const parts = upTime.split(":");
+        if (parts.length !== 4) {
+          // console.error("Invalid uptime format:", upTime);
+           return "No Data";  
+        }
+
+        const [days, hours, minutes, seconds] = parts.map(Number);
+
+        let result = "";
+
+        if (days) result += `${days}d `;
+        if (hours) result += `${hours}h `;
+        if (minutes) result += `${minutes}m `;
+        if (seconds) result += `${seconds}s`;
+
+        return result.trim();
+      };
+
   return (
     <>
 
@@ -203,10 +257,12 @@ if(startDate && endDate !== null){
 
                   <article className="card" id="div2">
                     <article style={{ margin: "auto", textAlign: 'center' }}>
-                      <img className="nodeimg" style={{ width: '70px', height: '58px' }} src={obcimage} alt="node" />
-                      {/* <label className="summarymode"> {nodeItemDt.nodeDesc}</label> */}
-                      <label className="summarymode" style={{ display: 'block' }}> Cab - {nodeItemDt?.carnumber || "loading.."}</label>
-                      <label className="summarysytem"><i className="fas fa-arrow-up fa-1x ng-scope "></i>{upTimeData}</label>
+                      <img className="nodeimg" src={transcoderImage} alt="transcoderImage" width="210px" height="190px" />
+                      {/* <label className="summarymode"> {nodeItemDt.upTime}</label> */}
+                      {/* <label className="summarymode" style={{ display: 'block' }}> Cab - {nodeItemDt?.carnumber || "loading.."}</label> */}
+                      <article>
+                      <label className="summarysytem"><i className="fas fa-arrow-up fa-1x ng-scope "></i>{formatUptime(nodeItemDt?.upTime)}</label> 
+                      </article>
                     </article>
                     <article style={{ margin: "auto" }}>
                       <article>
@@ -265,23 +321,23 @@ if(startDate && endDate !== null){
                             <tbody className="encodertbbdtwo">
                                 <tr>
                                 <td>Camera 1</td>
-                                <td>{nodeItemDt.camDesc1}</td>
-                                <td>{nodeItemDt.camStatus1}</td>
+                                <td>{cameraData?.camDesc1}</td>
+                                <td>{cameraData?.camStatus1}</td>
                                 </tr>
                                 <tr>
                                 <td>Camera 2</td>
-                                <td>{nodeItemDt.camDesc2}</td>
-                                <td>{nodeItemDt.camStatus2}</td>
+                                <td>{cameraData?.camDesc2}</td>
+                                <td>{cameraData?.camStatus2}</td>
                                 </tr>
                                 <tr>
                                 <td>Camera 3</td>
-                                <td>{nodeItemDt.camDesc3}</td>
-                                <td>{nodeItemDt.camStatus3}</td>
+                                <td>{cameraData?.camDesc3}</td>
+                                <td>{cameraData?.camStatus3}</td>
                                 </tr>
                                 <tr>
                                 <td>Camera 4</td>
-                                <td>{nodeItemDt.camDesc4}</td>
-                                <td>{nodeItemDt.camStatus4}</td>
+                                <td>{cameraData?.camDesc4}</td>
+                                <td>{cameraData?.camStatus4}</td>
                                 </tr>
                             </tbody>
                             </table> 

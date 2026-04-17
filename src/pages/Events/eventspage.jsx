@@ -258,7 +258,7 @@ const EventPg = () => {
                                 onChange={(e) => setCabNumber(e.target.value)}
                                 name="" placeholder="Enter Cab Number" id="" className="settinglabelsubinp" />
                                 <button type="button" className="createbtn" onClick={() => {
-                                    handleCabNumberIp();}}>run</button>
+                                    handleCabNumberIp();}}>Fetch</button>
                                 </div>
                                          <article className="row border-allsd" style={{ height: '16vh', overflow: 'hidden',position:'relative' }}>
                                 <table className="col-md-12 col-sm-12 col-lg-12 col-xl-12" style={{ tableLayout: 'fixed', width: '100%' }}>

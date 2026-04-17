@@ -67,17 +67,17 @@ const IoboxSummaryTab = ({currentTab }) => {
 
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      let url = `http://${nodeIpaddress}:8084/${currentTab}/api/v1/uptime`;
-      await getServerStatusUptimeDt(url);
-    };
-    fetchData();
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     let url = `http://${nodeIpaddress}:8084/${currentTab}/api/v1/uptime`;
+  //     await getServerStatusUptimeDt(url);
+  //   };
+  //   fetchData();
 
-    const intervalId = setInterval(fetchData, 30000);
+  //   const intervalId = setInterval(fetchData, 30000);
 
-  return () => clearInterval(intervalId);
-  }, [nodeIpaddress, currentTab]);
+  // return () => clearInterval(intervalId);
+  // }, [nodeIpaddress, currentTab]);
 
 
 
@@ -144,17 +144,17 @@ const IoboxSummaryTab = ({currentTab }) => {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      let url = `http://${nodeIpaddress}:8084/${currentTab}/api/v1/disk`;
-      await getDiskData(url);
-    };
-    fetchData();
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     let url = `http://${nodeIpaddress}:8084/${currentTab}/api/v1/disk`;
+  //     await getDiskData(url);
+  //   };
+  //   fetchData();
 
-    const intervalId = setInterval(fetchData, 30000);
+  //   const intervalId = setInterval(fetchData, 30000);
 
-  return () => clearInterval(intervalId);
-  }, [nodeIpaddress, currentTab]);
+  // return () => clearInterval(intervalId);
+  // }, [nodeIpaddress, currentTab]);
 
 
 
@@ -279,9 +279,9 @@ const myData = {
 
                   <article className="card" id="div2">
                     <article style={{ margin: "auto", textAlign: 'center' }}>
-                      <img className="nodeimg" style={{ width: '70px', height: '58px' }} src={obcimage} alt="node" />
-                      {/* <label className="summarymode"> {nodeItemDt.nodeDesc}</label> */}
-                      <label className="summarymode" style={{ display: 'block' }}> Cab - {nodeItemDt?.carnumber || ""}</label>
+                      {/* <img className="nodeimg" style={{ width: '70px', height: '58px' }} src={obcimage} alt="node" />
+                      <label className="summarymode"> {nodeItemDt.nodeDesc}</label>
+                      <label className="summarymode" style={{ display: 'block' }}> Cab - {nodeItemDt?.carnumber || ""}</label> */}
                       {/* <label className="summarysytem"><i className="fas fa-arrow-up fa-1x ng-scope "></i>{upTimeData}</label> */}
                     </article>
                     <article style={{ margin: "auto" }}>

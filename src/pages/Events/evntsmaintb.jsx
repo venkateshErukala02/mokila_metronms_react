@@ -31,7 +31,7 @@ const EventMainTB = () => {
     const [eventpopupData,setEventpopupData] = useState([]);
     const popupRef = useRef(null);
     const [date, setDate] = useState(null);
-
+    const [fromValue,setFromValue] =useState('0');
     const [showCustomPopup, setShowCustomPopup] = useState(false);
   const [customStartDate, setCustomStartDate] = useState(null);
   const [customEndDate, setCustomEndDate] = useState(null);
@@ -69,10 +69,11 @@ const EventMainTB = () => {
 
         const filterString = filterParts.join(";");
 
-        let url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`
+        let url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
         setReportUrl(url); 
         getDataEvntMain(url);
   };
+
 
 
     useEffect(() => {
@@ -163,6 +164,8 @@ const EventMainTB = () => {
     useEffect(() => {
 
         if (searchBtn) return;
+        const fetchData = () => {
+
         let url = '';
 
         let filterParts = [
@@ -177,25 +180,31 @@ const EventMainTB = () => {
         const filterString = filterParts.join(";");
         switch (typevalueSel) {
             case 'events':
-                url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`
-                getDataEvntMain(url);
+                url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
                 break;
 
             case 'syslogd':
-                url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`;
-                getDataEvntMain(url);
+                url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`;
 
                 break;
             case 'auditlog':
-                url= `api/v2/audit/list?_s=&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`
-                getDataEvntMain(url);
+                url= `api/v2/audit/list?_s=&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
                 break;
 
             default:
 
                 break;
         }
-    }, [typevalueSel, pageSize, eventmainLimitLabelSel,eventmainSeverityValueSel,searchBtn,eventtimeSel]);
+        setReportUrl(url);
+          getDataEvntMain(url);
+    }
+
+    fetchData();
+
+    const interval = setInterval(fetchData, 30000);
+    return () => clearInterval(interval);
+
+    }, [typevalueSel, eventmainLimitLabelSel,eventmainSeverityValueSel,searchBtn,eventtimeSel,fromValue]);
 
 
     const handleNodeIp = async (eventipText) => {
@@ -321,6 +330,7 @@ const EventMainTB = () => {
 
 
     const handleIncreamentOffset = () => {
+         setFromValue(parseInt(pageSize)* parseInt(eventmainLimitLabelSel));
         // setFromValue(parseInt(pageSize)* parseInt(limitValueSelLabel));
         if (eventmainData?.length === 0 || undefined) {
             setPageSize(prevstate => prevstate);
@@ -335,7 +345,8 @@ const EventMainTB = () => {
         if (pageSize > 1) {
             setPageSize(prevPageSize => {
                 const newPageSize = prevPageSize - 1;
-                // setFromValue(parseInt(newPageSize) * parseInt(limitValueSelLabel));
+                const fromCal = (parseInt(newPageSize)-1) * parseInt(eventmainLimitLabelSel);
+                 setFromValue(fromCal);
                 return newPageSize;
             });
         } else {
@@ -374,13 +385,13 @@ const EventMainTB = () => {
                          }
                 }  else {
                     if(typevalueSel === 'events'){
-                         filter  =  filter +  `eventDisplay%3D%3DY%3BeventSource!%3Dsyslogd;`+ `eventLogMsg%3D%3D` +`*${eventipText}*`;
+                         filter  =  filter +  `eventDisplay%3D%3DY%3BeventSource!%3Dsyslogd;`+ `eventLogMsg%3D%3D` +`*${eventipText}*;`;
                             if (eventmainSeverityValueSel) {
                         filter  =  filter + '&eventSeverity==' + `${eventmainSeverityValueSel}`;
                         }
-                         if (eventtimeSel && selectedDuration !== 'Custom') {
-                    filter  =  filter +  '&eventCreateTime%3Dgt%3D' + `${eventtimeSel}`;
-                    }
+                    //      if (eventtimeSel && selectedDuration !== 'Custom') {
+                    // filter  =  filter +  '&eventCreateTime%3Dgt%3D' + `${eventtimeSel}`;
+                    // }
                     if(selectedDuration === 'Custom' && startTimestamp && endTimestamp){
                         filter = filter + `eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}`;
                     }
@@ -391,13 +402,13 @@ const EventMainTB = () => {
                      setReportUrl(url);
                      handleRadialIPa(url);
                     }else{
-                    filter  =  filter + `eventDisplay%3D%3DY%3BeventSource%3D%3Dsyslogd;` + `eventLogMsg%3D%3D` +`*${eventipText}*`;
+                    filter  =  filter + `eventDisplay%3D%3DY%3BeventSource%3D%3Dsyslogd;` + `eventLogMsg%3D%3D` +`*${eventipText}*;`;
                      if (eventmainSeverityValueSel) {
                         filter  =  filter + '&eventSeverity==' + `${eventmainSeverityValueSel}`;
                         }
-                         if (eventtimeSel && selectedDuration !== 'Custom') {
-                    filter  =  filter +  '&eventCreateTime%3Dgt%3D' + `${eventtimeSel}`;
-                    }
+                    //      if (eventtimeSel && selectedDuration !== 'Custom') {
+                    // filter  =  filter +  '&eventCreateTime%3Dgt%3D' + `${eventtimeSel}`;
+                    // }
                      if(selectedDuration === 'Custom' && startTimestamp && endTimestamp){
                         filter = filter + `eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}`;
                     }
@@ -536,10 +547,14 @@ const EventMainTB = () => {
         setEventmainSeverityValueSel('');
         setEventmainSeverityLabelSel('All');
         setPageSize(1);
+        setFromValue('0');
     },[typevalueSel]);
 
     
-
+    const handleCustomPopup=()=>{
+        if(selectedDuration !== 'Custom') return;
+        setShowCustomPopup(true)
+    }
 
     return (
         <>
@@ -613,7 +628,8 @@ const EventMainTB = () => {
                                <option value="uei.opennms.org/traps/KEYWEST-MIB/disassociatedTrap" label="Dissociated">Dissociated</option>
                             </select> */}
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
-                            <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
+                            <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px',
+                                 minWidth: '94px' }} onClick={handleCustomPopup}>
                                 <option value="3600000" label="Last hour">Last hour</option>
                                 <option value="28800000" label="8 hours">8 hours</option>
                                 <option value="86400000" label="24 hours">24 hours</option>

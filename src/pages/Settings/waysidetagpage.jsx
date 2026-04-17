@@ -408,13 +408,13 @@ const WaysideTagContainer=()=>{
                                                     checked=''
                                                     onChange=''
                                                 /></td>
-                                            <td>{item.tag}</td>
+                                            <td style={{paddingLeft:'18px'}}>{item.tag}</td>
                                             <td>{item.location}</td>
-                                            <td>{item.line}</td>
+                                            <td style={{paddingLeft:'33px'}}>{item.line}</td>
                                             <td>
                                                 {item.position || item.postion}</td>
-                                            <td>{item.type}</td>
-                                            <td><input type="checkbox" className="incl"
+                                            <td style={{paddingLeft:'23px'}}>{item.type}</td>
+                                            <td style={{paddingLeft:'28px'}}><input type="checkbox" className="incl"
                                                      checked={item.priority === 1} // checkbox reflects priority
                                                 onChange={() => {
                                                 handlePriority(item.priority === 1 ? 0 : 1); 
@@ -422,14 +422,14 @@ const WaysideTagContainer=()=>{
                                                 }}
 
                                                 /></td>
-                                            <td><input type="checkbox" className="incl"
+                                            <td style={{paddingLeft:'37px'}}><input type="checkbox" className="incl"
                                                 checked={item.sendMail}
                                                 onChange={()=>{ handleMail(item.sendMail === true ? 1 :0);
                                                     setMailChecked(!mailChecked)}
                                                 }
                                                 
                                             /></td>
-                                            <td><input type="checkbox" className="incl"
+                                            <td style={{paddingLeft:'53px'}}><input type="checkbox" className="incl"
                                                  checked={item.reportAlarm}
                                                 onChange={()=>{ handleReport(item.reportAlarm === true ? 1 :0);
                                                     setReportChecked(!reportChecked)}

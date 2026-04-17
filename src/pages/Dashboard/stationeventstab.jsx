@@ -76,7 +76,7 @@ const SnEventTab=()=>{
 
         const filterString = filterParts.join(";");
 
-        let url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${pageSize}&order=desc&orderBy=id`
+        let url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
         setReportUrl(url); 
         getDataEvntMain(url);
 
@@ -172,12 +172,12 @@ const SnEventTab=()=>{
 
         switch (typevalueSel) {
             case 'events':
-               url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitValueSel}&offset=0`;
+               url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitValueSel}&offset=${fromValue}`;
                 break;
 
             case 'syslogd':
                 // url='api/v2/essearch/search';
-                url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitValueSel}&offset=0`;
+                url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitValueSel}&offset=${fromValue}`;
 
                 break;
             case 'auditlog':
@@ -185,7 +185,7 @@ const SnEventTab=()=>{
                 break;
 
             default:
-                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd&limit=${eventmainLimitValueSel}&offset=0`;
+                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd&limit=${eventmainLimitValueSel}&offset=${fromValue}`;
                 break;
         }
         setReportUrl(url)
@@ -197,7 +197,7 @@ const SnEventTab=()=>{
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
 
-    }, [typevalueSel,nodeDataId,eventmainLimitLabelSel,fromValue,pageSize,eventmainSeverityValueSel,eventtimeSel,searchBtn]);
+    }, [typevalueSel,nodeDataId,eventmainLimitLabelSel,fromValue,eventmainSeverityValueSel,eventtimeSel,searchBtn]);
 
     const formatTime = (timestamp) => {
         const date = new Date(timestamp);
@@ -280,7 +280,13 @@ const SnEventTab=()=>{
 
     const handleIncreamentOffset=()=>{
         setFromValue(parseInt(pageSize)* parseInt(eventmainLimitLabelSel));
-        setPageSize(prevstate=>  prevstate +1);
+         // setFromValue(parseInt(pageSize)* parseInt(limitValueSelLabel));
+        if (eventmainData?.length === 0 || undefined) {
+            setPageSize(prevstate => prevstate);
+        } else if (eventmainData?.length > 0) {
+            setPageSize(prevstate => prevstate + 1);
+        }
+        // setPageSize(prevstate=>  prevstate +1);
         
     }
 
@@ -288,12 +294,13 @@ const SnEventTab=()=>{
           if(pageSize > 1){
         setPageSize(prevPageSize => {
         const newPageSize = prevPageSize - 1;
-        setFromValue(parseInt(newPageSize) * parseInt(eventmainLimitLabelSel));
+        const fromCal = (parseInt(newPageSize)-1) * parseInt(eventmainLimitLabelSel);
+        setFromValue(fromCal);
         return newPageSize;
             });
         }else{
             setPageSize(1);
-                        setFromValue('0');
+                        // setFromValue('0');
                 }
     }
 
@@ -404,9 +411,9 @@ const SnEventTab=()=>{
         filters.push(`eventSeverity==${eventmainSeverityValueSel}`);
     }
 
-    if (eventtimeSel && selectedDuration !== 'Custom') {
-        filters.push(`eventCreateTime%3Dgt%3D${eventtimeSel}`);
-    }
+    // if (eventtimeSel && selectedDuration !== 'Custom') {
+    //     filters.push(`eventCreateTime%3Dgt%3D${eventtimeSel}`);
+    // }
 
     if(selectedDuration === 'Custom' && startTimestamp && endTimestamp){
         filters.push(`eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}`)
