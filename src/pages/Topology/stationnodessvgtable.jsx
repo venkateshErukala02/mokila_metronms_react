@@ -86,7 +86,7 @@ const StationNodesvgTable=({textName,yardfacilitieData,stationView, stationTagvi
                 <hr className="dashbdhr" />
             </article>
             <article className="row">
-                <article style={{overflowY:'auto',height:'47vh'}}>
+                <article style={{overflowY:'auto',height:'23vh'}}>
                     <table className="col-12 border-allsd" style={{ height: '0vh' }}>
 
                         <thead className="tbtwo">

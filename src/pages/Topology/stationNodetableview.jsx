@@ -4,6 +4,7 @@ import '../Topology/topology.css';
 import SouthBoundTb from "./southboundtb";
 import NorthBoundTb from "./northboundtb";
 import StationNodesvgTable from "./stationnodessvgtable";
+import StationTagsTable from "../Wayside/stationtagstable";
 
 
 const StationNodeTableView=({textName , rdDataRef,yardfacilitieData,stationView, stationTagview,lineTagview,trainView, selectedTreeNodeId,expandedTreeDt})=>{
@@ -30,6 +31,7 @@ const StationNodeTableView=({textName , rdDataRef,yardfacilitieData,stationView,
                        expandedTreeDt={expandedTreeDt}/>
                        <article>
                        </article>
+                        <StationTagsTable rdDataRef={rdDataRef}/>
                     </article>
                     <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6" style={{padding:'5px'}}>
                           <article className="border-tlr custom-row" style={{textAlign:'center'}}>
