@@ -69,9 +69,11 @@ const NorthBoundTb=({textName})=>{
 
     return(
         <>
-        <article style={{marginTop:'10px'}}>
+        <article>
                         <article className="bound-card">
-                      
+                       <article className="sbcard-header">
+                            Alarms
+                        </article>
                         <article className="trainevenhead">
                             North Bound
                             <article className="alarmiconsty">

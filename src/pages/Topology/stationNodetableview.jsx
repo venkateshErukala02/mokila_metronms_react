@@ -14,8 +14,11 @@ const StationNodeTableView=({textName , rdDataRef,yardfacilitieData,stationView,
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [searchBtn, setSearchBtn] = useState("");
+    const [boundsMode,setBoundsMode]=useState('SouthBound');
 
-
+       const handleChange = (event) => {
+        setBoundsMode(event.target.value);
+        };
   
     return(
         <>
@@ -29,10 +32,34 @@ const StationNodeTableView=({textName , rdDataRef,yardfacilitieData,stationView,
                        </article>
                     </article>
                     <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6" style={{padding:'5px'}}>
-                          <SouthBoundTb textName={textName}/>
-                        <article>
+                          <article className="border-tlr custom-row" style={{textAlign:'center'}}>
+
+      <label className="radiolabel" style={boundsMode === 'SouthBound' ? {fontWeight:700,color:'#495057',marginRight:'10px'}:{marginRight:'10px'}}>
+        <input
+          type="radio"
+          value="SouthBound"
+          checked={boundsMode === 'SouthBound'}
+          onChange={handleChange}
+          className="radiobtn"
+        />
+        South Bound
+      </label>
+
+      <label className="radiolabel" style={boundsMode === 'NorthBound' ? {fontWeight:700,color:'#495057'}:{}}>
+        <input
+          type="radio"
+          value="NorthBound"
+          checked={boundsMode === 'NorthBound'}
+          onChange={handleChange}
+          className="radiobtn"
+        />
+        North Bound
+      </label>
+         
+            </article>
+                        {boundsMode !== 'NorthBound' ? ( <SouthBoundTb textName={textName}/>) : (  <article>
                              <NorthBoundTb textName={textName}/>
-                        </article>
+                        </article>) }
                 </article>  
             </article>
           </article>
