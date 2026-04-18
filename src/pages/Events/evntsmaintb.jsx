@@ -36,16 +36,18 @@ const EventMainTB = () => {
   const [customStartDate, setCustomStartDate] = useState(null);
   const [customEndDate, setCustomEndDate] = useState(null);
   const [reportUrl, setReportUrl] = useState('');
+  const [searchUrl,setSearchUrl] = useState('');
   const [showCustomDateAlertPopup,setShowCustomDateAlertPopup] = useState(false);
   const [showCustomDateLimitAlertPopup,setShowCustomDateLimitAlertPopup] = useState(false);
+  const [isCustomApplied, setIsCustomApplied] = useState(false);
+  const reportUrlRef = useRef('');
 
   const handleClosepopup  = ()=>{
     setShowCustomPopup(false);
   }
 
   const handleCustomSubmit = (e) => {
-      e.preventDefault(); 
-    setShowCustomPopup(false);
+    if (e) e.preventDefault(); 
     if (!customStartDate || !customEndDate) {
             setShowCustomDateAlertPopup(true);
             return;
@@ -55,6 +57,9 @@ const EventMainTB = () => {
             setShowCustomDateLimitAlertPopup(true)
             return;
         }
+
+        setShowCustomPopup(false);
+        setIsCustomApplied(true);
 
         const startTimestamp = customStartDate.getTime(); // ms
         const endTimestamp = customEndDate.getTime();  
@@ -70,9 +75,17 @@ const EventMainTB = () => {
         const filterString = filterParts.join(";");
 
         let url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
+        reportUrlRef.current = url;
         setReportUrl(url); 
         getDataEvntMain(url);
   };
+
+
+  useEffect(()=>{
+     if(selectedDuration === 'Custom' && isCustomApplied) {
+        handleCustomSubmit();
+     }
+  },[eventmainSeverityValueSel,eventmainLimitLabelSel,customStartDate,customEndDate,fromValue,searchBtn])
 
 
 
@@ -96,6 +109,7 @@ const EventMainTB = () => {
 
 
     const getDataEvntMain = async (url) => {
+        reportUrlRef.current = url;
         setReportUrl(url);
        if(eventipText === ''){
         setIsLoading(true);
@@ -164,6 +178,7 @@ const EventMainTB = () => {
     useEffect(() => {
 
         if (searchBtn) return;
+        if(selectedDuration === 'Custom') return;
         const fetchData = () => {
 
         let url = '';
@@ -195,6 +210,7 @@ const EventMainTB = () => {
 
                 break;
         }
+        reportUrlRef.current = url;
         setReportUrl(url);
           getDataEvntMain(url);
     }
@@ -204,7 +220,7 @@ const EventMainTB = () => {
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
 
-    }, [typevalueSel, eventmainLimitLabelSel,eventmainSeverityValueSel,searchBtn,eventtimeSel,fromValue]);
+    }, [typevalueSel, eventmainLimitLabelSel,eventmainSeverityValueSel,searchBtn,eventtimeSel,fromValue,selectedDuration]);
 
 
     const handleNodeIp = async (eventipText) => {
@@ -371,18 +387,18 @@ const EventMainTB = () => {
                 url = `api/v2/audit/list?_s=logDesc==*${eventipText}*;datentime%3Dgt%3D1760080111575&limit=100&offset=0&order=desc&orderBy=id`
                  handleRadialIPa(url);
             } else {
-                start = `api/v2/events?_s=`
+                start = `api/v2/events/list?_s=`
                 const regex = /^192\.168\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
                 if (regex.test(eventipText)) {
-                    const id = await handleNodeIp(eventipText);
-                         if (id && typevalueSel === 'events') {
-                        // filter  =  filter +'node.id%3D%3D' + `${id}` + ';';
-                        url = `api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource%3D%3Dsyslogd;node.id%3D%3D${id};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=0&order=desc&orderBy=id`
-                        handleRadialIPa(url);
-                         }else{
-                             url = `api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;node.id%3D%3D${id};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=0&order=desc&orderBy=id`
-                        handleRadialIPa(url); 
-                         }
+                    // const id = await handleNodeIp(eventipText);
+                        //  if (id && typevalueSel === 'events') {
+                        // // filter  =  filter +'node.id%3D%3D' + `${id}` + ';';
+                        // url = `api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource%3D%3Dsyslogd;node.id%3D%3D${id};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=0&order=desc&orderBy=id`
+                        // handleRadialIPa(url);
+                        //  }else{
+                        //      url = `api/v2/events/list?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;node.id%3D%3D${id};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=0&order=desc&orderBy=id`
+                        // handleRadialIPa(url); 
+                        //  }
                 }  else {
                     if(typevalueSel === 'events'){
                          filter  =  filter +  `eventDisplay%3D%3DY%3BeventSource!%3Dsyslogd;`+ `eventLogMsg%3D%3D` +`*${eventipText}*;`;
@@ -399,7 +415,8 @@ const EventMainTB = () => {
                     filter  =  filter +'&limit=' + `${eventmainLimitLabelSel}`;
                     }
                     url = start + filter + '&offset=0&order=desc&orderBy=id';
-                     setReportUrl(url);
+                    // reportUrlRef.current = url;
+                    //  setReportUrl(url);
                      handleRadialIPa(url);
                     }else{
                     filter  =  filter + `eventDisplay%3D%3DY%3BeventSource%3D%3Dsyslogd;` + `eventLogMsg%3D%3D` +`*${eventipText}*;`;
@@ -417,7 +434,7 @@ const EventMainTB = () => {
                     filter  =  filter +'&limit=' + `${eventmainLimitLabelSel}`;
                     }
                     url = start + filter + '&offset=0&order=desc&orderBy=id';
-                     handleRadialIPa(url);
+                    handleRadialIPa(url);
                 }
                 }
                
@@ -428,9 +445,7 @@ const EventMainTB = () => {
 
 
       const handleRadialIPa = async (url) => {
-        setReportUrl(url);
-        console.log('joojojooo',reportUrl);
-        console.log('kkpkkpkp',url);
+        setSearchUrl(url);
         if (!eventipText) {
             alert("Please enter a search term");
             return;
@@ -494,16 +509,17 @@ const EventMainTB = () => {
     }
 
 
-      const getReportData = async (reportUrl) => {
+      const getReportData = async (url) => {
+        const finalUrl = searchBtn ? searchUrl : url;
     
         try {
 
-            if (!reportUrl) {
+            if (!finalUrl) {
             console.error("URL is missing");
             return;
         }
 
-          const updatedUrl = reportUrl.replace("events/list?_s", "events/export?_s");
+          const updatedUrl = finalUrl.replace("events/list?_s", "events/export?_s");
             const response = await fetch(updatedUrl, {
                 method: "GET",
                 headers: {
@@ -594,8 +610,8 @@ const EventMainTB = () => {
                              {/* <button type="button" style={{marginRight:'12px'}} className="createbtn" onClick={getReportData}>Report 
                                     <i className="fa fa-file-text" aria-hidden="true"></i>
                                 </button> */}
-                                 <button type="button" className="createbtn"   title="Export"  onClick={() => reportUrl && getReportData(reportUrl)}
-  disabled={!reportUrl}   style={{ marginRight: '7px'}}>  <i class="fa-solid fa-download"></i></button>     
+                                 <button type="button" className="createbtn"   title="Export"  onClick={() => reportUrlRef.current && getReportData(reportUrlRef.current)}
+  disabled={!reportUrlRef.current}   style={{ marginRight: '7px'}}>  <i class="fa-solid fa-download"></i></button>     
                     
 
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Type:</label>
