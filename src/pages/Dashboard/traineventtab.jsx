@@ -39,6 +39,9 @@ const TrainEventTab = () => {
     const [customEndDate, setCustomEndDate] = useState(null);
     const [showCustomDateAlertPopup,setShowCustomDateAlertPopup] = useState(false);
     const [showCustomDateLimitAlertPopup,setShowCustomDateLimitAlertPopup] = useState(false);
+    const [searchUrl,setSearchUrl] = useState('');
+    const [isCustomApplied, setIsCustomApplied] = useState(false);
+    const reportUrlRef = useRef('');
 
     const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
 
@@ -48,8 +51,8 @@ const TrainEventTab = () => {
   }
 
   const handleCustomSubmit = (e) => {
-      e.preventDefault(); 
-    setShowCustomPopup(false);
+    if (e) e.preventDefault();
+
     if (!customStartDate || !customEndDate) {
             setShowCustomDateAlertPopup(true);
             return;
@@ -59,6 +62,9 @@ const TrainEventTab = () => {
             setShowCustomDateLimitAlertPopup(true)
             return;
         }
+
+        setShowCustomPopup(false);
+        setIsCustomApplied(true);
 
         const startTimestamp = customStartDate.getTime(); // ms
         const endTimestamp = customEndDate.getTime();  
@@ -74,10 +80,18 @@ const TrainEventTab = () => {
         const filterString = filterParts.join(";");
 
         let url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
+        reportUrlRef.current = url;
         setReportUrl(url); 
         getDataEvntMain(url);
 
   };
+
+  useEffect(()=>{
+     if(selectedDuration === 'Custom' && isCustomApplied) {
+        handleCustomSubmit();
+     }
+  },[eventmainSeverityValueSel,eventmainLimitLabelSel,customStartDate,customEndDate,fromValue,searchBtn])
+
 
     useEffect(() => {
         if (selectedDuration == null || selectedDuration === '' || isNaN(selectedDuration)) return;
@@ -139,6 +153,7 @@ const TrainEventTab = () => {
 
     useEffect(() => {
             if(searchBtn) return;
+            if(selectedDuration === 'Custom') return;
         const fetchData = () => {
 
 
@@ -181,6 +196,7 @@ const TrainEventTab = () => {
                 url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd&limit=50&offset=${fromValue}`;
                 break;
         }
+        reportUrlRef.current = url;
         setReportUrl(url);
           getDataEvntMain(url);
     }
@@ -190,7 +206,7 @@ const TrainEventTab = () => {
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
 
-    }, [typevalueSel, nodeDataId,eventmainSeverityValueSel,eventtimeSel,eventmainLimitValueSel,searchBtn,fromValue]);
+    }, [typevalueSel, nodeDataId,eventmainSeverityValueSel,eventtimeSel,eventmainLimitValueSel,searchBtn,fromValue,selectedDuration]);
 
     const formatTime = (timestamp) => {
         const date = new Date(timestamp);
@@ -273,16 +289,17 @@ const TrainEventTab = () => {
         setLogsMode(event.target.value);
     };
 
-       const getReportData = async (reportUrl) => {
+       const getReportData = async (url) => {
+         const finalUrl = searchBtn ? searchUrl : url;
     
         try {
 
-            if (!reportUrl) {
+            if (!finalUrl) {
             console.error("URL is missing");
             return;
         }
 
-          const updatedUrl = reportUrl.replace("events/list?_s", "events/export?_s");
+          const updatedUrl = finalUrl.replace("events/list?_s", "events/export?_s");
             const response = await fetch(updatedUrl, {
                 method: "GET",
                 headers: {
@@ -354,7 +371,7 @@ const TrainEventTab = () => {
     const startTimestamp = customStartDate?.getTime();
     const endTimestamp = customEndDate?.getTime(); 
 
-    let start = `api/v2/events?_s=node.id%3D%3D${nodeDataId}`;
+    let start = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId}`;
     let filters = [];
 
     filters.push("eventDisplay%3D%3DY");
@@ -386,13 +403,13 @@ const TrainEventTab = () => {
     }
 
     let url = `${start};${query}&offset=0&order=desc&orderBy=id`;
-    setReportUrl(url);
 
     handleRadialIPa(url);
 };
 
 
       const handleRadialIPa = async (url) => {
+        setSearchUrl(url);
         if (!eventipText) {
             alert("Please enter a search term");
             return;
@@ -471,6 +488,23 @@ const TrainEventTab = () => {
                 }
     }
 
+    useEffect(()=>{
+        setSearchBtn(false);
+        setEventipText('');
+        setEventmainLimitValueSel('50');
+        setEventmainLimitLabelSel('50');
+        setEventtimeSel(Date.now() - 86400000);
+        setEventmainSeverityValueSel('');
+        setEventmainSeverityLabelSel('All');
+        setPageSize(1);
+        setFromValue('0');
+    },[typevalueSel]);
+
+     const handleCustomPopup=()=>{
+        if(selectedDuration !== 'Custom') return;
+        setShowCustomPopup(true)
+    }
+
 
     return (
         <>
@@ -532,8 +566,8 @@ const TrainEventTab = () => {
                                 <article className="col-sm-8 col-md-8 col-lg-8 col-xl-8 col-xxl-8">
                                     <article style={{ float: 'right' }}>
                                         <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block' }}>
-                                        <button type="button" className="createbtn"   title="Export"  onClick={() => reportUrl && getReportData(reportUrl)}
-                                        disabled={!reportUrl}   style={{ marginRight: '7px'}}>  <i class="fa-solid fa-download"></i></button>
+                                        <button type="button" className="createbtn"   title="Export"  onClick={() => reportUrlRef.current && getReportData(reportUrlRef.current)}
+                                        disabled={!reportUrlRef.current}   style={{ marginRight: '7px'}}>  <i class="fa-solid fa-download"></i></button>
                                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Type:</label>
 
                                             <select name="name" id="name" value={typevalueSel} onChange={handleType} className="form-controll1" style={{ maxWidth: '93px' }}>
@@ -573,7 +607,7 @@ const TrainEventTab = () => {
                      <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Timess:</label>
 
 
-                            <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
+                            <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }} onClick={handleCustomPopup}>
                                 <option value="3600000" label="Last hour">Last hour</option>
                                 <option value="28800000" label="8 hours">8 hours</option>
                                 <option value="86400000" label="24 hours">24 hours</option>
