@@ -751,6 +751,10 @@ tbody.stationeventstbdtb>tr{width: 100%;font-size: 12px;}
 
 .stationeventstbdtb>tr:last-child{border-bottom: none;}
 
+tbody.stationeventstbdtb > tr > td:nth-child(1){
+    padding-left: 0;
+}
+
 
 
 
@@ -856,6 +860,11 @@ tbody.tncodereventstbdtb>tr{border-bottom: 1px solid rgb(33 35 39 / 7%);}
 tbody.tncodereventstbdtb>tr{width: 100%;font-size: 12px;}
 
 .tncodereventstbdtb>tr:last-child{border-bottom: none;}
+
+tbody.tncodereventstbdtb > tr > td:nth-child(1){
+    padding-left: 0;
+}
+
 
 
 thead.tncodereventsthtb > tr > th:nth-child(1),  

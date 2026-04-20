@@ -30,6 +30,8 @@ const TcEventTab=()=>{
     const [showEventPopup,setShowEventPopup] = useState(false);
     const [eventpopupData,setEventpopupData] = useState([]);
     const popupRef = useRef(null);
+    const [pageSize,setPageSize] = useState(1);
+    const [fromValue,setFromValue] =useState('0');
 
  const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
 
@@ -117,19 +119,19 @@ const TcEventTab=()=>{
 
         switch (typevalueSel) {
             case 'events':
-                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitLabelSel}&offset=0`;
+                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitLabelSel}&offset=${fromValue}`;
                 break;
 
             case 'syslogd':
-                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitLabelSel}&offset=0`;
+                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitLabelSel}&offset=${fromValue}`;
 
                 break;
             case 'auditlog':
-                url = `/api/v2/audit/list?_s=&limit=${eventmainLimitLabelSel}&offset=0&order=desc&orderBy=id`;
+                url = `/api/v2/audit/list?_s=&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`;
                 break;
 
             default:
-                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd&limit=${eventmainLimitLabelSel}&offset=0`;
+                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd&limit=${eventmainLimitLabelSel}&offset=${fromValue}`;
                 break;
         }
         getDataEvntMain(url);
@@ -139,7 +141,7 @@ const TcEventTab=()=>{
       const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
 
-    }, [typevalueSel,nodeDataId,date,eventmainSeverityValueSel,eventtimeSel,eventmainLimitLabelSel]);
+    }, [typevalueSel,nodeDataId,date,eventmainSeverityValueSel,eventtimeSel,eventmainLimitLabelSel,fromValue]);
 
     const formatTime = (timestamp) => {
         const date = new Date(timestamp);
@@ -243,6 +245,48 @@ const TcEventTab=()=>{
             const handleEventPopupClose=()=>{
                 setShowEventPopup(false);
             }
+
+             useEffect(()=>{
+                    setSearchBtn(false);
+                    setEventipText('');
+                    setEventmainLimitValueSel('50');
+                    setEventmainLimitLabelSel('50');
+                    setEventtimeSel(Date.now() - 86400000);
+                    setEventmainSeverityValueSel('');
+                    setEventmainSeverityLabelSel('All');
+                    setPageSize(1);
+                    setFromValue('0');
+                    setSelectedDuration("86400000");
+                },[typevalueSel]);
+
+
+
+                     const handleIncreamentOffset=()=>{
+        setFromValue(parseInt(pageSize)* parseInt(eventmainLimitLabelSel));
+         // setFromValue(parseInt(pageSize)* parseInt(limitValueSelLabel));
+        if (eventmainData?.length === 0 || undefined) {
+            setPageSize(prevstate => prevstate);
+        } else if (eventmainData?.length > 0) {
+            setPageSize(prevstate => prevstate + 1);
+        }
+        // setPageSize(prevstate=>  prevstate +1);
+        
+    }
+
+    const handleDecrementOffset=()=>{
+          if(pageSize > 1){
+        setPageSize(prevPageSize => {
+        const newPageSize = prevPageSize - 1;
+        const fromCal = (parseInt(newPageSize)-1) * parseInt(eventmainLimitLabelSel);
+        setFromValue(fromCal);
+        return newPageSize;
+            });
+        }else{
+            setPageSize(1);
+                        // setFromValue('0');
+                }
+    }
+
         
 
     return (
@@ -278,11 +322,11 @@ const TcEventTab=()=>{
                <article className="row border-tlr custom-row">
                 <article className="col-sm-4 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
                     <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block' }}>
-                        <button type="button" className="arrowlf">
+                        <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
                             <i className="fa-solid fa-arrow-left"></i>
                         </button>
-                        <button type="button" className="numcl"><span>1</span></button>
-                        <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                        <button type="button" className="numcl"><span>{pageSize}</span></button>
+                        <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
             
                     </article>
                     <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
@@ -397,7 +441,7 @@ const TcEventTab=()=>{
                             {Array.isArray(eventmainData) && eventmainData.length > 0 ? (
                                 eventmainData.map((event) => (
                                     <tr key={event.id} onClick={()=>handleEventPopup(event)}>
-                                        <td>{formatTime(event.time)}</td>
+                                        <td><i className={getCategoryClass(event.severity)}></i>{formatTime(event.time)}</td>
                                         <td>{event.severity}</td>
                                         <td>{event.logMessage}</td>
                                     </tr>

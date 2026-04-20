@@ -44,6 +44,8 @@ const EventMainTB = () => {
 
   const handleClosepopup  = ()=>{
     setShowCustomPopup(false);
+    setCustomEndDate(null);
+    setCustomStartDate(null);
   }
 
   const handleCustomSubmit = (e) => {
@@ -85,7 +87,7 @@ const EventMainTB = () => {
      if(selectedDuration === 'Custom' && isCustomApplied) {
         handleCustomSubmit();
      }
-  },[eventmainSeverityValueSel,eventmainLimitLabelSel,customStartDate,customEndDate,fromValue,searchBtn])
+  },[eventmainSeverityValueSel,eventmainLimitLabelSel,fromValue,searchBtn])
 
 
 
@@ -132,6 +134,8 @@ const EventMainTB = () => {
 
             if (response.status === 204) {
                 setIsLoading(false);
+                setCustomStartDate(null);
+                setCustomEndDate(null);
                 setEventmainData([]);
                 // setSelectedDuration("86400000");
                 setIsError({ status: false, msg: '' });
@@ -150,7 +154,8 @@ const EventMainTB = () => {
             } else if (data?.event && typevalueSel==='events' || typevalueSel==='syslogd' ) {
                 normalized = data.event;
                 setEventmainData(normalized || []);
-
+                setCustomStartDate(null);
+                setCustomEndDate(null);
             }
             setIsLoading(false);
         } catch (error) {
@@ -564,6 +569,9 @@ const EventMainTB = () => {
         setEventmainSeverityLabelSel('All');
         setPageSize(1);
         setFromValue('0');
+        setSelectedDuration("86400000");
+        setCustomStartDate(null);
+        setCustomEndDate(null);
     },[typevalueSel]);
 
     

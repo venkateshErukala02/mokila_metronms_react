@@ -51,6 +51,8 @@ const SnEventTab=()=>{
 
   const handleClosepopup  = ()=>{
     setShowCustomPopup(false);
+    setCustomEndDate(null);
+    setCustomStartDate(null);
   }
 
   const handleCustomSubmit = (e) => {
@@ -93,7 +95,7 @@ const SnEventTab=()=>{
      if(selectedDuration === 'Custom' && isCustomApplied) {
         handleCustomSubmit();
      }
-  },[eventmainSeverityValueSel,eventmainLimitLabelSel,customStartDate,customEndDate,fromValue,searchBtn])
+  },[eventmainSeverityValueSel,eventmainLimitLabelSel,fromValue,searchBtn])
 
 
 
@@ -129,6 +131,8 @@ const SnEventTab=()=>{
 
             if (response.status === 204) {
                 setIsLoading(false);
+                setCustomStartDate(null);
+                setCustomEndDate(null);
                 setEventmainData([]);
                 setIsError({ status: false, msg: '' });
                 return;
@@ -144,8 +148,12 @@ const SnEventTab=()=>{
                 normalized = data.audits || [];
             } else if (data.event) {
                 normalized = data.event;
+                setCustomStartDate(null);
+                setCustomEndDate(null);
             }else if(typevalueSel === 'syslogd'){
                 normalized = data.event;
+                setCustomStartDate(null);
+                setCustomEndDate(null);
             }
 
             setEventmainData(normalized);
@@ -519,6 +527,9 @@ const SnEventTab=()=>{
         setEventmainSeverityLabelSel('All');
         setPageSize(1);
         setFromValue('0');
+        setSelectedDuration("86400000");
+        setCustomStartDate(null);
+        setCustomEndDate(null);
     },[typevalueSel]);
 
     return (
@@ -644,7 +655,7 @@ const SnEventTab=()=>{
                             {Array.isArray(eventmainData) && eventmainData.length > 0 ? (
                                 eventmainData.map((event) => (
                                     <tr key={event.id} onClick={()=>handleEventPopup(event)}>
-                                        <td>{formatTime(event.time)}</td>
+                                        <td><i className={getCategoryClass(event.severity)}></i>{formatTime(event.time)}</td>
                                         <td>{event.severity}</td>
                                         <td>{event.logMessage}</td>
                                     </tr>
