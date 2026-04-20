@@ -27,8 +27,11 @@ const WaysideTagContainer=()=>{
         const [searchTrigger, setSearchTrigger] = useState(0);
         const currentUser = useSelector((state) => state?.loginuser?.node?.role);
         const isReadOnly = currentUser === 'Read-only';
-
+        const [selectedIds, setSelectedIds] = useState([]);
+        const [showConfirmDeletePopupStatus,setShowConfirmDeletePopupStatus] = useState(false);
+        const [showDeleteSuccessPopup,setShowDeleteSuccessPopup] = useState(false);
         const value = priorityChecked ? "highpriority" : "none";
+        const [showWarningPopup,setShowWarningPopup] = useState(false);
 
          useEffect(() => {
            if (!tagIdText.trim()) return;
@@ -301,6 +304,70 @@ const WaysideTagContainer=()=>{
         const url=`api/v2/wayside/waySideTags?page=${pageCount}`;
         getTagData(url);
       }
+
+      const handleSelectAll = (e) => {
+        if (e.target.checked) {
+            const allIds = tagData?.tags.map((item) => item.tagId);
+            setSelectedIds(allIds);
+        } else {
+                setSelectedIds([]);
+            }
+    };
+
+    const handleSelect = (id) => {
+        setSelectedIds((prev) =>
+            prev.includes(id)
+                ? prev.filter((item) => item !== id) // uncheck
+                : [...prev, id] // check
+        );
+    };
+
+
+      const handleDeleteSelected = async () => {
+                const payload = {
+                "tagIds": selectedIds
+            };
+       
+        const method = 'POST';
+        try {
+            const response = await fetch(`api/v2/wayside/deleteTag`, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const text = await response.text();
+
+            if (response.ok) {
+            setShowDeleteSuccessPopup(true);
+            const url=`api/v2/wayside/waySideTags?page=${pageCount}`;
+            getTagData(url);
+            } else {
+                setIsError('Error starting discovery');
+            }
+        } catch (error) {
+            setIsError('An error occurred while contacting the server.');
+        } finally {
+            setIsLoading(false); // Turn off loading state
+        }
+
+    }
+
+       const handleBulkDelete = () => {
+        if (selectedIds.length === 0) {
+            setShowWarningPopup(true);
+            return;
+        }
+        setShowConfirmDeletePopupStatus(true);
+    };
+
+    const handleClosePopup=()=>{
+        setShowConfirmDeletePopupStatus(false);
+      }
+
+
  
     return(
         <>
@@ -338,6 +405,17 @@ const WaysideTagContainer=()=>{
                                     <article style={{ float: 'right'}}>
                                         <ul className="setttinglist">
                                             <li>
+                                            <button type="button"
+                                            className={`createbtn ${
+                                        currentUser === "Read-only" ? "btndisable" : ""
+                                    }`}
+                                    title={currentUser === "Read-only" ? "Permission required" : ""}
+                                    onClick={currentUser !== 'Read-only' ? handleBulkDelete : undefined}>Delete
+                                                <i className="fa fa-trash" style={{paddingLeft:'5px'}} aria-hidden="true"></i>
+                                            </button>
+
+                                        </li>
+                                            <li>
                                                  <input type="text" style={{ marginRight: '10px' }} name="" placeholder="Tag Number" id="" value={tagIdText} onChange={(e) => setTagIdText(e.target.value)} className="form-controlinventory" />
                                 <button type="button" className="createbtn" onClick={handleSearchClick}>Search</button>
                                  <button type="button" className="createbtn" style={{ marginLeft: '7px', display: searchBtn ? 'inline-block' : 'none' }} onClick={handleClearSearch}> Clear Search</button>
@@ -363,7 +441,11 @@ const WaysideTagContainer=()=>{
                                     <thead className="settingthtb">
                                         <tr>
                                             <th><input type="checkbox" className="incl"
-                                            onChange=''                                           checked=''
+                                            onChange={handleSelectAll}                                     
+                                             checked={
+                                                tagData?.tags?.length > 0 &&
+                                                selectedIds.length === tagData.tags.length
+                                            }
                                         /></th>
                                             <th>Tag Id  </th>
                                             <th>Location	 </th>
@@ -405,8 +487,8 @@ const WaysideTagContainer=()=>{
                                     {tagData?.tags && tagData?.tags?.map((item) => (
                                         <tr key={item.id}>
                                             <td><input type="checkbox" className="incl"
-                                                    checked=''
-                                                    onChange=''
+                                                    checked={selectedIds.includes(item.tagId)}
+                                                    onChange={() => handleSelect(item.tagId)}
                                                 /></td>
                                             <td style={{paddingLeft:'18px'}}>{item.tag}</td>
                                             <td>{item.location}</td>
@@ -449,6 +531,8 @@ const WaysideTagContainer=()=>{
                                                 color: isReadOnly ? "black" : "#ef0808",
                                                 opacity: isReadOnly ? 0.6 :1 
                                             }}
+                                            onClick={handleBulkDelete}
+                                            disabled={selectedIds.length === 0}
                                             title={isReadOnly ? "Permission required" :''}
                                             ></i></td>
                                         </tr>
@@ -468,6 +552,57 @@ const WaysideTagContainer=()=>{
                         />
                     </article> 
                     </article>
+                     {showConfirmDeletePopupStatus && <>
+                            <article className="confirmdeletepopup">
+                                <article className="confirmdeletepopupboxstyle">
+                                <h1 className="confirmdeletetitle">All the tag data will be lost. Are you sure you want to delete the tag?</h1>
+                                <article className="f-r">
+                                <button className="confirmdeletebtn" type="button" onClick={handleClosePopup}>NO</button>
+                                <button className="confirmdeletebtn confirmdeletebtnyes" type="button" onClick={async () => { 
+                                    await handleDeleteSelected();
+                                    setShowConfirmDeletePopupStatus(false)}}>YES</button>
+                                </article>
+                                </article>
+                            </article>
+                            </>}
+                              {showDeleteSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">Tag deleted successfully.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => {setShowDeleteSuccessPopup(false);
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
+                                {showWarningPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Warning</h1>
+                                    <p className="confirmtextsucess">No devices have been selected for deletion.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => {setShowWarningPopup(false);
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
         </>
     )
 }

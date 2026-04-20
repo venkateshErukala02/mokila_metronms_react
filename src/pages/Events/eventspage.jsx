@@ -16,10 +16,10 @@ const EventPg = () => {
     const [selectedToDate,setSelectedToDate] = useState(null);
     const [selectedStartDate,setSelectedStartDate] = useState(null);
     const [selectedEndDate,setSelectedEndDate] = useState(null);
-    const [timestampFrom,setTimestampFrom] = useState(Date.now());
-    const [timestampTo,setTimestampTo] = useState(Date.now());
-    const [timestampStart,setTimestampStart] = useState(Date.now());
-    const [timestampEnd,setTimestampEnd] = useState(Date.now());
+    const [timestampFrom,setTimestampFrom] = useState(null);
+    const [timestampTo,setTimestampTo] = useState(null);
+    const [timestampStart,setTimestampStart] = useState(null);
+    const [timestampEnd,setTimestampEnd] = useState(null);
     const [selectedLogVal,setSelectedLogVal] = useState('train')
     const [selectedPosition,setSelectedPosition] = useState('select');
     const [lineNameSel,setLineNameSel] = useState('-1');
@@ -29,7 +29,9 @@ const EventPg = () => {
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [cabNumberIpsData,setCabNumberIpsData] = useState([]);
     const [stationIpsData,setStationIpsData] = useState([]);
-
+    const [showWarningPopup,setShowWarningPopup] = useState(false);
+    const [showCustomDateAlertPopup,setShowCustomDateAlertPopup] = useState(false);
+    const [showCustomDateLimitAlertPopup,setShowCustomDateLimitAlertPopup] = useState(false);
       const ALL_LINES = [
           { key: 'line1-sec1', label: 'Line1-Section1' },
           { key: 'line1-sec2', label: 'Line1-Section2' },
@@ -111,31 +113,51 @@ const EventPg = () => {
 
 
 
-    const ExportCanData =  () => {
+    const ExportCanData =  (e) => {
+        if (e) e.preventDefault(); 
         if(cabNumber.length !== 4){
-            alert("Cab number is incorrect.")
+            setShowWarningPopup(true)
             return;
         }
         const tId = cabNumber.substring(0, 3); 
         const cId = cabNumber.substring(3);
 
         if (!timestampFrom || !timestampTo) {
-            alert("Please select start and end dates.");
+           setShowCustomDateAlertPopup(true);
             return;
         }
 
         if (new Date(timestampFrom) >= new Date(timestampTo)) {
-            alert("Start date should be less than end date.");
+           setShowCustomDateLimitAlertPopup(true)
             return;
         }
             const url =`api/v2/nodes/cabreport1/${tId}/${cId}/${timestampFrom}/${timestampTo}`;
             window.open(url, '_blank');
                 setCabNumber('');
-                setSelectedFromDate('');
-                setSelectedToDate('');
-                setTimestampFrom(Date.now());
-                setTimestampTo(Date.now());
+                setSelectedFromDate(null);
+                setSelectedToDate(null);
+                setTimestampFrom(null);
+                setTimestampTo(null);
     };
+
+
+    useEffect(()=>{
+        setCabNumber('');
+        setSelectedToDate(null);
+        setTimestampFrom(null);
+        setTimestampTo(null);
+        setSelectedPosition('select');
+        setLineNameSel('-1');
+        setStationNameSel('-1');
+        setStationData([]);
+        setCabNumberIpsData([]);
+        setStationIpsData([]);
+        setTimestampEnd(null);
+        setSelectedEndDate(null);
+        setSelectedFromDate(null);
+        setSelectedStartDate(null);
+        
+    },[selectedLogVal])
 
 
      const handleSelectedLog = (event) => {
@@ -187,6 +209,7 @@ const EventPg = () => {
 
      const handleCabNumberIp = async () => {
         if (!cabNumber) {
+            setShowWarningPopup(true);
             return;
         }
         setIsLoading(true);
@@ -417,6 +440,56 @@ const EventPg = () => {
                     </article>
                 </article>
             </article>
+             {showWarningPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Warning</h1>
+                                    <p className="confirmtextsucess"> Cab number is incorrect. Please enter a valid cab number.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => {setShowWarningPopup(false);
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
+
+                                   {showCustomDateAlertPopup && <>
+                            <article className="confirmdeletepopup">
+                                <article className="confirmdeletepopupboxstyle">
+                                <h1 className="confirmdeletetitle">Please select both start and end dates</h1>
+                                <article className="f-r">
+                                      <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() =>{ setShowCustomDateAlertPopup(false)}}
+                                        >
+                                        OK
+                                        </button>
+                                </article>
+                                </article>
+                            </article>
+                            </>}
+                            {showCustomDateLimitAlertPopup && <>
+                            <article className="confirmdeletepopup">
+                                <article className="confirmdeletepopupboxstyle">
+                                <h1 className="confirmdeletetitle">End date must be greater than start date</h1>
+                                <article className="f-r">
+                                      <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => {setShowCustomDateLimitAlertPopup(false)}}
+                                        >
+                                        OK
+                                        </button>
+                                </article>
+                                </article>
+                            </article>
+                            </>}
         </>
 
     )

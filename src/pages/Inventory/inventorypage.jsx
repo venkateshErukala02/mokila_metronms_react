@@ -55,6 +55,8 @@ const InventRpt = () => {
     const [showConfirmDeletePopupStatus,setShowConfirmDeletePopupStatus] = useState(false);
     const [showRescanSuccessPopup,setShowRescanSuccessPopup] = useState(false);
     const [showDeleteSuccessPopup,setShowDeleteSuccessPopup] = useState(false);
+    const [showWarningPopup,setShowWarningPopup] = useState(false);
+    
 
      const currentUser = useSelector((state) => state?.loginuser?.node?.role);
             const isReadOnly = currentUser === 'Read-only';
@@ -213,7 +215,7 @@ const InventRpt = () => {
 
     const handleBulkDelete = () => {
         if (selectedRows.length === 0) {
-            alert("No rows selected to delete.");
+            setShowWarningPopup(true);
             return;
         }
         setShowConfirmDeletePopupStatus(true);
@@ -756,6 +758,25 @@ const InventRpt = () => {
                                         <button
                                         className="confirmdeletebtn confirmdeletebtnyes"
                                         onClick={() => {setShowDeleteSuccessPopup(false);
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
+                                {showWarningPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Warning</h1>
+                                    <p className="confirmtextsucess">No devices have been selected for deletion.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => {setShowWarningPopup(false);
                                         }}
                                         >
                                         OK
