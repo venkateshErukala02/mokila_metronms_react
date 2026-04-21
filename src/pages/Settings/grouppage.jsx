@@ -4,6 +4,8 @@ import LocationSubCont from "./stationsubpage";
 import GroupSubCont from "./groupsubpage";
 import './../Settings/settings.css';
 import { useSelector } from "react-redux";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 
 const GroupContainer=()=>{
         const [profileStatusCont, setProfileStatusCont] = useState(true);
@@ -18,6 +20,14 @@ const GroupContainer=()=>{
         const [itemToDelete, setItemToDelete] = useState(null);
         const [showDeletePopup, setShowDeletePopup] = useState(false);
         const [showDeleteSuccessPopup, setShowDeleteSuccessPopup] = useState(false);
+        const [pageSize, setPageSize] = useState(1);
+        const [fromValue,setFromValue] =useState('0');
+        const [sortOrder, setSortOrder] = useState('asc');
+
+        const handleSort = () => {
+            setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
+        };
+
         
         const getGroupData = async (url) => {
             setIsLoading(true);
@@ -70,10 +80,10 @@ const GroupContainer=()=>{
      useEffect(() => {
 
             // const url = `rest/groups?limit=${groupLimitValueSel}&offset=0&sort=asc`
-            const url=`rest/groups?limit=${groupLimitValueSel}&offset=0&sort=asc`
+            const url=`rest/groups?limit=${groupLimitValueSel}&offset=${fromValue}&sort=${sortOrder}`
             getGroupData(url);
     
-        }, [groupLimitValueSel]);
+        }, [groupLimitValueSel,fromValue,sortOrder]);
 
         const handleGroupLimitValue = (event) => {
             setGroupLimitValueSel(event.target.value);
@@ -106,7 +116,7 @@ const GroupContainer=()=>{
 
             if (response.ok) {
                 setShowDeleteSuccessPopup(true);
-                const url=`rest/groups?limit=${groupLimitValueSel}&offset=0&sort=asc`;
+                const url=`rest/groups?limit=${groupLimitValueSel}&offset=${fromValue}&sort=${sortOrder}`;
                 getGroupData(url);
             } else {
                 setIsError('Error starting discovery');
@@ -130,6 +140,32 @@ const GroupContainer=()=>{
         setProfileStatusCont(true);
         setMode('edit');
     }
+
+       const handleIncreamentOffset = () => {
+         setPageSize(prevPageSize => {
+        if (!groupData || groupData.length  === 0) return prevPageSize;
+
+        const newPageSize = prevPageSize + 1;
+        setFromValue(parseInt(newPageSize-1) * parseInt(groupLimitValueSel));
+        return newPageSize;
+        });
+    }
+
+
+
+    const handleDecrementOffset = () => {
+        if (pageSize > 1) {
+            setPageSize(prevPageSize => {
+                const newPageSize = prevPageSize - 1;
+                const fromCal = (parseInt(newPageSize)-1) * parseInt(groupLimitValueSel);
+                 setFromValue(fromCal);
+                return newPageSize;
+            });
+        } else {
+            setPageSize(1);
+            //   setFromValue('0');
+        }
+    }
  
     return(
         <>
@@ -138,11 +174,11 @@ const GroupContainer=()=>{
                         <article className="" style={{ height: '90vh' }}>
                             <article className="row custom-row border-tlr">
                                 <article className="col-8">
-                                    <button type="button" className="arrowlf">
+                                    <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
                                         <i className="fa-solid fa-arrow-left"></i>
                                     </button>
-                                    <button type="button" className="numcl"><span>1</span></button>
-                                    <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                                    <button type="button" className="numcl"><span>{pageSize}</span></button>
+                                    <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
                                 </article>
                                 <article className="col-4">
                                     <article style={{ float: 'right' }}>
@@ -169,7 +205,9 @@ const GroupContainer=()=>{
                                 <table className="col-12" style={{ height: '0vh' }}>
                                     <thead className="settingthtb">
                                         <tr>
-                                            <th>Group Name</th>
+                                            <th onClick={handleSort}>Group Name <FontAwesomeIcon
+                                            icon={sortOrder ? (sortOrder === 'asc' ? faSortUp : faSortDown) : faSort}
+                                            style={{ color: 'black' }}  /></th>
                                             <th>Comments</th>
                                             <th>Edit </th>
                                             <th>Delete</th>

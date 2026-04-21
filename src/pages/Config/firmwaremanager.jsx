@@ -98,7 +98,7 @@ const FirmwareMng = () => {
      useEffect(() => {
 
         const fetchIntervalData = () => {
-        const url = `api/v2/firmware/firmwares?&page=1&limit=50&sort=${sortOrder}`
+        const url = `api/v2/firmware/firmwares?&page=1&limit=${regionLimitValueSel}&sort=${sortOrder}`
     
         getVersionData(url,true);
         }
@@ -109,7 +109,7 @@ const FirmwareMng = () => {
     
         return () => clearInterval(intervalId);
     
-    }, [sortOrder]);
+    }, [sortOrder,regionLimitValueSel]);
 
 
 
@@ -261,10 +261,10 @@ const FirmwareMng = () => {
 
                                         <li>
                                             <select className="form-controlfirm" value={regionLimitValueSel} onChange={handleRegionLimitValue} style={{ width: '50px', marginTop: '4px' }} aria-invalid="false">
-                                                <option value="0" label="50">50</option>
-                                                <option value="1" label="25" defaultValue={25}>25</option>
-                                                <option value="2" label="50">50</option>
-                                                <option value="3" label="100">100</option>
+                                                <option value="10">10</option>
+                                               <option value="25">25</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
                                             </select>
                                         </li>
                                     </ul>

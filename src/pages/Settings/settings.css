@@ -62,6 +62,12 @@ article.row {
 
 /* ----------------------------------------------------------------- */
 
+thead.settingthtb{
+     background-color: #fff;
+    position: sticky;
+    top: -1px;
+    z-index: 2;
+}
 
 thead.settingthtb>tr{border-bottom: 2px solid rgb(33 35 39 / 7%);text-align: left;}
 thead.settingthtb>tr>th{font-size: 15px;font-family: "Lato-Regular";font-weight: 100;padding: 13px;color: #000000de;letter-spacing: 0.6px;width: 100%;white-space: nowrap;position: relative;cursor: pointer; }

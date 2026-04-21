@@ -26,6 +26,7 @@ const WaysideTagSubCont = ({ handleSubContainer, refreshTagData, mode, user }) =
     const [mailChecked, setMailChecked] = useState(false);
     const [priorityChecked, setPriorityChecked] = useState(false);
     const [reportChecked, setReportChecked] = useState(false);
+    const [roleNameSele,setRoleNameSele] = useState('');
 
 
     const handleProfileContclose = () => {
@@ -43,6 +44,7 @@ const WaysideTagSubCont = ({ handleSubContainer, refreshTagData, mode, user }) =
             setPriorityChecked(user.priority || '');
             setMailChecked(user.sendMail || '');
             setReportChecked(user.reportAlarm || '');
+            setRoleNameSele(user.role || '');
         } else {
             setLineName('');
         }
@@ -96,8 +98,8 @@ const WaysideTagSubCont = ({ handleSubContainer, refreshTagData, mode, user }) =
         if (url) fetchStationData(url);
     }, []);
 
-     const handleAddUser = async () => {
-       
+     const handleAddUser = async (e) => {
+          if (e) e.preventDefault();
         const method = 'POST';
         // const url= isEditMode  ? `rest/users/${user["user-id"]}` :'rest/users';
         const requestBody ={
@@ -106,6 +108,7 @@ const WaysideTagSubCont = ({ handleSubContainer, refreshTagData, mode, user }) =
             line:direction,
             postion:position,
             type:tagtype,
+            role: roleNameSele,
             priority:priorityChecked ? 1 : 0,
             sendMail: !!mailChecked,
             reportAlarm:!!reportChecked
@@ -149,7 +152,21 @@ const WaysideTagSubCont = ({ handleSubContainer, refreshTagData, mode, user }) =
 
     }
 
+    const handleSelectRole=(e)=>{
+     setRoleNameSele(e.target.value);  
+}
 
+const tagRoles = [
+  { text: "VON" },
+  { text: "VOFF" },
+  { text: "GENERIC VON" },
+  { text: "GENERIC VOFF" },
+  { text: "YARD ENTER" },
+  { text: "YARD EXIT" },
+  { text: "SNL" },
+  { text: "DIR LEARN" },
+  { text: "RADIO REBOOT" }
+];
 
 
     return (
@@ -192,6 +209,19 @@ const WaysideTagSubCont = ({ handleSubContainer, refreshTagData, mode, user }) =
                                 disabled
                                 onChange={(e) => setTagtype(e.target.value)}
                                 name="" placeholder="" id="" className="settinglabelsubinp" />
+                             <article>
+                                    <label className="vlanlabel">Role</label>
+                                    <article>
+                                    <select  className="vlaninput" value={roleNameSele} onChange={handleSelectRole}>
+                                   <option value="-1">Select</option>
+                                            {tagRoles.map((item,index) => (
+                                                <option key={index} value={item.text}>
+                                                {item.text}
+                                                </option>
+                                            ))}
+                                          </select>  
+                                    </article>
+                                </article>
                             <label className="settinglabelsub">Priority</label>
                             <input type="checkbox" className="incl"
                                 checked={priorityChecked === 1}
@@ -221,7 +251,7 @@ const WaysideTagSubCont = ({ handleSubContainer, refreshTagData, mode, user }) =
 
                                 <center className="d-f">
                                     <button className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
-                                    <button onClick={handleAddUser}
+                                    <button type="button" onClick={handleAddUser}
                                     className={`creatsetingbtn ${
                                         currentUser === "Read-only" ? "btndisable" : ""
                                     }`} title={currentUser === "Read-only" ? "Permission required" : ""}

@@ -20,6 +20,8 @@ const UserContainer=()=>{
         const [itemToDelete, setItemToDelete] = useState(null);
         const [showDeletePopup, setShowDeletePopup] = useState(false);
         const [showDeleteSuccessPopup, setShowDeleteSuccessPopup] = useState(false);
+        const [pageSize, setPageSize] = useState(1);
+        const [fromValue,setFromValue] =useState('0');
 
         const getUserData = async (url) => {
             setIsLoading(true);
@@ -37,13 +39,22 @@ const UserContainer=()=>{
     
                 };
                 const response = await fetch(url, options);
+                   if (response.status === 204) {
+                    setIsLoading(false);
+                    setUserData([]);
+                    setIsError({ status: false, msg: '' });
+                    return;
+                }
     
                 const data = await response.json();
-    
-                if (response.ok) {
+                if (response.ok &&  response.status === 200) {
                     setIsLoading(false);
-                    setUserData(data.users);
+                    if(data?.users?.length === 0){
+                        setUserData([]); 
+                    }else{
+                    setUserData(data.users || []);
                     setIsError({ status: false, msg: "" });
+                    }
                 } else {
                     throw new Error("data not found");
                 }
@@ -57,7 +68,7 @@ const UserContainer=()=>{
      useEffect(() => {
         const fetchUserData = async()=>{
             // const url = `rest/users/list?limit=${userLimitValueSel}&offset=0&sort=asc`
-            const url=`rest/users/list?limit=${userLimitValueSel}&offset=0&sort=${sortOrder}`
+            const url=`rest/users/list?limit=${userLimitValueSel}&offset=${fromValue}&sort=${sortOrder}`
             getUserData(url);
         }
 
@@ -67,7 +78,7 @@ const UserContainer=()=>{
 
         return ()=> clearInterval(intervalId);
     
-        }, [userLimitValueSel,sortOrder]);
+        }, [userLimitValueSel,sortOrder,fromValue]);
 
         const handleUserLimitValue = (event) => {
             setUserLimitValueSel(event.target.value);
@@ -113,7 +124,7 @@ const UserContainer=()=>{
 
             if (response.ok) {
                 setShowDeleteSuccessPopup(true);
-                const url=`rest/users/list?limit=${userLimitValueSel}&offset=0&sort=${sortOrder}`
+                const url=`rest/users/list?limit=${userLimitValueSel}&offset=${fromValue}&sort=${sortOrder}`
                 getUserData(url);
             } else {
                 setIsError('Error starting discovery');
@@ -130,6 +141,32 @@ const UserContainer=()=>{
             setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
     };
 
+       const handleIncreamentOffset = () => {
+         setPageSize(prevPageSize => {
+        if (!userData || userData.length  === 0) return prevPageSize;
+
+        const newPageSize = prevPageSize + 1;
+        setFromValue(parseInt(newPageSize-1) * parseInt(userLimitValueSel));
+        return newPageSize;
+        });
+    }
+
+
+
+    const handleDecrementOffset = () => {
+        if (pageSize > 1) {
+            setPageSize(prevPageSize => {
+                const newPageSize = prevPageSize - 1;
+                const fromCal = (parseInt(newPageSize)-1) * parseInt(userLimitValueSel);
+                 setFromValue(fromCal);
+                return newPageSize;
+            });
+        } else {
+            setPageSize(1);
+            //   setFromValue('0');
+        }
+    }
+
 
  
     return(
@@ -139,11 +176,11 @@ const UserContainer=()=>{
                         <article className="" style={{ height: '90vh' }}>
                             <article className="row custom-row border-tlr">
                                 <article className="col-8">
-                                    <button type="button" className="arrowlf">
+                                    <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
                                         <i className="fa-solid fa-arrow-left"></i>
                                     </button>
-                                    <button type="button" className="numcl"><span>1</span></button>
-                                    <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                                    <button type="button" className="numcl"><span>{pageSize}</span></button>
+                                    <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
                                 </article>
                                 <article className="col-4">
                                     <article style={{ float: 'right' }}>
@@ -188,14 +225,6 @@ const UserContainer=()=>{
                                         <tr>
                                             <td colSpan="8" style={{ textAlign: "center" }}>
                                                 Loading...
-                                            </td>
-                                        </tr>
-                                    )}
-
-                                    {isError.status && (
-                                        <tr>
-                                            <td colSpan="12" style={{ textAlign: "center", color: "red" }}>
-                                                {isError.msg}
                                             </td>
                                         </tr>
                                     )}

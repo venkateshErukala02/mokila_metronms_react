@@ -78,7 +78,7 @@ const StationTagsTable = ({ circleId, lineId,textName,selectedTab,rdDataRef}) =>
                             return;
                         }
                     const tgData = await response.json();
-                    const data = tgData[0];
+                    const data = tgData?.tags[0];
                     if (response.ok) {
                         setIsLoading(false);
                         setTagData(Array.isArray(data) ? data : [data]);
@@ -181,11 +181,11 @@ const StationTagsTable = ({ circleId, lineId,textName,selectedTab,rdDataRef}) =>
             <article className="">
                  <article className="row border-lrr piechtcont">
                     <article className="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2">
-                        <button type="button" className="arrowlf">
+                        {/* <button type="button" className="arrowlf">
                             <i className="fa-solid fa-arrow-left"></i>
                         </button>
                         <button type="button" className="numcl"><span>1</span></button>
-                        <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                        <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button> */}
 
 
                     </article>
@@ -224,6 +224,7 @@ const StationTagsTable = ({ circleId, lineId,textName,selectedTab,rdDataRef}) =>
                                 <th>Tag Id</th>
                                 <th>Direction</th>
                                 <th>Position</th>
+                                <th>Role</th>
                                 <th style={{width:'132px'}}>(Work <i className="fa-solid fa-arrow-up" style={{color:""}}></i> ,Def <i className="fa-solid fa-arrow-down" style={{color:""}}></i>)</th>
                                 <th>Delete</th>                               
                             </tr>
@@ -265,10 +266,11 @@ const StationTagsTable = ({ circleId, lineId,textName,selectedTab,rdDataRef}) =>
                                     displayData.length !== 0 && displayData.map((value, index) => (
                                      <tr key={index}>
                                         <td style={{padding:"4px 6px"}}>{value[0]?.tag || value?.tag}</td>
-                                        <td style={{padding:"4px 6px"}}>{value.line}</td>
+                                        <td style={{padding:"4px 12px"}}>{value.line}</td>
                                         <td style={{padding:"4px 6px"}} className="">{value.position}</td>
+                                        <td style={{padding:"4px 6px"}} className="">{value.role}</td>
                                         <td style={{padding:"4px 48px"}}>{value.status === 'down' ? (<i className="fa-solid fa-arrow-down" style={{color:"red"}}></i> ): (<i className="fa-solid fa-arrow-up" style={{color:"green"}}></i>)}</td>
-                                        <td><i className="fa fa-trash" style={{cursor:'pointer'}}  onClick={()=>handleDeleteTag(value)}></i></td>
+                                        <td style={{paddingLeft:'22px'}}><i className="fa fa-trash" style={{cursor:'pointer'}}  onClick={()=>handleDeleteTag(value)}></i></td>
                                     </tr>
                                 ))                                     
                                 )}

@@ -70,14 +70,14 @@ const DashBoardPage = () => {
         }
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            let url = 'http://localhost:8084/redundancy/api/v1/metronms';
-            //let url='htpp://localhost:8980/redundancy/api/v1/ornms'
-            await getServerStatusDt(url);
-        };
-        fetchData();
-    }, []);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         let url = 'http://localhost:8084/redundancy/api/v1/metronms';
+    //         //let url='htpp://localhost:8980/redundancy/api/v1/ornms'
+    //         await getServerStatusDt(url);
+    //     };
+    //     fetchData();
+    // }, []);
 
 
     const toggleDropdown = () => {

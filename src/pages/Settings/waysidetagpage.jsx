@@ -436,22 +436,23 @@ const WaysideTagContainer=()=>{
                                 </article>
                             </article>
 
-                            <article className="row border-allsd" style={{ height: '77.5vh',overflow:'auto' }}>
-                                <table className="col-12" style={{ height: '0vh' }}>
+                            <article className="row border-allsd" style={{ height: '77.5vh',overflowY: 'auto', overflowX: 'clip',position:'relative'}}>
+                                <table className="col-12 table-fixed" style={{ height: '0vh' }}>
                                     <thead className="settingthtb">
                                         <tr>
-                                            <th><input type="checkbox" className="incl"
+                                            <th style={{paddingLeft:'49px'}}><input type="checkbox" className="incl"
                                             onChange={handleSelectAll}                                     
                                              checked={
                                                 tagData?.tags?.length > 0 &&
                                                 selectedIds.length === tagData.tags.length
                                             }
                                         /></th>
-                                            <th>Tag Id  </th>
-                                            <th>Location	 </th>
+                                            <th>Tag Id</th>
+                                            <th>Location</th>
                                             <th>Direction </th>
                                             <th>Position</th>
                                             <th>Tag Type</th>
+                                            <th>Role</th>
                                             <th>Priority</th>
                                             <th>Send Mail</th>
                                             <th>Report Alarm </th>
@@ -486,7 +487,7 @@ const WaysideTagContainer=()=>{
                                     )}
                                     {tagData?.tags && tagData?.tags?.map((item) => (
                                         <tr key={item.id}>
-                                            <td><input type="checkbox" className="incl"
+                                            <td style={{paddingLeft:'45px'}}><input type="checkbox" className="incl"
                                                     checked={selectedIds.includes(item.tagId)}
                                                     onChange={() => handleSelect(item.tagId)}
                                                 /></td>
@@ -496,6 +497,7 @@ const WaysideTagContainer=()=>{
                                             <td>
                                                 {item.position || item.postion}</td>
                                             <td style={{paddingLeft:'23px'}}>{item.type}</td>
+                                            <td style={{paddingLeft:'17px'}}>{item.role}</td>
                                             <td style={{paddingLeft:'28px'}}><input type="checkbox" className="incl"
                                                      checked={item.priority === 1} // checkbox reflects priority
                                                 onChange={() => {

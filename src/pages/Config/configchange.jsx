@@ -104,7 +104,7 @@ const ConfigChange = () => {
      useEffect(() => {
 
         const fetchIntervalData = () => {
-        const url = `api/v2/task/list?show=configpush&status=${selected}&offset=0&count=25`;
+        const url = `api/v2/task/list?show=configpush&status=${selected}&offset=0&count=${userLimitValueSel}`;
     
         getConfigChangeData(url,true);
         }
@@ -115,7 +115,7 @@ const ConfigChange = () => {
     
         return () => clearInterval(intervalId);
     
-    }, [selected]);
+    }, [selected,userLimitValueSel]);
 
     const handleUserLimitValue = (event) => {
         setUserLimitValueSel(event.target.value);
@@ -292,10 +292,10 @@ const handleBulkDelete = async () => {
 
                                         <li>
                                             <select className="form-controlfirm" value={userLimitValueSel} onChange={handleUserLimitValue} style={{ width: '50px', marginTop: '4px' }} aria-invalid="false">
-                                                <option value="0" label="50">50</option>
-                                                <option value="1" label="25" defaultValue={25}>25</option>
-                                                <option value="2" label="50">50</option>
-                                                <option value="3" label="100">100</option>
+                                                <option value="10">10</option>
+                                               <option value="25">25</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
                                             </select>
                                         </li>
                                     </ul>

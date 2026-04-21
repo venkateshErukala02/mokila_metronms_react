@@ -82,7 +82,7 @@ const FirmwareContainer = () => {
     };
 
     useEffect(() => {
-    const url = `api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=25`;
+    const url = `api/v2/task/list?show=firmwareClass&status=${selected}&offset=-1&count=${userLimitValueSel}`;
 
     getFimwareData(url);
 
@@ -92,7 +92,7 @@ const FirmwareContainer = () => {
 
     return () => clearInterval(intervalId);
 
-}, [selected]);
+}, [selected,userLimitValueSel]);
 
 
     const handleUserLimitValue = (event) => {
@@ -292,6 +292,7 @@ const handleBulkDelete = async () => {
 
                                         <li>
                                             <select className="form-controlfirm" value={userLimitValueSel} onChange={handleUserLimitValue} style={{ width: '50px', marginTop: '4px' }} aria-invalid="false">
+                                                <option value="10">10</option>
                                                <option value="25">25</option>
                                                 <option value="50">50</option>
                                                 <option value="100">100</option>

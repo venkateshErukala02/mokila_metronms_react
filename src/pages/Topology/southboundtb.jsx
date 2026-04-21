@@ -75,11 +75,11 @@ const SouthBoundTb=({textName})=>{
                         <article className="trainevenhead">
                             South Bound
                             <article className="alarmiconsty">
-                            <button className="sbarrow">
+                            {/* <button className="sbarrow">
                             <i className="fa-solid fa-arrow-left"></i>
                         </button>
                         <button className="sbarrow"><span>1</span></button>
-                        <button className="sbarrow"><i className="fa-solid fa-arrow-right"></i></button>
+                        <button className="sbarrow"><i className="fa-solid fa-arrow-right"></i></button> */}
                             </article>
                         </article>
                            <article className="bouneventtable">

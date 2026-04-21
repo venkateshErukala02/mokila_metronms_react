@@ -136,6 +136,11 @@ const handleCpuchart=()=>{
                 </article>
              </article>
             </article>
+             <article className="col-md-12 graphbord1" style={{marginTop:'20px'}}>
+              <article className="latencyfullwidthcl-monitortab">
+                <LatencyChart currentTab='transcoder' graphOption={graphOption} graphOptionValue={graphOptionValue}/>
+              </article>
+            </article>
           </article>
         </article>
       </article>

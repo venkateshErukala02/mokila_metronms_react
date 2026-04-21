@@ -488,6 +488,12 @@ const InventRpt = () => {
     return `${pad(days)}:${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 };
 
+
+const columnPadding = {
+  radioMode: "16px",
+  deviceType: "35px",
+};
+
     return (
         <>
             <article className="display-f">
@@ -597,7 +603,7 @@ const InventRpt = () => {
                             <table className="col-md-12" style={{ height: '0vh' }}>
                                 <thead className="inventthtb tableheadpostion">
                                      <tr>
-                                        <th style={{ paddingLeft: '18px' }}>
+                                        <th style={{ paddingLeft: '75px' }}>
                                         <input
                                             className="incl2"
                                             type="checkbox"
@@ -664,7 +670,7 @@ const InventRpt = () => {
                                     !isError.status && nodes.length > 0 ? (
                                         nodes.map((node) => (
                                            <tr key={node.ipAddress}>
-                                            <td style={{ paddingLeft: '18px' }}>
+                                            <td style={{ paddingLeft: '75px' }}>
                                             <input
                                                 type="checkbox"
                                                 checked={selectedRows.includes(node.id)}
@@ -675,7 +681,11 @@ const InventRpt = () => {
                                             {ALL_COLUMNS
                                             .filter(col => visibleColumns.includes(col.key))
                                             .map((col) => (
-                                            <td key={col.key}>
+                                            <td key={col.key} style={
+                                                columnPadding[col.key]
+                                                ? { paddingLeft: columnPadding[col.key] }
+                                                : {}
+                                            }>
                                                 {col.key === "label" ? (
                                         <span
                                         className="highlightText"
@@ -684,12 +694,16 @@ const InventRpt = () => {
                                         {node[col.key]}
                                         </span>): col.key === "sysUptime" ? (
                                                 formatUptime(node[col.key])
-                                            ) :(
+                                            ) : col.key === "sysName" ? (
+                                        <a href={`http://${node.primaryIP}`} target="_blank" rel="noreferrer">
+                                        {node[col.key]}
+                                        </a>
+                                    ):(
                                                 node[col.key]
                                         )}
                                             </td>
                                             ))}
-                                            <td><i className="fa fa-sync"  onClick={currentUser !== 'Read-only' ? () => handleActionRescan(node) : undefined}
+                                            <td style={{paddingLeft:'22px'}}><i className="fa fa-sync"  onClick={currentUser !== 'Read-only' ? () => handleActionRescan(node) : undefined}
                                                  style={{
                                                 cursor: isReadOnly ? "not-allowed" : "pointer" ,
                                                 opacity: isReadOnly ? 0.6 :1 
@@ -697,7 +711,7 @@ const InventRpt = () => {
                                                title={isReadOnly ? "Permission required" :''}
 
                                                 ></i></td>
-                                            <td><i className="fa fa-trash" onClick={currentUser !== 'Read-only' ? handleBulkDelete : undefined} 
+                                            <td style={{paddingLeft:'22px'}}><i className="fa fa-trash" onClick={currentUser !== 'Read-only' ? handleBulkDelete : undefined} 
                                             style={{
                                                 cursor: isReadOnly ? "not-allowed" : "pointer" ,
                                                 color: isReadOnly ? "black" : "#ef0808",

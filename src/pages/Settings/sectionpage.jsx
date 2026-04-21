@@ -22,6 +22,8 @@ const SectionContainer=()=>{
          const [itemToDelete, setItemToDelete] = useState(null);
         const [showDeletePopup, setShowDeletePopup] = useState(false);
         const [showDeleteSuccessPopup, setShowDeleteSuccessPopup] = useState(false);
+        const [pageSize, setPageSize] = useState(1);
+        const [fromValue,setFromValue] =useState('0');
 
         const getSectionData = async (url) => {
             setIsLoading(true);
@@ -39,12 +41,19 @@ const SectionContainer=()=>{
     
                 };
                 const response = await fetch(url, options);
+
+                 if (response.status === 204) {
+                    setIsLoading(false);
+                    setSectionData([]);
+                    setIsError({ status: false, msg: '' });
+                    return;
+                }
     
                 const data = await response.json();
     
-                if (response.ok) {
+                if (response.ok && response.status === 200) {
                     setIsLoading(false);
-                    setSectionData(data.region);
+                    setSectionData(data?.region || []);
                     setIsError({ status: false, msg: "" });
                 } else {
                     throw new Error("data not found");
@@ -58,7 +67,7 @@ const SectionContainer=()=>{
 
      useEffect(() => {
         const fetchSectionData=async()=>{
-        const url=`api/v2/locations?_s=&limit=${cityLimitValueSel}&offset=0&order=${sortOrder}&orderBy=${sortField}`
+        const url=`api/v2/locations?_s=&limit=${cityLimitValueSel}&offset=${fromValue}&order=${sortOrder}&orderBy=${sortField}`
             // const url = `api/v2/cities?_s=&limit=${cityLimitValueSel}&offset=0&order=asc&orderBy=name`
             await getSectionData(url);
         }
@@ -69,7 +78,7 @@ const SectionContainer=()=>{
 
         return ()=> clearInterval(intervalId);
     
-        }, [cityLimitValueSel,sortOrder]);
+        }, [cityLimitValueSel,sortOrder,fromValue]);
 
         const handleCityLimitValue = (event) => {
             setCityLimitValueSel(event.target.value);
@@ -116,7 +125,7 @@ const SectionContainer=()=>{
 
             if (response.ok) {
                 setShowDeleteSuccessPopup(true);
-                const url=`api/v2/locations?_s=&limit=${cityLimitValueSel}&offset=0&order=${sortOrder}&orderBy=${sortField}`
+                const url=`api/v2/locations?_s=&limit=${cityLimitValueSel}&offset=${fromValue}&order=${sortOrder}&orderBy=${sortField}`
                 getSectionData(url);
             } else {
                 setIsError('Error starting discovery');
@@ -138,6 +147,32 @@ const SectionContainer=()=>{
         }
     };
 
+     const handleIncreamentOffset = () => {
+         setPageSize(prev => {
+        if (!sectionData || sectionData.length === 0) return prev;
+
+        const newPage = prev + 1;
+        setFromValue(parseInt(newPage-1) * parseInt(cityLimitValueSel));
+        return newPage;
+        });
+    }
+
+
+
+    const handleDecrementOffset = () => {
+        if (pageSize > 1) {
+            setPageSize(prevPageSize => {
+                const newPageSize = prevPageSize - 1;
+                const fromCal = (parseInt(newPageSize)-1) * parseInt(cityLimitValueSel);
+                 setFromValue(fromCal);
+                return newPageSize;
+            });
+        } else {
+            setPageSize(1);
+            //   setFromValue('0');
+        }
+    }
+
 
     return(
         <>
@@ -146,11 +181,11 @@ const SectionContainer=()=>{
                         <article className="" style={{ height: '90vh' }}>
                             <article className="row custom-row border-tlr">
                                 <article className="col-8">
-                                    <button type="button" className="arrowlf">
+                                    <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
                                         <i className="fa-solid fa-arrow-left"></i>
                                     </button>
-                                    <button type="button" className="numcl"><span>1</span></button>
-                                    <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                                    <button type="button" className="numcl"><span>{pageSize}</span></button>
+                                    <button type="button" className="arrowlf"  onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
                                     
                                 </article>
                                 <article className="col-4">
@@ -197,14 +232,6 @@ const SectionContainer=()=>{
                                         <tr>
                                             <td colSpan="8" style={{ textAlign: "center" }}>
                                                 Loading...
-                                            </td>
-                                        </tr>
-                                    )}
-
-                                    {isError.status && (
-                                        <tr>
-                                            <td colSpan="12" style={{ textAlign: "center", color: "red" }}>
-                                                {isError.msg}
                                             </td>
                                         </tr>
                                     )}

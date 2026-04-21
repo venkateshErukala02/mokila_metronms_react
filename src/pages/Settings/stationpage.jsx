@@ -18,6 +18,8 @@ const StationContainer=()=>{
         const [sortOrder, setSortOrder] = useState('asc');
         const currentUser = useSelector((state) => state?.loginuser?.node?.role);
         const isReadOnly = currentUser === 'Read-only';
+        const [pageSize, setPageSize] = useState(1);
+        const [fromValue,setFromValue] =useState('0');
 
         const getStationData = async (url) => {
             setIsLoading(true);
@@ -35,12 +37,19 @@ const StationContainer=()=>{
     
                 };
                 const response = await fetch(url, options);
+
+                 if (response.status === 204) {
+                    setIsLoading(false);
+                    setStationData([]);
+                    setIsError({ status: false, msg: '' });
+                    return;
+                }
     
                 const data = await response.json();
     
-                if (response.ok) {
+                if (response.ok && response.status === 200) {
                     setIsLoading(false);
-                    setStationData(data.facility);
+                    setStationData(data?.facility || []);
                     setIsError({ status: false, msg: "" });
                 } else {
                     throw new Error("data not found");
@@ -54,10 +63,10 @@ const StationContainer=()=>{
 
      useEffect(() => {
             // const url = `api/v2/locations?_s=&limit=${locationLimitValueSel}&offset=0&order=asc&orderBy=name`
-            const url=`api/v2/facilities?_s=&limit=${locationLimitValueSel}&offset=0&order=${sortOrder}&orderBy=${sortField}`
+            const url=`api/v2/facilities?_s=&limit=${locationLimitValueSel}&offset=${fromValue}&order=${sortOrder}&orderBy=${sortField}`
             getStationData(url);
     
-        }, [locationLimitValueSel,sortOrder]);
+        }, [locationLimitValueSel,sortOrder,fromValue]);
 
         const handleLocationLimitValue = (event) => {
             setLocationLimitValueSel(event.target.value);
@@ -88,6 +97,32 @@ const StationContainer=()=>{
             setSortOrder('asc');
         }
     };
+
+     const handleIncreamentOffset = () => {
+         setPageSize(prev => {
+        if (!stationData || stationData.length === 0) return prev;
+
+        const newPage = prev + 1;
+        setFromValue(parseInt(newPage-1) * parseInt(locationLimitValueSel));
+        return newPage;
+        });
+    }
+
+
+
+    const handleDecrementOffset = () => {
+        if (pageSize > 1) {
+            setPageSize(prevPageSize => {
+                const newPageSize = prevPageSize - 1;
+                const fromCal = (parseInt(newPageSize)-1) * parseInt(locationLimitValueSel);
+                 setFromValue(fromCal);
+                return newPageSize;
+            });
+        } else {
+            setPageSize(1);
+            //   setFromValue('0');
+        }
+    }
  
     return(
         <>
@@ -96,11 +131,11 @@ const StationContainer=()=>{
                         <article className="" style={{ height: '90vh' }}>
                             <article className="row custom-row border-tlr">
                                 <article className="col-8">
-                                    <button type="button" className="arrowlf">
+                                    <button type="button" className="arrowlf"  onClick={handleDecrementOffset}>
                                         <i className="fa-solid fa-arrow-left"></i>
                                     </button>
-                                    <button type="button" className="numcl"><span>1</span></button>
-                                    <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                                    <button type="button" className="numcl"><span>{pageSize}</span></button>
+                                    <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
                                 </article>
                                 <article className="col-4">
                                     <article style={{ float: 'right' }}>
@@ -149,13 +184,6 @@ const StationContainer=()=>{
                                         </tr>
                                     )}
 
-                                    {isError.status && (
-                                        <tr>
-                                            <td colSpan="12" style={{ textAlign: "center", color: "red" }}>
-                                                {isError.msg}
-                                            </td>
-                                        </tr>
-                                    )}
 
                                     {!isLoading && !isError.status && (!stationData || stationData.length === 0) && (
                                         <tr>

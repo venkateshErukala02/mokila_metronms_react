@@ -55,11 +55,12 @@ const StationNodesvgTable=({textName,yardfacilitieData,stationView, stationTagvi
         <article className="piechtcont">
                 <article className="row border-lrr">
                     <article className="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2">
-                        <button type="button" className="arrowlf">
+                         {/* <h1 className="discoveryheading">Tags</h1> */}
+                        {/* <button type="button" className="arrowlf">
                             <i className="fa-solid fa-arrow-left"></i>
                         </button>
                         <button type="button" className="numcl"><span>1</span></button>
-                        <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                        <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button> */}
 
 
                     </article>
@@ -86,8 +87,8 @@ const StationNodesvgTable=({textName,yardfacilitieData,stationView, stationTagvi
                 <hr className="dashbdhr" />
             </article>
             <article className="row">
-                <article style={{overflowY:'auto',height:'23vh'}}>
-                    <table className="col-12 border-allsd" style={{ height: '0vh' }}>
+                <article style={{overflowY:'auto',height:'23vh',overflowX: 'clip',position:'relative'}}>
+                    <table className="col-12 border-allsd table-fixed" style={{ height: '0vh' }}>
 
                         <thead className="tbtwo">
                             <tr>

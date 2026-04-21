@@ -69,6 +69,10 @@ thead.inventthtb>tr>th{font-size: 13px;font-family: "Lato-Regular";font-weight: 
 tbody.inventbdtb>tr>td{font-size: 12px;font-family: "Lato-Regular";padding: 6px;color: #000000de;}
 tbody.inventbdtb>tr:nth-child(odd){        background-color: rgb(229 241 255 / 50%);
 }
+.inventbdtb>tr>td>a{
+    color: #000000de;
+    text-decoration: none;
+}
 .inventbdtb{border-bottom: 1px solid rgb(33 35 39 / 7%);}
 tbody.inventbdtb>tr:nth-child(even){        background-color:white;
 }
