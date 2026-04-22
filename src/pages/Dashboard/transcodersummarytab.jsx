@@ -359,7 +359,7 @@ useEffect(() => {
          const controller = new AbortController();
             const timeout = setTimeout(() => {
                 controller.abort();
-            }, 100000); 
+            }, 10000); 
         try {
             // const username = "admin";
             // const password = "admin";
@@ -1257,14 +1257,15 @@ const rebootRstpTranscoderService = async () => {
                                          <h3 className="configlinktitle">
                                                     Connection Details
                                                 </h3>
+                                                 {/* <article className="loader"></article> */}
                                                 <article>
                                           <ul className="configlist">
                                         {parsedServices?.slice(0, 3).map((item, index) => (
                                         <li key={index}>
-                                            <h6>{item.displayName}</h6>
+                                            <h6 style={(item.displayName === "GST Health" && uptimeIsLoading)  ? { paddingRight: "50px" } : {}}>{item.displayName}</h6>
                                             
                                             {uptimeIsLoading ? (
-                                        <div className="spinner"></div>
+                                        <div className="loader"></div>
                                     ) : item.status === "success" ? (
                                             <span>✔ {item.status === "success" ?  "Running" : "Failed" } </span>
                                             ) : item.status === "failure" ? (
@@ -1298,7 +1299,9 @@ const rebootRstpTranscoderService = async () => {
                                             className=""
                                             >
                                             <h6>{item.displayName}</h6>
-                                            {item.status === "success" ? (
+                                            {uptimeIsLoading ? (
+                                        <div className="loader"></div>
+                                    ) : item.status === "success" ? (
                                                 <span>✔ {item.status === "success" ?  "Pinging" : "Failed" } {item.value ? `(${formatValue(item.value)})` : ""}  
                                                 <button type="button" className="createbtn" onClick={() => handleCamStatus(item.name)}>ping</button>
                                                  </span>

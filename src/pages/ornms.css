@@ -4527,14 +4527,15 @@ svg *:focus {
 }
 
 .loader {
-  border: 6px solid #f3f3f3; /* Light grey */
-  border-top: 6px solid #3498db; /* Blue */
+  border: 5px solid #f3f3f3; /* Light grey */
+  border-top: 5px solid #3498db; /* Blue */
   border-radius: 50%;
-  width: 70px;
-  height: 70px;
+  width: 21px;
+  height: 21px;
   animation: spin 1s linear infinite;
   margin: auto;
 }
+
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
@@ -4595,22 +4596,6 @@ body {
 .defaultLogStyle {
     padding-left: 60%;
 };
-
-.configlist>li>div.spinner {
-    width: 20px;
-    height: 20px;
-    border: 3px solid #ccc;
-    border-top: 3px solid #3498db;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    display: block;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
 
  /* width={700} height={240} */
 
