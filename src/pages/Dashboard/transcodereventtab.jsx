@@ -261,31 +261,30 @@ const TcEventTab=()=>{
 
 
 
-                     const handleIncreamentOffset=()=>{
-        setFromValue(parseInt(pageSize)* parseInt(eventmainLimitLabelSel));
-         // setFromValue(parseInt(pageSize)* parseInt(limitValueSelLabel));
-        if (eventmainData?.length === 0 || undefined) {
-            setPageSize(prevstate => prevstate);
-        } else if (eventmainData?.length > 0) {
-            setPageSize(prevstate => prevstate + 1);
-        }
-        // setPageSize(prevstate=>  prevstate +1);
-        
-    }
+        const handleIncreamentOffset=()=>{
+                setPageSize(prev => {
+            if (!eventmainData || eventmainData.length === 0) return prev;
 
-    const handleDecrementOffset=()=>{
-          if(pageSize > 1){
-        setPageSize(prevPageSize => {
-        const newPageSize = prevPageSize - 1;
-        const fromCal = (parseInt(newPageSize)-1) * parseInt(eventmainLimitLabelSel);
-        setFromValue(fromCal);
-        return newPageSize;
+            const newPage = prev + 1;
+            setFromValue(parseInt(newPage-1) * parseInt(eventmainLimitLabelSel));
+            return newPage;
             });
-        }else{
-            setPageSize(1);
-                        // setFromValue('0');
-                }
-    }
+
+        }
+
+        const handleDecrementOffset=()=>{
+            if(pageSize > 1){
+            setPageSize(prevPageSize => {
+            const newPageSize = prevPageSize - 1;
+            const fromCal = (parseInt(newPageSize)-1) * parseInt(eventmainLimitLabelSel);
+            setFromValue(fromCal);
+            return newPageSize;
+                });
+            }else{
+                setPageSize(1);
+                            // setFromValue('0');
+                    }
+        }
 
         
 
@@ -388,10 +387,10 @@ const TcEventTab=()=>{
                           
 
                             <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
-                                <option value="0" label="25">25</option>
-                                <option value="1" label="50">50</option>
-                                <option value="2" label="100">100</option>
-                                <option value="3" label="500">500</option>
+                                <option value="25" label="25">25</option>
+                                <option value="50" label="50">50</option>
+                                <option value="100" label="100">100</option>
+                                <option value="500" label="500">500</option>
                             </select>
                         </article>
                         <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
@@ -410,9 +409,9 @@ const TcEventTab=()=>{
 
                             <select className="form-controll1" value={eventauditLimitValueSel} onChange={handleMainAuditLimitValue}  style={{ width: 'auto' }} aria-invalid="false">
                             <option value="0" label="25">25</option>
-                                <option value="1" label="50">50</option>
-                                <option value="2" label="100">100</option>
-                                <option value="3" label="500">500</option>
+                                <option value="50" label="50">50</option>
+                                <option value="100" label="100">100</option>
+                                <option value="500" label="500">500</option>
                             </select>
                         </article>
 

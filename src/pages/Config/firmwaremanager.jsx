@@ -24,7 +24,8 @@ const FirmwareMng = () => {
     const [firmwareToDelete, setFirmwareToDelete] = useState(null);
     const columnWrapperRef =  useRef(null);
     const [showConfirmDeleteSuccessPopupStatus, setShowConfirmDeleteSuccessPopupStatus] = useState(false);
-
+    const [pageSize, setPageSize] = useState(1);
+    const [fromValue,setFromValue] =useState('0');
 
        useEffect(()=>{
         const handleClickOutside=(event)=>{
@@ -98,7 +99,7 @@ const FirmwareMng = () => {
      useEffect(() => {
 
         const fetchIntervalData = () => {
-        const url = `api/v2/firmware/firmwares?&page=1&limit=${regionLimitValueSel}&sort=${sortOrder}`
+        const url = `api/v2/firmware/firmwares?&page=${pageSize}&limit=${regionLimitValueSel}&sort=${sortOrder}`
     
         getVersionData(url,true);
         }
@@ -109,7 +110,7 @@ const FirmwareMng = () => {
     
         return () => clearInterval(intervalId);
     
-    }, [sortOrder,regionLimitValueSel]);
+    }, [sortOrder,regionLimitValueSel,pageSize]);
 
 
 
@@ -189,7 +190,7 @@ const FirmwareMng = () => {
             if (response.ok) {
                 setShowConfirmDeleteSuccessPopupStatus(true);
                 setFirmwareToDelete(null);
-                getVersionData('api/v2/firmware/firmwares?&page=1&limit=50&sort=fileName.asc')
+                getVersionData(`api/v2/firmware/firmwares?&page=${pageSize}&limit=${regionLimitValueSel}&sort=${sortOrder}`)
                 // alert("Are you sure you want to delete this firmware?")
                 // if(refreshUserData) refreshUserData();
             //    setUserName('');
@@ -235,7 +236,29 @@ const FirmwareMng = () => {
             setShowConfirmDeletePopupStatus(true);
         };
 
+          const handleIncreamentOffset = () => {
+            setPageSize(prev => {
+            if (!versionData || versionData.length === 0) return prev;
 
+            const newPage = prev + 1;
+            // setFromValue(parseInt(newPage-1) * parseInt(regionLimitValueSel));
+            return newPage;
+            });
+        }
+
+        const handleDecrementOffset = () => {
+            if (pageSize > 1) {
+                setPageSize(prevPageSize => {
+                    const newPageSize = prevPageSize - 1;
+                    // const fromCal = (parseInt(newPageSize)-1) * parseInt(regionLimitValueSel);
+                    // setFromValue(fromCal);
+                    return newPageSize;
+                });
+            } else {
+                setPageSize(1);
+                //   setFromValue('0');
+            }
+        }
 
     return (
         <>
@@ -244,11 +267,11 @@ const FirmwareMng = () => {
                     <article className="" style={{ height: '90vh' }}>
                         <article className="row custom-row border-tlr">
                             <article className="col-8">
-                                <button type="button" className="arrowlf">
+                                <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
                                     <i className="fa-solid fa-arrow-left"></i>
                                 </button>
-                                <button type="button" className="numcl"><span>1</span></button>
-                                <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                                <button type="button" className="numcl"><span>{pageSize}</span></button>
+                                <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
                             </article>
                             <article className="col-4">
                                 <article style={{ float: 'right' }}>
@@ -405,7 +428,7 @@ const FirmwareMng = () => {
                         handleSubContainer={handleSubContainer}
                         mode={mode}
                         version={editVersion}
-                        refreshLineData={() => getVersionData('api/v2/firmware/firmwares?&page=1&limit=50&sort=fileName.asc')
+                        refreshLineData={() => getVersionData(`api/v2/firmware/firmwares?&page=${pageSize}&limit=${regionLimitValueSel}&sort=${sortOrder}`)
                         }
                     />
                 </article>
@@ -414,7 +437,7 @@ const FirmwareMng = () => {
                         handleSubContainer={handleSubContainer}
                          mode={mode}
                          version={editVersion}
-                        refreshLineData={() => getVersionData('api/v2/firmware/firmwares?&page=1&limit=50&sort=fileName.asc')
+                        refreshLineData={() => getVersionData(`api/v2/firmware/firmwares?&page=${pageSize}&limit=${regionLimitValueSel}&sort=${sortOrder}`)
                         }
                     />
                 </article>

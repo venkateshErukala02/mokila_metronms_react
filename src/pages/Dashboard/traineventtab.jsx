@@ -469,15 +469,14 @@ const TrainEventTab = () => {
     };
 
      const handleIncreamentOffset=()=>{
-        setFromValue(parseInt(pageSize)* parseInt(eventmainLimitLabelSel));
-         // setFromValue(parseInt(pageSize)* parseInt(limitValueSelLabel));
-        if (eventmainData?.length === 0 || undefined) {
-            setPageSize(prevstate => prevstate);
-        } else if (eventmainData?.length > 0) {
-            setPageSize(prevstate => prevstate + 1);
-        }
-        // setPageSize(prevstate=>  prevstate +1);
-        
+         setPageSize(prev => {
+        if (!eventmainData || eventmainData.length === 0) return prev;
+
+        const newPage = prev + 1;
+        setFromValue(parseInt(newPage-1) * parseInt(eventmainLimitLabelSel));
+        return newPage;
+        });
+
     }
 
     const handleDecrementOffset=()=>{

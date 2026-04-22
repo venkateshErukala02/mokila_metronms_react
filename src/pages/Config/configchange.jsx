@@ -24,8 +24,9 @@ const ConfigChange = () => {
     const [showDeleteSuccessPopup, setShowDeleteSuccessPopup] = useState(false);
     const [showBulkDeletePopup, setShowBulkDeletePopup] = useState(false);
     const [showBulkDeleteSuccessPopup, setShowBulkDeleteSuccessPopup] = useState(false);
-
-
+    const [pageSize, setPageSize] = useState(1);
+    const [fromValue,setFromValue] =useState('0');
+    
     const statuses = [
         { label: "All", value: 4 },
         { label: "Pending", value: 0 },
@@ -77,6 +78,12 @@ const ConfigChange = () => {
 
             };
             const response = await fetch(url, options);
+            if (response.status === 204) {
+                setIsLoading(false);
+                setConfigChangeData([]);
+                setIsError({ status: false, msg: '' });
+                return;
+            }
 
             const data = await response.json();
 
@@ -104,7 +111,7 @@ const ConfigChange = () => {
      useEffect(() => {
 
         const fetchIntervalData = () => {
-        const url = `api/v2/task/list?show=configpush&status=${selected}&offset=0&count=${userLimitValueSel}`;
+        const url = `api/v2/task/list?show=configpush&status=${selected}&offset=${fromValue}&count=${userLimitValueSel}`;
     
         getConfigChangeData(url,true);
         }
@@ -115,7 +122,7 @@ const ConfigChange = () => {
     
         return () => clearInterval(intervalId);
     
-    }, [selected,userLimitValueSel]);
+    }, [selected,userLimitValueSel,fromValue]);
 
     const handleUserLimitValue = (event) => {
         setUserLimitValueSel(event.target.value);
@@ -172,7 +179,7 @@ const ConfigChange = () => {
         if (response.ok) {
             setShowDeleteSuccessPopup(true);
             await getConfigChangeData(
-                `api/v2/task/list?show=configpush&status=${selected}&offset=0&count=25`
+                `api/v2/task/list?show=configpush&status=${selected}&offset=${fromValue}&count=${userLimitValueSel}`
             );
         } else {
             setIsError({
@@ -243,7 +250,7 @@ const handleBulkDelete = async () => {
         }
         setShowBulkDeleteSuccessPopup(true);
         await getConfigChangeData(
-                `api/v2/task/list?show=configpush&status=${selected}&offset=0&count=25`
+                `api/v2/task/list?show=configpush&status=${selected}&offset=${fromValue}&count=${userLimitValueSel}`
         );
 
         setSelectedTasks([]);
@@ -258,18 +265,44 @@ const handleBulkDelete = async () => {
     const formatDateTime = (dateTime) =>
         dateTime ? dateTime.split('.')[0] : '';
 
+    const handleIncreamentOffset = () => {
+         setPageSize(prev => {
+        if (!configChangeData || configChangeData.length === 0) return prev;
+
+        const newPage = prev + 1;
+        setFromValue(parseInt(newPage-1) * parseInt(userLimitValueSel));
+        return newPage;
+        });
+    }
+
+
+
+    const handleDecrementOffset = () => {
+        if (pageSize > 1) {
+            setPageSize(prevPageSize => {
+                const newPageSize = prevPageSize - 1;
+                const fromCal = (parseInt(newPageSize)-1) * parseInt(userLimitValueSel);
+                 setFromValue(fromCal);
+                return newPageSize;
+            });
+        } else {
+            setPageSize(1);
+            //   setFromValue('0');
+        }
+    }
+
     return (
         <>
             <article className="row">
                 <article className={profileStatusCont ? 'col-8' : 'col-12'}>
-                    <article className="" style={{ height: '90vh' }}>
-                        <article className="row custom-row border-tlr">
+                    <article className="" style={{ height: '0vh' }}>
+                        <article className="row custom-row border-allsd">
                             <article className="col-8">
-                                <button className="arrowlf">
+                                <button className="arrowlf" onClick={handleDecrementOffset}>
                                     <i className="fa-solid fa-arrow-left"></i>
                                 </button>
-                                <button className="numcl"><span>1</span></button>
-                                <button className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                                <button className="numcl"><span>{pageSize}</span></button>
+                                <button className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
                             </article>
                             <article className="col-4">
                                 <article style={{ float: 'right' }}>
@@ -303,9 +336,9 @@ const handleBulkDelete = async () => {
                             </article>
                         </article>
 
-                        <article className="row border-allsd">
+                        <article className="row border-allsd" style={{ height: '80vh',overflowY:'auto',overflowX: 'clip' }}>
                             <table className="col-12" style={{ height: '0vh' }}>
-                                <thead className="settingthtb"> 
+                                <thead className="settingthtb tableheadpostion"> 
                                     <tr>
                                         <th><input className="incl2" type="checkbox"
                                          checked={selectedTasks.length === configChangeData.length && configChangeData.length > 0}

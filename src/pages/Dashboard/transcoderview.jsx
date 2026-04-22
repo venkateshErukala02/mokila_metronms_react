@@ -70,6 +70,7 @@ const TranscoderView = () => {
     };
 
     useEffect(() => {
+          if (!nodeIpaddress) return;
         const fetchData = async () => {
             const nodeId = localStorage.getItem('nodeId');
             let url = `http://${nodeIpaddress}:8084/transcoder/api/v1/config`;
@@ -78,7 +79,7 @@ const TranscoderView = () => {
             await getServerStatusDt(url);
         };
         fetchData();
-    }, []);
+    }, [nodeIpaddress]);
 
     useEffect(() => {
         if (nodeDataId) {

@@ -113,9 +113,9 @@ const SnmpContainer=()=>{
                                 </article>
                             </article>
 
-                            <article className="row border-allsd">
+                            <article className="row border-allsd" style={{ height: '80vh',overflowY:'auto',overflowX: 'clip' }}>
                                 <table className="col-12" style={{ height: '0vh' }}>
-                                    <thead className="settingthtb">
+                                    <thead className="settingthtb tableheadpostion">
                                         <tr>
                                         <th>SNMP Version </th>
                                             <th>Begin Address </th>

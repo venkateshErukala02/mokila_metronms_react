@@ -38,6 +38,7 @@ const InventRpt = () => {
     const [success, setSuccess] = useState('');
     const [selectedRows, setSelectedRows] = useState([]);
     const [pageSize,setPageSize] = useState(1);
+    const [fromValue,setFromValue] =useState('0');
     const [limitValueSel, setLimitValueSel] = useState('');
     const [limitValueSelLabel, setLimitValueSelLabel] = useState('50');
     const [sortField, setSortField] = useState('id');
@@ -100,7 +101,7 @@ const InventRpt = () => {
         const handleSearchData = async (searchText) => {
 
                 try {
-                    const response = await fetch(`api/v2/nodes?_s=assetRecord.serialNumber==${searchText},label==${searchText},sysName==${searchText}&limit=25&offset=0&order=asc&orderBy=id`, {
+                    const response = await fetch(`api/v2/nodes?_s=assetRecord.serialNumber==${searchText},label==${searchText},sysName==${searchText}&limit=${limitValueSelLabel}&offset=${fromValue}&order=asc&orderBy=id`, {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",
@@ -147,7 +148,7 @@ const InventRpt = () => {
             }
         setIsError({ status: false, msg: "" });
         try {
-            const url = `api/v2/nodes?_s=&limit=${limitValueSelLabel}&offset=${pageSize}&order=${sortOrder}&orderBy=${fieldToUse}`;
+            const url = `api/v2/nodes?_s=&limit=${limitValueSelLabel}&offset=${fromValue}&order=${sortOrder}&orderBy=${fieldToUse}`;
             const options = {
                 method: "GET",
                 headers: {
@@ -155,6 +156,12 @@ const InventRpt = () => {
                 },
             };
             const response = await fetch(url, options);
+             if (response.status === 204) {
+                    setIsLoading(false);
+                    setInvenData([]);
+                    setIsError({ status: false, msg: '' });
+                    return;
+                }
             const data = await response.json();
             if (response.ok) {
                 setInvenData(data);
@@ -180,7 +187,7 @@ const InventRpt = () => {
                 getDataInvety()
             },30000);
           return ()=> clearInterval(intervalId);
-    }, [pageSize,limitValueSelLabel,sortOrder,searchBtn]);
+    }, [fromValue,limitValueSelLabel,sortOrder,searchBtn]);
 
     let activeTrueCount = 0;
     let activeFalseCount = 0;
@@ -315,26 +322,30 @@ const InventRpt = () => {
     };
 
      const handleIncreamentOffset=()=>{
-            // setFromValue(parseInt(pageSize)* parseInt(limitValueSelLabel));
-                if (invenData?.node?.length === 0 || undefined) {            
-                setPageSize(prevstate => prevstate);
-            } else if (invenData?.node?.length > 0) {
-                setPageSize(prevstate => prevstate + 1);
-            }
+
+          setPageSize(prev => {
+        if (!invenData || invenData?.length === 0 || invenData?.node?.length === 0) return prev;
+
+        const newPage = prev + 1;
+        setFromValue(parseInt(newPage-1) * parseInt(limitValueSelLabel));
+        return newPage;
+        });
         }
     
       
         const handleDecrementOffset=()=>{
-              if(pageSize > 1){
+
+             if (pageSize > 1) {
             setPageSize(prevPageSize => {
-            const newPageSize = prevPageSize - 1;
-            // setFromValue(parseInt(newPageSize) * parseInt(limitValueSelLabel));
-            return newPageSize;
-                });
-            }else{
-                setPageSize(1);
-                            // setFromValue('0');
-                    }
+                const newPageSize = prevPageSize - 1;
+                const fromCal = (parseInt(newPageSize)-1) * parseInt(limitValueSelLabel);
+                 setFromValue(fromCal);
+                return newPageSize;
+            });
+        } else {
+            setPageSize(1);
+            //   setFromValue('0');
+        }
         }
 
         const handleLimitValue = (event) => {
@@ -587,9 +598,10 @@ const columnPadding = {
                                         </li>
                                         <li>
                                             <select className="form-controll1" style={{ maxWidth: '58px', minWidth: '58px', marginTop: '2px', fontSize: '12px' }} aria-invalid="false" value={limitValueSel} onChange={handleLimitValue}>
-                                                <option value="1" label="25" defaultValue={25}>25</option>
-                                                <option value="2" label="50">50</option>
-                                                <option value="3" label="100">100</option>
+                                                    <option value="25" label="25">25</option>
+                                                    <option value="50" label="50">50</option>
+                                                    <option value="100" label="100">100</option>
+                                                    {/* <option value="500" label="500">500</option> */}
                                             </select>
                                         </li>
                                     </ul>

@@ -8,6 +8,9 @@ const SummaryTable=()=>{
     const [summaryDatatb, setSummaryDatatb] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
+    const [pageSize, setPageSize] = useState(1);
+    const [fromValue,setFromValue] =useState('0');
+    const [summaryLimitValueSel, setSummaryLimitValueSel] = useState('25');
 
     const getDatasummarytb = async () => {
           setIsLoading(true);
@@ -16,7 +19,7 @@ const SummaryTable=()=>{
             const username = 'admin';
             const password = 'admin';
             const token = btoa(`${username}:${password}`)
-            const url='api/v2/dtask/list?_s=&limit=25&offset=0&order=desc&orderBy=id';
+            const url=`api/v2/dtask/list?_s=&limit=${summaryLimitValueSel}&offset=${fromValue}&order=desc&orderBy=id`;
             const options = {
               method: "GET", 
               headers: {
@@ -51,26 +54,53 @@ const SummaryTable=()=>{
             }, 30000); 
     
             return () => clearInterval(intervalId);
-        }, []);
-   
+        }, [summaryLimitValueSel,fromValue]);
+
+    const handleIncreamentOffset = () => {
+         setPageSize(prev => {
+        if (!summaryDatatb || summaryDatatb.length === 0) return prev;
+
+        const newPage = prev + 1;
+        setFromValue(parseInt(newPage-1) * parseInt(summaryLimitValueSel));
+        return newPage;
+        });
+    }
+
+    const handleDecrementOffset = () => {
+        if (pageSize > 1) {
+            setPageSize(prevPageSize => {
+                const newPageSize = prevPageSize - 1;
+                const fromCal = (parseInt(newPageSize)-1) * parseInt(summaryLimitValueSel);
+                 setFromValue(fromCal);
+                return newPageSize;
+            });
+        } else {
+            setPageSize(1);
+            //   setFromValue('0');
+        }
+    }
+
+    const handleSumaryLimitValue = (event) => {
+            setSummaryLimitValueSel(event.target.value);
+        }
 
     return(
         <>
          <article className="row border-tlr custom-row" style={{ margin: '5px 0px 0 5px' }}>
               <article className="col-5">
-                <button type="button" className="arrowlf">
+                <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
                   <i className="fa-solid fa-arrow-left"></i>
                 </button>
-                <button type="button" className="numcl"><span>1</span></button>
-                <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                <button type="button" className="numcl"><span>{pageSize}</span></button>
+                <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
               </article>
               <article className="col-7">
                 <article style={{ float: 'right' }}>
-                  <select className="form-controlfirm" value="select" style={{ width: "auto" }} aria-invalid="false">
-                    <option value="0" label="100">100</option>
-                    <option value="1" selected="selected" label="200">200</option>
-                    <option value="2" label="300">300</option>
-                    <option value="3" label="400">400</option>
+                  <select className="form-controlfirm" value="select" style={{ width: "auto" }} aria-invalid="false"  value={summaryLimitValueSel} onChange={handleSumaryLimitValue}>
+                  <option value="25" label="25">25</option>
+                  <option value="50" label="50">50</option>
+                  <option value="100" label="100">100</option>
+                  <option value="500" label="500">500</option>
                   </select>
                 </article>
               </article>

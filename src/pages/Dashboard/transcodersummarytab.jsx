@@ -8,6 +8,9 @@ import NetworkMonitoringDashboard from "./nodeviewchart";
 import LatencyChart from "./latencychart";
 import TranscoderDashboard from "./transcoderdashboard";
 import { use } from "react";
+import loaderImg from '../../assets/img/progress.gif'
+import '../ornms.css'
+
 
 
 const TcSummaryTab = ({  }) => {
@@ -26,6 +29,7 @@ const TcSummaryTab = ({  }) => {
           const isReadOnly = currentUser === 'Read-only';
         
     const [isLoading, setIsLoading] = useState("");
+    const [uptimeIsLoading,setUptimeIsLoading] = useState(false);
     const [isError, setIsError] = useState("");
     const [upTimeData, setUpTimeData] = useState([]);
     // const [bitRate,setBitRate] = useState(bitrate);
@@ -46,6 +50,8 @@ const TcSummaryTab = ({  }) => {
   );
   const [allParsedServices, setAllParsedServices] = useState([]);
   const [showTerminal, setShowTerminal] = useState(false);
+  const [showWarningPopup,setShowWarningPopup] = useState(false);
+  const [hasFetchedUpTime, setHasFetchedUpTime] = useState(false);
   const [terminalData, setTerminalData] = useState({
   camName: "",
   status: "unknown",
@@ -121,7 +127,7 @@ const [transcoderStats, setTranscoderStats] = useState({
 
 
 
-     const getServerStatus = async (url) => {
+     const getConfigStatus = async (url) => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
@@ -178,16 +184,16 @@ const [transcoderStats, setTranscoderStats] = useState({
         }
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const nodeId = localStorage.getItem('nodeId');
-            let url = `http://${nodeIpaddress}:8084/transcoder/api/v1/config`;
-          //let url = '/transcoder/api/v1/config';
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const nodeId = localStorage.getItem('nodeId');
+    //         let url = `http://${nodeIpaddress}:8084/transcoder/api/v1/config`;
+    //       //let url = '/transcoder/api/v1/config';
 
-            await getServerStatus(url);
-        };
-        fetchData();
-    }, []);
+    //         await getConfigStatus(url);
+    //     };
+    //     fetchData();
+    // }, []);
 
 
 
@@ -276,13 +282,13 @@ const handleQuadChange = (name, value) => {
         }
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            let url = `api/v2/troubleshoot/transcoder/${nodeIpaddress}/servicecheck`;
-            await getServiceCheckStatus(url);
-        };
-        fetchData();
-    }, []);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         let url = `api/v2/troubleshoot/transcoder/${nodeIpaddress}/servicecheck`;
+    //         await getServiceCheckStatus(url);
+    //     };
+    //     fetchData();
+    // }, []);
 
 
 useEffect(() => {
@@ -347,34 +353,71 @@ useEffect(() => {
 
 
     const getServerStatusDt = async (url) => {
-        setIsLoading(true);
+        setUptimeIsLoading(true);
         setIsError({ status: false, msg: "" });
+
+         const controller = new AbortController();
+            const timeout = setTimeout(() => {
+                controller.abort();
+            }, 100000); 
         try {
-            const username = "admin";
-            const password = "admin";
-            const token = btoa(`${username}:${password}`);
+            // const username = "admin";
+            // const password = "admin";
+            // const token = btoa(`${username}:${password}`);
             const options = {
                 method: "GET",
                 headers: {
-                    "Authorization": `Basic ${token}`,
-                    "Content-Type": "application/json",
+                    // "Authorization": `Basic ${token}`,
+                    // "Content-Type": "application/json",
                 },
+                signal: controller.signal,
             };
-            const response = await fetch(url);
+            const response = await fetch(url,options);
+            clearTimeout(timeout);
+            
+             if (response.status === 204) {
+                setIsLoading(false);
+                setShowWarningPopup(true);
+                setIsError({ status: false, msg: "" });
+                return;
+            }
+
             const data = await response.json();
 
-            if (response.ok) {
-                setIsLoading(false);
-
-
+            if (response.ok && response.status === 200) {
+                setUptimeIsLoading(false);
                 setUpTimeData(data);
+                setHasFetchedUpTime(true);
+                const  urlTemp = `http://${nodeIpaddress}:8084/transcoder/api/v1/temp`;
+                const  urlService = `api/v2/troubleshoot/transcoder/${nodeIpaddress}/servicecheck`;
+                const  urlConfig = `http://${nodeIpaddress}:8084/transcoder/api/v1/config`;
+                await Promise.all([
+                    getTemperatureDt(urlTemp),
+                    getServiceCheckStatus(urlService),
+                    getConfigStatus(urlConfig)
+                ]);
                 setIsError({ status: false, msg: "" });
             } else {
+                setUptimeIsLoading(true)
+                setShowWarningPopup(true);
                 throw new Error("Data not found");
             }
         } catch (error) {
-            setIsLoading(false);
-            setIsError({ status: true, msg: error.message });
+            clearTimeout(timeout);
+            setUptimeIsLoading(false);
+            setShowWarningPopup(true);
+            // setIsError({ status: true, msg: error.message });
+            if (error.name === "AbortError") {
+            setIsError({
+                status: true,
+                msg: "Request timed out (10s)"
+            });
+        } else {
+            setIsError({
+                status: true,
+                msg: error.message
+            });
+        }
         }
     };
 
@@ -411,21 +454,22 @@ useEffect(() => {
     };
 
     useEffect(() => {
+        if (!nodeIpaddress) return;
         const fetchData = async () => {
             let url = `http://${nodeIpaddress}:8084/transcoder/api/v1/uptime`;
             await getServerStatusDt(url);
         };
         fetchData();
-    }, []);
+    }, [nodeIpaddress]);
 
 
-    useEffect(()=> {
-         const fetchData = async () => {
-            let url = `http://${nodeIpaddress}:8084/transcoder/api/v1/temp`;
-            await getTemperatureDt(url);
-        };
-        fetchData();
-    },[])
+    // useEffect(()=> {
+    //      const fetchData = async () => {
+    //         let url = `http://${nodeIpaddress}:8084/transcoder/api/v1/temp`;
+    //         await getTemperatureDt(url);
+    //     };
+    //     fetchData();
+    // },[])
 
 
     const handleEditBit=()=>{
@@ -1218,10 +1262,15 @@ const rebootRstpTranscoderService = async () => {
                                         {parsedServices?.slice(0, 3).map((item, index) => (
                                         <li key={index}>
                                             <h6>{item.displayName}</h6>
-                                            {item.status === "success" ? (
+                                            
+                                            {uptimeIsLoading ? (
+                                        <div className="spinner"></div>
+                                    ) : item.status === "success" ? (
                                             <span>✔ {item.status === "success" ?  "Running" : "Failed" } </span>
                                             ) : item.status === "failure" ? (
                                             <span className="failure-color">✖ Failed</span>
+                                            ): (!upTimeData || upTimeData.length === 0) ? (
+                                                <span className="pulse"></span>
                                             ) : (
                                             <span className="pulse">Checking...</span>
                                             )}
@@ -1257,7 +1306,9 @@ const rebootRstpTranscoderService = async () => {
                                                 <span className="failure-color" >✖ Not Pinging {item.value ? `(${formatValue(item.value)})` : ""}  
                                                 <button type="button" className="createbtn" onClick={() => handleCamStatus(item.name)}>ping</button>
                                                  </span>
-                                                ) : (
+                                                ) :(!upTimeData || upTimeData.length === 0) ? (
+                                                    <span className="pulse"></span>
+                                                ) :  (
                                                 <span className="pulse">Checking...</span>
                                                 )}
                                             </li>
@@ -1312,6 +1363,26 @@ const rebootRstpTranscoderService = async () => {
 
                 </article>
             </article>
+
+              {showWarningPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Warning</h1>
+                                    <p className="confirmtextsucess">Transcoder agent is not installed.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => {setShowWarningPopup(false);
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
         </>
     )
 }

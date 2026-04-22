@@ -21,10 +21,14 @@ const LineContainer=()=>{
         const [itemToDelete, setItemToDelete] = useState(null);
         const [showDeletePopup, setShowDeletePopup] = useState(false);
         const [showDeleteSuccessPopup, setShowDeleteSuccessPopup] = useState(false);
+        const [pageSize, setPageSize] = useState(1);
+        const [fromValue,setFromValue] =useState('0');
 
         const getLineData = async (url) => {
             setIsLoading(true);
             setIsError({ status: false, msg: "" });
+              setLineData([]);
+
             try {
                 const username = 'admin';
                 const password = 'admin';
@@ -40,11 +44,18 @@ const LineContainer=()=>{
                 };
                 const response = await fetch(url, options);
     
-                const data = await response.json();
-    
-                if (response.ok) {
+                 if (response.status === 204) {
                     setIsLoading(false);
-                    setLineData(data.region);
+                    setLineData([]);
+                    setIsError({ status: false, msg: '' });
+                    return;
+                }
+    
+                    const data = await response.json();
+                if (response.ok && response.status === 200 ) {
+                    const regionData = Array.isArray(data?.region) ? data.region : [];
+                    setIsLoading(false);
+                    setLineData(regionData);
                     setIsError({ status: false, msg: "" });
                 } else {
                     throw new Error("data not found");
@@ -57,7 +68,7 @@ const LineContainer=()=>{
 
      useEffect(() => {
         const fetchLinesData = async()=>{
-            const url= `api/v2/regions?_s=&limit=${regionLimitValueSel}&offset=0&order=${sortOrder}&orderBy=${sortField}`
+            const url= `api/v2/regions?_s=&limit=${regionLimitValueSel}&offset=${fromValue}&order=${sortOrder}&orderBy=${sortField}`
             // const url = `api/v2/regions?_s=&limit=${regionLimitValueSel}&offset=0&order=asc&orderBy=name`
            await getLineData(url);
          
@@ -68,7 +79,7 @@ const LineContainer=()=>{
 
         return ()=> clearInterval(intervalId);
     
-        }, [regionLimitValueSel,sortOrder]);
+        }, [regionLimitValueSel,sortOrder,fromValue]);
 
 
       
@@ -125,7 +136,7 @@ const LineContainer=()=>{
             if (response.ok) {
                 // alert("Are you sure you want to delete this firmware?")
                 setShowDeleteSuccessPopup(true);
-                 let url =`api/v2/regions?_s=&limit=${regionLimitValueSel}&offset=0&order=${sortOrder}&orderBy=${sortField}`
+                 let url =`api/v2/regions?_s=&limit=${regionLimitValueSel}&offset=${fromValue}&order=${sortOrder}&orderBy=${sortField}`
             getLineData(url);
             } else {
                 setIsError('Error starting discovery');
@@ -147,6 +158,33 @@ const LineContainer=()=>{
         }
     };
 
+     const handleIncreamentOffset = () => {
+         setPageSize(prev => {
+        if (!lineData || lineData.length === 0) return prev;
+
+        const newPage = prev + 1;
+        setFromValue(parseInt(newPage-1) * parseInt(regionLimitValueSel));
+        return newPage;
+        });
+    }
+
+
+
+    const handleDecrementOffset = () => {
+        if (pageSize > 1) {
+            setPageSize(prevPageSize => {
+                const newPageSize = prevPageSize - 1;
+                const fromCal = (parseInt(newPageSize)-1) * parseInt(regionLimitValueSel);
+                 setFromValue(fromCal);
+                return newPageSize;
+            });
+        } else {
+            setPageSize(1);
+            //   setFromValue('0');
+        }
+    }
+
+
  
     return(
         <>
@@ -155,11 +193,11 @@ const LineContainer=()=>{
                         <article className="" style={{ height: '90vh' }}>
                             <article className="row custom-row border-tlr">
                                 <article className="col-8">
-                                    <button type="button" className="arrowlf">
+                                    <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
                                         <i className="fa-solid fa-arrow-left"></i>
                                     </button>
-                                    <button type="button" className="numcl"><span>1</span></button>
-                                    <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+                                    <button type="button" className="numcl"><span>{pageSize}</span></button>
+                                    <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
                                 </article>
                                 <article className="col-4">
                                     <article style={{ float: 'right' }}>
@@ -183,9 +221,9 @@ const LineContainer=()=>{
                                 </article>
                             </article>
 
-                            <article className="row border-allsd">
+                            <article className="row border-allsd" style={{ height: '80vh',overflowY:'auto',overflowX: 'clip' }}>
                                 <table className="col-12" style={{ height: '0vh' }}>
-                                    <thead className="settingthtb">
+                                    <thead className="settingthtb tableheadpostion">
                                         <tr>
                                             <th onClick={() => handleSort('name')}>Line <FontAwesomeIcon 
                                                 icon={sortField === 'name' ? (sortOrder === 'asc' ?  faSortUp :  faSortDown) : faSort} 
@@ -205,15 +243,7 @@ const LineContainer=()=>{
                                         </tr>
                                     )}
 
-                                    {isError.status && (
-                                        <tr>
-                                            <td colSpan="12" style={{ textAlign: "center", color: "red" }}>
-                                                {isError.msg}
-                                            </td>
-                                        </tr>
-                                    )}
-
-                                    {!isLoading && !isError.status && (!lineData || lineData.length === 0) && (
+                                    {!isLoading && !isError.status && lineData.length === 0  && (
                                         <tr>
                                             <td colSpan="12" style={{ textAlign: "center" }}>
                                                 No Data Available

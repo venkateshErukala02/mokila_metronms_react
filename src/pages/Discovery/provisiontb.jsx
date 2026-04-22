@@ -62,6 +62,8 @@ const ProvisionTb = ({ getProviContData }) => {
   const [success, setSuccess] = useState('');
   const currentUser = useSelector((state) => state?.loginuser?.node?.role);
   const isReadOnly = currentUser === 'Read-only';
+  const [pageSize, setPageSize] = useState(1);
+  const [fromValue,setFromValue] =useState('0');
 
    useEffect(()=>{
     if(lineNameSel === '-1') return;
@@ -245,6 +247,12 @@ const ProvisionTb = ({ getProviContData }) => {
         method: "GET",
       };
       const response = await fetch(url, options);
+      if (response.status === 204) {
+          setIsLoading(false);
+          setFirmData([]);
+          setIsError({ status: false, msg: '' });
+          return;
+        }
       const data = await response.json();
       if (response.ok) {
         setFirmData(data);  
@@ -267,7 +275,7 @@ const ProvisionTb = ({ getProviContData }) => {
     let show = unassignLabel || 'none';
     let limit = limitValueSelLabel || '100';
   
-    const url = `api/v2/discovery/showunprovisioned?show=${show}&ofs=0&limit=${limit}&sort=sysUptime&by=desc`;
+    const url = `api/v2/discovery/showunprovisioned?show=${show}&ofs=${fromValue}&limit=${limit}&sort=sysUptime&by=desc`;
   
     getDataUnprovisiontbData(url);
 
@@ -276,7 +284,7 @@ const ProvisionTb = ({ getProviContData }) => {
   }, 2000); 
 
   return () => clearInterval(intervalId);
-  }, [unassignLabel, limitValueSelLabel,searchBtn]);
+  }, [unassignLabel, limitValueSelLabel,searchBtn,fromValue]);
   
 
    const allSelected = ALL_COLUMNS.every(col =>
@@ -353,6 +361,32 @@ const ProvisionTb = ({ getProviContData }) => {
                   setIsLoading(false); 
               }
           };
+
+           const handleIncreamentOffset = () => {
+              setPageSize(prev => {
+              if (!firmData || firmData.length === 0) return prev;
+
+              const newPage = prev + 1;
+              setFromValue(parseInt(newPage-1) * parseInt(limitValueSelLabel));
+              return newPage;
+              });
+          }
+
+
+
+    const handleDecrementOffset = () => {
+        if (pageSize > 1) {
+            setPageSize(prevPageSize => {
+                const newPageSize = prevPageSize - 1;
+                const fromCal = (parseInt(newPageSize)-1) * parseInt(limitValueSelLabel);
+                 setFromValue(fromCal);
+                return newPageSize;
+            });
+        } else {
+            setPageSize(1);
+            //   setFromValue('0');
+        }
+    }
             
 
 
@@ -361,11 +395,11 @@ const ProvisionTb = ({ getProviContData }) => {
     <>
       <article className="row custom-row border-tlr" style={{ margin: '5px 0px 0 5px' }}>
         <article className="col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1">
-          <button type="button" className="arrowlf">
+          <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
             <i className="fa-solid fa-arrow-left"></i>
           </button>
-          <button type="button" className="numcl"><span>1</span></button>
-          <button type="button" className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
+          <button type="button" className="numcl"><span>{pageSize}</span></button>
+          <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
         </article>
         <article className="col-sm-11 col-md-11 col-lg-11 col-xl-11 col-xxl-11" style={{ float: 'right' }}>
           <article style={{ float: 'right' }}>

@@ -210,9 +210,9 @@ const SectionContainer=()=>{
                                 </article>
                             </article>
 
-                            <article className="row border-allsd">
+                            <article className="row border-allsd" style={{ height: '80vh',overflowY:'auto',overflowX: 'clip' }}>
                                 <table className="col-12" style={{ height: '0vh' }}>
-                                    <thead className="settingthtb">
+                                    <thead className="settingthtb tableheadpostion">
                                         <tr>
                                             <th onClick={() => handleSort('name')}>Section <FontAwesomeIcon
                                             icon={sortField === 'name' ? (sortOrder === 'asc' ?  faSortUp :  faSortDown) : faSort} 
