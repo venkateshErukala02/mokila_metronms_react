@@ -387,6 +387,12 @@ const ProvisionTb = ({ getProviContData }) => {
             //   setFromValue('0');
         }
     }
+
+     const columnPadding = {
+          status: "18px",
+          radioMode: "24px"
+          };
+
             
 
 
@@ -553,7 +559,11 @@ const ProvisionTb = ({ getProviContData }) => {
                     {ALL_COLUMNS
                     .filter(col => visibleColumns.includes(col.key))
                     .map((col) => (
-                      <td key={col.key}>
+                      <td key={col.key} style={
+                                columnPadding[col.key]
+                                ? { paddingLeft: columnPadding[col.key] }
+                                : {}
+                                            }>
                         {node[col.key]}
                       </td>
                     ))}

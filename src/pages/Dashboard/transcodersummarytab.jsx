@@ -1262,7 +1262,7 @@ const rebootRstpTranscoderService = async () => {
                                           <ul className="configlist">
                                         {parsedServices?.slice(0, 3).map((item, index) => (
                                         <li key={index}>
-                                            <h6 style={(item.displayName === "GST Health" && uptimeIsLoading)  ? { paddingRight: "50px" } : {}}>{item.displayName}</h6>
+                                            <h6>{item.displayName}</h6>
                                             
                                             {uptimeIsLoading ? (
                                         <div className="loader"></div>

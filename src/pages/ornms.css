@@ -950,7 +950,7 @@ tbody.statustagtbbd>tr>td>a{
 }
 
 .statustagthtb>tr>th, .statustagtbbd>tr>td {
-  width: 20%; /* 100% ÷ 8 columns */
+  width: 16%; /* 100% ÷ 8 columns */
   /* text-align: center; */
 }
 
@@ -4314,15 +4314,18 @@ svg *:focus {
 .configlist>li {
     display: flex;
     font-size: 17px;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     list-style-type: none;
     padding: 7px;
+    gap: 412px;
 }
 
 .configlist>li>h6{
     font-size: 17px;
     padding: 0;
     margin: 0;
+    min-width: 165px;
+    max-width: 201px;
 }
 
 
@@ -4533,7 +4536,7 @@ svg *:focus {
   width: 21px;
   height: 21px;
   animation: spin 1s linear infinite;
-  margin: auto;
+  /* margin: auto; */
 }
 
 

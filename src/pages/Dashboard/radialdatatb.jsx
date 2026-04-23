@@ -390,6 +390,13 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
                 visibleColumns.includes(col.key)
                 );
 
+
+                const columnPadding = {
+                    status: "10px",
+                    productCode: "19px",
+                    radioMode: "16px"
+                    };
+
     return (
         <>
             <article className="piechtcont">
@@ -523,7 +530,11 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
                                 rdData.map((node, index) => (
                                 <tr key={index}>
                                 {ALL_COLUMNS.filter(col => visibleColumns.includes(col.key)).map(col => (
-                                    <td key={col.key}>
+                                    <td key={col.key} style={
+                                                columnPadding[col.key]
+                                                ? { paddingLeft: columnPadding[col.key] }
+                                                : {}
+                                            }>
                                     {col.key === "sysName" ? (
                                         <a href={`http://${node.ipAddress}`} target="_blank" rel="noreferrer">
                                         {node[col.key]}

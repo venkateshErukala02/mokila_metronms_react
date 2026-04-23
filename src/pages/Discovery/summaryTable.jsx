@@ -96,7 +96,7 @@ const SummaryTable=()=>{
               </article>
               <article className="col-7">
                 <article style={{ float: 'right' }}>
-                  <select className="form-controlfirm" value="select" style={{ width: "auto" }} aria-invalid="false"  value={summaryLimitValueSel} onChange={handleSumaryLimitValue}>
+                  <select className="form-controlfirm" style={{ width: "auto" }} aria-invalid="false"  value={summaryLimitValueSel} onChange={handleSumaryLimitValue}>
                   <option value="25" label="25">25</option>
                   <option value="50" label="50">50</option>
                   <option value="100" label="100">100</option>
@@ -138,8 +138,8 @@ const SummaryTable=()=>{
                         <td>{item.start}</td>
                         <td>{item.end}</td>
                         <td>{item.status}</td>
-                        <td>{item.icmp}</td>
-                        <td>{item.snmp}</td>
+                        <td style={{paddingLeft:"22px"}}>{item.icmp}</td>
+                        <td style={{paddingLeft:"22px"}}>{item.snmp}</td>
                       </tr>
                     ))
                   ) : (

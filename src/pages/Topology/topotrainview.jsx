@@ -4,6 +4,7 @@ import northboundtr from '../../assets/img/Train_northbound_new.svg'
 import northgreen from '../../assets/Train_northboundgreen.svg'
 import southred from '../../assets/Train_southboundgreen copy.svg'
 import { Prev } from "react-bootstrap/esm/PageItem";
+import '../ornms.css';
 
 const TrainView=({textName,parentTextName,childrenTextName})=>{
 
@@ -28,7 +29,8 @@ const [apiUrl, setApiUrl] = useState("");
     const [svgContentNorth,setSvgContentNorth] = useState("");
     const [showPopup,setShowPopup] = useState(false);
     const [linkStatDt,setLinkStatDt] = useState([]);
-
+    const [popupLoading, setPopupLoading] = useState(false);
+    const [showWarningPopup,setShowWarningPopup] = useState(false);
 const [table1, setTable1] = useState([]);
 const [table2, setTable2] = useState([]);
 const [table3, setTable3] = useState([]);
@@ -293,7 +295,7 @@ useEffect(() => {
 
 
      const getServerStatusDt = async (url) => {
-    setIsLoading(true);
+    setPopupLoading(true);
     setIsError({ status: false, msg: "" });
     const dt = new Date();
     try {
@@ -321,22 +323,19 @@ useEffect(() => {
     } catch (error) {
       setIsError({ status: true, msg: error.message });
     } finally {
-      setIsLoading(false);
+      setPopupLoading(false);
     }
   };
 
 
     const handleTrainPopup=(id)=>{
-    setShowPopup(true);
-    let url='';
-    if(id === undefined){
-        url = `api/v2//nodelinks/linkstats?nodeId=373`;
- 
-    }else{
-        url = `api/v2//nodelinks/linkstats?nodeId=${id}`;
+    if (!id) {
+        setShowWarningPopup(true);
+        return;
     }
+     setShowPopup(true);
+      const  url = `api/v2//nodelinks/linkstats?nodeId=${id}`;
         getServerStatusDt(url);
-    // setFirmpopupData(data);
   }
 
 
@@ -673,6 +672,18 @@ useEffect(() => {
                                 <i className="fa fa-close noticlose" role="button" tabindex="0" onClick={() => setShowPopup(false)} style={{ marginBottom: '5px', float: 'right',transform:'translateY(-8px)',fontSize:'15px',paddingRight:'12px' }}></i>
                            
                             </article>
+                              {popupLoading ? (
+                                <article style={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        padding: "70px 0",
+                                        fontSize: "15px"
+                                    }}>
+                                <p style={{paddingRight:'15px'}}>Loading...</p>
+                                <div className="loader"></div>
+                                </article>
+                                ) : (
                             <article >
                             <article className="row" style={{marginTop:'20px',marginLeft:'20px'}}>
                                 <article className="col-12" style={{display:'flex'}}>
@@ -728,6 +739,7 @@ useEffect(() => {
                                 </article>
                             </article>
                             </article>
+                        )}
                         </div>
                         </div>
                     )}
@@ -737,6 +749,25 @@ useEffect(() => {
             </article>
 
         </article>
+           {showWarningPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Warning</h1>
+                                    <p className="confirmtextsucess">Cab number is not found.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => {setShowWarningPopup(false);
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
         </>
     )
 }
