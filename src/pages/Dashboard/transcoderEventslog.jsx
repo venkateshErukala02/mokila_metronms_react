@@ -234,8 +234,18 @@ const handleRowClick = (value) => {
 
     return (
         <section className="container-fluid">
-            <article className={`border-tlr custom-row ${currentTab === "obc" ? "obcLogStyle" : "defaultLogStyle"
+            <article className={`border-tlr custom-row ${currentTab === "obc" ? "obcLogStyle" : ""
                  }`}
+                 style={
+    currentTab === "obc"
+      ? {
+        }
+      : {
+          display: "flex",
+          justifyContent: "flex-end",
+          paddingLeft: "60%",
+        }
+  }
             >
                 <>
                     {currentTab === 'obc' && (<>

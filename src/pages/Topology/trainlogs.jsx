@@ -112,10 +112,11 @@ const TrainLogs = ({ trainId }) => {
                         </article>
                     </article>
                     <article className="col-6">
-                        <article className="bound-card">
-                            <article className="sbcard-header">
+                        <article className="bound-card" style={{ height: "43vh", overflowY: 'auto', overflowX: 'clip' }}>
+                            <article className="sbcard-header tableheadpostion" style={{zIndex:"10000"}}>
                                 Alarms
                             </article>
+                            <article className="">
                             <table className="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12 bordeer-allsd" style={{ height: '90vh' }}>
                                 <thead>
                                     <tr>
@@ -157,7 +158,7 @@ const TrainLogs = ({ trainId }) => {
                                     ))}
                                 </tbody>
                             </table>
-
+                            </article>
 
                             <article>
 
