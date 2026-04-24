@@ -598,6 +598,7 @@ useEffect(() => {
         setTrainView(false);
         setTrainLabelDiply(false);
         setStationTagview(true);
+        setStationView(true);
     }
 
     const handleTrainVwVisible=()=>{

@@ -275,11 +275,30 @@ const EventPg = () => {
                       {selectedLogVal === 'train' && <article style={{padding:"12px"}}>
                             <label className="settinglabelsub">Cab Number</label>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px',marginBottom:'12px' }}>
+                                <div className="input-wrapper">
                             <input type="text"
                              value={cabNumber}
                                 required
                                 onChange={(e) => setCabNumber(e.target.value)}
                                 name="" placeholder="Enter Cab Number" id="" className="settinglabelsubinp" />
+                                {cabNumber && (
+                                    <button
+                                    type="button"
+                                    className="clear-btn"
+                                    onClick={() =>{ setCabNumber("");
+                                        setSelectedFromDate(null);
+                                        setSelectedToDate(null);
+                                        setTimestampFrom(null);
+                                        setTimestampTo(null);
+                                        if (Object.keys(cabNumberIpsData).length > 0) {
+                                            setCabNumberIpsData({});
+                                        }
+                                    }}
+                                    >
+                                    ✖
+                                    </button>
+                                )}
+                                </div>
                                 <button type="button" className="createbtn" onClick={() => {
                                     handleCabNumberIp();}}>Fetch</button>
                                 </div>

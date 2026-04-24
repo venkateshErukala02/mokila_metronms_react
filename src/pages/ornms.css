@@ -4600,6 +4600,31 @@ body {
     padding-left: 60%;
 };
 
+.input-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.settinglabelsubinp {
+  padding-right: 30px; 
+}
+
+.clear-btn {
+  background: #0000;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 9px;
+    position: absolute;
+    right: 28%;
+    top: 27.5%;
+    transform: translateY(-50%);
+}
+
+.clear-btn:hover {
+  color: #000;
+}
+
  /* width={700} height={240} */
 
 /*  */

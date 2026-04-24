@@ -3,7 +3,7 @@ import { useLayoutEffect } from 'react';
 import '../ornms.css'
  
 
-const StationSvg = ({ textName, setTrainView, setStationView, setTrainLabelDiply, setTrainId ,rdDataRef,trainView,trainId,stationNode,goToStationView,yardfacilitieData,yardfacilitieDataRef,trainData,trainDataRef ,stationIdFromSvg }) => {
+const StationSvg = ({ textName, setTrainView, setStationView,setStationTagview, setTrainLabelDiply, setTrainId ,rdDataRef,trainView,trainId,stationNode,goToStationView,yardfacilitieData,yardfacilitieDataRef,trainData,trainDataRef ,stationIdFromSvg }) => {
     // const [trainData, setTrainData] = useState('')
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [isLoading, setIsLoading] = useState(false);
@@ -407,6 +407,7 @@ const resetTrainLayers = (svgRoot) => {
         setTrainView(true);
         setTrainId(trainId)
         setStationView(false);
+        setStationTagview(false);
         setTrainLabelDiply(true);
     };
 
