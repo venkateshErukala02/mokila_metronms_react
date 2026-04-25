@@ -41,6 +41,10 @@ const EventMainTB = () => {
   const [showCustomDateLimitAlertPopup,setShowCustomDateLimitAlertPopup] = useState(false);
   const [isCustomApplied, setIsCustomApplied] = useState(false);
   const reportUrlRef = useRef('');
+  const [sysSelectedDate, setSysSelectedDate] = useState(new Date());
+  const [executedSearch, setExecutedSearch] = useState("");
+  const [executedDate, setExecutedDate] = useState("");
+  const [searchTrigger, setSearchTrigger] = useState(0);
 
   const handleClosepopup  = ()=>{
     setShowCustomPopup(false);
@@ -141,6 +145,13 @@ const EventMainTB = () => {
                 setIsError({ status: false, msg: '' });
                 return;
             }
+
+            if (typevalueSel === 'syslogd') {
+                    const textData = await response.text(); // ✅ only text
+                    setEventmainData(textData || "");
+                    setIsLoading(false);
+                    return;
+                }
             const data = await response.json();
             if (!response.ok) {
                 throw new Error("API Error");
@@ -151,7 +162,7 @@ const EventMainTB = () => {
             if (url.includes('/audit/') && typevalueSel==='auditlog') {
                 normalized = data.audits || [];
                 setAuditmainData(normalized || []);
-            } else if (data?.event && typevalueSel==='events' || typevalueSel==='syslogd' ) {
+            } else if (data?.event && typevalueSel==='events' ) {
                 normalized = data.event;
                 setEventmainData(normalized || []);
                 setCustomStartDate(null);
@@ -204,7 +215,9 @@ const EventMainTB = () => {
                 break;
 
             case 'syslogd':
-                url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`;
+                if(searchBtn) return;
+                // url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`;
+                url = `api/v2/events/list/allsyslogs`
 
                 break;
             case 'auditlog':
@@ -503,6 +516,79 @@ const EventMainTB = () => {
         }
     };
 
+    const handleSyslogSearch = async (url) => {
+        setSearchUrl(url);
+        // if (!eventipText) {
+        //     alert("Please enter a search term");
+        //     return;
+        // }
+
+        setSearchBtn(true);
+        setIsLoading(true);
+        setIsError({ status: false, msg: "" });
+        
+        try {
+            const response = await fetch(url,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            if (response.status === 204) {
+                setIsLoading(false);
+                setEventmainData([]);
+                return;
+            }
+
+               if (typevalueSel === 'syslogd') {
+            const textData = await response.text();
+            setEventmainData(textData || "");
+            return;
+        }
+
+        // ✅ JSON for others
+        const data = await response.json();
+
+        if (response.ok) {
+            setEventmainData(data.event || []);
+            setIsError({ status: false, msg: '' });
+        } else {
+                throw new Error("Data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message || "Something went wrong" });
+        }
+    };
+
+    useEffect(() => {
+    if (!searchTrigger || searchTrigger === 0) return; 
+      const startTimestamp = customStartDate?.getTime();
+        const endTimestamp = customEndDate?.getTime();
+    let url = `api/v2/events/list/allsyslogs`;
+            const params = [];
+
+            if (eventipText) {
+                params.push(`search=${encodeURIComponent(eventipText)}`);
+            }
+            if (selectedDuration === 'Custom' && startTimestamp && endTimestamp) {
+                params.push(`from=${startTimestamp}`);
+                params.push(`to=${endTimestamp}`);
+            }
+            if(selectedDuration !== 'Custom'){
+                params.push(`time=${eventtimeSel}`)
+            }
+
+            if (params.length > 0) {
+                url += "?" + params.join("&");
+            }
+
+                handleSyslogSearch(url);
+        }, [searchTrigger,selectedDuration]);
+
 
     const handleEventPopup=(event)=>{
         setShowEventPopup(true);
@@ -580,25 +666,39 @@ const EventMainTB = () => {
         setShowCustomPopup(true)
     }
 
+      const handleSearch = (eventipText, sysSelectedDate) => {
+        setExecutedSearch(eventipText);
+        setExecutedDate(sysSelectedDate);
+        setSearchTrigger(prev => prev + 1); 
+    };
+
+    const handleClearSearch = () => {
+        setEventipText('');
+    }
+
+    useEffect(() => {
+        setEventipText('');
+        setExecutedDate(new Date());
+        setExecutedSearch('');
+    }, [typevalueSel]);
+
+
     return (
         <>
             <article className="row border-tlr custom-row">
                 <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
-                    <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block' }}>
+                    <article style={{ display: typevalueSel === 'events' ? 'block' : 'none' }}>
                         <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
                             <i className="fa-solid fa-arrow-left"></i>
                         </button>
                         <button type="button" className="numcl"><span>{pageSize}</span></button>
                         <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
-                        {/* <span className="eventscp">Scope : </span>
-                        <span className="eventgolcl" onClick={toggleDropdown} >Golbal <span className="fa fa-chevron-down highlightText v-align-tt iconsy"></span></span> */}
 
                         <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
                         <button type="button" className="createbtn" onClick={() => { handleRadialIP();}} >Search</button>
                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
-                        {/* <button type="button" className="createbtn"  onClick={() => getReportData(reportUrl)} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}>  <i class="fa-solid fa-download"></i></button> */}
-
                     </article>
+                 
                     <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
                         <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
                             <i className="fa-solid fa-arrow-left"></i>
@@ -614,7 +714,7 @@ const EventMainTB = () => {
                 </article>
                 <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
                     <article style={{ float: 'right' }}>
-                        <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block' }}>
+                        <article style={{ display: typevalueSel === 'events' ? 'block' : 'none' }}>
                              {/* <button type="button" style={{marginRight:'12px'}} className="createbtn" onClick={getReportData}>Report 
                                     <i className="fa fa-file-text" aria-hidden="true"></i>
                                 </button> */}
@@ -668,6 +768,40 @@ const EventMainTB = () => {
                                 <option value="500" label="500">500</option>
                             </select>
                         </article>
+                           <article style={{ display: typevalueSel === 'syslogd' ? 'block' : 'none' }}>              
+                        <button type="button" className="createbtn"   title="Export"  onClick={() => reportUrl && getReportData(reportUrl)}
+                            disabled={!reportUrl}   style={{ marginRight: '7px'}}>  <i class="fa-solid fa-download"></i></button>
+                            <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Type:</label>
+
+                            <select name="name" id="name" value={typevalueSel} onChange={handleType} className="form-controll1" style={{ maxWidth: '93px' }}>
+                                <option value="events" label="Events">Events</option>
+                                <option value="syslogd" label="Syslogs">Syslogs</option>
+                                <option value="auditlog" label="Audit Log">Audit Log</option>
+                            </select>
+                                <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
+    
+                        <article className="trans-datepickerbg" style={{ display: 'inline-block', marginTop: '5px' }}>
+                           <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
+                            <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px',
+                                 minWidth: '94px' }} onClick={handleCustomPopup}>
+                                <option value="3600000" label="Last hour">Last hour</option>
+                                <option value="28800000" label="8 hours">8 hours</option>
+                                <option value="86400000" label="24 hours">24 hours</option>
+                                <option value="172800000" label="48 hours">48 hours</option>
+                                <option value="Custom" label="Custom">Custom</option>
+                            </select>
+    
+                        </article>
+                        <button type="button" className="createbtn" style={{ marginLeft: '10px' }}
+                            onClick={() => {
+                                handleSearch(eventipText, sysSelectedDate)
+                            }
+                            }
+                        >Search</button>
+                        {(eventipText !== '') && (<button type="button" className="createbtn" style={{ marginLeft: '10px' }}
+                            onClick={handleClearSearch}
+                        >Clear Search</button>)}
+                    </article>
                         <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
 
                             
@@ -705,7 +839,22 @@ const EventMainTB = () => {
             <p>Loading...</p>
         </div>
         )} */}
-            {typevalueSel !== 'auditlog' ? (
+        { typevalueSel === 'syslogd' &&(
+            <>
+            <article className="eventmaintable">
+                <ul className="log-list">
+                    {typeof eventmainData === "string" &&
+                    eventmainData
+                        .split('\n')
+                        .filter(line => line.trim() !== '')
+                        .map((line, index) => (
+                            <li key={index}>{line}</li>
+                        ))}
+                </ul>
+                </article>
+                </>
+        )}
+            {typevalueSel === 'events' &&(
                 <article className="eventmaintable">
                     <article className="row">
                         <table className="col-12">
@@ -743,7 +892,8 @@ const EventMainTB = () => {
                             </tbody>
                         </table>
                     </article>
-                </article>) : (
+                </article>)} 
+                {typevalueSel === 'auditlog' && (
                 <article className="eventmaintable">
                     <article className="row">
                         <table className="col-12">

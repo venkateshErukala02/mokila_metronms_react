@@ -113,7 +113,7 @@ const EventPg = () => {
 
 
 
-    const ExportCanData =  (e) => {
+    const ExportCabData =  (e) => {
         if (e) e.preventDefault(); 
         if(cabNumber.length !== 4){
             setShowWarningPopup(true)
@@ -139,6 +139,73 @@ const EventPg = () => {
                 setTimestampFrom(null);
                 setTimestampTo(null);
     };
+
+    const nodeIds = stationIpsData.map(item => item.nodeId);
+    const ExportStationData =  async(e) => {
+        if (e) e.preventDefault(); 
+        setIsLoading(true);
+        // if(cabNumber.length !== 4){
+        //     setShowWarningPopup(true)
+        //     return;
+        // }
+       
+        if (!timestampStart || !timestampEnd) {
+           setShowCustomDateAlertPopup(true);
+           setIsLoading(false); 
+            return;
+        }
+
+        if (new Date(timestampStart) >= new Date(timestampEnd)) {
+           setShowCustomDateLimitAlertPopup(true);
+           setIsLoading(false); 
+            return;
+        }
+            const url =`api/v2/events/zip/stationdevicelog?from=${timestampStart}&to=${timestampEnd}`;
+              try {
+           
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/zip'
+                },
+                body: JSON.stringify(nodeIds),
+            });
+
+            if (!response.ok) {
+                        throw new Error('Error starting discovery');
+                    }
+
+                    const blob = await response.blob();
+
+        const downloadUrl = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+
+        a.download = `station_device_logs_${Date.now()}.zip`;
+
+        document.body.appendChild(a);
+        a.click();
+
+        a.remove();
+        window.URL.revokeObjectURL(downloadUrl);
+        setLineNameSel('-1');
+        setStationNameSel('-1');
+        setSelectedPosition("select");
+        setStationIpsData([]);
+        setSelectedStartDate(null);
+        setSelectedEndDate(null);
+        setTimestampStart(null);
+        setTimestampEnd(null);
+
+        } catch (error) {
+            setIsError('An error occurred while contacting the server.');
+        } finally {
+            setIsLoading(false); 
+        }
+    };
+
 
 
     useEffect(()=>{
@@ -177,7 +244,7 @@ const EventPg = () => {
 
     const handleSelectLine=(e)=>{
         setLineNameSel(e.target.value);
-        setStationNameSel(-1);
+        setStationNameSel('-1');
         setSelectedPosition("select");
         setStationIpsData([]);
         setSelectedStartDate(null);
@@ -372,7 +439,7 @@ const EventPg = () => {
                             className="myDatepickercl" />
                             </article>
                                 <article className="f-r labelaligncl">
-                                    <button type="button" className="createbtn" onClick={ExportCanData}>Export</button>
+                                    <button type="button" className="createbtn" onClick={ExportCabData}>Export</button>
                                 </article>
                         </article>}
                        {selectedLogVal === 'station' && 
@@ -467,7 +534,14 @@ const EventPg = () => {
                             />
                         </article>
                         <article className="f-r labelaligncl">
-                                    <button type="button" className="createbtn" onClick="">Export</button>
+                                    <button type="button" disabled={isLoading} className="createbtn" onClick={ExportStationData}>
+                                         {isLoading ? (
+     
+                                        "Exporting..."
+                                    ) : (
+                                    "Export"
+                                    )}
+                                        </button>
                                 </article>
                                 </article>
                                 </article>
