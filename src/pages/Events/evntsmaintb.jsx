@@ -12,7 +12,7 @@ const EventMainTB = () => {
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [typevalueSel, setTypevalueSel] = useState('events');
     const [typelabelSel, setTypelabelSel] = useState('Events');
-    const [selectedDuration, setSelectedDuration] = useState(86400000);
+    const [selectedDuration, setSelectedDuration] = useState(Date.now() - 86400000);
     const [eventtimeSel, setEventtimeSel] = useState(Date.now() - 86400000);
     const [eventmainSeverityValueSel, setEventmainSeverityValueSel] = useState('');
     const [eventmainSeverityLabelSel, setEventmainSeverityLabelSel] = useState('All');
@@ -45,7 +45,7 @@ const EventMainTB = () => {
   const [executedSearch, setExecutedSearch] = useState("");
   const [executedDate, setExecutedDate] = useState("");
   const [searchTrigger, setSearchTrigger] = useState(0);
-
+    const hasFetched = useRef(false);
   const handleClosepopup  = ()=>{
     setShowCustomPopup(false);
     setCustomEndDate(null);
@@ -66,9 +66,15 @@ const EventMainTB = () => {
 
         setShowCustomPopup(false);
         setIsCustomApplied(true);
-
-        const startTimestamp = customStartDate.getTime(); // ms
+         fetchCustomData();
+    }
+    const fetchCustomData = () => {
+         if (!customStartDate || !customEndDate) return;
+         if (searchBtn) return;
+           const startTimestamp = customStartDate.getTime(); // ms
         const endTimestamp = customEndDate.getTime();  
+        let url = '';
+        if( typevalueSel === 'events'){
          let filterParts = [
             "eventDisplay==Y",
             typevalueSel === 'events' ? "eventSource!=syslogd" : 'eventSource==syslogd'
@@ -80,19 +86,55 @@ const EventMainTB = () => {
 
         const filterString = filterParts.join(";");
 
-        let url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
+         url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
+        }else if( typevalueSel === 'syslogd'){
+            url = `api/v2/events/list/allsyslogs`;
+                const params = [];
+
+                if (eventipText) {
+                    params.push(`search=${encodeURIComponent(eventipText)}`);
+                }
+                if (selectedDuration === 'Custom' && startTimestamp && endTimestamp) {
+                    params.push(`from=${startTimestamp}`);
+                    params.push(`to=${endTimestamp}`);
+                }
+                // if(selectedDuration !== 'Custom'){
+                //     params.push(`time=${eventtimeSel}`)
+                // }
+
+                if (params.length > 0) {
+                    url += "?" + params.join("&");
+                }
+        }
         reportUrlRef.current = url;
         setReportUrl(url); 
         getDataEvntMain(url);
   };
 
 
-  useEffect(()=>{
-     if(selectedDuration === 'Custom' && isCustomApplied) {
-        handleCustomSubmit();
-     }
-  },[eventmainSeverityValueSel,eventmainLimitLabelSel,fromValue,searchBtn])
+useEffect(() => {
+    if (!(selectedDuration === 'Custom' && isCustomApplied)) return;
+    fetchCustomData();
 
+    const interval = setInterval(() => {
+        if (searchBtn) return;
+        fetchCustomData();
+    }, 30000);
+
+    return () => clearInterval(interval);
+
+}, [
+    selectedDuration,
+    isCustomApplied,
+    eventmainSeverityValueSel,
+    eventmainLimitLabelSel,
+    fromValue,
+    searchBtn
+]);
+
+//   const handleCustomSubmitTrigger=()=>{
+//         setCustomTrigger(perv=> prev +1)
+//   }
 
 
     useEffect(() => {
@@ -165,8 +207,8 @@ const EventMainTB = () => {
             } else if (data?.event && typevalueSel==='events' ) {
                 normalized = data.event;
                 setEventmainData(normalized || []);
-                setCustomStartDate(null);
-                setCustomEndDate(null);
+                // setCustomStartDate(null);
+                // setCustomEndDate(null);
             }
             setIsLoading(false);
         } catch (error) {
@@ -182,6 +224,9 @@ const EventMainTB = () => {
 
 
     useEffect(() => {
+        if (selectedDuration === 'Custom') return;
+
+        if (typeof selectedDuration !== 'number') return;
         if (selectedDuration == null || selectedDuration === '' || isNaN(selectedDuration)) return;
         const newTimestamp = Date.now() - selectedDuration;
         setEventtimeSel(newTimestamp);
@@ -191,12 +236,14 @@ const EventMainTB = () => {
         setDropdownOpen(!isDropdownOpen);
     };
 
+    const isFetching = useRef(false);
     useEffect(() => {
-
         if (searchBtn) return;
         if(selectedDuration === 'Custom') return;
-        const fetchData = () => {
-
+        const fetchData = async() => {
+             if (isFetching.current) return;
+            isFetching.current = true;
+              try {
         let url = '';
 
         let filterParts = [
@@ -217,7 +264,7 @@ const EventMainTB = () => {
             case 'syslogd':
                 if(searchBtn) return;
                 // url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`;
-                url = `api/v2/events/list/allsyslogs`
+                url = `api/v2/events/list/allsyslogs?time=${selectedDuration}`
 
                 break;
             case 'auditlog':
@@ -230,8 +277,11 @@ const EventMainTB = () => {
         }
         reportUrlRef.current = url;
         setReportUrl(url);
-          getDataEvntMain(url);
-    }
+         await getDataEvntMain(url);
+    }finally {
+            isFetching.current = false;
+        }
+    };
 
     fetchData();
 
@@ -239,7 +289,6 @@ const EventMainTB = () => {
     return () => clearInterval(interval);
 
     }, [typevalueSel, eventmainLimitLabelSel,eventmainSeverityValueSel,searchBtn,eventtimeSel,fromValue,selectedDuration]);
-
 
     const handleNodeIp = async (eventipText) => {
 
@@ -314,6 +363,8 @@ const EventMainTB = () => {
 
         setEventmainSeverityValueSel(value);
         setEventmainSeverityLabelSel(label);
+        setSearchBtn(false);
+        setEventipText('');
     };
 
 
@@ -322,7 +373,8 @@ const EventMainTB = () => {
         const label = event.target.options[event.target.selectedIndex].label;
         setTypevalueSel(value);
         setTypelabelSel(label);
-
+        setSearchBtn(false);
+        setEventipText('');
     }
 
 
@@ -330,10 +382,14 @@ const EventMainTB = () => {
         const customvalue = event.target.value;
         if (customvalue === "Custom") {
             setSelectedDuration("Custom");  
+            setSearchBtn(false);
+            setEventipText('');
             setShowCustomPopup(true);       
         } else {
             const value = parseInt(customvalue); 
-            setSelectedDuration(value);
+            setSearchBtn(false);
+            setEventipText('');
+            setSelectedDuration(Date.now() - value);
             setShowCustomPopup(false);      
         }
     };
@@ -423,9 +479,9 @@ const EventMainTB = () => {
                             if (eventmainSeverityValueSel) {
                         filter  =  filter + '&eventSeverity==' + `${eventmainSeverityValueSel}`;
                         }
-                    //      if (eventtimeSel && selectedDuration !== 'Custom') {
-                    // filter  =  filter +  '&eventCreateTime%3Dgt%3D' + `${eventtimeSel}`;
-                    // }
+                         if (eventtimeSel && selectedDuration !== 'Custom') {
+                    filter  =  filter +  '&eventCreateTime%3Dgt%3D' + `${eventtimeSel}`;
+                    }
                     if(selectedDuration === 'Custom' && startTimestamp && endTimestamp){
                         filter = filter + `eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}`;
                     }
@@ -499,7 +555,7 @@ const EventMainTB = () => {
             if (url.includes('/audit/') && typevalueSel==='auditlog') {
                 normalized = data.audits || [];
                 setAuditmainData(normalized || []);
-            } else if (data?.event && typevalueSel==='events' || typevalueSel==='syslogd' ) {
+            } else if (data?.event && typevalueSel==='events') {
                 normalized = data.event;
                 setEventmainData(normalized || []);
 
@@ -565,7 +621,7 @@ const EventMainTB = () => {
     };
 
     useEffect(() => {
-    if (!searchTrigger || searchTrigger === 0) return; 
+    if (!searchTrigger || searchTrigger === 0 ) return; 
       const startTimestamp = customStartDate?.getTime();
         const endTimestamp = customEndDate?.getTime();
     let url = `api/v2/events/list/allsyslogs`;
@@ -588,6 +644,32 @@ const EventMainTB = () => {
 
                 handleSyslogSearch(url);
         }, [searchTrigger,selectedDuration]);
+
+        //  useEffect(() => {
+        //      if(selectedDuration === 'Custom') {
+        // const startTimestamp = customStartDate?.getTime();
+        //     const endTimestamp = customEndDate?.getTime();
+        // let url = `api/v2/events/list/allsyslogs`;
+        //         const params = [];
+
+        //         if (eventipText) {
+        //             params.push(`search=${encodeURIComponent(eventipText)}`);
+        //         }
+        //         if (selectedDuration === 'Custom' && startTimestamp && endTimestamp) {
+        //             params.push(`from=${startTimestamp}`);
+        //             params.push(`to=${endTimestamp}`);
+        //         }
+        //         // if(selectedDuration !== 'Custom'){
+        //         //     params.push(`time=${eventtimeSel}`)
+        //         // }
+
+        //         if (params.length > 0) {
+        //             url += "?" + params.join("&");
+        //         }
+        //     }
+
+        //             handleSyslogSearch(url);
+        // }, [selectedDuration]);
 
 
     const handleEventPopup=(event)=>{

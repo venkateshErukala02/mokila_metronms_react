@@ -113,7 +113,7 @@ const EventPg = () => {
 
 
 
-    const ExportCabData =  (e) => {
+    const ExportCabData =  async(e) => {
         if (e) e.preventDefault(); 
         if(cabNumber.length !== 4){
             setShowWarningPopup(true)
@@ -131,13 +131,35 @@ const EventPg = () => {
            setShowCustomDateLimitAlertPopup(true)
             return;
         }
-            const url =`api/v2/nodes/cabreport1/${tId}/${cId}/${timestampFrom}/${timestampTo}`;
-            window.open(url, '_blank');
-                setCabNumber('');
-                setSelectedFromDate(null);
-                setSelectedToDate(null);
-                setTimestampFrom(null);
-                setTimestampTo(null);
+            const url =`api/v2/nodes/cabreport/${tId}/${cId}/${timestampFrom}/${timestampTo}`;
+
+             try {
+        const response = await fetch(url, {
+            method: 'GET', 
+            // headers: {
+            //     'Content-Type': 'application/json',
+            //     'Accept': 'application/zip'
+            // },
+        });
+
+        if (response.ok) {
+            const data = await response.json(); 
+
+            const fileBlob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+            const fileURL = URL.createObjectURL(fileBlob);
+            window.open(fileURL, '_blank');
+            
+            setCabNumber('');
+            setSelectedFromDate(null);
+            setSelectedToDate(null);
+            setTimestampFrom(null);
+            setTimestampTo(null);
+        } else {
+            console.error('Error fetching data:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error making the request:', error);
+    }
     };
 
     const nodeIds = stationIpsData.map(item => item.nodeId);
