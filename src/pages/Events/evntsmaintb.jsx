@@ -12,7 +12,7 @@ const EventMainTB = () => {
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [typevalueSel, setTypevalueSel] = useState('events');
     const [typelabelSel, setTypelabelSel] = useState('Events');
-    const [selectedDuration, setSelectedDuration] = useState(Date.now() - 86400000);
+    const [selectedDuration, setSelectedDuration] = useState("86400000");
     const [eventtimeSel, setEventtimeSel] = useState(Date.now() - 86400000);
     const [eventmainSeverityValueSel, setEventmainSeverityValueSel] = useState('');
     const [eventmainSeverityLabelSel, setEventmainSeverityLabelSel] = useState('All');
@@ -288,7 +288,7 @@ useEffect(() => {
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
 
-    }, [typevalueSel, eventmainLimitLabelSel,eventmainSeverityValueSel,searchBtn,eventtimeSel,fromValue,selectedDuration]);
+    }, [typevalueSel, eventmainLimitLabelSel,eventmainSeverityValueSel,searchBtn,fromValue,selectedDuration]);
 
     const handleNodeIp = async (eventipText) => {
 

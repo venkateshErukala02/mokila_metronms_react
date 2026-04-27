@@ -143,17 +143,25 @@ const EventPg = () => {
         });
 
         if (response.ok) {
-            const data = await response.json(); 
+             const fileBlob = await response.blob();  // Get the file as a Blob (binary data)
 
-            const fileBlob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-            const fileURL = URL.createObjectURL(fileBlob);
-            window.open(fileURL, '_blank');
-            
-            setCabNumber('');
-            setSelectedFromDate(null);
-            setSelectedToDate(null);
-            setTimestampFrom(null);
-            setTimestampTo(null);
+    // Create a URL for the Blob
+    const fileURL = URL.createObjectURL(fileBlob);
+
+    // Create an invisible <a> element to trigger the download
+    const a = document.createElement("a");
+    a.href = fileURL;
+    // a.download = "5101.zip";  // Set the filename for the downloaded file
+    document.body.appendChild(a);
+    a.click();  // Trigger the download
+    document.body.removeChild(a);  // Clean up the element
+
+    // Optionally reset your state here
+    setCabNumber('');
+    setSelectedFromDate(null);
+    setSelectedToDate(null);
+    setTimestampFrom(null);
+    setTimestampTo(null);
         } else {
             console.error('Error fetching data:', response.statusText);
         }
