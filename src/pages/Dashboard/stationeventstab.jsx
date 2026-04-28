@@ -12,7 +12,7 @@ const SnEventTab=()=>{
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [typevalueSel, setTypevalueSel] = useState('events');
     const [typelabelSel, setTypelabelSel] = useState('Events');
-    const [selectedDuration, setSelectedDuration] = useState(86400000); 
+    const [selectedDuration, setSelectedDuration] = useState("86400000"); 
     const [eventtimeSel, setEventtimeSel] = useState(Date.now() - 86400000);
     const [eventmainSeverityValueSel, setEventmainSeverityValueSel] = useState('');
     const [eventmainSeverityLabelSel, setEventmainSeverityLabelSel] = useState('All');
@@ -43,10 +43,97 @@ const SnEventTab=()=>{
     const [searchUrl,setSearchUrl] = useState('');
     const [isCustomApplied, setIsCustomApplied] = useState(false);
     const reportUrlRef = useRef('');
-    
+     const hasFetched = useRef(false);
+     const [executedSearch, setExecutedSearch] = useState("");
+  const [executedDate, setExecutedDate] = useState("");
+  const [searchTrigger, setSearchTrigger] = useState(0);
+   const [sysSelectedDate, setSysSelectedDate] = useState(new Date());
  const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
 
  const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress)|| localStorage.getItem('nodeIpaddress');
+
+   useEffect(() => {
+        setEventipText('');
+        setExecutedDate(new Date());
+        setExecutedSearch('');
+    }, [typevalueSel]);
+
+
+     const handleSyslogSearch = async (url) => {
+        setSearchUrl(url);
+        // if (!eventipText) {
+        //     alert("Please enter a search term");
+        //     return;
+        // }
+
+        setSearchBtn(true);
+        setIsLoading(true);
+        setIsError({ status: false, msg: "" });
+        
+        try {
+            const response = await fetch(url,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            if (response.status === 204) {
+                setIsLoading(false);
+                setEventmainData([]);
+                return;
+            }
+
+               if (typevalueSel === 'syslogd') {
+            const textData = await response.text();
+            setEventmainData(textData || "");
+            return;
+        }
+
+        // ✅ JSON for others
+        const data = await response.json();
+
+        if (response.ok) {
+            setEventmainData(data.event || []);
+            setIsError({ status: false, msg: '' });
+        } else {
+                throw new Error("Data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message || "Something went wrong" });
+        }
+    };
+
+
+     useEffect(() => {
+    if (!searchTrigger || searchTrigger === 0 ) return; 
+      const startTimestamp = customStartDate?.getTime();
+        const endTimestamp = customEndDate?.getTime();
+         const durationMs = parseInt(selectedDuration);
+            const timeParam = Date.now() - durationMs;
+    let url = `api/v2/events/syslogs/${nodeDataId}`;
+            const params = [];
+
+            if (eventipText) {
+                params.push(`search=${encodeURIComponent(eventipText)}`);
+            }
+            if (selectedDuration === 'Custom' && startTimestamp && endTimestamp) {
+                params.push(`from=${startTimestamp}`);
+                params.push(`to=${endTimestamp}`);
+            }
+            if(selectedDuration !== 'Custom'){
+                params.push(`time=${timeParam}`)
+            }
+
+            if (params.length > 0) {
+                url += "?" + params.join("&");
+            }
+
+                handleSyslogSearch(url);
+        }, [searchTrigger,selectedDuration,nodeDataId]);
 
 
   const handleClosepopup  = ()=>{
@@ -55,9 +142,8 @@ const SnEventTab=()=>{
     setCustomStartDate(null);
   }
 
-  const handleCustomSubmit = (e) => {
-      if (e) e.preventDefault();
-    
+const handleCustomSubmit = (e) => {
+    if (e) e.preventDefault(); 
     if (!customStartDate || !customEndDate) {
             setShowCustomDateAlertPopup(true);
             return;
@@ -70,9 +156,15 @@ const SnEventTab=()=>{
 
         setShowCustomPopup(false);
         setIsCustomApplied(true);
-
-        const startTimestamp = customStartDate.getTime(); // ms
+         fetchCustomData();
+    }
+    const fetchCustomData = () => {
+         if (!customStartDate || !customEndDate) return;
+         if (searchBtn) return;
+           const startTimestamp = customStartDate.getTime(); // ms
         const endTimestamp = customEndDate.getTime();  
+        let url = '';
+        if( typevalueSel === 'events'){
          let filterParts = [
             "eventDisplay==Y",
             typevalueSel === 'events' ? "eventSource!=syslogd" : 'eventSource==syslogd'
@@ -84,20 +176,51 @@ const SnEventTab=()=>{
 
         const filterString = filterParts.join(";");
 
-        let url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
+         url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
+        }else if( typevalueSel === 'syslogd'){
+            url = `api/v2/events/syslogs/${nodeDataId}`;
+                const params = [];
+
+                if (eventipText) {
+                    params.push(`search=${encodeURIComponent(eventipText)}`);
+                }
+                if (selectedDuration === 'Custom' && startTimestamp && endTimestamp) {
+                    params.push(`from=${startTimestamp}`);
+                    params.push(`to=${endTimestamp}`);
+                }
+                // if(selectedDuration !== 'Custom'){
+                //     params.push(`time=${eventtimeSel}`)
+                // }
+
+                if (params.length > 0) {
+                    url += "?" + params.join("&");
+                }
+        }
         reportUrlRef.current = url;
         setReportUrl(url); 
         getDataEvntMain(url);
-
   };
 
-   useEffect(()=>{
-     if(selectedDuration === 'Custom' && isCustomApplied) {
-        handleCustomSubmit();
-     }
-  },[eventmainSeverityValueSel,eventmainLimitLabelSel,fromValue,searchBtn])
 
+useEffect(() => {
+    if (!(selectedDuration === 'Custom' && isCustomApplied)) return;
+    fetchCustomData();
 
+    const interval = setInterval(() => {
+        if (searchBtn) return;
+        fetchCustomData();
+    }, 30000);
+
+    return () => clearInterval(interval);
+
+}, [
+    selectedDuration,
+    isCustomApplied,
+    eventmainSeverityValueSel,
+    eventmainLimitLabelSel,
+    fromValue,
+    searchBtn
+]);
 
   useEffect(() => {
     if (selectedDuration == null || selectedDuration === '' || isNaN(selectedDuration)) return;
@@ -114,16 +237,13 @@ const SnEventTab=()=>{
     const getDataEvntMain = async (url) => {
         reportUrlRef.current = url;
         setReportUrl(url);
+        if(eventipText === ''){
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
-            const username = 'admin';
-            const password = 'admin';
-            const token = btoa(`${username}:${password}`)
            let options = {
         method: "GET",
         headers: {
-            'Authorization': `Basic ${token}`,
             "Content-Type": "application/json",
         },
         };
@@ -137,6 +257,14 @@ const SnEventTab=()=>{
                 setIsError({ status: false, msg: '' });
                 return;
             }
+
+             if (typevalueSel === 'syslogd') {
+                    const textData = await response.text(); // ✅ only text
+                    setEventmainData(textData || "");
+                    setIsLoading(false);
+                    return;
+                }
+
             const data = await response.json();
             if (!response.ok) {
                 throw new Error("API Error");
@@ -144,46 +272,43 @@ const SnEventTab=()=>{
 
             let normalized = [];
 
-            if (url.includes('/audit/')) {
+            if (url.includes('/audit/'&& typevalueSel==='auditlog')) {
                 normalized = data.audits || [];
-            } else if (data.event) {
+                // setAuditmainData(normalized || []);
+            } else if (data.event && typevalueSel==='events') {
                 normalized = data.event;
-                setCustomStartDate(null);
-                setCustomEndDate(null);
-            }else if(typevalueSel === 'syslogd'){
-                normalized = data.event;
+                setEventmainData(normalized || []);
                 setCustomStartDate(null);
                 setCustomEndDate(null);
             }
-
-            setEventmainData(normalized);
             setIsLoading(false);
         } catch (error) {
             setIsLoading(false);
             setIsError({ status: true, msg: error.message });
+        }finally {
+            // setCustomStartDate(null);
+            // setCustomEndDate(null);
+            setIsLoading(false);
         }
     };
+}
 
     const toggleDropdown = () => {
         setDropdownOpen(!isDropdownOpen);
     };
-
+    const isFetching = useRef(false);
     useEffect(() => {
-        if(searchBtn) return;
         if(selectedDuration === 'Custom') return;
-         const fetchData = () => {
+         const fetchData = async() => {
 
-         let effectiveDate;
-
-            if (date === null) {
-                const sixHoursInMs = 6 * 60 * 60 * 1000;
-                const now = new Date();
-                effectiveDate = now.getTime() - sixHoursInMs;
-            } else {
-                const formatDate = new Date(date);
-                effectiveDate = formatDate.getTime();
-            }
-        let url = '';
+            if(searchBtn) return;
+            if (isFetching.current) return;
+            isFetching.current = true;
+            const durationMs = parseInt(selectedDuration);
+            const timeParam = Date.now() - durationMs;
+            
+            try {
+                let url = '';
 
         let filterParts = [
             "eventDisplay==Y",
@@ -197,25 +322,27 @@ const SnEventTab=()=>{
 
         switch (typevalueSel) {
             case 'events':
-               url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitValueSel}&offset=${fromValue}`;
+               url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${timeParam}&limit=${eventmainLimitValueSel}&offset=${fromValue}`;
                 break;
 
             case 'syslogd':
-                // url='api/v2/essearch/search';
-                url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitValueSel}&offset=${fromValue}`;
+                url = `api/v2/events/syslogs/${nodeDataId}?time=${timeParam}`
 
                 break;
             case 'auditlog':
-                url = '/api/v2/audit/list?_s=&limit=50&offset=0&order=desc&orderBy=id';
+                 url= `api/v2/audit/list?_s=&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
                 break;
 
             default:
-                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd&limit=${eventmainLimitValueSel}&offset=${fromValue}`;
+               
                 break;
         }
         reportUrlRef.current = url;
         setReportUrl(url)
-        getDataEvntMain(url);
+       await getDataEvntMain(url);
+    }finally {
+            isFetching.current = false;
+        }
     }
 
      fetchData();
@@ -264,6 +391,8 @@ const SnEventTab=()=>{
         const label = event.target.options[event.target.selectedIndex].label;
         setTypevalueSel(value);
         setTypelabelSel(label);
+        setSearchBtn(false);
+        setEventipText('');
 
     }
 
@@ -273,6 +402,8 @@ const SnEventTab=()=>{
 
         setEventmainLimitValueSel(value);
         setEventmainLimitLabelSel(label);
+        setSearchBtn(false);
+        setEventipText('');
     }
 
     const handleMainAuditLimitValue = (event) => {
@@ -280,6 +411,8 @@ const SnEventTab=()=>{
         setEventauditLimitValueSel(selectedIndex)
         let label = event.target.options[selectedIndex].label;
         setEventauditLimitLabelSel(label)
+        setSearchBtn(false);
+        setEventipText('');
     }
     
 
@@ -296,11 +429,15 @@ const SnEventTab=()=>{
             const customvalue = event.target.value;
             if (customvalue === "Custom") {
                 setSelectedDuration("Custom");   
-                setShowCustomPopup(true);        
+                setShowCustomPopup(true);   
+                setSearchBtn(false);
+                setEventipText('');     
             } else {
                 const value = parseInt(customvalue); 
                 setSelectedDuration(value);
-                setShowCustomPopup(false);       
+                setShowCustomPopup(false);
+                setSearchBtn(false);
+                setEventipText('');       
             }
             };
 
@@ -338,16 +475,22 @@ const SnEventTab=()=>{
 
 
       const getReportData = async (url) => {
-        const finalUrl = searchBtn ? searchUrl : url;
+         const finalUrl = searchBtn ? searchUrl : url;
     
         try {
 
             if (!finalUrl) {
             console.error("URL is missing");
             return;
-        }
-
-          const updatedUrl = finalUrl.replace("events/list?_s", "events/export?_s");
+        }   
+            let updatedUrl = finalUrl;
+                if (finalUrl.includes("events/list?_s") && typevalueSel === "events") {
+                updatedUrl = finalUrl.replace("events/list?_s", "events/export?_s");
+            }else {
+                updatedUrl = finalUrl.includes("?")
+                    ? `${finalUrl}&action=download`
+                    : `${finalUrl}?action=download`;
+            }
             const response = await fetch(updatedUrl, {
                 method: "GET",
                 headers: {
@@ -427,9 +570,7 @@ const SnEventTab=()=>{
 
     if (typevalueSel === 'events') {
         filters.push("eventSource!%3Dsyslogd");
-    } else {
-        filters.push("eventSource%3D%3Dsyslogd");
-    }
+    } 
 
     filters.push(`eventLogMsg%3D%3D*${eventipText}*`);
 
@@ -494,7 +635,7 @@ const SnEventTab=()=>{
             if (url.includes('/audit/') && typevalueSel==='auditlog') {
                 normalized = data.audits || [];
                 // setAuditmainData(normalized || []);
-            } else if (data?.event && typevalueSel==='events' || typevalueSel==='syslogd' ) {
+            } else if (data?.event && typevalueSel==='events') {
                 normalized = data.event;
                 setEventmainData(normalized || []);
 
@@ -531,13 +672,20 @@ const SnEventTab=()=>{
         setCustomEndDate(null);
     },[typevalueSel]);
 
+
+      const handleSearch = (eventipText) => {
+        setExecutedSearch(eventipText);
+        // setExecutedDate(sysSelectedDate);
+        setSearchTrigger(prev => prev + 1); 
+    };
+
     return (
         <>
          <article className="row">
                  <article className="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
             <article className="row border-tlr custom-row">
                 <article className="col-sm-4 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
-                    <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block' }}>
+                    <article style={{ display: typevalueSel === 'events' ? 'block' : 'none'}}>
                         <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
                             <i className="fa-solid fa-arrow-left"></i>
                         </button>
@@ -562,7 +710,7 @@ const SnEventTab=()=>{
                 </article>
                 <article className="col-sm-8 col-md-8 col-lg-8 col-xl-8 col-xxl-8">
                     <article style={{ float: 'right' }}>
-                        <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block' }}>
+                        <article style={{ display: typevalueSel === 'events' ? 'block' : 'none' }}>
                              <button type="button" className="createbtn"   title="Export"  onClick={() => reportUrlRef.current && getReportData(reportUrlRef.current)}
                         disabled={!reportUrlRef.current}   style={{ marginRight: '7px'}}>  <i class="fa-solid fa-download"></i></button>     
                     
@@ -603,6 +751,41 @@ const SnEventTab=()=>{
                                 <option value="500" label="500">500</option>
                             </select>
                         </article>
+                          <article style={{ display: typevalueSel === 'syslogd' ? 'block' : 'none',marginTop:"-5px",paddingRight:"18px" }}>              
+                        <button type="button" className="createbtn"   title="Export"  onClick={() => reportUrl && getReportData(reportUrl)}
+                            disabled={!reportUrl}   style={{ marginRight: '7px'}}>  <i class="fa-solid fa-download"></i></button>
+                            <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Type:</label>
+
+                            <select name="name" id="name" value={typevalueSel} onChange={handleType} className="form-controll1" style={{ maxWidth: '93px' }}>
+                                <option value="events" label="Events">Events</option>
+                                <option value="syslogd" label="Syslogs">Syslogs</option>
+                                <option value="auditlog" label="Audit Log">Audit Log</option>
+                            </select>
+                            
+                                <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
+    
+                        <article className="trans-datepickerbg" style={{ display: 'inline-block', marginTop: '5px' }}>
+
+                            <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
+                            <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px',
+                                 minWidth: '94px' }} onClick={handleCustomPopup}>
+                                <option value="3600000" label="Last hour">Last hour</option>
+                                <option value="28800000" label="8 hours">8 hours</option>
+                                <option value="86400000" label="24 hours">24 hours</option>
+                                <option value="172800000" label="48 hours">48 hours</option>
+                                <option value="Custom" label="Custom">Custom</option>
+                            </select>
+    
+                        </article>
+                        <button type="button" className="createbtn" style={{ marginLeft: '10px' }}
+                            onClick={() => {
+                                handleSearch(eventipText)
+                            }
+                            }
+                        >Search</button>
+
+                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '10px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
+                    </article>
                         <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Type:</label>
 
@@ -632,7 +815,7 @@ const SnEventTab=()=>{
                     </article>
                 </article>
             </article>
-            {typevalueSel === 'events' ? (
+            {typevalueSel === 'events' && (
             <article className="eventmaintable">
                 <article className="row">
                     <table className="col-12">
@@ -667,7 +850,24 @@ const SnEventTab=()=>{
                         </tbody>
                     </table>
                 </article>
-            </article>) : (
+            </article>)}
+             
+               { typevalueSel === 'syslogd' &&(
+            <>
+            <article className="eventmaintable">
+                <ul className="log-list">
+                    {typeof eventmainData === "string" &&
+                    eventmainData
+                        .split('\n')
+                        .filter(line => line.trim() !== '')
+                        .map((line, index) => (
+                            <li key={index}>{line}</li>
+                        ))}
+                </ul>
+                </article>
+                </>
+        )}
+              { typevalueSel === 'auditlogs' && (
             <article className="eventmaintable">
                 <article className="row">
                     <table className="col-12">

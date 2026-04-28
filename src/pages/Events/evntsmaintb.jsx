@@ -163,13 +163,9 @@ useEffect(() => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
-            const username = 'admin';
-            const password = 'admin';
-            const token = btoa(`${username}:${password}`)
             const options = {
                 method: "GET",
                 headers: {
-                    'Authorization': `Basic ${token}`,
                     "Content-Type": "application/json",
                 },
 
@@ -238,11 +234,15 @@ useEffect(() => {
 
     const isFetching = useRef(false);
     useEffect(() => {
-        if (searchBtn) return;
         if(selectedDuration === 'Custom') return;
+
         const fetchData = async() => {
+            
+            if (searchBtn) return;
              if (isFetching.current) return;
             isFetching.current = true;
+              const durationMs = parseInt(selectedDuration);
+            const timeParam = Date.now() - durationMs;
               try {
         let url = '';
 
@@ -258,13 +258,12 @@ useEffect(() => {
         const filterString = filterParts.join(";");
         switch (typevalueSel) {
             case 'events':
-                url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
+                url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${timeParam}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
                 break;
 
             case 'syslogd':
-                if(searchBtn) return;
                 // url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`;
-                url = `api/v2/events/list/allsyslogs?time=${selectedDuration}`
+                url = `api/v2/events/list/allsyslogs?time=${timeParam}`
 
                 break;
             case 'auditlog':
@@ -289,6 +288,8 @@ useEffect(() => {
     return () => clearInterval(interval);
 
     }, [typevalueSel, eventmainLimitLabelSel,eventmainSeverityValueSel,searchBtn,fromValue,selectedDuration]);
+
+    
 
     const handleNodeIp = async (eventipText) => {
 
@@ -389,7 +390,7 @@ useEffect(() => {
             const value = parseInt(customvalue); 
             setSearchBtn(false);
             setEventipText('');
-            setSelectedDuration(Date.now() - value);
+            setSelectedDuration(value);
             setShowCustomPopup(false);      
         }
     };
@@ -448,6 +449,8 @@ useEffect(() => {
      const handleRadialIP = async () => {
         const startTimestamp = customStartDate?.getTime();
         const endTimestamp = customEndDate?.getTime();  
+        const durationMs = parseInt(selectedDuration);
+        const timeParam = Date.now() - durationMs;
         if (!eventipText) {
             alert("Please enter a search term");
             return;
@@ -479,8 +482,8 @@ useEffect(() => {
                             if (eventmainSeverityValueSel) {
                         filter  =  filter + '&eventSeverity==' + `${eventmainSeverityValueSel}`;
                         }
-                         if (eventtimeSel && selectedDuration !== 'Custom') {
-                    filter  =  filter +  '&eventCreateTime%3Dgt%3D' + `${eventtimeSel}`;
+                         if (timeParam && selectedDuration !== 'Custom') {
+                    filter  =  filter +  '&eventCreateTime%3Dgt%3D' + `${timeParam}`;
                     }
                     if(selectedDuration === 'Custom' && startTimestamp && endTimestamp){
                         filter = filter + `eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}`;
@@ -493,22 +496,22 @@ useEffect(() => {
                     //  setReportUrl(url);
                      handleRadialIPa(url);
                     }else{
-                    filter  =  filter + `eventDisplay%3D%3DY%3BeventSource%3D%3Dsyslogd;` + `eventLogMsg%3D%3D` +`*${eventipText}*;`;
-                     if (eventmainSeverityValueSel) {
-                        filter  =  filter + '&eventSeverity==' + `${eventmainSeverityValueSel}`;
-                        }
-                    //      if (eventtimeSel && selectedDuration !== 'Custom') {
-                    // filter  =  filter +  '&eventCreateTime%3Dgt%3D' + `${eventtimeSel}`;
+                    // filter  =  filter + `eventDisplay%3D%3DY%3BeventSource%3D%3Dsyslogd;` + `eventLogMsg%3D%3D` +`*${eventipText}*;`;
+                    //  if (eventmainSeverityValueSel) {
+                    //     filter  =  filter + '&eventSeverity==' + `${eventmainSeverityValueSel}`;
+                    //     }
+                    // //      if (eventtimeSel && selectedDuration !== 'Custom') {
+                    // // filter  =  filter +  '&eventCreateTime%3Dgt%3D' + `${eventtimeSel}`;
+                    // // }
+                    //  if(selectedDuration === 'Custom' && startTimestamp && endTimestamp){
+                    //     filter = filter + `eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}`;
                     // }
-                     if(selectedDuration === 'Custom' && startTimestamp && endTimestamp){
-                        filter = filter + `eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}`;
-                    }
 
-                     if (eventmainLimitLabelSel != 'all') {
-                    filter  =  filter +'&limit=' + `${eventmainLimitLabelSel}`;
-                    }
-                    url = start + filter + '&offset=0&order=desc&orderBy=id';
-                    handleRadialIPa(url);
+                    //  if (eventmainLimitLabelSel != 'all') {
+                    // filter  =  filter +'&limit=' + `${eventmainLimitLabelSel}`;
+                    // }
+                    // url = start + filter + '&offset=0&order=desc&orderBy=id';
+                    // handleRadialIPa(url);
                 }
                 }
                
@@ -624,6 +627,8 @@ useEffect(() => {
     if (!searchTrigger || searchTrigger === 0 ) return; 
       const startTimestamp = customStartDate?.getTime();
         const endTimestamp = customEndDate?.getTime();
+         const durationMs = parseInt(selectedDuration);
+            const timeParam = Date.now() - durationMs;
     let url = `api/v2/events/list/allsyslogs`;
             const params = [];
 
@@ -635,7 +640,7 @@ useEffect(() => {
                 params.push(`to=${endTimestamp}`);
             }
             if(selectedDuration !== 'Custom'){
-                params.push(`time=${eventtimeSel}`)
+                params.push(`time=${timeParam}`)
             }
 
             if (params.length > 0) {
@@ -690,9 +695,16 @@ useEffect(() => {
             if (!finalUrl) {
             console.error("URL is missing");
             return;
-        }
-
-          const updatedUrl = finalUrl.replace("events/list?_s", "events/export?_s");
+        }   
+            let updatedUrl = finalUrl;
+                if (finalUrl.includes("events/list?_s") && typevalueSel === "events") {
+                updatedUrl = finalUrl.replace("events/list?_s", "events/export?_s");
+            }else {
+                updatedUrl = finalUrl.includes("?")
+                    ? `${finalUrl}&action=download`
+                    : `${finalUrl}?action=download`;
+            }
+          
             const response = await fetch(updatedUrl, {
                 method: "GET",
                 headers: {
@@ -756,6 +768,7 @@ useEffect(() => {
 
     const handleClearSearch = () => {
         setEventipText('');
+        setSearchBtn(false);
     }
 
     useEffect(() => {
@@ -780,6 +793,13 @@ useEffect(() => {
                         <button type="button" className="createbtn" onClick={() => { handleRadialIP();}} >Search</button>
                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
                     </article>
+                    {/* <article style={{ display: typevalueSel === 'syslogd' ? 'block' : 'none' }}>
+                        <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
+                            <i className="fa-solid fa-arrow-left"></i>
+                        </button>
+                        <button type="button" className="numcl"><span>{pageSize}</span></button>
+                        <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
+                    </article> */}
                  
                     <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
                         <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
@@ -797,9 +817,6 @@ useEffect(() => {
                 <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
                     <article style={{ float: 'right' }}>
                         <article style={{ display: typevalueSel === 'events' ? 'block' : 'none' }}>
-                             {/* <button type="button" style={{marginRight:'12px'}} className="createbtn" onClick={getReportData}>Report 
-                                    <i className="fa fa-file-text" aria-hidden="true"></i>
-                                </button> */}
                                  <button type="button" className="createbtn"   title="Export"  onClick={() => reportUrlRef.current && getReportData(reportUrlRef.current)}
   disabled={!reportUrlRef.current}   style={{ marginRight: '7px'}}>  <i class="fa-solid fa-download"></i></button>     
                     
@@ -823,16 +840,6 @@ useEffect(() => {
                                 <option value="2" label="Cleared">Cleared</option>
                                 <option value="1" label="Indeterminate">Indeterminate</option>
                             </select>
-
-                            {/* <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Category:</label>
-
-                            <select name="name" id="name" className="form-controll1" style={{ maxWidth: '124px', minWidth: '124px' }}>
-                                <option value="All">All</option>
-                               <option value="uei.opennms.org/nodes/nodeUp" label="Up">Up</option>
-                               <option value="uei.opennms.org/nodes/nodeDown" label="Down">Down</option>
-                               <option value="uei.opennms.org/traps/KEYWEST-MIB/associatedTrap" label="Associated">Associated</option>
-                               <option value="uei.opennms.org/traps/KEYWEST-MIB/disassociatedTrap" label="Dissociated">Dissociated</option>
-                            </select> */}
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
                             <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px',
                                  minWidth: '94px' }} onClick={handleCustomPopup}>
@@ -850,7 +857,7 @@ useEffect(() => {
                                 <option value="500" label="500">500</option>
                             </select>
                         </article>
-                           <article style={{ display: typevalueSel === 'syslogd' ? 'block' : 'none' }}>              
+                           <article style={{ display: typevalueSel === 'syslogd' ? 'block' : 'none',marginTop:"-5px",paddingRight:"18px" }}>              
                         <button type="button" className="createbtn"   title="Export"  onClick={() => reportUrl && getReportData(reportUrl)}
                             disabled={!reportUrl}   style={{ marginRight: '7px'}}>  <i class="fa-solid fa-download"></i></button>
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Type:</label>
@@ -860,10 +867,12 @@ useEffect(() => {
                                 <option value="syslogd" label="Syslogs">Syslogs</option>
                                 <option value="auditlog" label="Audit Log">Audit Log</option>
                             </select>
+                            
                                 <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
     
                         <article className="trans-datepickerbg" style={{ display: 'inline-block', marginTop: '5px' }}>
-                           <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
+
+                            <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
                             <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px',
                                  minWidth: '94px' }} onClick={handleCustomPopup}>
                                 <option value="3600000" label="Last hour">Last hour</option>
@@ -880,9 +889,8 @@ useEffect(() => {
                             }
                             }
                         >Search</button>
-                        {(eventipText !== '') && (<button type="button" className="createbtn" style={{ marginLeft: '10px' }}
-                            onClick={handleClearSearch}
-                        >Clear Search</button>)}
+
+                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '10px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
                     </article>
                         <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
 

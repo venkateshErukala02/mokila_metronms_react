@@ -244,6 +244,7 @@ const handleRowClick = (value) => {
           display: "flex",
           justifyContent: "flex-end",
           paddingLeft: "60%",
+          paddingRight:"18px"
         }
   }
             >
@@ -264,6 +265,7 @@ const handleRowClick = (value) => {
                          <input
                         type="text"
                         placeholder="Search text"
+                        style={{marginTop:"5px"}}
                         value={searchText}
                         className="form-controldistwo searchbar"
                         onChange={(e) => setSearchText(e.target.value)}

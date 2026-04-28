@@ -162,6 +162,7 @@ const EventPg = () => {
     setSelectedToDate(null);
     setTimestampFrom(null);
     setTimestampTo(null);
+    setCabNumberIpsData([]);
         } else {
             console.error('Error fetching data:', response.statusText);
         }
@@ -390,7 +391,7 @@ const EventPg = () => {
                       {selectedLogVal === 'train' && <article style={{padding:"12px"}}>
                             <label className="settinglabelsub">Cab Number</label>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px',marginBottom:'12px' }}>
-                                <div className="input-wrapper">
+                                <div style={{position:"relative",display:"inline-block"}}>
                             <input type="text"
                              value={cabNumber}
                                 required
