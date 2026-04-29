@@ -42,19 +42,101 @@ const TrainEventTab = () => {
     const [searchUrl,setSearchUrl] = useState('');
     const [isCustomApplied, setIsCustomApplied] = useState(false);
     const reportUrlRef = useRef('');
+    const hasFetched = useRef(false);
+    const [executedSearch, setExecutedSearch] = useState("");
+    const [executedDate, setExecutedDate] = useState("");
+    const [searchTrigger, setSearchTrigger] = useState(0);
+    const [sysSelectedDate, setSysSelectedDate] = useState(new Date());
 
     const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
 
+     useEffect(() => {
+        setEventipText('');
+        setExecutedDate(new Date());
+        setExecutedSearch('');
+    }, [typevalueSel]);
 
-     const handleClosepopup  = ()=>{
-    setShowCustomPopup(false);
-    setCustomEndDate(null);
-    setCustomStartDate(null);
-  }
 
-  const handleCustomSubmit = (e) => {
-    if (e) e.preventDefault();
+      const handleSyslogSearch = async (url) => {
+        setSearchUrl(url);
+        // if (!eventipText) {
+        //     alert("Please enter a search term");
+        //     return;
+        // }
 
+        setSearchBtn(true);
+        setIsLoading(true);
+        setIsError({ status: false, msg: "" });
+        
+        try {
+            const response = await fetch(url,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            if (response.status === 204) {
+                setIsLoading(false);
+                setEventmainData([]);
+                return;
+            }
+
+               if (typevalueSel === 'syslogd') {
+            const textData = await response.text();
+            setEventmainData(textData || "");
+            return;
+        }
+
+        // ✅ JSON for others
+        const data = await response.json();
+
+        if (response.ok) {
+            setEventmainData(data.event || []);
+            setIsError({ status: false, msg: '' });
+        } else {
+                throw new Error("Data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message || "Something went wrong" });
+        }
+    };
+
+
+     useEffect(() => {
+    if (!searchTrigger || searchTrigger === 0 ) return; 
+      const startTimestamp = customStartDate?.getTime();
+        const endTimestamp = customEndDate?.getTime();
+         const durationMs = parseInt(selectedDuration);
+            const timeParam = Date.now() - durationMs;
+    let url = `api/v2/events/syslogs/${nodeDataId}`;
+            const params = [];
+
+            if (eventipText) {
+                params.push(`search=${encodeURIComponent(eventipText)}`);
+            }
+            if (selectedDuration === 'Custom' && startTimestamp && endTimestamp) {
+                params.push(`from=${startTimestamp}`);
+                params.push(`to=${endTimestamp}`);
+            }
+            if(selectedDuration !== 'Custom'){
+                params.push(`time=${timeParam}`)
+            }
+
+            if (params.length > 0) {
+                url += "?" + params.join("&");
+            }
+
+                handleSyslogSearch(url);
+        }, [searchTrigger,selectedDuration,nodeDataId]);
+
+
+
+const handleCustomSubmit = (e) => {
+    if (e) e.preventDefault(); 
     if (!customStartDate || !customEndDate) {
             setShowCustomDateAlertPopup(true);
             return;
@@ -67,9 +149,15 @@ const TrainEventTab = () => {
 
         setShowCustomPopup(false);
         setIsCustomApplied(true);
-
-        const startTimestamp = customStartDate.getTime(); // ms
+         fetchCustomData();
+    }
+    const fetchCustomData = () => {
+         if (!customStartDate || !customEndDate) return;
+         if (searchBtn) return;
+           const startTimestamp = customStartDate.getTime(); // ms
         const endTimestamp = customEndDate.getTime();  
+        let url = '';
+        if( typevalueSel === 'events'){
          let filterParts = [
             "eventDisplay==Y",
             typevalueSel === 'events' ? "eventSource!=syslogd" : 'eventSource==syslogd'
@@ -81,19 +169,58 @@ const TrainEventTab = () => {
 
         const filterString = filterParts.join(";");
 
-        let url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
+         url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
+        }else if( typevalueSel === 'syslogd'){
+            url = `api/v2/events/syslogs/${nodeDataId}`;
+                const params = [];
+
+                if (eventipText) {
+                    params.push(`search=${encodeURIComponent(eventipText)}`);
+                }
+                if (selectedDuration === 'Custom' && startTimestamp && endTimestamp) {
+                    params.push(`from=${startTimestamp}`);
+                    params.push(`to=${endTimestamp}`);
+                }
+                // if(selectedDuration !== 'Custom'){
+                //     params.push(`time=${eventtimeSel}`)
+                // }
+
+                if (params.length > 0) {
+                    url += "?" + params.join("&");
+                }
+        }
         reportUrlRef.current = url;
         setReportUrl(url); 
         getDataEvntMain(url);
-
   };
 
-  useEffect(()=>{
-     if(selectedDuration === 'Custom' && isCustomApplied) {
-        handleCustomSubmit();
-     }
-  },[eventmainSeverityValueSel,eventmainLimitLabelSel,fromValue,searchBtn])
 
+useEffect(() => {
+    if (!(selectedDuration === 'Custom' && isCustomApplied)) return;
+    fetchCustomData();
+
+    const interval = setInterval(() => {
+        if (searchBtn) return;
+        fetchCustomData();
+    }, 30000);
+
+    return () => clearInterval(interval);
+
+}, [
+    selectedDuration,
+    isCustomApplied,
+    eventmainSeverityValueSel,
+    eventmainLimitLabelSel,
+    fromValue,
+    searchBtn
+]);
+
+
+     const handleClosepopup  = ()=>{
+    setShowCustomPopup(false);
+    setCustomEndDate(null);
+    setCustomStartDate(null);
+  }
 
     useEffect(() => {
         if (selectedDuration == null || selectedDuration === '' || isNaN(selectedDuration)) return;
@@ -105,13 +232,9 @@ const TrainEventTab = () => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
-            const username = 'admin';
-            const password = 'admin';
-            const token = btoa(`${username}:${password}`)
             const options = {
                 method: "GET",
                 headers: {
-                    'Authorization': `Basic ${token}`,
                     "Content-Type": "application/json",
                 },
 
@@ -128,6 +251,14 @@ const TrainEventTab = () => {
                 setIsError({ status: false, msg: '' });
                 return;
             }
+
+             if (typevalueSel === 'syslogd') {
+                    const textData = await response.text(); // ✅ only text
+                    setEventmainData(textData || "");
+                    setIsLoading(false);
+                    return;
+                }
+
             const data = await response.json();
             if (!response.ok) {
                 throw new Error("API Error");
@@ -137,17 +268,20 @@ const TrainEventTab = () => {
 
             if (url.includes('/audit/')) {
                 normalized = data.audits || [];
-            } else if (data.event) {
+            } else if (data.event  && typevalueSel==='events') {
                 normalized = data.event;
+                setEventmainData(normalized || []);
                 setCustomStartDate(null);
                 setCustomEndDate(null);
             }
-
-            setEventmainData(normalized);
             setIsLoading(false);
         } catch (error) {
             setIsLoading(false);
             setIsError({ status: true, msg: error.message });
+        }finally {
+            // setCustomStartDate(null);
+            // setCustomEndDate(null);
+            setIsLoading(false);
         }
     };
 
@@ -156,23 +290,19 @@ const TrainEventTab = () => {
     };
 
 
-
+    const isFetching = useRef(false);
     useEffect(() => {
-            if(searchBtn) return;
             if(selectedDuration === 'Custom') return;
-        const fetchData = () => {
+        const fetchData = async() => {
 
+             if(searchBtn) return;
+             if (isFetching.current) return;
+            isFetching.current = true;
+            const durationMs = parseInt(selectedDuration);
+            const timeParam = Date.now() - durationMs;
+               
+            try {
 
-        let effectiveDate;
-
-            if (date === null) {
-                const sixHoursInMs = 6 * 60 * 60 * 1000;
-                const now = new Date();
-                effectiveDate = now.getTime() - sixHoursInMs;
-            } else {
-                const formatDate = new Date(date);
-                effectiveDate = formatDate.getTime();
-            }
         let url = '';
 
         let filterParts = [
@@ -187,24 +317,28 @@ const TrainEventTab = () => {
 
         switch (typevalueSel) {
             case 'events':
-               url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitValueSel}&offset=${fromValue}`;
+               url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${timeParam}&limit=${eventmainLimitValueSel}&offset=${fromValue}`;
                 break;
 
-            case 'syslogd':
-                url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitValueSel}&offset=${fromValue}`;
-
+           case 'syslogd':
+                url = `api/v2/events/syslogs/${nodeDataId}?time=${timeParam}`
                 break;
+
             case 'auditlog':
                 url = `/api/v2/audit/list?_s=&limit=${eventmainLimitValueSel}&offset=${fromValue}&order=desc&orderBy=id`;
                 break;
 
             default:
-                url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd&limit=50&offset=${fromValue}`;
+              
                 break;
         }
+
         reportUrlRef.current = url;
         setReportUrl(url);
-          getDataEvntMain(url);
+        await  getDataEvntMain(url);
+    }finally {
+            isFetching.current = false;
+        }
     }
 
     fetchData();
@@ -245,6 +379,8 @@ const TrainEventTab = () => {
 
         setEventmainSeverityValueSel(value);
         setEventmainSeverityLabelSel(label);
+        setSearchBtn(false);
+        setEventipText('');
     };
 
 
@@ -253,6 +389,8 @@ const TrainEventTab = () => {
         const label = event.target.options[event.target.selectedIndex].label;
         setTypevalueSel(value);
         setTypelabelSel(label);
+        setSearchBtn(false);
+        setEventipText('');
 
     }
 
@@ -261,11 +399,15 @@ const TrainEventTab = () => {
           const customvalue = event.target.value;
             if (customvalue === "Custom") {
                 setSelectedDuration("Custom");   
-                setShowCustomPopup(true);        
+                setShowCustomPopup(true);
+                setSearchBtn(false);
+                setEventipText('');        
             } else {
                 const value = parseInt(customvalue); 
                 setSelectedDuration(value);
-                setShowCustomPopup(false);       
+                setShowCustomPopup(false); 
+                setSearchBtn(false);
+                setEventipText('');      
             }
     };
 
@@ -276,13 +418,17 @@ const TrainEventTab = () => {
 
         setEventmainLimitValueSel(value);
         setEventmainLimitLabelSel(label);
+        setSearchBtn(false);
+        setEventipText('');
     }
 
     const handleMainAuditLimitValue = (event) => {
         let selectedIndex = event.target.selectedIndex;
         setEventauditLimitValueSel(selectedIndex)
         let label = event.target.options[selectedIndex].label;
-        setEventauditLimitLabelSel(label)
+        setEventauditLimitLabelSel(label);
+        setSearchBtn(false);
+        setEventipText('');
     }
 
 
@@ -295,7 +441,7 @@ const TrainEventTab = () => {
         setLogsMode(event.target.value);
     };
 
-       const getReportData = async (url) => {
+  const getReportData = async (url) => {
          const finalUrl = searchBtn ? searchUrl : url;
     
         try {
@@ -303,9 +449,15 @@ const TrainEventTab = () => {
             if (!finalUrl) {
             console.error("URL is missing");
             return;
-        }
-
-          const updatedUrl = finalUrl.replace("events/list?_s", "events/export?_s");
+        }   
+            let updatedUrl = finalUrl;
+                if (finalUrl.includes("events/list?_s") && typevalueSel === "events") {
+                updatedUrl = finalUrl.replace("events/list?_s", "events/export?_s");
+            }else {
+                updatedUrl = finalUrl.includes("?")
+                    ? `${finalUrl}&action=download`
+                    : `${finalUrl}?action=download`;
+            }
             const response = await fetch(updatedUrl, {
                 method: "GET",
                 headers: {
@@ -451,7 +603,7 @@ const TrainEventTab = () => {
             if (url.includes('/audit/') && typevalueSel==='auditlog') {
                 normalized = data.audits || [];
                 // setAuditmainData(normalized || []);
-            } else if (data?.event && typevalueSel==='events' || typevalueSel==='syslogd' ) {
+            } else if (data?.event && typevalueSel==='events') {
                 normalized = data.event;
                 setEventmainData(normalized || []);
 
@@ -513,40 +665,20 @@ const TrainEventTab = () => {
         setShowCustomPopup(true)
     }
 
+     const handleSearch = (eventipText) => {
+        setExecutedSearch(eventipText);
+        // setExecutedDate(sysSelectedDate);
+        setSearchTrigger(prev => prev + 1); 
+    };
+
 
     return (
         <>
             <article className="row">
-                {/* <article className="border-tlr custom-row" style={{ textAlign: 'center' }}>
-
-                    <label className="radiolabel" style={logsMode === 'LOGS' ? { fontWeight: 700, color: '#495057', marginRight: '10px' } : { marginRight: '10px' }}>
-                        <input
-                            type="radio"
-                            value="LOGS"
-                            checked={logsMode === 'LOGS'}
-                            onChange={handleChange}
-                            className="radiobtn"
-                        />
-                        Logs
-                    </label>
-
-                    <label className="radiolabel" style={logsMode === 'EVENTS' ? { fontWeight: 700, color: '#495057' } : {}}>
-                        <input
-                            type="radio"
-                            value="EVENTS"
-                            checked={logsMode === 'EVENTS'}
-                            onChange={handleChange}
-                            className="radiobtn"
-                        />
-                        Events
-                    </label>
-                   
-                </article> */}
-                 {/* {logsMode !== 'LOGS' ? ( */}
                         <article className="col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12" style={{ padding: '0' }}>
                             <article className="row border-tlr custom-row">
                                 <article className="col-sm-4 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
-                                    <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block', float: 'left' }}>
+                                    <article style={{ display: typevalueSel === 'events' ? 'block' : 'none', float: 'left' }}>
                                         <button type="button" onClick={handleDecrementOffset} className="arrowlf">
                                             <i className="fa-solid fa-arrow-left"></i>
                                         </button>
@@ -555,9 +687,7 @@ const TrainEventTab = () => {
                                          <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
                          <button type="button" className="createbtn" onClick={() => { handleRadialIP();}} >Search</button>
                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{ marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
-                        {/* <button type="button" className="createbtn"  onClick={() => getReportData(reportUrl)} style={{ marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}>  <i class="fa-solid fa-download"></i></button>      */}
                     
-
                                     </article>
                                     <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
                                         <button type="button" className="arrowlf">
@@ -573,7 +703,7 @@ const TrainEventTab = () => {
                                 </article>
                                 <article className="col-sm-8 col-md-8 col-lg-8 col-xl-8 col-xxl-8">
                                     <article style={{ float: 'right' }}>
-                                        <article style={{ display: typevalueSel === 'auditlog' ? 'none' : 'block' }}>
+                                        <article style={{ display: typevalueSel === 'events' ? 'block' : 'none' }}>
                                         <button type="button" className="createbtn"   title="Export"  onClick={() => reportUrlRef.current && getReportData(reportUrlRef.current)}
                                         disabled={!reportUrlRef.current}   style={{ marginRight: '7px'}}>  <i class="fa-solid fa-download"></i></button>
                                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Type:</label>
@@ -630,6 +760,41 @@ const TrainEventTab = () => {
                                                 <option value="500" label="500">500</option>
                                             </select>
                                         </article>
+                                            <article style={{ display: typevalueSel === 'syslogd' ? 'block' : 'none',marginTop:"-5px",paddingRight:"18px" }}>              
+                        <button type="button" className="createbtn"   title="Export"  onClick={() => reportUrl && getReportData(reportUrl)}
+                            disabled={!reportUrl}   style={{ marginRight: '7px'}}>  <i class="fa-solid fa-download"></i></button>
+                            <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Type:</label>
+
+                            <select name="name" id="name" value={typevalueSel} onChange={handleType} className="form-controll1" style={{ maxWidth: '93px' }}>
+                                <option value="events" label="Events">Events</option>
+                                <option value="syslogd" label="Syslogs">Syslogs</option>
+                                {/* <option value="auditlog" label="Audit Log">Audit Log</option> */}
+                            </select>
+                            
+                                <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
+    
+                        <article className="trans-datepickerbg" style={{ display: 'inline-block', marginTop: '5px' }}>
+
+                            <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
+                            <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px',
+                                 minWidth: '94px' }} onClick={handleCustomPopup}>
+                                <option value="3600000" label="Last hour">Last hour</option>
+                                <option value="28800000" label="8 hours">8 hours</option>
+                                <option value="86400000" label="24 hours">24 hours</option>
+                                <option value="172800000" label="48 hours">48 hours</option>
+                                <option value="Custom" label="Custom">Custom</option>
+                            </select>
+    
+                        </article>
+                        <button type="button" className="createbtn" style={{ marginLeft: '10px' }}
+                            onClick={() => {
+                                handleSearch(eventipText)
+                            }
+                            }
+                        >Search</button>
+
+                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '10px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
+                    </article>
                                         <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
                                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Type:</label>
 
@@ -659,7 +824,7 @@ const TrainEventTab = () => {
                                     </article>
                                 </article>
                             </article>
-                            {typevalueSel !== 'auditlog' ? (
+                             {typevalueSel === 'events' && (
                                 <article className="eventmaintable">
                                     <article className="row">
                                         <table className="col-12">
@@ -694,7 +859,28 @@ const TrainEventTab = () => {
                                             </tbody>
                                         </table>
                                     </article>
-                                </article>) : (
+                                </article>)} 
+                               {typevalueSel === 'syslogd' && (
+                                    <article className="eventmaintable">
+                                        {typeof eventmainData === "string" &&
+                                        eventmainData.trim() !== "" &&
+                                        eventmainData.split('\n').filter(line => line.trim() !== '').length > 0 ? (
+                                        
+                                        <ul className="log-list">
+                                            {eventmainData
+                                            .split('\n')
+                                            .filter(line => line.trim() !== '')
+                                            .map((line, index) => (
+                                                <li key={index}>{line}</li>
+                                            ))}
+                                        </ul>
+
+                                        ) : (
+                                        <p className="nologpara">No logs available</p>
+                                        )}
+                                    </article>
+                                    )}
+                                 { typevalueSel === 'auditlogs' && (
                                 <article className="eventmaintable">
                                     <article className="row">
                                         <table className="col-12">

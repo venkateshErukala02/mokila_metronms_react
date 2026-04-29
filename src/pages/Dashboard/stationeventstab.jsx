@@ -383,6 +383,8 @@ useEffect(() => {
 
         setEventmainSeverityValueSel(value);
         setEventmainSeverityLabelSel(label);
+        setSearchBtn(false);
+        setEventipText('');
     };
 
 
@@ -759,7 +761,7 @@ useEffect(() => {
                             <select name="name" id="name" value={typevalueSel} onChange={handleType} className="form-controll1" style={{ maxWidth: '93px' }}>
                                 <option value="events" label="Events">Events</option>
                                 <option value="syslogd" label="Syslogs">Syslogs</option>
-                                <option value="auditlog" label="Audit Log">Audit Log</option>
+                                {/* <option value="auditlog" label="Audit Log">Audit Log</option> */}
                             </select>
                             
                                 <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
@@ -852,21 +854,26 @@ useEffect(() => {
                 </article>
             </article>)}
              
-               { typevalueSel === 'syslogd' &&(
-            <>
-            <article className="eventmaintable">
-                <ul className="log-list">
-                    {typeof eventmainData === "string" &&
-                    eventmainData
-                        .split('\n')
-                        .filter(line => line.trim() !== '')
-                        .map((line, index) => (
-                            <li key={index}>{line}</li>
-                        ))}
-                </ul>
-                </article>
-                </>
-        )}
+                    {typevalueSel === 'syslogd' && (
+                                    <article className="eventmaintable">
+                                        {typeof eventmainData === "string" &&
+                                        eventmainData.trim() !== "" &&
+                                        eventmainData.split('\n').filter(line => line.trim() !== '').length > 0 ? (
+                                        
+                                        <ul className="log-list">
+                                            {eventmainData
+                                            .split('\n')
+                                            .filter(line => line.trim() !== '')
+                                            .map((line, index) => (
+                                                <li key={index}>{line}</li>
+                                            ))}
+                                        </ul>
+
+                                        ) : (
+                                        <p className="nologpara">No logs available</p>
+                                        )}
+                                    </article>
+                                    )}
               { typevalueSel === 'auditlogs' && (
             <article className="eventmaintable">
                 <article className="row">

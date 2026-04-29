@@ -2053,6 +2053,7 @@ min-width: 205px;
         margin-left: 20px;
         margin-top: 13px;
         color: black;
+        font-size: 12px !important;
      } 
      .settinput1{
         width: 432px;
@@ -4625,6 +4626,14 @@ body {
   color: #000;
 }
 
+.nologpara{
+    font-size: 12px;
+    line-height: 15px;
+    list-style-type: none;
+    padding: 4px 4px 4px 8px;
+    font-family: monospace;
+    white-space: pre-wrap;
+}
  /* width={700} height={240} */
 
 /*  */

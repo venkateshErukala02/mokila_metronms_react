@@ -929,20 +929,25 @@ useEffect(() => {
             <p>Loading...</p>
         </div>
         )} */}
-        { typevalueSel === 'syslogd' &&(
-            <>
-            <article className="eventmaintable">
-                <ul className="log-list">
-                    {typeof eventmainData === "string" &&
-                    eventmainData
-                        .split('\n')
-                        .filter(line => line.trim() !== '')
-                        .map((line, index) => (
-                            <li key={index}>{line}</li>
-                        ))}
-                </ul>
-                </article>
-                </>
+        {typevalueSel === 'syslogd' && (
+        <article className="eventmaintable">
+            {typeof eventmainData === "string" &&
+            eventmainData.trim() !== "" &&
+            eventmainData.split('\n').filter(line => line.trim() !== '').length > 0 ? (
+            
+            <ul className="log-list">
+                {eventmainData
+                .split('\n')
+                .filter(line => line.trim() !== '')
+                .map((line, index) => (
+                    <li key={index}>{line}</li>
+                ))}
+            </ul>
+
+            ) : (
+            <p className="nologpara">No logs available</p>
+            )}
+        </article>
         )}
             {typevalueSel === 'events' &&(
                 <article className="eventmaintable">
