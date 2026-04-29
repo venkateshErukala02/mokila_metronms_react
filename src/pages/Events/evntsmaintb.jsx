@@ -908,7 +908,7 @@ useEffect(() => {
                                 <option value="28800000">8 hours</option>
                                 <option value="86400000">24 hours</option>
                                 <option value="172800000">48 hours</option>
-                                <option value="Custom">Custom</option>
+                                {/* <option value="Custom">Custom</option> */}
                             </select>
 
                             <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">

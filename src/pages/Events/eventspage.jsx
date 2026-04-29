@@ -144,14 +144,24 @@ const EventPg = () => {
 
         if (response.ok) {
              const fileBlob = await response.blob();  // Get the file as a Blob (binary data)
+        const disposition = response.headers.get('Content-Disposition');
 
+        let filename = `download_${Date.now()}.zip`;
+
+        if (disposition && disposition.includes('filename=')) {
+            filename = disposition
+                .split('filename=')[1]
+                .split(';')[0]
+                .replace(/"/g, '')
+                .trim();
+        }
     // Create a URL for the Blob
     const fileURL = URL.createObjectURL(fileBlob);
 
     // Create an invisible <a> element to trigger the download
     const a = document.createElement("a");
     a.href = fileURL;
-    // a.download = "5101.zip";  // Set the filename for the downloaded file
+     a.download = filename;  // Set the filename for the downloaded file
     document.body.appendChild(a);
     a.click();  // Trigger the download
     document.body.removeChild(a);  // Clean up the element
@@ -206,6 +216,11 @@ const EventPg = () => {
             if (!response.ok) {
                         throw new Error('Error starting discovery');
                     }
+                    const disposition = response.headers.get('Content-Disposition');
+
+    const filename = disposition
+    ? disposition.split('filename=')[1]?.replace(/"/g, '').trim()
+    : '';
 
                     const blob = await response.blob();
 
@@ -214,7 +229,7 @@ const EventPg = () => {
         const a = document.createElement('a');
         a.href = downloadUrl;
 
-        a.download = `station_device_logs_${Date.now()}.zip`;
+        a.download = filename;
 
         document.body.appendChild(a);
         a.click();
