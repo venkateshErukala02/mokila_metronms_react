@@ -81,9 +81,10 @@ useEffect(() => {
 
   const getNodeLabel = (node) => {
     const mode = node.data?.mode;
+    const type = node.data?.type;
   
-    if (mode === "region" || mode === "location") {
-      return node.data?.display || node.text || "Unknown";
+    if (mode === "region") {
+      return node.data?.display;
     } else if (
       mode === "AP" || 
       mode === "CAM" || 
@@ -91,12 +92,12 @@ useEffect(() => {
       mode === "encoder"
     ) {
       return node.data?.systemname || "Unnamed Device";
-    } else if (mode === "facility" || node.data?.parent === "yard_1") {
+    } else if (mode === "facility" /*|| node.data?.parent === "yard_1"*/) {
       return node.text || "Unnamed Facility";
-    } else if (node.data?.parent === "yard" || mode === 'global') {
+    } else if (mode === 'global') {
       return node.data?.display || "Unnamed Yard";
     } else {
-      return node.data?.display || node.text || "Unknown";
+      return node.text ;
     }
   };
   

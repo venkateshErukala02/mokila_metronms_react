@@ -29,8 +29,6 @@ useEffect(() => {
       } else if (textName.data.mode == 'facility') {
         if(textName.text === 'Finch trail track' || textName.text ==='VMC trail track'){
           svg= 'Finch_trail_track.svg';
-        }else if(textName.text === 'Carhouse'){
-          svg = 'carhouse.svg';
         }else{
         svg =  'Station_Line1.svg';  
         }

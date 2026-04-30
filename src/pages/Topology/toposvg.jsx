@@ -121,7 +121,7 @@ useEffect(()=>{
         const stationId = textName?.data?.id;
         if (!stationId) return;
         if (stationId === null) return;
-        if( textName?.data?.mode !== 'yard' || childrenTextName[0]?.data?.mode !== 'facility' ) return;
+        if( childrenTextName.length === 0   ) return;
         if(!stationId  !== 'tagtable') {
         const urlStation= `api/v2/treeview/station/${childrenTextName[0]?.data?.id}`;
         // const urlTrains = `api/v2/treeview/trains/${stationId}`;
@@ -253,25 +253,12 @@ useEffect(() => {
             svg = 'line4-sec1.svg';
           }
       } else if (textName?.data.mode == 'location') {
-          svg =  textName.text+'.svg';
-      } else if (textName?.data.mode == 'facility') {
-        if(textName?.data.display === 'davisville_track'){
-          svg= 'davisville_track.svg';
-        }else if(textName?.data.display === 'wilson_track'){
-          svg= 'wilson_track.svg';
-        }else if(textName?.text === 'Finch trail track' || textName?.text ==='VMC trail track'){
-          svg= 'Finch_trail_track.svg';
-        }else{
+          svg =  textName?.data.display +'.svg';
+      } else if (textName?.data.type == 'yard') {
+         svg= textName?.data.display +'.svg';
+      } else if (textName?.data.type == 'facility'){
         svg =  'Station_Line1.svg';
-        }
-    }else if (textName?.data.mode === 'yard'){
-      if(textName?.text === 'yard_1'){
-          svg= 'davisville_track.svg'
-      }else{
-        // svg = textName.data.display+'.svg';
-        svg= 'davisville_track.svg'
       }
-    }
     }
 
     
@@ -1130,9 +1117,9 @@ return (
   <article className="" style={{textAlign:'center',paddingTop:'0px',paddingBottom:'0px'}}>
     <div ref={svgContainerRef} dangerouslySetInnerHTML={{ __html: svgContent }} />
    </article>
-   <article>
+   {/* <article>
     {textName?.data?.mode === 'yard' && <YardTbone yardData={yardData} yardfacilitieData={yardfacilitieData} textName={textName}/> }
-    </article>
+    </article> */}
     </>
 
 );

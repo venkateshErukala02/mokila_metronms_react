@@ -48,7 +48,7 @@ const [treeData, setTreeData] = useState(() => structuredClone(defaultTree));
   if (!selectedTreeNodeId?.id) return;
 
   // Find the node in treeData by ID
-  const node = findNodeById(treeData, selectedTreeNodeId.id);
+  const node = findNodeById(treeData, selectedTreeNodeId?.id);
   if (node) {
     setSelectedNode(node); // update internal state
   }
@@ -140,7 +140,10 @@ useEffect(() => {
         if (mode === "region" && n.text === regionName) {
           return true;
         }
-        if (mode === "location" && n.text === locationName) {
+        if (mode === "location" && n.data.display === locationName) {
+          return true;
+        }
+        if (mode === "facility" && n.text === stationName) {
           return true;
         }
         return false;
@@ -149,57 +152,57 @@ useEffect(() => {
       if (!matchingNode) break;
 
 
-      if (mode === "region") {
-        if (currentNode.text === "line1") {
-          const line1Sections = children.filter(n => n.text.includes("line1-sec"));
-          // Ensure expanding sections only within line1
-          const section1Node = line1Sections.find(n => n.text === "line1-sec1");
-          const section2Node = line1Sections.find(n => n.text === "line1-sec2");
+    //   if (mode === "region") {
+    //     if (currentNode.text === "line1") {
+    //       const line1Sections = children.filter(n => n.text.includes("line1-sec"));
+    //       // Ensure expanding sections only within line1
+    //       const section1Node = line1Sections.find(n => n.text === "line1-sec1");
+    //       const section2Node = line1Sections.find(n => n.text === "line1-sec2");
 
-          // Expand section1 if it's line1-sec1
-          if (currentNode.text === "line1-sec1" && section1Node) {
-            currentNode = section1Node;
-            setSelectedNode(currentNode);
-          }
+    //       // Expand section1 if it's line1-sec1
+    //       if (currentNode.text === "line1-sec1" && section1Node) {
+    //         currentNode = section1Node;
+    //         setSelectedNode(currentNode);
+    //       }
 
-          // Expand section2 if it's line1-sec2
-          if (currentNode.text === "line1-sec2" && section2Node) {
-            currentNode = section2Node;
-            setSelectedNode(currentNode);
-          }
-        }
+    //       // Expand section2 if it's line1-sec2
+    //       if (currentNode.text === "line1-sec2" && section2Node) {
+    //         currentNode = section2Node;
+    //         setSelectedNode(currentNode);
+    //       }
+    //     }
 
-        // Handling for line4, which only has section line1-sec1
-        if (currentNode.text === "line4") {
-          const sectionNode = children.find(n => n.text === "line1-sec1");
-          if (currentNode.text === "line1-sec1" && sectionNode) {
-            currentNode = sectionNode;
-            setSelectedNode(currentNode);
-          }
-        }
-      }
+    //     // Handling for line4, which only has section line1-sec1
+    //     if (currentNode.text === "line4") {
+    //       const sectionNode = children.find(n => n.text === "line1-sec1");
+    //       if (currentNode.text === "line1-sec1" && sectionNode) {
+    //         currentNode = sectionNode;
+    //         setSelectedNode(currentNode);
+    //       }
+    //     }
+    //   }
 
-      // Handling for location mode
-      if (mode === "location") {
-         const sections = await getDatanodesLine(getUrl(currentNode), currentNode);
+    //   // Handling for location mode
+    //   if (mode === "location") {
+    //      const sections = await getDatanodesLine(getUrl(currentNode), currentNode);
 
-    // Only find the section that matches locationName
-    const targetSection = sections.find(n => n.text === locationName);
+    // // Only find the section that matches locationName
+    // const targetSection = sections.find(n => n.text === locationName);
 
-    if (targetSection) {
-      currentNode = targetSection;
-      setSelectedNode(currentNode);
-        const facilities = await getDatanodesLine(getUrl(currentNode), currentNode)
-      const stationNode = facilities.find(f => f.text === stationName);
-        if (!stationNode) return;
-        onStationResolved?.(stationNode); 
-        currentNode = stationNode;
-        setSelectedNode(currentNode);
-        return;
-      }
+    // if (targetSection) {
+    //   currentNode = targetSection;
+    //   setSelectedNode(currentNode);
+    //     const facilities = await getDatanodesLine(getUrl(currentNode), currentNode)
+    //   const stationNode = facilities.find(f => f.text === stationName);
+    //     if (!stationNode) return;
+    //     onStationResolved?.(stationNode); 
+    //     currentNode = stationNode;
+    //     setSelectedNode(currentNode);
+    //     return;
+    //   }
     
 
-      }
+    //   }
 
       currentNode = matchingNode;
       setSelectedNode(currentNode);

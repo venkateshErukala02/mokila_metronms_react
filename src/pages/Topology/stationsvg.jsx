@@ -283,9 +283,9 @@ const resetTrainLayers = (svgRoot) => {
             }
         }
          else {
-            svg = 'Station_Line1.svg';
+            
         }
-
+        svg = 'Station_Line1.svg';
         let url = 'images/' + svg;
         setSvgContent('');
         // Api call fetchSvg with signal

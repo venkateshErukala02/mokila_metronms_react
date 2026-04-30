@@ -218,10 +218,13 @@ useEffect(()=>{
         if (!textName?.data) return;
         setTrainData('');
         if (circleId) return;
-        if(textName?.data?.mode === 'yard') return;
-        if(textName?.data?.mode !== 'facility') return;
+        //if(textName?.data?.mode === 'yard') return;
+        // if(textName?.data?.mode !== 'facility') return;
         let intervalId;
-        const stationId = textName?.data?.id;
+        let stationId = textName?.data?.id;
+        if (textName?.data?.actualType === 4) {
+            stationId = childrenTextName[0]?.data?.id
+        }
         if (!stationId) return;
         if (stationId === null) return;
         if(!stationId || selectedTab !== 'tagtable') {
@@ -231,9 +234,12 @@ useEffect(()=>{
             clearInterval(textNameIntervalRef.current)
         };
         getYardfacilitieData(urlStation);
-        if (!(parentTextName?.data?.mode === 'yard' && childrenTextName[0]?.data?.mode === 'facility')) {
-                getTrainData(urlTrains);
-            }
+        if(textName?.data?.mode === 'mainline' || textName?.data?.mode === 'trains' || textName?.data?.mode === 'facility') {
+            getTrainData(urlTrains);
+        }
+        // if ((parentTextName?.data?.mode === 'mainline' && childrenTextName[0]?.data?.mode === 'facility')) {
+        //         getTrainData(urlTrains);
+        //     }
 
           textNameIntervalRef.current  = setInterval(() => {
             getYardfacilitieData(urlStation);
@@ -408,31 +414,13 @@ useEffect(() => {
 
 
     const renderSectComponent=(textName)=>{
-        switch (textName?.text) {
+        switch (textName?.data?.display) {
             case 'line1-sec1':
+            case 'line1-sec2':
+            case 'line4-sec1':
               return   <>   <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId}/>
                 <TopoSectionTable  textName={textName}/> </>
                 break;
-            case 'line1-sec2':
-                return  <>   <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId}/>
-                         <TopoSectionTable  textName={textName}/> </>
-                    break;
-            case 'line4-sec1':
-                return  <>   <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId}/>
-                            <TopoSectionTable  textName={textName}/> </>
-                    break;
-            case 'line1':
-                return  <>   <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId}/>
-                            </>
-                    break;
-            case 'line4':
-                return  <>   <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId}/>
-                           </>
-                    break;
-            case 'Global':
-                return  <>   <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId}/>
-                             </>
-                    break;
             default:
                 return <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId}/>
                 break;
@@ -442,14 +430,18 @@ useEffect(() => {
     
 
     const renderSectFacility=(textName)=>{
-        switch (textName?.data?.mode) {
-            case 'facility':{
+        switch (textName?.data?.type) {
+            case 'facility':
+               return ( <> <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg}/>
+              <StationNodeTableView  yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt}/>
+                      </> );
+            /*{
                 if(textName.data.display === 'davisville_track' || textName.data.display ==='wilson_track' || textName.text === 'Finch trail track' || textName.text ==='VMC trail track' ){
                     return(
                     <>
                       <TopoSvgViewer yardfacilitieData={yardfacilitieData}  textName={textName}/>
                         <YardTbone yardfacilitieData={yardfacilitieData} textName={textName} />
-                        {/* <YardTbtwo textName={textName}/> */}
+                       
                     </>
                     );
                 }else if (textName.text === 'Carhouse' ){
@@ -457,7 +449,7 @@ useEffect(() => {
                         <>
                         <YardSvgViewer yardfacilitieData={yardfacilitieData}  textName={textName}/>
                 <YardTbone yardfacilitieData={yardfacilitieData} textName={textName} />
-            {/* <YardTbtwo textName={textName}/> */}
+            
                         </>
                     )
                 }else{
@@ -465,7 +457,7 @@ useEffect(() => {
               <StationNodeTableView  yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt}/>
                       </> );
                 }
-            }
+            }*/
                 break;
             case 'Trains':
                 return  <TrainView textName={textName} parentTextName={parentTextName} childrenTextName={childrenTextName}/>
@@ -476,6 +468,7 @@ useEffect(() => {
             case 'yard':
                 return  <>
                 <TopoSvgViewer yardfacilitieData={yardfacilitieData}  textName={textName} childrenTextName={childrenTextName} parentTextName={parentTextName}/>
+                 <YardTbone yardfacilitieData={yardfacilitieData} textName={textName} />
                 {/* <YardTbone yardfacilitieData={yardfacilitieData} textName={textName} childrenTextName={childrenTextName}/> */}
             {/* <YardTbtwo textName={textName}/> */}
                 </>
@@ -812,7 +805,7 @@ useEffect(() => {
 
     const hasMode =
   textName?.data &&
-  ['facility', 'Trains', 'mainline', 'yard'].includes(textName.data.mode);
+  ['facility', 'Trains', 'mainline', 'yard'].includes(textName.data.type);
 
     return (
         <article className="display-f">
