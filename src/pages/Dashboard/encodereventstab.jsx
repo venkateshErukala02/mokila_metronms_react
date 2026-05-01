@@ -54,13 +54,9 @@ const EncoderEventTab=()=>{
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
-            const username = 'admin';
-            const password = 'admin';
-            const token = btoa(`${username}:${password}`)
             const options = {
                 method: "GET",
                 headers: {
-                    'Authorization': `Basic ${token}`,
                     "Content-Type": "application/json",
                 },
 
@@ -100,21 +96,14 @@ const EncoderEventTab=()=>{
         setDropdownOpen(!isDropdownOpen);
     };
 
+ const isFetching = useRef(false);
+
     useEffect(() => {
-         const fetchData = () => {
-
-
-          let effectiveDate;
-
-            if (date === null) {
-                const sixHoursInMs = 6 * 60 * 60 * 1000;
-                const now = new Date();
-                effectiveDate = now.getTime() - sixHoursInMs;
-            } else {
-                const formatDate = new Date(date);
-                effectiveDate = formatDate.getTime();
-            }
-
+         if(logsMode === 'LOGS' ) return;
+         const fetchData = async() => {
+        if (isFetching.current) return;
+        isFetching.current = true;
+     try {
         let url = '';
 
         let filterParts = [
@@ -144,14 +133,32 @@ const EncoderEventTab=()=>{
                 url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd&limit=${eventmainLimitValueSel}&offset=${fromValue}`;
                 break;
         }
-        getDataEvntMain(url);
+        if (url) {
+        await getDataEvntMain(url);
+        }
+    }catch (err) {
+            console.error(err);
+        } finally {
+            isFetching.current = false;
+        }
     }
     fetchData();
 
       const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
 
-    }, [typevalueSel,nodeDataId,date,eventmainSeverityValueSel,eventtimeSel,eventmainLimitValueSel,fromValue]);
+    }, [typevalueSel,logsMode,nodeDataId,date,eventmainSeverityValueSel,eventtimeSel,eventmainLimitValueSel,fromValue]);
+
+     useEffect(()=>{
+        setEventmainSeverityValueSel('');
+        setEventmainSeverityLabelSel('All');
+        setEventmainLimitValueSel('50');
+        setEventmainLimitLabelSel('50');
+        setSelectedDuration(86400000);
+        setEventtimeSel(Date.now() - 86400000);
+        setPageSize(1);
+        setFromValue('0');
+    },[logsMode]);
 
     const formatTime = (timestamp) => {
         const date = new Date(timestamp);
@@ -351,7 +358,7 @@ const EncoderEventTab=()=>{
 
                             <select name="name" id="name" value={typevalueSel} onChange={handleType} className="form-controll1" style={{ maxWidth: '93px' }}>
                                 <option value="events" label="Events">Events</option>
-                                <option value="syslogd" label="Syslogs">Syslogs</option>
+                                {/* <option value="syslogd" label="Syslogs">Syslogs</option> */}
                                
                             </select>
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Severity :</label>
@@ -402,8 +409,8 @@ const EncoderEventTab=()=>{
 
                             <select name="name" id="name" value={typevalueSel} onChange={handleType} className="form-controll1" style={{ maxWidth: '93px' }}>
                                 <option value="events" label="Events">Events</option>
-                                <option value="syslogd" label="Syslogs">Syslogs</option>
-                                <option value="auditlog" label="Audit Log">Audit Log</option>
+                                {/* <option value="syslogd" label="Syslogs">Syslogs</option>
+                                <option value="auditlog" label="Audit Log">Audit Log</option> */}
                             </select>
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
                             <select name="name" id="name" className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>

@@ -219,12 +219,13 @@ useEffect(()=>{
         setTrainData('');
         if (circleId) return;
         //if(textName?.data?.mode === 'yard') return;
-        // if(textName?.data?.mode !== 'facility') return;
+        // if(textName?.data?.type !== 'facility') return;
+        if (textName?.data?.type === 'region' || textName?.data?.type === 'location' || textName?.data?.type === 'Trains' || textName?.data?.type === 'mainline' ) return;
         let intervalId;
         let stationId = textName?.data?.id;
-        if (textName?.data?.actualType === 4) {
-            stationId = childrenTextName[0]?.data?.id
-        }
+        // if (textName?.data?.actualType === 4) {
+        //     stationId = childrenTextName[0]?.data?.id
+        // }
         if (!stationId) return;
         if (stationId === null) return;
         if(!stationId || selectedTab !== 'tagtable') {
@@ -234,19 +235,19 @@ useEffect(()=>{
             clearInterval(textNameIntervalRef.current)
         };
         getYardfacilitieData(urlStation);
-        if(textName?.data?.mode === 'mainline' || textName?.data?.mode === 'trains' || textName?.data?.mode === 'facility') {
+        if(textName?.data?.type === 'facility') {
             getTrainData(urlTrains);
         }
         // if ((parentTextName?.data?.mode === 'mainline' && childrenTextName[0]?.data?.mode === 'facility')) {
         //         getTrainData(urlTrains);
         //     }
 
-          textNameIntervalRef.current  = setInterval(() => {
-            getYardfacilitieData(urlStation);
-             if (!(parentTextName?.data?.mode === 'yard' && childrenTextName[0]?.data?.mode === 'facility')) {
-                getTrainData(urlTrains);
-            }
-        }, 30000);
+        //   textNameIntervalRef.current  = setInterval(() => {
+        //     getYardfacilitieData(urlStation);
+        //      if (!(parentTextName?.data?.mode === 'yard' && childrenTextName[0]?.data?.mode === 'facility')) {
+        //         getTrainData(urlTrains);
+        //     }
+        // }, 30000);
         }
 
          return () => {
@@ -496,29 +497,25 @@ useEffect(() => {
 
 
     const getNodeLabel = (node) => {
-    const mode = node.data?.mode;
-  
-    if (mode === "region" || mode === "location") {
-      return node.data?.display || node.text || "Unknown";
-    }else if (mode === "facility" && (node.text === "Davisville" || node.text === "Wilson")) {
-      return `Yard- ${node.text}` || "Unnamed Facility";
-    }else if (mode === "facility" && (node.text === "Finch trail track" || node.text === "VMC trail track" || node.text === 'Carhouse')) {
-      return `${node.text}` || "Unnamed Facility";
-    }
-    // else if (stationTagview === true) {
-    //     return `Station- ${circleId}`;
-    // }
-    else if ( mode === "facility" || node.data?.parent === "yard_1") {
-      return `Station- ${node.text}` || "Unnamed Facility";
+    const type = node.data?.type;
+    if (type === "region") {
+      return node.data.display;
+    }else if (type === "location") {
+       return node.text;
+    }else if (type === "facility") {
+      return `Station- ${node.text}`;
+    }else if (type === "yard") {
+      return `Yard- ${node.text}`;
     } else {
-      return node.data?.display || node.text || "Unknown";
+      return '';
     }
   };
 
    const getTabLabel = (textName) => {
      const mode = textName?.data?.mode;
+    const type = textName?.data?.type;
   
-    if ((mode === "region" || mode === "location") && stationTagview === false  && lineTagview === false) {
+    if ((type === "region" || type === "location") && stationTagview === false  && lineTagview === false) {
       return (
       <span>
         Link View - {textName.data.display}
@@ -528,12 +525,9 @@ useEffect(() => {
         return (
       <span>
             Link View - {textName.data.display}
-        {/* <span onClick={(e)=>{ 
-            e.stopPropagation();
-            handleStationTabview();}} style={{ marginLeft: '8px', cursor: 'pointer' }}>x</span> */}
       </span>
     );
-    } else if(mode === "facility"){
+    } else if(type === "facility"){
          return (
       <span>
         Link View - Station View
@@ -606,7 +600,7 @@ useEffect(() => {
     // setStationTagview(false);
     setLineTagview(prev.lineTagview);
     setTrainView(prev.trainView);
-    setSelectedTreeNodeId(prev.selectedTreeNodeId);
+    setSelectedTreeNodeId(prev.textName.data.id);
     setPrevIdActive(true);
     previousViewRef.current = null;
     return;
@@ -738,7 +732,7 @@ useEffect(() => {
         url = `api/v2/wayside/tagdetails?station=${circleId}`;
     } else if (lineId) {
         url = `api/v2/wayside/tagdetails?station=${lineId}`;
-    }else if(textName?.data?.mode === 'facility'){
+    }else if(textName?.data?.type === 'facility'){
         url = `api/v2/wayside/tagdetails?station=${textName.data.display}`;
     }
 
@@ -892,7 +886,7 @@ useEffect(() => {
                     <article style={{margin:'5px'}}>
                     <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} textName={textName}/>
                     </article>
-                    {textName && textName?.data?.mode === 'facility' ? (<article style={{margin:'5px',marginTop:'15px'}}>
+                    {textName && textName?.data?.type === 'facility' ? (<article style={{margin:'5px',marginTop:'15px'}}>
                     <StationTagsTable textName={textName} circleId={circleId} lineId={lineId}  rdDataRef={rdDataRef} />
                     </article>) : ('')}
                     {showPopup && (
@@ -973,7 +967,7 @@ useEffect(() => {
                         </article>
                             </>
                     )}
-                    {((['facility', 'location', 'region'].includes(textName?.data?.mode)) && stationTagview === false) && (
+                    {((['facility', 'location', 'region','yard'].includes(textName?.data?.type)) && stationTagview === false) && (
                         <article className="row">
                         <article className="col-4">
                             {trainView === true ? (

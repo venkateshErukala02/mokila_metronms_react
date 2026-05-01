@@ -40,13 +40,11 @@ useEffect(() => {
     const fetchData = async () => {
         let url = "";
 
-        // 👉 Case 1: No selection → Parent API
         if (!trainValueSel || trainValueSel === 'select') {
             const facId = parentTextName?.data?.id ?? '';
             url = `api/v2/treeview/alltrains/${facId}?_s=&limit=${limitLabelSel}&offset=${offsetValue}`;
         }
 
-        // 👉 Case 2: Mainline selected
         else if (trainValueSel === 'mainline') {
             const node = childrenTextName.find(n => n?.data?.mode === 'mainline');
             if (node) {
@@ -54,7 +52,6 @@ useEffect(() => {
             }
         }
 
-        // 👉 Case 3: Yard selected
         else if (trainValueSel === 'yard') {
             const node = childrenTextName.find(n => n?.data?.mode === 'yard');
             if (node) {
@@ -68,6 +65,13 @@ useEffect(() => {
     };
 
     fetchData();
+
+      const intervalId = setInterval(() => {
+        fetchData();
+    }, 30000);
+
+    return () => clearInterval(intervalId);
+
 }, [trainValueSel, parentTextName, childrenTextName, limitLabelSel, offsetValue]);
 
 
@@ -383,7 +387,7 @@ useEffect(() => {
                             </article>)}
                             </article>
                             <hr />
-                            <article style={{position:'relative'}}>
+                            <article style={{position:'relative',height:'82vh',overflow:'auto'}}>
                             {!isLoading && !isError.status && table1 && table1.length > 0 &&  <table className="col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3 bordeer-allsd" style={{ height: 'auto', margin:'0 20px' }}>
                     <thead>
                         <tr>

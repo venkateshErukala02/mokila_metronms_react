@@ -43,6 +43,13 @@ useEffect(() => {
     };
 
     fetchData();
+
+     const intervalId = setInterval(() => {
+        fetchData();
+    }, 30000);
+
+    return () => clearInterval(intervalId);
+
 }, [textName, limitLabelSel, offsetValue]);
 
 
@@ -425,7 +432,7 @@ useEffect(() => {
                                 <img src={southred} alt="southtr" style={{float:'right'}} />
                             </article>)} 
                             {trainLabelSel !== 'Mainline' && trainLabelSel !== 'Yard' ? (<article className="boundimg">
-                                <span className="southtxt">South Bound</span>
+                                <span className="southtxt">South Bound</span>   
                                 <span className="northtxt">North Bound</span>
                             </article>):(<article className="boundimg">
                                 <span className="southtxt" style={{padding:"0 24px"}}>Up</span>
@@ -433,7 +440,7 @@ useEffect(() => {
                             </article>)}
                             </article>
                             <hr />
-                            <article style={{position:'relative'}}>
+                            <article style={{position:'relative',height:'82vh',overflow:'auto'}}>
                             {!isLoading && !isError.status && table1 && table1.length > 0 &&  <table className="col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3 bordeer-allsd" style={{ height: 'auto', margin:'0 20px' }}>
                     <thead>
                         <tr>

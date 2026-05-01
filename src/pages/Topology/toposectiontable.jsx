@@ -57,7 +57,7 @@ const TopoSectionTable=({textName})=>{
         let url ='';
         switch (textName.data.mode) {
             case 'location':
-              url= `api/v2/dashboard/filternodes?ar=line&facilities=${textName.text}&state=up&offset=${fromValue}&limit=${sectionLimitValueSel}&status=active&sort=productcode&by=desc`;
+              url= `api/v2/dashboard/filternodes?ar=line&facilities=${textName.data.display}&state=up&offset=${fromValue}&limit=${sectionLimitValueSel}&status=active&sort=productcode&by=desc`;
                 break;
             case 'facility':
                  url= `api/v2/dashboard/filternodes?ar=${textName.data.parent}&facilities=${textName.data.display}&state=up&offset=${fromValue}&limit=${sectionLimitValueSel}&status=active&sort=productcode&by=desc`;

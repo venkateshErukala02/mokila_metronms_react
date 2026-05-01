@@ -274,10 +274,14 @@ useEffect(() => {
 
                 break;
         }
+     if (url) {
         reportUrlRef.current = url;
         setReportUrl(url);
          await getDataEvntMain(url);
-    }finally {
+     }
+    }catch (err) {
+            console.error(err);
+        }finally {
             isFetching.current = false;
         }
     };

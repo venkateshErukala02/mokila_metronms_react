@@ -702,6 +702,7 @@ useEffect(() => {
   // }, [svgContent,textName]);
 
    useLayoutEffect(() => {
+    if(textName?.data.type == 'facility' ||  textName?.data.type == 'yard' || textName?.data.type == 'Trains' || textName?.data.type == 'mainline' ) return;
     if (!svgContent) return;
     const fetchData = () => {
     const username = 'admin';
@@ -716,16 +717,10 @@ useEffect(() => {
 
     let currentLine =''
 
-    if(textName?.text == 'line1'){
-        currentLine= 'all'
-    }else if(textName?.text == 'line4'){
-        currentLine='line4-sec1'
-    }else if(textName?.text == 'line1-sec1'){
-        currentLine='line1-sec1'
-    }else if(textName?.text == 'line1-sec2'){
-        currentLine='line1-sec2'
+    if(textName?.data.type == 'location'){
+        currentLine= `${textName?.data.display}`
     }else{
-      currentLine= 'all'
+      currentLine= 'all';
     }
 
       // fetch(`api/v2/wayside/stationstatus?time=10`, options)

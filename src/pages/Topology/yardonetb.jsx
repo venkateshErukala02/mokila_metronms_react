@@ -182,11 +182,11 @@ const YardTbone=({textName,yardfacilitieData,yardData})=>{
                                 .filter(node => node.type.includes('AP') || node.type.includes('SN')) 
                                 .map((node, index) => (
                             <tr key={index}>
-                                <td>{node.connectedTo}</td>
+                                <td style={{paddingLeft:"12px"}}>{node.connectedTo}</td>
                                 <td>{node.systemName}</td>
                                 <td>{node.ipAddress}</td>
-                                <td>{node.status}</td>
-                                <td>{(linkData[node.nodeId] || []).length}</td>
+                                <td style={{paddingLeft:"16px"}}>{node.status}</td>
+                                <td style={{paddingLeft:"52px"}}>{(linkData[node.nodeId] || []).length}</td>
                                      <td>
                                     {(linkData[node.nodeId] || []).length > 0 ? (
                                         <ul className="linkcablist">

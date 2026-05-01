@@ -120,17 +120,18 @@ useEffect(() => {
 //   expandByMode();
 // }, [uniquefacilitieData,selectedNodeId]);
 
-
+const lastExpandedKeyRef = useRef(null);
 useEffect(() => {
   if (!regionId || !locationId || !regionName || !locationName || !stationName) return;
   if (!selectedNodeId) return;
+  if (!treeData?.length) return;
   if (hasExpandedRef.current) return;
 
   const expandByMode = async () => {
     let currentNode = treeData[0]; // Global
     setSelectedNode(currentNode);
 
-    for (const mode of ["region", "location"]) {
+    for (const mode of ["region", "location","facility"]) {
       const children = await getDatanodesLine(
         getUrl(currentNode),
         currentNode
@@ -149,7 +150,7 @@ useEffect(() => {
         return false;
       });
 
-      if (!matchingNode) break;
+      if (!matchingNode) return;
 
 
     //   if (mode === "region") {
@@ -211,8 +212,11 @@ useEffect(() => {
   };
 
   expandByMode();
-}, [regionId, locationId, selectedNodeId, regionName, locationName,stationName]);
+}, [regionId, locationId, selectedNodeId, regionName, locationName,stationName,treeData]);
 
+useEffect(() => {
+  hasExpandedRef.current = false;
+}, [regionId, locationId, regionName, locationName, stationName,selectedNodeId]);
 
 const facilityIdRef = useRef(null);
 

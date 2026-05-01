@@ -134,16 +134,16 @@ useEffect(() => {
      if (!tagTypeValue || !textName) return; 
     let url = `api/v2/wayside/fetch?show=${tagTypeValue}`;
 
-    if (textName?.data?.mode === 'facility') {
+    if (textName?.data?.type === 'facility') {
       url += `&station=${textName.data.display}`;
     } else {
       url += '&station=all';
     }
 
-    if (textName?.data?.mode === 'facility' || textName?.text ==='Global' ) {
+    if (textName?.data?.type === 'facility' || textName?.text ==='Global' ) {
         url += '&time=1800&region=all';     
     } else {
-     url += `&time=1800&region=${textName.text}`;
+     url += `&time=1800&region=${textName.data.display}`;
     }
 
     fetchDataRadial(url, true);
@@ -226,7 +226,7 @@ useEffect(() => {
             <article className="row">
             <article
                 style={{
-                height: textName?.data?.mode === 'facility' ? '40.5vh' : '80vh',
+                height: textName?.data?.type === 'facility' ? '40.5vh' : '80vh',
                 overflowY: "auto",
                 border: "1px solid rgb(33 35 39 / 7%)",
                 position: "relative"

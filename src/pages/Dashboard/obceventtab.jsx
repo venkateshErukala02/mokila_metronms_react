@@ -16,7 +16,7 @@ const ObcEventTab=({nodeItemDt})=>{
     const [eventtimeSel, setEventtimeSel] = useState(Date.now() - 86400000);
     const [eventmainSeverityValueSel, setEventmainSeverityValueSel] = useState('');
     const [eventmainSeverityLabelSel, setEventmainSeverityLabelSel] = useState('All');
-    const [eventmainLimitValueSel, setEventmainLimitValueSel] = useState('1');
+    const [eventmainLimitValueSel, setEventmainLimitValueSel] = useState('50');
     const [eventmainLimitLabelSel, setEventmainLimitLabelSel] = useState('50');
     const [eventauditLimitValueSel, setEventauditLimitValueSel] = useState('1');
     const [eventauditLimitLabelSel, setEventauditLimitLabelSel] = useState('50');
@@ -47,13 +47,9 @@ const ObcEventTab=({nodeItemDt})=>{
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
-            const username = 'admin';
-            const password = 'admin';
-            const token = btoa(`${username}:${password}`)
             const options = {
                 method: "GET",
                 headers: {
-                    'Authorization': `Basic ${token}`,
                     "Content-Type": "application/json",
                 },
 
@@ -95,20 +91,13 @@ const ObcEventTab=({nodeItemDt})=>{
     };
 
 
-
+    const isFetching = useRef(false);
     useEffect(() => {
-         const fetchData = () => {
-
-         let effectiveDate;
-
-            if (date === null) {
-                const sixHoursInMs = 6 * 60 * 60 * 1000;
-                const now = new Date();
-                effectiveDate = now.getTime() - sixHoursInMs;
-            } else {
-                const formatDate = new Date(date);
-                effectiveDate = formatDate.getTime();
-            }
+        if(logsMode === 'LOGS' ) return
+         const fetchData = async() => {
+            if (isFetching.current) return;
+            isFetching.current = true;
+     try {
         let url = '';
 
         let filterParts = [
@@ -123,31 +112,48 @@ const ObcEventTab=({nodeItemDt})=>{
 
         switch (typevalueSel) {
             case 'events':
-               url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitLabelSel}&offset=${fromValue}`;
+               url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitValueSel}&offset=${fromValue}`;
                 break;
 
             case 'syslogd':
-                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitLabelSel}&offset=${fromValue}`;
+                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&limit=${eventmainLimitValueSel}&offset=${fromValue}`;
 
                 break;
             case 'auditlog':
-                url = `/api/v2/audit/list?_s=&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`;
+                url = `/api/v2/audit/list?_s=&limit=${eventmainLimitValueSel}&offset=${fromValue}&order=desc&orderBy=id`;
                 break;
 
             default:
-                url=`api/v2/events/list?_s=node.id%3D%3D${nodeDataId};eventDisplay%3D%3DY;eventSource!%3Dsyslogd&limit=${eventmainLimitLabelSel}&offset=${fromValue}`;
                 break;
         }
-         getDataEvntMain(url);
+         if (url) {
+        await getDataEvntMain(url);
+         }
 
+    }catch (err) {
+            console.error(err);
+        } finally {
+            isFetching.current = false;
+        }
     }
      fetchData();
 
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
 
-    }, [typevalueSel,nodeDataId,eventmainSeverityValueSel,eventtimeSel,eventmainLimitLabelSel,fromValue]);
+    }, [typevalueSel,logsMode,nodeDataId,eventmainSeverityValueSel,eventtimeSel,eventmainLimitValueSel,fromValue]);
 
+
+    useEffect(()=>{
+        setEventmainSeverityValueSel('');
+        setEventmainSeverityLabelSel('All');
+        setEventmainLimitValueSel('50');
+        setEventmainLimitLabelSel('50');
+        setSelectedDuration(86400000);
+        setEventtimeSel(Date.now() - 86400000);
+        setPageSize(1);
+        setFromValue('0');
+    },[logsMode]);
 
     const formatTime = (timestamp) => {
         const date = new Date(timestamp);
@@ -198,11 +204,9 @@ const ObcEventTab=({nodeItemDt})=>{
     };
 
 
-    const handleMainEventLimitValue = (event) => {
-        let selectedIndex = event.target.selectedIndex;
-        setEventmainLimitValueSel(selectedIndex)
-        let label = event.target.options[selectedIndex].label;
-        setEventmainLimitLabelSel(label)
+     const handleMainEventLimitValue = (event) => {
+        let selectedValue = event.target.value;
+        setEventmainLimitValueSel(selectedValue)
     }
 
     const handleMainAuditLimitValue = (event) => {
@@ -352,7 +356,7 @@ const ObcEventTab=({nodeItemDt})=>{
 
                             <select name="name" id="name" value={typevalueSel} onChange={handleType} className="form-controll1" style={{ maxWidth: '93px' }}>
                                 <option value="events" label="Events">Events</option>
-                                <option value="syslogd" label="Syslogs">Syslogs</option>
+                                {/* <option value="syslogd" label="Syslogs">Syslogs</option> */}
                                
                             </select>
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Severity :</label>
@@ -405,10 +409,10 @@ const ObcEventTab=({nodeItemDt})=>{
                             </select>
 
                             <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
-                                <option value="0" label="25">25</option>
-                                <option value="1" label="50">50</option>
-                                <option value="2" label="100">100</option>
-                                <option value="3" label="500">500</option>
+                               <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="500">500</option>
                             </select>
                         </article>
                         <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
@@ -416,7 +420,7 @@ const ObcEventTab=({nodeItemDt})=>{
 
                             <select name="name" id="name" value={typevalueSel} onChange={handleType} className="form-controll1" style={{ maxWidth: '93px' }}>
                                 <option value="events" label="Events">Events</option>
-                                <option value="syslogd" label="Syslogs">Syslogs</option>
+                                {/* <option value="syslogd" label="Syslogs">Syslogs</option> */}
                                
                             </select>
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
