@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import '../../../src/pages/ornms.css';
 import nodeimage from "../../assets/img/suinodeview.png";
 import radioimage from "../../assets/img/radiomode.png";
@@ -23,7 +23,9 @@ const currentUser = useSelector((state) => state?.loginuser?.node?.role);
 
     const [isLoading, setIsLoading] = useState("");
     const [isError, setIsError] = useState("");
-
+    const [svgTemplate, setSvgTemplate] = useState("");
+    const [localsnrSignal,setLocalsnrSignal] = useState(null);
+    const [remotesnrSignal,setRemotesnrSignal] = useState(null);
 
 
     const initialConfig = {
@@ -41,7 +43,7 @@ const currentUser = useSelector((state) => state?.loginuser?.node?.role);
         EthernetMAC: '',
         WiFiMAC: '',
     };
-
+    const svgContainerRef = useRef(null);
     const [configTab, setConfigTab] = useState("basic");
     const [isChanged, setIsChanged] = useState(false);
     const [canApply, setCanApply] = useState(false);
@@ -94,6 +96,18 @@ const [triggerConfig,setTriggerConfig] = useState(0);
     }
   }, [nodeIpaddress]);
 
+     const getActiveRectIds = (value) => {
+    const active = [];
+
+    if (value >= 10) active.push("rect1");
+    if (value >= 30) active.push("rect2");
+    if (value >= 50) active.push("rect3");
+    if (value >= 60) active.push("rect4");
+    if (value >= 80) active.push("rect5");
+
+    return active;
+};
+
 // When API data (configData) arrives, update state
 useEffect(() => {
   if (configData) {
@@ -105,6 +119,59 @@ useEffect(() => {
   }
 }, [configData]);
 
+
+useEffect(() => {
+    const controller = new AbortController();
+
+    fetch("images/bars.svg", { signal: controller.signal })
+        .then((res) => res.text())
+        .then(setSvgTemplate)
+        .catch(console.log);
+
+    return () => controller.abort();
+}, []);
+
+const renderSvg = (svg, value, color) => {
+    if (!svg) return "";
+
+    const doc = new DOMParser().parseFromString(svg, "image/svg+xml");
+
+    const activeRects = getActiveRectIds(value);
+
+    // reset bars
+    ["rect1", "rect2", "rect3", "rect4", "rect5"].forEach((id) => {
+        const el = doc.getElementById(id);
+        if (el) el.setAttribute("fill", "#ccc");
+    });
+
+    // active bars
+    activeRects.forEach((id) => {
+        const el = doc.getElementById(id);
+        if (el) {
+            el.setAttribute("fill", color);
+            el.style.fill = color;
+        }
+    });
+
+    // label
+    const labelEl = doc.getElementById("siglbl");
+    if (labelEl) {
+       labelEl.textContent = value != null ? `${value} dB` : "";
+        labelEl.setAttribute("font-weight", "bold");
+    }
+
+    return new XMLSerializer().serializeToString(doc);
+};
+
+
+
+const localSvg = useMemo(() => {
+    return renderSvg(svgTemplate, localsnrSignal, "#169b16");
+}, [svgTemplate, localsnrSignal]);
+
+const remoteSvg = useMemo(() => {
+    return renderSvg(svgTemplate, remotesnrSignal, "#169b16");
+}, [svgTemplate, remotesnrSignal]);
 
 
     const handleRowClick = (value) => {
@@ -427,26 +494,6 @@ useEffect(() => {
     };
 
 
-    const SignalStrength = ({ value }) => {
-          const MIN = 0;
-          const MAX = 0.25;
-        
-          const normalized = Math.min(
-            Math.max((value - MIN) / (MAX - MIN), 0),
-            1
-          );
-        
-          const activeCells = Math.ceil(normalized * 5);
-        
-          const getClass = (cell) =>
-            // cell <= activeCells ? 'fill-green-400' : 'fill-gray-400';
-           cell <= activeCells ? "signal-active" : "signal-inactive";
-        
-          return <SignalIconn getClass={getClass} />;
-        };
-
-
-
 
           const getConfigDt = async (url) => {
              if (!url) {
@@ -507,8 +554,12 @@ useEffect(() => {
             if (response.ok) {
                 setIsLoading(false);
 
-
-                setLinkDetails(data.links);
+                const firstLink = data?.links?.[0] ?? null;
+                const snrSignalLocal = firstLink?.localsnr;
+                const snrSignalRemote = firstLink?.remotesnr;
+                setLocalsnrSignal(snrSignalLocal);
+                setRemotesnrSignal(snrSignalRemote);
+                setLinkDetails(firstLink);
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("Data not found");
@@ -525,7 +576,13 @@ useEffect(() => {
             await getServiceCheckDt(url);
         };
         fetchData();
-    }, []);
+          const intervalId = setInterval(() => {
+        fetchData();
+    }, 30000);
+
+    return () => clearInterval(intervalId);
+    }, [nodeDataId]);
+
 
     const linkDetailsList = [
   { name: "lsnr", displayName: "Local SNR" },
@@ -1336,10 +1393,10 @@ const handleSaveConfiguration = async () => {
                                                 return (
                                                 <li key={index} className="">
                                                 
-                                                    <h6>Connected Car :</h6>
+                                                    <h6>Connected Car : </h6>
                                                     <div className="">
                                                     <span className="">
-                                                        {linkDetails?.stationame ?? ""} 
+                                                        {linkDetails?.sysName ?? ""} 
                                                     </span>
                                                     </div>
                                                 </li>
@@ -1352,7 +1409,7 @@ const handleSaveConfiguration = async () => {
                                                     <h6>Associated MAC Address :</h6>
                                                     <div className="">
                                                     <span className="">
-                                                        {linkDetails?.associatedmacaddr ?? ""} 
+                                                        {linkDetails?.macAddress ?? ""} 
                                                     </span>
                                                     </div>
                                                 </li>
@@ -1362,14 +1419,11 @@ const handleSaveConfiguration = async () => {
                                                 return (
                                                 <li key={index} className="" style={{paddingTop:'0px'}}>
                                                     
-                                                    <h6 style={{paddingTop:"40px"}}>SNR :</h6>
-                                                    <span className="" style={{paddingTop:"37px"}}>
-                                                        {linkDetails?.[key] === null || linkDetails?.[key] === ""
-                                                        ? " --"
-                                                        : linkDetails?.[key] + " dB"}
-                                                    </span>
-                                                    <SignalStrength value={linkDetails?.[key] || 0} />
-                                                
+                                                    <h6 style={{paddingTop:"40px",paddingRight:"10px"}}>SNR : </h6>
+                                                <article style={{marginTop:"20px"}}>
+                                                    <div ref={svgContainerRef} dangerouslySetInnerHTML={{ __html: localSvg }} />
+                                                </article>
+                                                  
                                                 </li>
                                                 );
                                             }
@@ -1388,19 +1442,19 @@ const handleSaveConfiguration = async () => {
                                                     <h6>Singnal/Noise :</h6>
                                                     <div className="">
                                                     <span className="">
-                                                        {linkDetails?.lsignal ?? "--"} dB / {linkDetails?.lnoise ?? "--"} dB
+                                                        {linkDetails?.localsignal ?? "--"} dB / {linkDetails?.localnoise ?? "--"} dB
                                                     </span>
                                                     </div>
                                                 </li>
                                                 );
                                             }
 
-                                            return (
-                                                <li key={index} className="">
-                                                <h6>{linkDetailsList.find((item) => item.name === key)?.displayName} :</h6>
-                                                <span className="">{linkDetails?.[key] ?? ""}</span>
-                                                </li>
-                                            );
+                                            // return (
+                                            //     <li key={index} className="">
+                                            //     <h6>{linkDetailsList.find((item) => item.name === key)?.displayName} :</h6>
+                                            //     <span className="">{linkDetails?.[key] ?? ""}</span>
+                                            //     </li>
+                                            // );
                                             }
                                         )}
                                         </ul>       
@@ -1412,8 +1466,8 @@ const handleSaveConfiguration = async () => {
                                                 return (
                                                 <li key={index} className="">
                                                     
-                                                    <h6>Network Name :</h6>
-                                                    <span className="">{linkDetails?.[key] ?? ""}</span>
+                                                    <h6>Network Name : </h6>
+                                                    <span className="" style={{paddingLeft:"10px"}}>{configData?.networkName || ''}</span>
                                                 </li>
                                                 );
                                             }
@@ -1421,8 +1475,8 @@ const handleSaveConfiguration = async () => {
                                                 return (
                                                 <li key={index} className="">
                                                     
-                                                    <h6>Associated IP Address :</h6>
-                                                    <span className="">{linkDetails?.[key] ?? ""}</span>
+                                                    <h6>Associated IP Address : </h6>
+                                                    <span className="" style={{paddingLeft:"10px"}}>{linkDetails?.ipAddress ?? ""}</span>
                                                 </li>
                                                 );
                                             }
@@ -1437,13 +1491,10 @@ const handleSaveConfiguration = async () => {
                                                 return (
                                                 <li key={index} className="" style={{paddingTop:'0px'}}>
                                                     
-                                                    <h6 style={{paddingTop:"40px"}}>SNR :</h6>
-                                                    <span className="" style={{paddingTop:"37px"}}>
-                                                        {linkDetails?.[key] === null || linkDetails?.[key] === ""
-                                                        ? " --"
-                                                        : linkDetails?.[key] + " dB"}
-                                                    </span>
-                                                    <SignalStrength value={linkDetails?.[key] || 0} />
+                                                    <h6 style={{paddingTop:"40px",paddingRight:"10px"}}>SNR : </h6>
+                                                    <article style={{marginTop:"20px"}}>
+                                                    <div ref={svgContainerRef} dangerouslySetInnerHTML={{ __html: remoteSvg }} />
+                                                </article>
                                                 </li>
                                                 );
                                             }
@@ -1454,19 +1505,19 @@ const handleSaveConfiguration = async () => {
                                                     <h6>Singnal/Noise :</h6>
                                                     <div className="">
                                                     <span className="">
-                                                        {linkDetails?.rsignal ?? "--"} dB / {linkDetails?.rnoise ?? "--"} dB
+                                                        {linkDetails?.remotesignal ?? "--"} dB / {linkDetails?.remotenoise ?? "--"} dB
                                                     </span>
                                                     </div>
                                                 </li>
                                                 );
                                             }
 
-                                            return (
-                                                <li key={index} className="">
-                                                <h6>{linkDetailsList.find((item) => item.name === key)?.displayName} :</h6>
-                                                <span className="">{linkDetails?.[key] ?? ""}</span>
-                                                </li>
-                                            );
+                                            // return (
+                                            //     <li key={index} className="">
+                                            //     <h6>{linkDetailsList.find((item) => item.name === key)?.displayName} :</h6>
+                                            //     <span className="">{linkDetails?.[key] ?? ""}</span>
+                                            //     </li>
+                                            // );
                                             }
                                         )}
                                         </ul>
