@@ -82,7 +82,7 @@ article.row {
  }
 
 thead.tbtwo>tr{border-bottom: 2px solid rgb(33 35 39 / 7%);}
-thead.tbtwo>tr>th{font-size: 13px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #000000de;letter-spacing: 0.6px;cursor: pointer;}
+thead.tbtwo>tr>th{font-size: 13px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #000000de;letter-spacing: 0.6px;cursor: pointer;width: 100%;}
 
 tbody.tbbdtwo>tr>td{font-size: 12px;font-family: "Lato-Regular";padding: 6px;color: #000000de; white-space: nowrap;
     overflow: hidden;

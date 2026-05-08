@@ -181,15 +181,15 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
                 fetchDataRadial(url);
                 break;
             case 'line1-sec1':
-                url = `api/v2//dashboard/filternodes?ar=line&facilities=line1-sec1&state=up&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortField}&by=${sortOrder}`;
+                url = `api/v2//dashboard/filternodes?ar=line&facilities=line1-sec1&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortField}&by=${sortOrder}`;
                 fetchDataRadial(url);
                 break;
             case 'line1-sec2':
-                url = `api/v2//dashboard/filternodes?ar=line&facilities=line1-sec2&state=up&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortField}&by=${sortOrder}`
+                url = `api/v2//dashboard/filternodes?ar=line&facilities=line1-sec2&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortField}&by=${sortOrder}`
                 fetchDataRadial(url);
                 break;
             case 'line4-sec1':
-                url = `api/v2//dashboard/filternodes?ar=line&facilities=line4-sec1&state=up&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortField}&by=${sortOrder}`;
+                url = `api/v2//dashboard/filternodes?ar=line&facilities=line4-sec1&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortField}&by=${sortOrder}`;
                 fetchDataRadial(url);
                 break;
 
@@ -230,15 +230,15 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
         let url = '';
         switch (lineInfo) {
             case 'line1-sec1':
-                url = `api/v2//dashboard/filternodes?ar=line1-sec1&facilities=${circleId}&state=down&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortOrder}&by=${sortOrder}`
+                url = `api/v2//dashboard/filternodes?ar=line1-sec1&facilities=${circleId}&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortOrder}&by=${sortOrder}`
                 fetchDataRadial(url);
                 break;
             case 'line1-sec2':
-                url = `api/v2//dashboard/filternodes?ar=line1-sec2&facilities=${circleId}&state=down&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortOrder}&by=${sortOrder}`
+                url = `api/v2//dashboard/filternodes?ar=line1-sec2&facilities=${circleId}&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortOrder}&by=${sortOrder}`
                 fetchDataRadial(url);
                 break;
             case 'line4-sec1':
-                url = `api/v2//dashboard/filternodes?ar=line4-sec1&facilities=${circleId}&state=down&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortOrder}&by=${sortOrder}`
+                url = `api/v2//dashboard/filternodes?ar=line4-sec1&facilities=${circleId}&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortOrder}&by=${sortOrder}`
                 fetchDataRadial(url);
                 break;
             default:

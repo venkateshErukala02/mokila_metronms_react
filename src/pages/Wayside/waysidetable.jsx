@@ -4,7 +4,7 @@ import '../Dashboard/dashboard.css';
 
 
 
-const WaysideTable = ({ westSideView, circleId, setShowPopup, showPopup,lineId,handleTagsPopup,stationCount,lineCount ,allTagfailCount,textName}) => {
+const WaysideTable = ({ westSideView, circleId, setShowPopup, showPopup,lineId,handleTagsPopup,stationCount,lineCount ,allTagfailCount,textName,stationTagview}) => {
     const [rdData, setRdData] = useState('');
     const [searchBtn, setSearchBtn] = useState(false);
     const [radialipText, setRadialipText] = useState('');
@@ -194,11 +194,43 @@ useEffect(() => {
         setTagTypeLabel(label);
     }
 
-   
+
+
+    const getNodeLabel = (node) => {
+    const type = node.data?.type;
+    if (type === "region") {
+      return node.data.display;
+    }else if (type === "location") {
+       return node.text;
+    }else if (type === "facility") {
+      return `Station- ${node.text}`;
+    }else if (type === "yard") {
+      return `Yard- ${node.text}`;
+    } else {
+      return '';
+    }
+  };
+   const trainView=false;
 
     return (
         <>
-          <h1 className="discoveryheading">Failed Tags</h1>
+          {((['facility', 'location', 'region','yard'].includes(textName?.data?.type)) && stationTagview === false) && (
+                        <article className="row">
+                        <article className="col-8">
+                            {trainView === true ? (
+                            // <h1 className="mapheading">Train View : {trainId}</h1>
+                            ''
+                            ) : (
+                                <>
+                            {!stationTagview && <h1 className="mapheading">{getNodeLabel(textName)} (Failed Tags) </h1>}
+                            </>
+                            )}
+                        </article>
+                        <article className="col-8" style={{justifyContent:'end',display:'flex',paddingTop:'6px',paddingRight:'8px'}}>
+                        </article>
+                        </article>
+                    )}
+          {/* <h1 className="discoveryheading">Failed Tags</h1> */}
             <article className="">
                 <article className="row border-lrr piechtcont">
                     <article className="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2">
@@ -215,9 +247,9 @@ useEffect(() => {
                         <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Tag type :</label>
                                 <select name="name" id="name" value={tagTypeValue} onChange={handleTagType} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
                                     <option value="all" label="All">All</option>
-                                   <option value="TDM" label="Tdm">Tdm</option>
-                                   <option value="NTDM" label="Ntdm">Ntdm</option>
-                                   <option value="ATC" label="Atc">Atc</option>
+                                   <option value="TDM" label="TDM">TDM</option>
+                                   <option value="ATC" label="ATC">ATC</option>
+                                   <option value="NTDM" label="Other">Other</option>
                                 </select>
                                 </article>
                     </article>

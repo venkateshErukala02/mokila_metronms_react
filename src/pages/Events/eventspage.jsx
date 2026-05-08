@@ -361,6 +361,11 @@ const EventPg = () => {
                 setCabNumberIpsData([]);
                 return;
             }
+            if (response.status === 400) {
+                alert("Please enter a valid cab number.")
+                setIsLoading(false);
+                return;
+            }
 
             const data = await response.json(); // Only parse once
 
@@ -377,6 +382,21 @@ const EventPg = () => {
             setIsError({ status: true, msg: error.message || "Something went wrong" });
         }
     };
+
+const handleCabNumberChange = (e) => {
+    const value = e.target.value;
+
+    if (!/^\d*$/.test(value)) return;
+
+    setCabNumber(value);
+};
+
+
+useEffect(() => {
+    if (/^\d{4}$/.test(cabNumber)) {
+        handleCabNumberIp(cabNumber);
+    }
+}, [cabNumber]);
 
 
 
@@ -404,23 +424,41 @@ const EventPg = () => {
                             </select>
                             </article>
                       {selectedLogVal === 'train' && <article style={{padding:"12px"}}>
-                            <label className="settinglabelsub">Cab Number</label>
+                         <label className="settinglabelsub">Select Duration</label>
+                          <article className="labelaligncl">
+                            <DatePicker
+                            selected={selectedFromDate}
+                            showTimeSelect
+                            dateFormat="yyyy-MM-dd HH:mm"
+                            placeholderText="Start Date"
+                            onChange={handleFromDateChange}
+                            className="myDatepickercl" />
+                            </article>
+                            <article className="labelaligncl">
+                           <DatePicker
+                            selected={selectedToDate}
+                            showTimeSelect
+                            dateFormat="yyyy-MM-dd HH:mm"
+                            placeholderText="End Date"
+                            onChange={handleToDateChange}
+                            className="myDatepickercl" />
+                            </article>
+                            <label className="settinglabelsub labelaligncl">Cab Number</label>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px',marginBottom:'12px' }}>
+                                
                                 <div style={{position:"relative",display:"inline-block"}}>
                             <input type="text"
                              value={cabNumber}
                                 required
-                                onChange={(e) => setCabNumber(e.target.value)}
+                                onChange={handleCabNumberChange}
+                                maxLength={4}
+                                // onChange={(e) => setCabNumber(e.target.value)}
                                 name="" placeholder="Enter Cab Number" id="" className="settinglabelsubinp" />
                                 {cabNumber && (
                                     <button
                                     type="button"
                                     className="clear-btn"
                                     onClick={() =>{ setCabNumber("");
-                                        setSelectedFromDate(null);
-                                        setSelectedToDate(null);
-                                        setTimestampFrom(null);
-                                        setTimestampTo(null);
                                         if (Object.keys(cabNumberIpsData).length > 0) {
                                             setCabNumberIpsData({});
                                         }
@@ -430,8 +468,7 @@ const EventPg = () => {
                                     </button>
                                 )}
                                 </div>
-                                <button type="button" className="createbtn" onClick={() => {
-                                    handleCabNumberIp();}}>Fetch</button>
+                              
                                 </div>
                                          <article className="row border-allsd" style={{ height: '16vh', overflow: 'hidden',position:'relative' }}>
                                 <table className="col-md-12 col-sm-12 col-lg-12 col-xl-12" style={{ tableLayout: 'fixed', width: '100%' }}>
@@ -465,25 +502,6 @@ const EventPg = () => {
                                 </div>
                             </article>
 
-
-                                <article className="labelaligncl">
-                            <DatePicker
-                            selected={selectedFromDate}
-                            showTimeSelect
-                            dateFormat="yyyy-MM-dd HH:mm"
-                            placeholderText="Start Date"
-                            onChange={handleFromDateChange}
-                            className="myDatepickercl" />
-                            </article>
-                            <article className="labelaligncl">
-                           <DatePicker
-                            selected={selectedToDate}
-                            showTimeSelect
-                            dateFormat="yyyy-MM-dd HH:mm"
-                            placeholderText="End Date"
-                            onChange={handleToDateChange}
-                            className="myDatepickercl" />
-                            </article>
                                 <article className="f-r labelaligncl">
                                     <button type="button" className="createbtn" onClick={ExportCabData}>Export</button>
                                 </article>
@@ -491,6 +509,27 @@ const EventPg = () => {
                        {selectedLogVal === 'station' && 
                         <article style={{clear:"both"}}>
                              <article style={{padding:"0px 12px 12px"}}>
+                                <label className="settinglabelsub">Select Duration</label>
+                                  <article className="labelaligncl">
+                            <DatePicker
+                            selected={selectedStartDate}
+                            showTimeSelect
+                            dateFormat="yyyy-MM-dd HH:mm"
+                            placeholderText="Start Date"
+                            onChange={handleStartDateChange}
+                            className="myDatepickercl" 
+                            />
+                            </article>
+                            <article className="labelaligncl">
+                           <DatePicker
+                            selected={selectedEndDate}
+                            showTimeSelect
+                            dateFormat="yyyy-MM-dd HH:mm"
+                            placeholderText="End Date"
+                            onChange={handleEndDateChange}
+                            className="myDatepickercl" 
+                            />
+                        </article>
                             <article>
                                 <label htmlFor="name" className="vlanlabel">Select Line</label>
                                     <article>
@@ -559,26 +598,7 @@ const EventPg = () => {
                             </article>
                             
                        
-                        <article className="labelaligncl">
-                            <DatePicker
-                            selected={selectedStartDate}
-                            showTimeSelect
-                            dateFormat="yyyy-MM-dd HH:mm"
-                            placeholderText="Start Date"
-                            onChange={handleStartDateChange}
-                            className="myDatepickercl" 
-                            />
-                            </article>
-                            <article className="labelaligncl">
-                           <DatePicker
-                            selected={selectedEndDate}
-                            showTimeSelect
-                            dateFormat="yyyy-MM-dd HH:mm"
-                            placeholderText="End Date"
-                            onChange={handleEndDateChange}
-                            className="myDatepickercl" 
-                            />
-                        </article>
+                      
                         <article className="f-r labelaligncl">
                                     <button type="button" disabled={isLoading} className="createbtn" onClick={ExportStationData}>
                                          {isLoading ? (

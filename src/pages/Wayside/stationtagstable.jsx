@@ -1,10 +1,11 @@
 import  { useState, useEffect } from "react";
 import '../ornms.css'
 import '../Dashboard/dashboard.css';
+import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
-
-const StationTagsTable = ({ circleId, lineId,textName,selectedTab,rdDataRef}) =>{
+const StationTagsTable = ({ circleId, lineId,textName,selectedTab,rdDataRef,onSortChange}) =>{
     const [searchBtn, setSearchBtn] = useState(false);
     const [radialipText, setRadialipText] = useState('');
     const [limitValueSel, setLimitValueSel] = useState('1');
@@ -21,6 +22,8 @@ const StationTagsTable = ({ circleId, lineId,textName,selectedTab,rdDataRef}) =>
     const displayData = tagData.length > 0 ? tagData : (rdDataRef?.current ? rdDataRef?.current[0]?.tags : []);
     const [tagIdText,setTagIdText] = useState('');
     const [searchTrigger, setSearchTrigger] = useState(0);
+    const [sortField, setSortField] = useState('sysUptime');
+    const [sortOrder, setSortOrder] = useState('desc');
 
       useEffect(() => {
            if (!tagIdText.trim()) return;
@@ -172,6 +175,38 @@ const StationTagsTable = ({ circleId, lineId,textName,selectedTab,rdDataRef}) =>
 //     }
 // }, [searchClear]);
 
+const columns = [
+  { key: "tagId", label: "Tag Id" },
+  { key: "line", label: "Direction" },
+  { key: "position", label: "Position" },
+  { key: "role", label: "Role" },
+  {
+    key: "status",
+    label: (
+      <>
+        (Work <i className="fa-solid fa-arrow-up"></i>,
+        Def <i className="fa-solid fa-arrow-down"></i>)
+      </>
+    )
+  }
+];
+
+
+const handleSort = (field) => {
+
+  let newOrder = "asc";
+
+  if (sortField === field) {
+    newOrder = sortOrder === "asc" ? "desc" : "asc";
+    setSortOrder(newOrder);
+  } else {
+    setSortField(field);
+    setSortOrder("asc");
+  }
+
+  onSortChange(field, newOrder);
+};
+
 
 
     return (
@@ -221,12 +256,33 @@ const StationTagsTable = ({ circleId, lineId,textName,selectedTab,rdDataRef}) =>
 
                         <thead className="statustagthtb">
                             <tr>
-                                <th>Tag Id</th>
-                                <th>Direction</th>
-                                <th>Position</th>
-                                <th>Role</th>
-                                <th style={{width:'132px'}}>(Work <i className="fa-solid fa-arrow-up" style={{color:""}}></i> ,Def <i className="fa-solid fa-arrow-down" style={{color:""}}></i>)</th>
-                                <th>Delete</th>                               
+                            {columns.map((col) => (
+                                <th
+                                key={col.key}
+                                onClick={() => handleSort(col.key)}
+                                style={{
+                                    cursor: "pointer",
+                                    userSelect: "none",
+                                    whiteSpace: "nowrap"
+                                }}
+                                >
+                                {col.label}{" "}
+
+                                <FontAwesomeIcon
+                                    icon={
+                                    sortField === col.key
+                                        ? sortOrder === "asc"
+                                        ? faSortDown
+                                        : faSortUp
+                                        : faSort
+                                    }
+                                    style={{
+                                    color: sortField === col.key ? "black" : "#D7D7D7",
+                                    marginLeft: "5px"
+                                    }}
+                                />
+                                </th>
+                            ))}
                             </tr>
                         </thead>
 
@@ -270,7 +326,6 @@ const StationTagsTable = ({ circleId, lineId,textName,selectedTab,rdDataRef}) =>
                                         <td style={{padding:"4px 6px"}} className="">{value.position}</td>
                                         <td style={{padding:"4px 6px"}} className="">{value.role}</td>
                                         <td style={{padding:"4px 48px"}}>{value.status === 'down' ? (<i className="fa-solid fa-arrow-down" style={{color:"red"}}></i> ): (<i className="fa-solid fa-arrow-up" style={{color:"green"}}></i>)}</td>
-                                        <td style={{paddingLeft:'22px'}}><i className="fa fa-trash" style={{cursor:'pointer'}}  onClick={()=>handleDeleteTag(value)}></i></td>
                                     </tr>
                                 ))                                     
                                 )}

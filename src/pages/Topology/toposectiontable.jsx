@@ -1,7 +1,38 @@
-import {useState,useEffect} from "react";
+import {useState,useEffect, useRef} from "react";
+import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import '../ornms.css'
+import { handleNodeData, handlePreviousNodeselTree } from "../Action/action";
 
 
-const TopoSectionTable=({textName})=>{
+const TopoSectionTable=({textName,textId,stationView, stationTagview,lineTagview,trainView, selectedTreeNodeId,expandedTreeDt})=>{
+
+
+    const ALL_COLUMNS = [
+        { key: "sysName", label: "System Name", sortable: true },
+        { key: "ipAddress", label: "Primary IP", sortable: true },
+        { key: "macaddress", label: "MAC Address", sortable: true },
+        { key: "serialNum", label: "Serial Number", sortable: true },
+        { key: "status", label: "Status", sortable: true },
+        { key: "sysUptime", label: "Up Time", sortable: true },
+        { key: "productCode", label: "Device Type", sortable: true },
+        { key: "region", label: "Line", sortable: true },
+        { key: "location", label: "Station", sortable: true },
+        { key: "radioMode", label: "Position", sortable: true }
+        ];
+        const DEFAULT_COLUMNS = [
+            "sysName",
+            "ipAddress",
+            "status",  
+            "productCode",
+            "sysUptime",
+            // "region",
+            "location",
+            "radioMode",
+            ];
+
     const [sectionTbData,setSectionTbData] = useState([]);
     const [limitValueSel, setLimitValueSel] = useState('');
     const [limitValueSelLabel, setLimitValueSelLabel] = useState('50');
@@ -12,6 +43,32 @@ const TopoSectionTable=({textName})=>{
     const [pageSize, setPageSize] = useState(1);
     const [fromValue,setFromValue] =useState('0');
     const [sectionLimitValueSel,setSectionLimitValueSel] = useState('50');
+    const isTextIdFlow = useRef(false);
+    const prevTextIdRef = useRef(null);
+    const prevTextNameRef = useRef(null);
+    const prevModeRef = useRef(null);
+    const [visibleColumns, setVisibleColumns] = useState(DEFAULT_COLUMNS);
+    const [sortField, setSortField] = useState('sysUptime');
+    const [sortOrder, setSortOrder] = useState('desc');
+    const [apiUrl, setApiUrl] = useState("");
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
+    
+       useEffect(()=>{
+        if (!textId) return;
+        if(textName?.data?.type !== "location") return;
+
+        const cleanedId = textId.replace(/_txt$/, '');
+
+     const urlTextId = `api/v2//dashboard/filternodes?ar=${textName?.data?.display}&facilities=${cleanedId}&offset=${pageSize}&limit=${sectionLimitValueSel}&status=up&sort=${sortField}&by=${sortOrder}`;
+        setApiUrl(urlTextId);
+
+        const firstLoad = prevTextIdRef.current !== textId;
+
+         prevTextIdRef.current = textId;
+
+            setIsInitialLoad(firstLoad);
+
+    },[textId,pageSize,sectionLimitValueSel,textName,sortField,sortOrder]);
 
 
     const fetchSectionTbData = async (url, isInitial = false) => {
@@ -49,34 +106,54 @@ const TopoSectionTable=({textName})=>{
     };
 
     useEffect(()=>{
-          if (!textName || !textName.data || !textName.data.mode) {
+    if (textId) return;
+
+    if (!textName || !textName.data || !textName.data.mode) {
         return; 
-    }
+     }
     if(searchBtn) return;
 
         let url ='';
         switch (textName.data.mode) {
             case 'location':
-              url= `api/v2/dashboard/filternodes?ar=line&facilities=${textName.data.display}&state=up&offset=${fromValue}&limit=${sectionLimitValueSel}&status=active&sort=productcode&by=desc`;
+              url= `api/v2/dashboard/filternodes?ar=line&facilities=${textName.data.display}&offset=${pageSize}&limit=${sectionLimitValueSel}&status=active&sort=${sortField}&by=${sortOrder}`;
                 break;
-            case 'facility':
-                 url= `api/v2/dashboard/filternodes?ar=${textName.data.parent}&facilities=${textName.data.display}&state=up&offset=${fromValue}&limit=${sectionLimitValueSel}&status=active&sort=productcode&by=desc`;
+            // case 'facility':
+            //      url= `api/v2/dashboard/filternodes?ar=${textName.data.parent}&facilities=${textName.data.display}&offset=${pageSize}&limit=${sectionLimitValueSel}&status=active&sort=${sortField}&by=${sortOrder}`;
                
-                break;        
+                // break;        
             default:
                 return;
         }
-        if(url){
-            fetchSectionTbData(url , true);
-            const intervalId = setInterval(()=>{
-                fetchSectionTbData(url,false);
-            },30000);
 
-            return()=> clearInterval(intervalId);
-        }
+           setApiUrl(url);
+
+           const firstLoad =
+            prevTextNameRef.current !== textName.data.display ||
+            prevModeRef.current !== textName.data.mode;
+
+            prevTextNameRef.current = textName.data.display;
+            prevModeRef.current = textName.data.mode;
+
+            setIsInitialLoad(firstLoad);
 
          
-    },[textName,fromValue,sectionLimitValueSel,searchBtn]);
+    },[textName,pageSize,sectionLimitValueSel,searchBtn,,sortField,sortOrder,textId]);
+
+
+    useEffect(() => {
+
+    if (!apiUrl) return;
+
+    fetchSectionTbData(apiUrl, isInitialLoad);
+
+    const intervalId = setInterval(() => {
+        fetchSectionTbData(apiUrl, false);
+    }, 30000);
+
+    return () => clearInterval(intervalId);
+
+}, [apiUrl]);
 
     const handleClearSerch = () => {
         setSearchBtn(false);
@@ -90,7 +167,7 @@ const TopoSectionTable=({textName})=>{
         if (!sectionTbData || sectionTbData.length === 0) return prev;
 
         const newPage = prev + 1;
-        setFromValue(parseInt(newPage-1) * parseInt(sectionLimitValueSel));
+        // setFromValue(parseInt(newPage-1) * parseInt(sectionLimitValueSel));
         return newPage;
         });
     }
@@ -101,8 +178,8 @@ const TopoSectionTable=({textName})=>{
         if (pageSize > 1) {
             setPageSize(prevPageSize => {
                 const newPageSize = prevPageSize - 1;
-                const fromCal = (parseInt(newPageSize)-1) * parseInt(sectionLimitValueSel);
-                 setFromValue(fromCal);
+                // const fromCal = (parseInt(newPageSize)-1) * parseInt(sectionLimitValueSel);
+                //  setFromValue(fromCal);
                 return newPageSize;
             });
         } else {
@@ -163,9 +240,65 @@ const TopoSectionTable=({textName})=>{
           const url = `api/v2/nodes/search?_s=assetRecord.serialNumber==${lineipText},sysName==${lineipText},label==${lineipText}&limit=${sectionLimitValueSel}&offset=0&order=asc`;
         handleRadialIP(url);
 
-    },[sectionLimitValueSel])
+    },[sectionLimitValueSel]);
 
 
+            const navigate = useNavigate();
+            const dispatch = useDispatch();
+
+             const handleRowClick = (node) => {
+              const previousState = {
+                textName,
+                stationView,
+                stationTagview,
+                lineTagview,
+                trainView,
+                selectedTreeNodeId,
+                expandedTreeDt
+              };
+            
+              dispatch(handlePreviousNodeselTree(previousState));
+            
+              dispatch(handleNodeData(node));
+            
+              if (`${node.productCode}` === 'AP') {
+                navigate('/SN-view', { state: { previousState } });
+              } else {
+                navigate(`/${node.productCode}-view`, {
+                  state: { node, previousState },
+                });
+              }
+            };
+
+                 const columnPadding = {
+                    status: "10px",
+                    productCode: "19px",
+                    radioMode: "16px"
+                    };
+
+
+            const handleColumnToggle = (key) => {
+            setVisibleColumns(prev =>
+                prev.includes(key)
+                ? prev.filter(col => col !== key)
+                : [...prev, key]
+            );
+            };
+
+            const allSelected = ALL_COLUMNS.every(col =>
+                visibleColumns.includes(col.key)
+                );
+
+
+                 const handleSort = (field) => {
+                    const mappedField = field === 'productCode' ? 'productcode' : field;
+                    if (sortField === mappedField) {
+                        setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
+                    } else {
+                        setSortField(mappedField);
+                        setSortOrder('asc');
+                    }
+                };
 
     return(
         <>
@@ -211,17 +344,30 @@ const TopoSectionTable=({textName})=>{
                 <hr className="dashbdhr" />
             </article>
             <article className="row">
-                <article style={{overflowY:'auto',height:'40vh'}}>
+                <article style={{overflowY:'auto',height:'83vh'}}>
                     <table className="col-12 border-allsd" style={{ height: '0vh' }}>
 
                         <thead className="tbtwo">
-                            <tr>
-                                <th>System Name</th>
-                                <th>Primary IP</th>
-                                <th>Up Time</th>
-                                <th>Device Type</th>
-                                <th>Position</th>
-                            </tr>
+                             <tr>
+                                                            {ALL_COLUMNS.filter(col => visibleColumns.includes(col.key)).map(col => (
+                                                            <th key={col.key} onClick={() => handleSort(col.key)}>
+                                                                {col.label}
+                                                                <FontAwesomeIcon
+                                                                icon={
+                                                                    sortField === col.key
+                                                                    ? sortOrder === "asc"
+                                                                        ? faSortDown
+                                                                        : faSortUp
+                                                                    : faSort
+                                                                }
+                                                                style={{
+                                                                    color:
+                                                                    sortField === col.key ? "black" : "#D7D7D7"
+                                                                }}
+                                                                />
+                                                            </th>
+                                                            ))}
+                                                        </tr>
                         </thead>
 
                         <tbody className="tbbdtwo">
@@ -253,13 +399,35 @@ const TopoSectionTable=({textName})=>{
                                 !isError.status &&
                                 sectionTbData.length > 0 &&
                                 sectionTbData.map((node, index) => (
-                                    <tr key={index}>
-                                        <td>{node.sysName}</td>
-                                        <td>{node.ipAddress}</td>
-                                        <td>{node.firmware}</td>
-                                        <td style={{paddingLeft:"28px"}}>{node.status}</td>
-                                        <td style={{paddingLeft:"12px"}}>{node.radioMode}</td>
-                                    </tr>
+                                      <tr key={index}>
+                                {ALL_COLUMNS.filter(col => visibleColumns.includes(col.key)).map(col => (
+                                    <td key={col.key} style={
+                                                columnPadding[col.key]
+                                                ? { paddingLeft: columnPadding[col.key] }
+                                                : {}
+                                            }>
+                                    {col.key === "sysName" ? (
+                                        <a href={`http://${node.ipAddress}`} target="_blank" rel="noreferrer">
+                                        {node[col.key]}
+                                        </a>
+                                    ) : col.key === "ipAddress" ? (
+                                        <span
+                                        className="highlightText"
+                                        onClick={() => handleRowClick(node)}
+                                        >
+                                        {node[col.key]}
+                                        </span>
+                                    ) : col.key === "status" ? (
+                                        <span style={{fontWeight:'bold'}}
+                                        >
+                                        {node[col.key]}
+                                        </span>
+                                         ) :(
+                                        node[col.key]
+                                    )}
+                                    </td>
+                                ))}
+                                </tr>
                                 ))}
                         </tbody>
                     </table>

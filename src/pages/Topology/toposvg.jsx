@@ -10,7 +10,7 @@ import {handleStationCircleId} from '../Action/action'
 import YardTbone from "./yardonetb";
 
 
-const TopoSvgViewer = ({textName,yardfacilitieData,setTrainView,setStationView,setTrainLabelDiply,setTrainId,getCircleId,getLineId,setStationTagview,setLineTagview,childrenTextName,parentTextName}) => {
+const TopoSvgViewer = ({textName,yardfacilitieData,setTrainView,setStationView,setTrainLabelDiply,setTrainId,getCircleId,getLineId,setStationTagview,setLineTagview,childrenTextName,parentTextName,getTextId}) => {
  const [svgContent, setSvgContent] = useState("");
   const [error, setError] = useState("");
   const svgContainerRef = useRef(null);
@@ -372,19 +372,45 @@ useEffect(() => {
   if (!svgRoot) return;
 
         const circles = svgContainerRef.current.querySelectorAll("circle");
+        const texts = svgRoot.querySelectorAll("text");
 
-        circles.forEach((circle, index) => {
-        circle.addEventListener("click", () => {
-                      const circleId  = circle.getAttribute('id');
-                       const title = circle.querySelector("title")?.textContent || "No Name";
+        const circleHandlers = [];
+        const textHandlers = [];
 
-                    dispatch(handleStationCircleId(circleId)); 
-                    getCurrentId(circleId);
+      circles.forEach((circle) => {
+    const handler = () => {
+      const circleId = circle.getAttribute("id");
+      dispatch(handleStationCircleId(circleId));
+      getCurrentId(circleId);
+    };
 
-        })
-      })
-  
+    circle.addEventListener("click", handler);
+    circleHandlers.push({ element: circle, handler });
+  });
+
+         texts.forEach((text) => {
+    const handler = () => {
+      const id = text.getAttribute("id");
+      handleTextClick(id);
+    };
+
+    text.style.cursor = "pointer"; // UX improvement
+    text.addEventListener("click", handler);
+    textHandlers.push({ element: text, handler });
+  });
+
+  return () => {
+    circleHandlers.forEach(({ element, handler }) => {
+      element.removeEventListener("click", handler);
+    });
+
+    textHandlers.forEach(({ element, handler }) => {
+      element.removeEventListener("click", handler);
+    });
+  };
+        
 }, [svgContent]);
+
 
 
 
@@ -1105,6 +1131,9 @@ useEffect(() => {
         }
   
   
+        const handleTextClick=(id)=>{
+          getTextId(id)
+        }
 
 
 return (

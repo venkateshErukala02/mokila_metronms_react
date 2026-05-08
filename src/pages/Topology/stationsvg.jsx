@@ -201,9 +201,12 @@ const resetTrainLayers = (svgRoot) => {
          yardfacilitieDataRef?.current?.forEach((item) => { 
             let tt = item.position?.toLowerCase() + 'text'; 
             let posttext = svgRoot.querySelector(`#${tt}`);
+            if (item.type === 'sta' || item.type === 'obc' || item.type === 'ioc' ){
+                return;
+            }
          const el = svgRoot.querySelector(`#${item.position}`);
             const title = svgRoot.querySelector(`#ts-${item.position}`);
-                if (item.type !== 'sta') {
+                if (item.type !== 'sta' ) {
                      if (posttext) {
                         if (item.type=='transcoder') {
                             posttext.firstChild.nodeValue = 'T';
@@ -343,6 +346,7 @@ const resetTrainLayers = (svgRoot) => {
                 if (bottomLayer) {
                     bottomLayer.style.display = "block";
                     bottomLayer.style.cursor = "pointer"; 
+                    bottomLayer.setAttribute('train-id', item.trainId + item.obc);
                     bottomLayer.addEventListener('click', handleTrainClick);
                 }
                 const tnelement = svgRoot.querySelector('#bottomtrainclicktext');
@@ -361,6 +365,7 @@ const resetTrainLayers = (svgRoot) => {
                 if (topLayer) {
                     topLayer.style.display = "block";
                     topLayer.style.cursor = "pointer";
+                    topLayer.setAttribute('train-id', item.trainId + item.obc);
                     topLayer.addEventListener('click', handleTrainClick);
                 }
                 const tnelement = svgRoot.querySelector('#toptrainclicktext');
@@ -379,6 +384,7 @@ const resetTrainLayers = (svgRoot) => {
                 if (topLayer) {
                     topLayer.style.display = "block";
                     topLayer.style.cursor = "pointer";
+                    topLayer.setAttribute('train-id', item.trainId + item.obc);
                     topLayer.addEventListener('click', handleTrainClick);
                 }
                 const tnelement = svgRoot.querySelector('#toptrainclicktext');

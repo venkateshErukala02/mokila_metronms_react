@@ -7,7 +7,7 @@ import StationNodesvgTable from "./stationnodessvgtable";
 import StationTagsTable from "../Wayside/stationtagstable";
 
 
-const StationNodeTableView=({textName , rdDataRef,yardfacilitieData,stationView, stationTagview,lineTagview,trainView, selectedTreeNodeId,expandedTreeDt})=>{
+const StationNodeTableView=({textName , rdDataRef,yardfacilitieData,stationView, stationTagview,lineTagview,trainView, selectedTreeNodeId,expandedTreeDt,onSortChange})=>{
     const [sectionTbData,setSectionTbData] = useState('');
     const [limitValueSel, setLimitValueSel] = useState('');
     const [limitValueSelLabel, setLimitValueSelLabel] = useState('50');
@@ -31,7 +31,7 @@ const StationNodeTableView=({textName , rdDataRef,yardfacilitieData,stationView,
                        expandedTreeDt={expandedTreeDt}/>
                        <article>
                        </article>
-                        <StationTagsTable rdDataRef={rdDataRef}/>
+                        <StationTagsTable rdDataRef={rdDataRef} onSortChange={onSortChange}/>
                     </article>
                     <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6" style={{padding:'5px'}}>
                           <article className="border-tlr custom-row" style={{textAlign:'center'}}>

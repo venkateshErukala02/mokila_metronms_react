@@ -11,13 +11,13 @@
    enable-background="new 0 0 4170 3176"
    xml:space="preserve"
    id="svg198"
-   sodipodi:docname="TTC_SubwayMap.svg"
+   sodipodi:docname="TTC_SubwayMap 2.svg"
    inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns:i="&amp;#38;#38;ns_ai;"><defs
+   xmlns:i="&amp;#38;#38;#38;ns_ai;"><defs
    id="defs202"><clipPath
      clipPathUnits="userSpaceOnUse"
      id="clipPath1077"><rect
@@ -388,14 +388,14 @@
    inkscape:pagecheckerboard="0"
    showgrid="false"
    inkscape:zoom="0.97291066"
-   inkscape:cx="354.60604"
+   inkscape:cx="313.4923"
    inkscape:cy="402.40077"
    inkscape:window-width="1850"
    inkscape:window-height="1016"
    inkscape:window-x="70"
    inkscape:window-y="27"
    inkscape:window-maximized="1"
-   inkscape:current-layer="g146" />
+   inkscape:current-layer="svg198" />
 		<style
    id="style2">
 			text,tspan{
@@ -443,7 +443,7 @@
    x2="4000.041"
    y2="977.73102"
    id="line10"
-   style="display:inline" />
+   style="display:inline;fill:none;fill-opacity:1;stroke:#cccccc;stroke-opacity:1" />
 			
 				
 		</g><g
@@ -853,7 +853,7 @@
      x2="4000.041"
      y2="977.73102"
      id="SHY1"
-     style="display:inline"
+     style="display:inline;fill:none;fill-opacity:1;stroke:#cccccc;stroke-opacity:1"
      clip-path="url(#clipPath1790)"
      inkscape:label="SHY" /><line
      fill="none"
@@ -866,7 +866,7 @@
      x2="4000.041"
      y2="977.73102"
      id="BAY"
-     style="display:inline"
+     style="display:inline;fill:none;fill-opacity:1;stroke:#cccccc;stroke-opacity:1"
      clip-path="url(#clipPath1798)"
      inkscape:label="BAY" /><line
      fill="none"
@@ -879,7 +879,7 @@
      x2="4000.041"
      y2="977.73102"
      id="BES"
-     style="display:inline"
+     style="display:inline;fill:none;fill-opacity:1;stroke:#cccccc;stroke-opacity:1"
      clip-path="url(#clipPath1806)"
      inkscape:label="BES" /><line
      fill="none"
@@ -892,7 +892,7 @@
      x2="4000.041"
      y2="977.73102"
      id="LES"
-     style="display:inline"
+     style="display:inline;fill:none;fill-opacity:1;stroke:#cccccc;stroke-opacity:1"
      clip-path="url(#clipPath1814)"
      inkscape:label="LES" /><line
      fill="none"
@@ -905,7 +905,7 @@
      x2="4000.041"
      y2="977.73102"
      id="DMS"
-     style="display:inline"
+     style="display:inline;stroke:#cccccc;stroke-opacity:1"
      clip-path="url(#clipPath1822)"
      inkscape:label="DMS" /></g><g
    id="labels"

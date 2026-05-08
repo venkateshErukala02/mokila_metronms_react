@@ -34,6 +34,7 @@ const TopoPg = () => {
     const [childrenTextName,setChildrenTextName] = useState(null);
     const [lineId, setLineId] = useState('');
     const [circleId, setCircleId] = useState('');
+    const [textId,setTextId] = useState(null);
     const [stationCount, setStationCount] = useState(false);
     const [lineCount, setLineCount] = useState(false);
     const [lineTagview, setLineTagview] = useState(false);
@@ -70,6 +71,8 @@ const TopoPg = () => {
     const [enableStationPolling, setEnableStationPolling] = useState(true);
     const [expandedTreeDt,setExpandedTreeDt] = useState(null);
     const [prevTreeDt,setPrevTreeDt] = useState([]);
+    const [sortField, setSortField] = useState('status');
+    const [sortOrder, setSortOrder] = useState('desc');
 
     const handleNodeClick = (value,parent) => {
         setTextNameChanged(true); 
@@ -114,6 +117,7 @@ useEffect(()=>{
         // getUniquefacilitieData(url);
 
     },[circleId]);
+
 
 useEffect(() => {
     const timer = setInterval(() => {
@@ -242,12 +246,12 @@ useEffect(()=>{
         //         getTrainData(urlTrains);
         //     }
 
-        //   textNameIntervalRef.current  = setInterval(() => {
-        //     getYardfacilitieData(urlStation);
-        //      if (!(parentTextName?.data?.mode === 'yard' && childrenTextName[0]?.data?.mode === 'facility')) {
-        //         getTrainData(urlTrains);
-        //     }
-        // }, 30000);
+          textNameIntervalRef.current  = setInterval(() => {
+            getYardfacilitieData(urlStation);
+             if (textName?.data?.type === 'facility') {
+                getTrainData(urlTrains);
+            }
+        }, 30000);
         }
 
          return () => {
@@ -419,11 +423,22 @@ useEffect(() => {
             case 'line1-sec1':
             case 'line1-sec2':
             case 'line4-sec1':
-              return   <>   <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId}/>
-                <TopoSectionTable  textName={textName}/> </>
+              return   <>   
+              <article className="row">
+                <article className="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xxl-5">
+                    <article style={{padding:"200px 0px"}}>
+                        <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId} getTextId={getTextId}/>
+                    </article>
+                </article>
+                 <article className="col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xxl-7">
+                         <TopoSectionTable  textName={textName} textId={textId} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} 
+                       expandedTreeDt={expandedTreeDt}/>
+                    </article>
+              </article>
+                </>
                 break;
             default:
-                return <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId}/>
+                return <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId} getTextId={getTextId}/>
                 break;
         }
     }
@@ -434,7 +449,7 @@ useEffect(() => {
         switch (textName?.data?.type) {
             case 'facility':
                return ( <> <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg}/>
-              <StationNodeTableView  yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt}/>
+              <StationNodeTableView  yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange}/>
                       </> );
             /*{
                 if(textName.data.display === 'davisville_track' || textName.data.display ==='wilson_track' || textName.text === 'Finch trail track' || textName.text ==='VMC trail track' ){
@@ -468,7 +483,7 @@ useEffect(() => {
                     break;
             case 'yard':
                 return  <>
-                <TopoSvgViewer yardfacilitieData={yardfacilitieData}  textName={textName} childrenTextName={childrenTextName} parentTextName={parentTextName}/>
+                <TopoSvgViewer yardfacilitieData={yardfacilitieData}  textName={textName} childrenTextName={childrenTextName} parentTextName={parentTextName} getTextId={getTextId}/>
                  <YardTbone yardfacilitieData={yardfacilitieData} textName={textName} />
                 {/* <YardTbone yardfacilitieData={yardfacilitieData} textName={textName} childrenTextName={childrenTextName}/> */}
             {/* <YardTbtwo textName={textName}/> */}
@@ -483,7 +498,7 @@ useEffect(() => {
         if (stationTagview) {
             return <>
                 <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg}/>
-              <StationNodeTableView yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} />
+              <StationNodeTableView yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange} />
             </>
         } else if (lineTagview) {
             return <>
@@ -690,6 +705,10 @@ useEffect(() => {
 
     }
 
+    const getTextId=(id)=>{
+        setTextId(id);
+    }
+
 
        const fetchDataRadial = async (url) => {
         setIsLoading(true);
@@ -729,11 +748,11 @@ useEffect(() => {
         useEffect(() => {
     let url = '';
     if (circleId) {
-        url = `api/v2/wayside/tagdetails?station=${circleId}`;
+        url = `api/v2/wayside/tagdetails?station=${circleId}&sortBy=${sortField}&order=${sortOrder}`;
     } else if (lineId) {
-        url = `api/v2/wayside/tagdetails?station=${lineId}`;
+        url = `api/v2/wayside/tagdetails?station=${lineId}&sortBy=${sortField}&order=${sortOrder}`;
     }else if(textName?.data?.type === 'facility'){
-        url = `api/v2/wayside/tagdetails?station=${textName.data.display}`;
+        url = `api/v2/wayside/tagdetails?station=${textName.data.display}&sortBy=${sortField}&order=${sortOrder}`;
     }
 
     if (url) {
@@ -745,7 +764,7 @@ useEffect(() => {
 
         return()=> clearInterval(intervalId);
     }
-}, [circleId, lineId,textName,selectedTab]);
+}, [circleId, lineId,textName,selectedTab,sortField,sortOrder]);
 
     const handleTagsPopup = (value, id) => {
         setShowPopup(value);
@@ -800,6 +819,19 @@ useEffect(() => {
     const hasMode =
   textName?.data &&
   ['facility', 'Trains', 'mainline', 'yard'].includes(textName.data.type);
+
+
+const onSortChange = (field) => {
+
+    let newOrder = "asc";
+
+    if (sortField === field) {
+        newOrder = sortOrder === "asc" ? "desc" : "asc";
+    }
+
+    setSortField(field);
+    setSortOrder(newOrder);
+};
 
     return (
         <article className="display-f">
@@ -884,10 +916,10 @@ useEffect(() => {
                 {tagTableView === true ? (
                     <>
                     <article style={{margin:'5px'}}>
-                    <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} textName={textName}/>
+                    <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} textName={textName} stationTagview={stationTagview}/>
                     </article>
                     {textName && textName?.data?.type === 'facility' ? (<article style={{margin:'5px',marginTop:'15px'}}>
-                    <StationTagsTable textName={textName} circleId={circleId} lineId={lineId}  rdDataRef={rdDataRef} />
+                    <StationTagsTable textName={textName} circleId={circleId} lineId={lineId}  rdDataRef={rdDataRef} onSortChange={onSortChange}/>
                     </article>) : ('')}
                     {showPopup && (
                         <div className="popupStyle">
