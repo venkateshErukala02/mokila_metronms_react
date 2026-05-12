@@ -165,12 +165,16 @@ const StationContainer=()=>{
                                             <th onClick={() => handleSort('name')}>Station <FontAwesomeIcon
                                             icon={sortField === 'name' ? (sortOrder === 'asc' ?  faSortUp :  faSortDown) : faSort} 
                                             style={{ color: sortField === 'name' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }}                                   /></th>
-                                            <th onClick={() => handleSort('regionName')}>Line <FontAwesomeIcon
+                                            <th onClick={() => handleSort('regionName')}>Line 
+                                                {/* <FontAwesomeIcon
                                             icon={sortField === 'regionName' ? (sortOrder === 'asc' ?  faSortUp :  faSortDown) : faSort} 
-                                            style={{ color: sortField === 'regionName' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }}                                   /></th>
-                                            <th onClick={() => handleSort('locationName')}>Section <FontAwesomeIcon
+                                            style={{ color: sortField === 'regionName' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }}                                   
+                                            /> */}
+                                            </th>
+                                            <th onClick={() => handleSort('locationName')}>Section { /*<FontAwesomeIcon
                                             icon={sortField === 'locationName' ? (sortOrder === 'asc' ?  faSortUp :  faSortDown) : faSort} 
-                                            style={{ color: sortField === 'locationName' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }}                                   /></th>
+                                            style={{ color: sortField === 'locationName' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }}                                   /> */}
+                                            </th>
                                             <th>Edit</th>
                                         </tr>
 

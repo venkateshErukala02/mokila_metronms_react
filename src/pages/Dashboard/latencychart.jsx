@@ -61,13 +61,9 @@ const LatencyChart = ({ graphOption, graphOptionValue ,labelName }) => {
     setIsLoading(true);
     setIsError({ status: false, msg: "" });
     try {
-      const username = "admin";
-      const password = "admin";
-      const token = btoa(`${username}:${password}`);
       const options = {
         method: "GET",
         headers: {
-          "Authorization": `Basic ${token}`,
           "Content-Type": "application/json",
         },
       };

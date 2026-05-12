@@ -48,6 +48,7 @@ const LocalSnr = ({ graphOption, graphOptionValue }) => {
 };
 
    const nodeDataId = useSelector((state) => state.node.node.nodeId) || localStorage.getItem('nodeId');
+   const stationDataCode = useSelector((state) => state.node.node.productCode) || localStorage.getItem('stationCode');
      const nodeIpaddress = useSelector((state) => state.node.node.ipAddress) || localStorage.getItem('nodeIpAddress');
 
 
@@ -62,13 +63,9 @@ const LocalSnr = ({ graphOption, graphOptionValue }) => {
     setIsError({ status: false, msg: "" });
     const dt = new Date();
     try {
-      const username = "admin";
-      const password = "admin";
-      const token = btoa(`${username}:${password}`);
       const options = {
         method: "GET",
         headers: {
-          "Authorization": `Basic ${token}`,
           "Content-Type": "application/json",
         },
       };
@@ -175,28 +172,32 @@ const LocalSnr = ({ graphOption, graphOptionValue }) => {
 
     let interval;
     if (graphOption === 'live') {
+       const url =
+                graphOption === 'live' && stationDataCode === 'TR'
+                    ? `api/v2/nodelinks/getRadio/stats?nodeId=${nodeDataId}&deviceType=${stationDataCode}`
+                    : `api/v2//nodelinks/constats?nodeId=${nodeDataId}`;
+
+          getServerStatusDt(url);
+
       interval = setInterval(() => {
-        // api/v2/nodelinks/constats?nodeId=237
-        //const url = `api/v2//nodelinks/linkstatstest?nodeId=${nodeDataId}`;
-        const url = `api/v2//nodelinks/constats?nodeId=${nodeDataId}`;
         getServerStatusDt(url);
       }, 5000);
     }
     return () => clearInterval(interval);
-  }, [graphOption]);
+  }, [graphOption, stationDataCode, nodeDataId]);
 
 
 
   useEffect(() => {
     let url = '';
-    if (graphOption === 'live') {
-      // url = `api/v2//nodelinks/testsnrlive?nodeId=${nodeDataId}`;
-       const url = `api/v2//nodelinks/constats?nodeId=${nodeDataId}`;
-    } else {
-      url = `rest/measurements/node%5B${nodeDataId}%5D.worpindex%5B1.1%5D?aggregation=AVERAGE&att=lsnr,rsnr,traincab&duration=${graphOptionValue}`;
-    }
+    if (graphOption === 'live') return;
+      url =
+        stationDataCode === 'TR'
+        ?   `rest/measurements/node%5B${nodeDataId}%5D.trainindex%5B1.1%5D?aggregation=AVERAGE&att=lsnr,rsnr&duration=${graphOptionValue}`
+      : `rest/measurements/node%5B${nodeDataId}%5D.worpindex%5B1.1%5D?aggregation=AVERAGE&att=lsnr,rsnr,traincab&duration=${graphOptionValue}`;
+    
     getServerStatusDt(url);
-  }, [graphOptionValue, graphOption]);
+  }, [graphOptionValue, graphOption, stationDataCode, nodeDataId]);
 
 
 
@@ -221,7 +222,7 @@ const CustomTooltip = ({payload, label }) => {
   if (payload && payload.length) {
     const txRaw = payload[0]?.payload?.lsnr;
     const rxRaw = payload[1]?.payload?.rsnr;
-     const cab = payload[0]?.payload?.traincab || "";
+     const cab = payload[0]?.payload?.traincab || "N/A";
     const timestamp = payload[0]?.payload?.timestamp;
 
     const snrValue = typeof txRaw === "number" ? parseInt(txRaw) : "0";
@@ -229,7 +230,7 @@ const CustomTooltip = ({payload, label }) => {
 
     return (
       <div className="custom-tooltip">
-        <h1 style={{ paddingBottom: '0px',fontSize:'15px' }}>{cab}</h1>
+        {stationDataCode === 'SN' ?  (<h1 style={{ paddingBottom: '0px',fontSize:'15px' }}>{cab}</h1>) :''}
         <div>{timestamp ? format(new Date(timestamp), 'HH:mm') : 'N/A'}</div>
         <span>SNR</span>
 

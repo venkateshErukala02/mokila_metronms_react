@@ -14,7 +14,7 @@ import {
 import { useSelector } from "react-redux";
 
 
-const TxChart = ({graphOption,graphOptionValue}) => {
+const RetriesChart = ({graphOption,graphOptionValue}) => {
  const [snrData, setSnrData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState({ status: false, msg: "" });
@@ -24,16 +24,25 @@ const TxChart = ({graphOption,graphOptionValue}) => {
   const { timestamps, labels, columns } = apiData;
 
   return timestamps.map((timestamp, index) => {
-     const val0 = columns[0]?.values[index];
-    const val1 = columns[1]?.values[index];
     const val2 = columns[2]?.values[index];
 
-    return {
+    const hasDecimal = typeof val2 === 'number' && !isNaN(val2) && val2 % 1 !== 0;
+
+    if(hasDecimal){
+      return{
         timestamp: timestamp,
-        [labels[0]]: parseFloat(val0) || 0,
-        [labels[1]]: parseFloat(val1) || 0,
-        [labels[2]]: parseFloat(val2) || 0,
+        [labels[0]]: 0,
+        [labels[1]]: 0,
+        [labels[2]]: 0,
+      }
+    }else{
+      return {
+         timestamp: timestamp, 
+      [labels[0]]: parseFloat(columns[0].values[index]),   
+      [labels[1]]: parseFloat(columns[1].values[index]),
+      [labels[2]]: parseFloat(columns[2].values[index]),
     };
+    }
   });
 };
 
@@ -72,8 +81,8 @@ const TxChart = ({graphOption,graphOptionValue}) => {
                const hasDecimal = typeof vallcl === 'number' && !isNaN(vallcl) && vallcl % 1 !== 0;
                if(hasDecimal){
                 dataNew = {
-                txrate: 0,
-                remtexrate: 0,
+                sendretries: 0,
+                sendfailures: 0,
                 traincab: 0,
                 timestamp: dt.getTime(),
                 index: counterRef.current
@@ -81,8 +90,8 @@ const TxChart = ({graphOption,graphOptionValue}) => {
                }else{
 
               dataNew = {
-                txrate: data.links[0].localtx,
-                remtexrate: data.links[0].remotetx,
+                sendretries: data.links[0].sendRetries,
+                sendfailures: data.links[0].sendFailures,
                 traincab: data.links[0].traincab,
                 timestamp: dt.getTime(),
                 index: counterRef.current
@@ -90,8 +99,8 @@ const TxChart = ({graphOption,graphOptionValue}) => {
             }
             } else {
               dataNew = {
-                txrate: 0,
-                remtexrate: 0,
+                sendretries: 0,
+                sendfailures: 0,
                 traincab: 0,
                 timestamp: dt.getTime(),
                 index: counterRef.current
@@ -117,8 +126,8 @@ const TxChart = ({graphOption,graphOptionValue}) => {
       }
     } catch (error) {
         let dataNew = {
-          txrate: 0,
-          remtexrate: 0,
+          sendretries: 0,
+          sendfailures: 0,
           traincab: 0,
           timestamp: dt.getTime(),
           index: counterRef.current
@@ -132,7 +141,6 @@ const TxChart = ({graphOption,graphOptionValue}) => {
 
    
    const nodeDataId = useSelector((state) => state.node.node.nodeId) || localStorage.getItem('nodeId');
-    const stationDataCode = useSelector((state) => state.node.node.productCode) || localStorage.getItem('stationCode');
      const nodeIpaddress = useSelector((state) => state.node.node.ipAddress) || localStorage.getItem('nodeIpAddress');
 
 
@@ -140,7 +148,7 @@ const TxChart = ({graphOption,graphOptionValue}) => {
     if (graphOption === 'live') {
       const defData = []
       for (let i = 0; i <= 360; i++) {
-        let arr = { "timestamp": 0, "index": i, "txrate": 0,'remtexrate':0,'traincab':0 }
+        let arr = { "timestamp": 0, "index": i, "sendretries": 0,'sendfailures':0,'traincab':0 }
         
         defData.push(arr);
       }
@@ -149,30 +157,25 @@ const TxChart = ({graphOption,graphOptionValue}) => {
     let interval;
     if (graphOption === 'live') {
 
-       const url =
-                graphOption === 'live' && stationDataCode === 'TR'
-                    ? `api/v2/nodelinks/getRadio/stats?nodeId=${nodeDataId}&deviceType=${stationDataCode}`
-                    : `api/v2//nodelinks/constats?nodeId=${nodeDataId}`;
+       const url = `api/v2//nodelinks/constats?nodeId=${nodeDataId}`;
 
         getServerStatusDt(url);
-
+        
       interval = setInterval(() => {
         getServerStatusDt(url);
       }, 5000);
     }
     return () => clearInterval(interval);
-  }, [graphOption, stationDataCode, nodeDataId]); 
+  }, [graphOption]); 
 
 useEffect(() => {
   let url = '';
-   if (graphOption === 'live') return;
-    url =
-        stationDataCode === 'TR'
-        ?   `rest/measurements/node%5B${nodeDataId}%5D.trainindex%5B1.1%5D?aggregation=AVERAGE&att=txrate,remtexrate&duration=${graphOptionValue}`
-     : `rest/measurements/node%5B${nodeDataId}%5D.worpindex%5B1.1%5D?aggregation=AVERAGE&att=txrate,remtexrate,traincab&duration=${graphOptionValue}`;
-
+  if (graphOption === 'live') return;
+     url = `rest/measurements/node%5B${nodeDataId}%5D.worpindex%5B1.1%5D?aggregation=AVERAGE&att=rsend,fsend,traincab&duration=${graphOptionValue} `;
+  
   getServerStatusDt(url);
-}, [graphOptionValue, graphOption, stationDataCode, nodeDataId]); 
+
+}, [graphOptionValue, graphOption,nodeDataId]); 
 
 
   const hourFormat = (graphOption) => {
@@ -193,23 +196,23 @@ useEffect(() => {
 
 const CustomTooltip = ({payload, label }) => {
   if (payload && payload.length) {
-    const txRaw = payload[0]?.payload?.txrate;
-    const rxRaw = payload[1]?.payload?.remtexrate;
-     const cab = payload[0]?.payload?.traincab || "N/A";
+    const sendRetriesRaw = payload[0]?.payload?.sendRetries;
+    const sendFailuresRaw = payload[1]?.payload?.sendFailures;
+    const cab = payload[0]?.payload?.traincab || "N/A";
     const timestamp = payload[0]?.payload?.timestamp;
 
-    const snrValue = typeof txRaw === "number" ? txRaw.toFixed(2) : "0.00";
-    const rsnrValue = typeof rxRaw === "number" ? rxRaw.toFixed(2) : "0.00";
+    const retriesValue = typeof sendRetriesRaw === "number" ? sendRetriesRaw.toFixed(2) : "0.00";
+    const failuresValue = typeof sendFailuresRaw === "number" ? sendFailuresRaw.toFixed(2) : "0.00";
 
     return (
       <div className="custom-tooltip">
-        {stationDataCode === 'SN' ? (<h1 style={{ paddingBottom: '0px',fontSize:'15px' }}>{cab}</h1>) :""}
+        <h1 style={{ paddingBottom: '0px',fontSize:'15px' }}>{cab}</h1>
         <div>{timestamp ? format(new Date(timestamp), 'HH:mm') : 'N/A'}</div>
         <span>Bytes</span>
 
         <ul className="txrxlist">
-          <li>Tx : {snrValue}</li>
-          <li>Rx : {rsnrValue}</li>
+          <li>sendretries : {retriesValue}</li>
+          <li>sendfailures : {failuresValue}</li>
         </ul>
       </div>
     );
@@ -241,7 +244,8 @@ const CustomLegend = (props) => {
             onMouseLeave={() => console.log('')}
             style={{ color: itemColor, cursor: 'pointer', margin: '0 10px' }}
           >
-            <span style={{ marginRight: 5, color: dotColor }}>●</span> {entry.value} (in kbps)
+            <span style={{ marginRight: 5, color: dotColor }}>●</span> {entry.value} 
+            {/* (in kbps) */}
           </li>
         );
       })}
@@ -267,16 +271,16 @@ const CustomLegend = (props) => {
                         <Legend content={<CustomLegend />} />
                         <Area
                           type="monotone"
-                           dataKey='remtexrate'
-                          name="Local Tx"
+                           dataKey='sendfailures'
+                          name="Send Failures"
                           stroke="#e39c56"
                           fill="#569de3"
                           isAnimationActive={false}
                         />
                         <Area
                           type="monotone"
-                          name="Remote Tx"
-                            dataKey="txrate"
+                          name="Send Retries"
+                            dataKey="sendretries"
                           stroke="#3fc5e1"
                           fill="#e39c56"
                           isAnimationActive={false}
@@ -290,5 +294,5 @@ const CustomLegend = (props) => {
   );
 };
 
-export default TxChart;
+export default RetriesChart;
 

@@ -7,6 +7,7 @@ import LocalSnr from "./localsnr";
 import TxChart from "./localtxr";
 import { useSelector } from "react-redux";
 import '../ornms.css';
+import RetriesChart from "./sendretries";
 
 
 const NetworkMonitoringDashboard = () => {
@@ -24,7 +25,7 @@ const NetworkMonitoringDashboard = () => {
 
     const nodeDataId = useSelector((state) => state.node.node.nodeId);
      const nodeIp = useSelector((state) => state.node.node.ipAddress);
-
+ const stationDataCode = useSelector((state) => state.node.node.productCode) || localStorage.getItem('stationCode');
 
   const handleGraphopt = (value, numb) => {
     setGraphOption(value);
@@ -136,8 +137,11 @@ const data = [
                <LatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue} />
               </article>
             </article>
-            <article className="col-md-12">
-            </article>
+           {stationDataCode === 'SN' ? (  <article className="col-md-12 graphbord2" style={{marginTop:'25px'}}>
+              <article className="latencyfullwidthcl-monitortab">
+            <RetriesChart graphOption={graphOption} graphOptionValue={graphOptionValue} />
+              </article>
+            </article>) :""}
           </article>
         </article>
       </article>

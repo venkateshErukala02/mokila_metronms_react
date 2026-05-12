@@ -7,6 +7,14 @@ import TranscoderEventLog from "./transcoderEventslog";
 
 
 const TrainEventTab = () => {
+   const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+};
+
 
     const [eventmainData, setEventmainData] = useState([]);
     const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -21,6 +29,7 @@ const TrainEventTab = () => {
     const [eventauditLimitValueSel, setEventauditLimitValueSel] = useState('50');
     const [eventauditLimitLabelSel, setEventauditLimitLabelSel] = useState('50');
     const [selectedDate, setSelectedDate] = useState(new Date());
+    const [trainlogSelectedDate, setTrainlogSelectedDate] = useState(formatDate(new Date()));
     const [date, setDate] = useState(null);
     const [logsMode, setLogsMode] = useState('LOGS');
     const [searchBtn, setSearchBtn] = useState(false);
@@ -112,18 +121,18 @@ const TrainEventTab = () => {
         const endTimestamp = customEndDate?.getTime();
          const durationMs = parseInt(selectedDuration);
             const timeParam = Date.now() - durationMs;
-    let url = `api/v2/events/syslogs/${nodeDataId}`;
+    let url = `api/v2/events/train/syslogs/${nodeDataId}`;
             const params = [];
 
             if (eventipText) {
                 params.push(`search=${encodeURIComponent(eventipText)}`);
             }
-            if (selectedDuration === 'Custom' && startTimestamp && endTimestamp) {
-                params.push(`from=${startTimestamp}`);
-                params.push(`to=${endTimestamp}`);
-            }
-            if(selectedDuration !== 'Custom'){
-                params.push(`time=${timeParam}`)
+            // if (selectedDuration === 'Custom' && startTimestamp && endTimestamp) {
+            //     params.push(`from=${startTimestamp}`);
+            //     params.push(`to=${endTimestamp}`);
+            // }
+            if(trainlogSelectedDate){
+                params.push(`date=${trainlogSelectedDate}`)
             }
                 params.push(`offset=${fromValue}`);
                 params.push(`limit=${eventmainLimitValueSel}`);
@@ -131,7 +140,7 @@ const TrainEventTab = () => {
                 url = `${url}?${params.join("&")}`;
 
                 handleSyslogSearch(url);
-        }, [searchTrigger,selectedDuration,nodeDataId,fromValue,eventmainLimitValueSel]);
+        }, [searchTrigger,selectedDuration,nodeDataId,fromValue,eventmainLimitValueSel,trainlogSelectedDate]);
 
 
 
@@ -171,16 +180,19 @@ const handleCustomSubmit = (e) => {
 
          url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
         }else if( typevalueSel === 'syslogd'){
-            url = `api/v2/events/syslogs/${nodeDataId}`;
+            url = `api/v2/events/train/syslogs/${nodeDataId}`;
                 const params = [];
 
                 if (eventipText) {
                     params.push(`search=${encodeURIComponent(eventipText)}`);
                 }
-                if (selectedDuration === 'Custom' && startTimestamp && endTimestamp) {
-                    params.push(`from=${startTimestamp}`);
-                    params.push(`to=${endTimestamp}`);
-                }
+                if(trainlogSelectedDate){
+                params.push(`date=${trainlogSelectedDate}`)
+            }
+                // if (selectedDuration === 'Custom' && startTimestamp && endTimestamp) {
+                //     params.push(`from=${startTimestamp}`);
+                //     params.push(`to=${endTimestamp}`);
+                // }
                 // if(selectedDuration !== 'Custom'){
                 //     params.push(`time=${eventtimeSel}`)
                 // }
@@ -323,7 +335,7 @@ useEffect(() => {
                 break;
 
            case 'syslogd':
-                url = `api/v2/events/syslogs/${nodeDataId}?time=${timeParam}&offset=${fromValue}&limit=${eventmainLimitValueSel}`
+                url = `api/v2/events/train/syslogs/${nodeDataId}?date=${trainlogSelectedDate}&offset=${fromValue}&limit=${eventmainLimitValueSel}`
                 break;
 
             case 'auditlog':
@@ -331,7 +343,7 @@ useEffect(() => {
                 break;
 
             default:
-              
+             
                 break;
         }
 
@@ -348,7 +360,7 @@ useEffect(() => {
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
 
-    }, [typevalueSel, nodeDataId,eventmainSeverityValueSel,eventtimeSel,eventmainLimitValueSel,searchBtn,fromValue,selectedDuration]);
+    }, [typevalueSel, nodeDataId,eventmainSeverityValueSel,eventtimeSel,eventmainLimitValueSel,searchBtn,fromValue,selectedDuration,trainlogSelectedDate]);
 
     const formatTime = (timestamp) => {
         const date = new Date(timestamp);
@@ -674,6 +686,12 @@ useEffect(() => {
         setSearchTrigger(prev => prev + 1); 
     };
 
+    const parseLocalDate = (dateString) => {
+    const [year, month, day] = dateString.split("-");
+
+    return new Date(year, month - 1, day);
+};
+
 
     return (
         <>
@@ -785,7 +803,21 @@ useEffect(() => {
     
                         <article className="trans-datepickerbg" style={{ display: 'inline-block', marginTop: '5px' }}>
 
-                            <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
+                             <label for="name" className="radiolabel" style={{ display: 'inline-block' }}>Time:</label>
+                            
+                            <article className="trans-datepickerbg" style={{ display: 'inline-block', marginTop: '5px' }}>
+                                <DatePicker
+                                    // selected={trainlogSelectedDate}
+                                    selected={trainlogSelectedDate ? parseLocalDate(trainlogSelectedDate) : null}
+                                    // showTimeSelect
+                                    dateFormat="yyyy-MM-dd"
+                                    className="myDatepickercl"
+                                    onChange={(date) => setTrainlogSelectedDate(formatDate(date))}
+                                />
+        
+                            </article>
+
+                            {/* <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
                             <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px',
                                  minWidth: '94px' }} onClick={handleCustomPopup}>
                                 <option value="3600000" label="Last hour">Last hour</option>
@@ -793,7 +825,7 @@ useEffect(() => {
                                 <option value="86400000" label="24 hours">24 hours</option>
                                 <option value="172800000" label="48 hours">48 hours</option>
                                 <option value="Custom" label="Custom">Custom</option>
-                            </select>
+                            </select> */}
     
                         </article>
                           <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">

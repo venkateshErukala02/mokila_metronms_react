@@ -631,7 +631,7 @@ const columnPadding = {
                                         .map((col) => (
                                         <th key={col.key} onClick={() => handleSort(col.key)}>
                                             {col.label}
-                                            <FontAwesomeIcon
+                                          {col.key !== 'region' && (   <FontAwesomeIcon
                                             icon={
                                                 sortField === col.key
                                                 ? sortOrder === 'asc'
@@ -647,6 +647,7 @@ const columnPadding = {
                                                 paddingLeft: col.key === 'firmware' || col.key === 'status' || col.key === 'uptime' ? '0px' : undefined
                                             }}
                                             />
+                                             )}
                                         </th>
                                         ))}
                                         <th>Action</th>

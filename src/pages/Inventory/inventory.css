@@ -64,7 +64,7 @@ article.row {
 
 .border-lr{border-left: 1px solid rgb(33 35 39 / 7%);border-right: 1px solid rgb(33 35 39 / 7%);height: 100vh;border-bottom: 1px solid rgb(33 35 39 / 7%);}
 thead.inventthtb>tr{border-bottom: 2px solid rgb(33 35 39 / 7%);}
-thead.inventthtb>tr>th{font-size: 13px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #000000de;letter-spacing: 0.6px;cursor: pointer;}
+thead.inventthtb>tr>th{font-size: 13px;font-family: "Lato-Regular";font-weight: 900;padding: 7px;color: #000000de;letter-spacing: 0.6px;cursor: pointer;width: 100%;}
 
 tbody.inventbdtb>tr>td{font-size: 12px;font-family: "Lato-Regular";padding: 6px;color: #000000de;}
 tbody.inventbdtb>tr:nth-child(odd){        background-color: rgb(229 241 255 / 50%);

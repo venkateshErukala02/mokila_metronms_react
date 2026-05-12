@@ -49,7 +49,7 @@ const ProvisionTb = ({ getProviContData }) => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [unprovision, setUnprovisionData] = useState({})
   const [isError, setIsError] = useState({ status: false, msg: "" });
-  const [sortField, setSortField] = useState('');
+  const [sortField, setSortField] = useState('sysUptime');
   const [sortOrder, setSortOrder] = useState('asc');
   const [dropDownShow,setDropDownShow] = useState(false);
   const columnWrapperRef =  useRef(null);
@@ -275,16 +275,16 @@ const ProvisionTb = ({ getProviContData }) => {
     let show = unassignLabel || 'none';
     let limit = limitValueSelLabel || '100';
   
-    const url = `api/v2/discovery/showunprovisioned?show=${show}&ofs=${fromValue}&limit=${limit}&sort=sysUptime&by=desc`;
+    const url = `api/v2/discovery/showunprovisioned?show=${show}&ofs=${fromValue}&limit=${limit}&sort=${sortField}&by=${sortOrder}`;
   
     getDataUnprovisiontbData(url);
 
     const intervalId = setInterval(() => {
       getDataUnprovisiontbData(url);
-  }, 2000); 
+  }, 30000); 
 
   return () => clearInterval(intervalId);
-  }, [unassignLabel, limitValueSelLabel,searchBtn,fromValue]);
+  }, [unassignLabel, limitValueSelLabel,searchBtn,fromValue,sortOrder,sortField]);
   
 
    const allSelected = ALL_COLUMNS.every(col =>
