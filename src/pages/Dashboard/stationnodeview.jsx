@@ -20,6 +20,7 @@ const StationNodeDetails = () => {
 
    const nodeDataI = useSelector((state) => state);
    console.log('plpplp',nodeDataI);
+   const stationDataCode =  useSelector((state) => state?.node?.node?.productCode) ?? localStorage.getItem('stationCode');
   const nodeDataId = useSelector((state) => state.node?.node?.nodeId || state.node?.node?.id) ?? localStorage.getItem('nodeId');
 
   const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress || state.node?.node?.label);
@@ -63,6 +64,14 @@ const StationNodeDetails = () => {
     };
     fetchData();
   }, [nodeDataId]);
+
+  useEffect(() => {
+    if (stationDataCode) {
+      localStorage.setItem('stationCode', stationDataCode);
+
+    }
+  }, [stationDataCode]);
+
 
   useEffect(() => {
     if (nodeDataId) {

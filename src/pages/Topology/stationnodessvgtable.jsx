@@ -43,7 +43,9 @@ const StationNodesvgTable=({textName,yardfacilitieData,stationView, stationTagvi
 
   if (`${node.type}` === 'AP') {
     navigate('/SN-view', { state: { previousState } });
-  } else {
+  } else if(`${node.type}` === 'CAM'){
+            alert('Node-View Not Supported')
+        } else {
     navigate(`/${node.type}-view`, {
       state: { node, previousState },
     });

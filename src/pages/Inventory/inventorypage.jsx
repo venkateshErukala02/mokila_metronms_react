@@ -398,9 +398,11 @@ const InventRpt = () => {
               if (`${node.deviceType}` === 'AP') {
                   navigate('/SN-view')
                   dispatch(handleNodeData(node))
-              } else {
-                  navigate(`/${node.deviceType}-view`, { state: { node }});
-                  dispatch(handleNodeData(node))
+              } else if(`${node.deviceType}` === 'CAM'){
+                    alert('Node-View Not Supported')
+                } else {
+                        navigate(`/${node.deviceType}-view`, { state: { node }});
+                        dispatch(handleNodeData(node))
               }
       
           };

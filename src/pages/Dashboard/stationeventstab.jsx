@@ -128,12 +128,13 @@ const SnEventTab=()=>{
                 params.push(`time=${timeParam}`)
             }
 
-            if (params.length > 0) {
-                url += "?" + params.join("&");
-            }
+            params.push(`offset=${fromValue}`);
+            params.push(`limit=${eventmainLimitValueSel}`);
+
+             url = `${url}?${params.join("&")}`;
 
                 handleSyslogSearch(url);
-        }, [searchTrigger,selectedDuration,nodeDataId]);
+        }, [searchTrigger,selectedDuration,nodeDataId,fromValue,eventmainLimitValueSel]);
 
 
   const handleClosepopup  = ()=>{
@@ -191,6 +192,8 @@ const handleCustomSubmit = (e) => {
                 // if(selectedDuration !== 'Custom'){
                 //     params.push(`time=${eventtimeSel}`)
                 // }
+                   params.push(`offset=${fromValue}`);
+                    params.push(`limit=${eventmainLimitValueSel}`);
 
                 if (params.length > 0) {
                     url += "?" + params.join("&");
@@ -326,7 +329,7 @@ useEffect(() => {
                 break;
 
             case 'syslogd':
-                url = `api/v2/events/syslogs/${nodeDataId}?time=${timeParam}`
+                url = `api/v2/events/syslogs/${nodeDataId}?time=${timeParam}&offset=${fromValue}&limit=${eventmainLimitValueSel}`
 
                 break;
             case 'auditlog':
@@ -350,7 +353,7 @@ useEffect(() => {
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
 
-    }, [typevalueSel,nodeDataId,eventmainLimitLabelSel,fromValue,eventmainSeverityValueSel,eventtimeSel,searchBtn,selectedDuration]);
+    }, [typevalueSel,nodeDataId,eventmainLimitLabelSel,fromValue,eventmainSeverityValueSel,eventtimeSel,searchBtn,selectedDuration,eventmainLimitValueSel]);
 
     const formatTime = (timestamp) => {
         const date = new Date(timestamp);
@@ -419,6 +422,7 @@ useEffect(() => {
     
 
     const handleClearSerch = () => {
+        setExecutedSearch('');
         setSearchBtn(false);
         setEventipText('');
       }
@@ -695,9 +699,17 @@ useEffect(() => {
                         <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>   
                          <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
                          <button type="button" className="createbtn" onClick={() => { handleRadialIP();}} >Search</button>
-                        <button type="button" className="createbtn" onClick={handleClearSerch} style={{ marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
+                        <button type="button" className="createbtn" onClick={handleClearSerch} style={{ marginLeft: '7px', display: executedSearch?.trim() ? 'inline-block' : 'none' }}> Clear Search</button>
                         {/* <button type="button" className="createbtn"  onClick={() => getReportData(reportUrl)} style={{ marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}>  <i class="fa-solid fa-download"></i></button>      */}
                     </article>
+
+                     <article style={{ display: typevalueSel === 'syslogd' ? 'block' : 'none'}}>
+                        <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
+                            <i className="fa-solid fa-arrow-left"></i>
+                        </button>
+                        <button type="button" className="numcl"><span>{pageSize}</span></button>
+                        <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>   
+                        </article>
                     <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
                         <button type="button" className="arrowlf">
                             <i className="fa-solid fa-arrow-left"></i>
@@ -779,6 +791,12 @@ useEffect(() => {
                             </select>
     
                         </article>
+                         <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
+                                <option value="25" label="25">25</option>
+                                <option value="50" label="50">50</option>
+                                <option value="100" label="100">100</option>
+                                <option value="500" label="500">500</option>
+                            </select>
                         <button type="button" className="createbtn" style={{ marginLeft: '10px' }}
                             onClick={() => {
                                 handleSearch(eventipText)
@@ -786,7 +804,7 @@ useEffect(() => {
                             }
                         >Search</button>
 
-                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '10px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
+                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{  marginLeft: '10px', display: executedSearch?.trim() ? 'inline-block' : 'none' }}> Clear Search</button>
                     </article>
                         <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Type:</label>

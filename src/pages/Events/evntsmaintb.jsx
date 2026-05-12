@@ -101,6 +101,8 @@ const EventMainTB = () => {
                 // if(selectedDuration !== 'Custom'){
                 //     params.push(`time=${eventtimeSel}`)
                 // }
+                params.push(`offset=${fromValue}`);
+                params.push(`limit=${eventmainLimitValueSel}`);
 
                 if (params.length > 0) {
                     url += "?" + params.join("&");
@@ -263,7 +265,7 @@ useEffect(() => {
 
             case 'syslogd':
                 // url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${eventtimeSel}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`;
-                url = `api/v2/events/list/allsyslogs?time=${timeParam}`
+                url = `api/v2/events/list/allsyslogs?time=${timeParam}&offset=${fromValue}&limit=${eventmainLimitLabelSel}`
 
                 break;
             case 'auditlog':
@@ -403,7 +405,7 @@ useEffect(() => {
    const handleMainEventLimitValue = (event) => {
          const value = event.target.value;  
         const label = event.target.options[event.target.selectedIndex].label;
-
+        setSearchBtn(false);
         setEventmainLimitValueSel(value);
         setEventmainLimitLabelSel(label);
     }
@@ -419,6 +421,7 @@ useEffect(() => {
 
 
     const handleClearSerch = () => {
+          setExecutedSearch('');
         setSearchBtn(false);
         setEventipText('');
     }
@@ -647,12 +650,15 @@ useEffect(() => {
                 params.push(`time=${timeParam}`)
             }
 
+            params.push(`offset=${fromValue}`);
+            params.push(`limit=${eventmainLimitValueSel}`);
+
             if (params.length > 0) {
                 url += "?" + params.join("&");
             }
 
                 handleSyslogSearch(url);
-        }, [searchTrigger,selectedDuration]);
+        }, [searchTrigger,selectedDuration,eventmainLimitValueSel,fromValue]);
 
         //  useEffect(() => {
         //      if(selectedDuration === 'Custom') {
@@ -795,15 +801,15 @@ useEffect(() => {
 
                         <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
                         <button type="button" className="createbtn" onClick={() => { handleRadialIP();}} >Search</button>
-                        <button type="button" className="createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
+                        <button type="button" className="createbtn" onClick={handleClearSerch} style={{  marginLeft: '7px', display: executedSearch?.trim() ? 'inline-block' : 'none' }}> Clear Search</button>
                     </article>
-                    {/* <article style={{ display: typevalueSel === 'syslogd' ? 'block' : 'none' }}>
-                        <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
+                    <article style={{ display: typevalueSel === 'syslogd' ? 'block' : 'none' }}>
+                       <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
                             <i className="fa-solid fa-arrow-left"></i>
                         </button>
                         <button type="button" className="numcl"><span>{pageSize}</span></button>
                         <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
-                    </article> */}
+                    </article>
                  
                     <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
                         <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
@@ -814,7 +820,7 @@ useEffect(() => {
 
                          <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="IP Address " id="" className="form-controlevents" />
                         <button type="button" className="createbtn" onClick={() => { handleRadialIP();}} >Search</button>
-                        <button type="button" className="createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
+                        <button type="button" className="createbtn" onClick={handleClearSerch} style={{  marginLeft: '7px', display: executedSearch?.trim() ? 'inline-block' : 'none' }}> Clear Search</button>
                     </article>
 
                 </article>
@@ -887,6 +893,12 @@ useEffect(() => {
                             </select>
     
                         </article>
+                        <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
+                                <option value="25" label="25">25</option>
+                                <option value="50" label="50">50</option>
+                                <option value="100" label="100">100</option>
+                                <option value="500" label="500">500</option>
+                            </select>
                         <button type="button" className="createbtn" style={{ marginLeft: '10px' }}
                             onClick={() => {
                                 handleSearch(eventipText, sysSelectedDate)
@@ -894,7 +906,7 @@ useEffect(() => {
                             }
                         >Search</button>
 
-                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '10px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
+                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{ marginLeft: '10px', display: executedSearch?.trim() ? 'inline-block' : 'none' }}> Clear Search</button>
                     </article>
                         <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
 
