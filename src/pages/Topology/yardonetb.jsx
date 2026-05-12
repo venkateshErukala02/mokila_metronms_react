@@ -15,13 +15,14 @@ const YardTbone=({textName,yardfacilitieData,yardData})=>{
     ? yardfacilitieData 
     : (yardData && yardData.length > 0 ? yardData : []);
 
-      const getYardLinkData = async (url, nodeId) => {
+      const getYardLinkData = async (url, nodeId,signal) => {
         try {
             // setIsLoading(true); 
             const response = await fetch(url, {
                 method: "GET",
+                signal, 
                 headers: {
-                    'Authorization': `Basic ${btoa('admin:admin')}`
+                    // 'Authorization': `Basic ${btoa('admin:admin')}`
                 }
             });
             const data = await response.json();
@@ -35,25 +36,36 @@ const YardTbone=({textName,yardfacilitieData,yardData})=>{
                 throw new Error("Data not found");
             }
         } catch (error) {
+              if (error.name === "AbortError") {
+                console.log("Request aborted for", nodeId);
+                return;
+            }
             setIsError({ status: true, msg: error.message });
         } 
     };
 
 
      useEffect(() => {
+         const controller = new AbortController();
+        const signal = controller.signal;
+
     const fetchData = async () => {
 
-        if (!dataToUse || dataToUse.length === 0) {
-            return;
-        }
+        if (!dataToUse || dataToUse.length === 0)  return;
         setSortedData([...dataToUse]);
         for (const node of dataToUse) {
+             if (signal.aborted) return;
             // const url = `api/v2/nodelinks/linkstatstest?nodeId=0`; // test API
             const url = `api/v2/nodelinks/linkstats?nodeId=${node.nodeId}`; // working API
-            await getYardLinkData(url, node.nodeId);
+            await getYardLinkData(url, node.nodeId,signal);
         }
     };
     fetchData();
+
+     return () => {
+        controller.abort(); 
+    };
+
 }, [dataToUse]);
 
     useEffect(() => {

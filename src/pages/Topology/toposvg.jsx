@@ -122,6 +122,7 @@ useEffect(()=>{
         if (!stationId) return;
         if (stationId === null) return;
         if( childrenTextName.length === 0   ) return;
+        if(textName?.data?.mode === 'yard') return;
         if(!stationId  !== 'tagtable') {
         const urlStation= `api/v2/treeview/station/${childrenTextName[0]?.data?.id}`;
         // const urlTrains = `api/v2/treeview/trains/${stationId}`;

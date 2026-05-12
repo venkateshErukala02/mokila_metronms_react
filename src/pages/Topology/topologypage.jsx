@@ -51,7 +51,7 @@ const TopoPg = () => {
     const [selectedTab,setSelectedTab] = useState('linkview')
     const isVisible = useSelector(state => state.visibility.isVisible);
     const [timeLeft, setTimeLeft] = useState(30);
-    const [yardfacilitieData, setYardfacilitieData] = useState([]);
+    const [yardfacilitieData, setYardfacilitieData] = useState(null);
     const [selectedTreeNodeId, setSelectedTreeNodeId] = useState({});
     const [uniquefacilitieData,setUniquefacilitieData] = useState([]);
     const [stationNode, setStationNode] = useState(null);
@@ -73,6 +73,7 @@ const TopoPg = () => {
     const [prevTreeDt,setPrevTreeDt] = useState([]);
     const [sortField, setSortField] = useState('status');
     const [sortOrder, setSortOrder] = useState('desc');
+    const childrenTextNameRef = useRef([]);
 
     const handleNodeClick = (value,parent) => {
         setTextNameChanged(true); 
@@ -224,7 +225,7 @@ useEffect(()=>{
         if (circleId) return;
         //if(textName?.data?.mode === 'yard') return;
         // if(textName?.data?.type !== 'facility') return;
-        if (textName?.data?.type === 'region' || textName?.data?.type === 'location' || textName?.data?.type === 'Trains' || textName?.data?.type === 'mainline' ) return;
+        if (textName?.data?.type === 'region' || textName?.data?.type === 'location' || textName?.data?.type === 'Trains' || textName?.data?.type === 'mainline') return;
         let intervalId;
         let stationId = textName?.data?.id;
         // if (textName?.data?.actualType === 4) {
@@ -233,7 +234,22 @@ useEffect(()=>{
         if (!stationId) return;
         if (stationId === null) return;
         if(!stationId || selectedTab !== 'tagtable') {
-        const urlStation= `api/v2/treeview/station/${stationId}`;
+            let urlStation = '';
+            if(textName?.data?.mode === 'yard'){
+            const child = childrenTextNameRef.current?.[0];
+
+            const currentChildId = child?.data?.id;
+            const currentChildMode = child?.data?.mode;
+
+            if (currentChildId && currentChildMode === 'yard_1') {
+                 urlStation= `api/v2/treeview/station/${childrenTextName[0]?.data?.id}`;
+            }
+            else{
+            //  urlStation= `api/v2/treeview/station/${stationId}`;
+                }
+            }else{
+                urlStation= `api/v2/treeview/station/${stationId}`;
+            }
         const urlTrains = `api/v2/treeview/trains/${stationId}`;
          if (textNameIntervalRef.current) {
             clearInterval(textNameIntervalRef.current)
@@ -253,6 +269,7 @@ useEffect(()=>{
             }
         }, 30000);
         }
+    
 
          return () => {
              if (textNameIntervalRef.current) {
@@ -261,7 +278,7 @@ useEffect(()=>{
             }
         };
 
-    },[textName,selectedTab]); 
+    },[textName,selectedTab,childrenTextName]); 
 
 // const prevStationIdRef = useRef(null);
 // const stationIdRef = useRef(null);
@@ -483,7 +500,7 @@ useEffect(() => {
                     break;
             case 'yard':
                 return  <>
-                <TopoSvgViewer yardfacilitieData={yardfacilitieData}  textName={textName} childrenTextName={childrenTextName} parentTextName={parentTextName} getTextId={getTextId}/>
+                <TopoSvgViewer yardfacilitieData={yardfacilitieData}  textName={textName} childrenTextName={childrenTextName} parentTextName={parentTextName} getTextId={getTextId} childrenTextNameRef={childrenTextNameRef}/>
                  <YardTbone yardfacilitieData={yardfacilitieData} textName={textName} />
                 {/* <YardTbone yardfacilitieData={yardfacilitieData} textName={textName} childrenTextName={childrenTextName}/> */}
             {/* <YardTbtwo textName={textName}/> */}
@@ -807,6 +824,7 @@ useEffect(() => {
     const canGoBack = Boolean(previousViewRef.current);
 
     const handleChildrenData = (data) => {
+        childrenTextNameRef.current = data;
         setChildrenTextName(data);
     };
 
