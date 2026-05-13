@@ -67,6 +67,7 @@ article.row {
 .navlistone {
     list-style-type: none;
     padding-left: 0;
+    margin: 0;
 }
 
 .navlistone>li {
@@ -98,12 +99,12 @@ article.row {
 
 .navlisttwo {
     list-style-type: none;
-    margin-top: 15px;
+    /* margin-top: 15px; */
 }
 
 .navlisttwo>li {
     float: left;
-    margin-right: 20px;
+    margin-right: 30px;
 }
 
 .navlisttwo>li>h6 {
@@ -116,4 +117,12 @@ article.row {
 
 .navlisttwo>li:last-child {
     margin-right: 0;
+}
+.navlisttwo>li>a>i{
+    transform: translateY(-2px);
+}
+
+.navalign{
+    align-items: center;
+    display: flex;
 }

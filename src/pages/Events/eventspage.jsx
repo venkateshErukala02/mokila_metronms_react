@@ -281,10 +281,10 @@ const EventPg = () => {
       const handleSelectedPostionSta=(event)=>{
         setSelectedPosition(event.target.value);
         setStationIpsData([]);
-        setSelectedStartDate(null);
-        setSelectedEndDate(null);
-        setTimestampStart(null);
-        setTimestampEnd(null);
+        // setSelectedStartDate(null);
+        // setSelectedEndDate(null);
+        // setTimestampStart(null);
+        // setTimestampEnd(null);
     }
 
 
@@ -293,20 +293,20 @@ const EventPg = () => {
         setStationNameSel('-1');
         setSelectedPosition("select");
         setStationIpsData([]);
-        setSelectedStartDate(null);
-        setSelectedEndDate(null);
-        setTimestampStart(null);
-        setTimestampEnd(null);
+        // setSelectedStartDate(null);
+        // setSelectedEndDate(null);
+        // setTimestampStart(null);
+        // setTimestampEnd(null);
     }
 
               const handleSelectStation=(e)=>{
                 setStationNameSel(e.target.value);
                 setSelectedPosition("select");
                 setStationIpsData([]);
-                setSelectedStartDate(null);
-                setSelectedEndDate(null);
-                setTimestampStart(null);
-                setTimestampEnd(null);
+                // setSelectedStartDate(null);
+                // setSelectedEndDate(null);
+                // setTimestampStart(null);
+                // setTimestampEnd(null);
             }
 
               const getSelStationData = async (url) => {

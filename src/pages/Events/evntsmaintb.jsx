@@ -390,12 +390,12 @@ useEffect(() => {
         if (customvalue === "Custom") {
             setSelectedDuration("Custom");  
             setSearchBtn(false);
-            setEventipText('');
+            // setEventipText('');
             setShowCustomPopup(true);       
         } else {
             const value = parseInt(customvalue); 
             setSearchBtn(false);
-            setEventipText('');
+            // setEventipText('');
             setSelectedDuration(value);
             setShowCustomPopup(false);      
         }
@@ -408,6 +408,8 @@ useEffect(() => {
         setSearchBtn(false);
         setEventmainLimitValueSel(value);
         setEventmainLimitLabelSel(label);
+        // setExecutedSearch('');
+        // setEventipText('');
     }
 
     const handleMainAuditLimitValue = (event) => {
@@ -659,6 +661,7 @@ useEffect(() => {
 
                 handleSyslogSearch(url);
         }, [searchTrigger,selectedDuration,eventmainLimitValueSel,fromValue]);
+        // eventmainLimitLabelSel,eventmainSeverityValueSel,searchBtn,fromValue,selectedDuration
 
         //  useEffect(() => {
         //      if(selectedDuration === 'Custom') {

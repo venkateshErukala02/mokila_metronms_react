@@ -120,12 +120,12 @@ const Navbar = () => {
     <article>
     <section className="container-fluid">
         <article className="row navheader" id='landpage' style={{position:"relative"}}> 
-            <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
+            <article className="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xxl-5">
             <a  onClick={handleToggle}><i className="fas fa-2x fa-bars accentColor" style={{paddingTop:'10px',paddingLeft:'10px'}}></i></a>
            <img src={logo} alt="logo" />
             </article>
-            <article className="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xxl-5">
-            <ul className="navlistone" style={{marginTop:'15px'}}>
+            <article className="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xxl-5 navalign">
+            <ul className="navlistone">
                     <li>
                         <h6>Memory: <span>{userData.freeMemory} MB ({userData.totalMemory} MB) </span></h6>
                     </li>
@@ -140,7 +140,7 @@ const Navbar = () => {
                     </li>
                 </ul>
             </article>
-            <article className="col-sm-1 col-md-1 col-lg-1 col-xl-1 col-xxl-1">
+            <article className="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2 navalign" style={{justifyContent:'center'}}>
             <ul className="navlisttwo">
                     <li>
                         <h6>{userLoginData.currentUser}</h6>

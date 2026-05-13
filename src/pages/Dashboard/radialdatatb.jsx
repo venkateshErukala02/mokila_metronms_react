@@ -116,8 +116,14 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
         apiStatus = radialData + dname;
     }
 
+    // const hasFetched = useRef(false);
+
     useEffect(() => {
         if (searchBtn) return; 
+
+        // if (hasFetched.current) return;
+        // hasFetched.current = true;
+
         const fetchData = () => {
         let url = '';
 
@@ -426,7 +432,7 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
 
                             </li>
                             <li style={{position:'relative'}} ref={dropdownRef} >
-                                <label htmlFor="" className="addcloum">Add Columns  <span className="glyphicon glyphicon-tasks"  onClick={(e) =>{ e.stopPropagation(); handleAddColumn()}}></span></label>
+                                <label htmlFor="" className="addcloum">Select Columns <span className="glyphicon glyphicon-tasks"  onClick={(e) =>{ e.stopPropagation(); handleAddColumn()}}></span></label>
 
                               {dropDownShow && (
                                     <article className="Addcoldropdownart" onClick={(e) => e.stopPropagation()}>

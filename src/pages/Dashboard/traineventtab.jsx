@@ -140,7 +140,7 @@ const TrainEventTab = () => {
                 url = `${url}?${params.join("&")}`;
 
                 handleSyslogSearch(url);
-        }, [searchTrigger,selectedDuration,nodeDataId,fromValue,eventmainLimitValueSel,trainlogSelectedDate]);
+        }, [searchTrigger,selectedDuration,nodeDataId,fromValue,trainlogSelectedDate,eventmainLimitValueSel]);
 
 
 
@@ -179,30 +179,24 @@ const handleCustomSubmit = (e) => {
         const filterString = filterParts.join(";");
 
          url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
-        }else if( typevalueSel === 'syslogd'){
-            url = `api/v2/events/train/syslogs/${nodeDataId}`;
-                const params = [];
-
-                if (eventipText) {
-                    params.push(`search=${encodeURIComponent(eventipText)}`);
-                }
-                if(trainlogSelectedDate){
-                params.push(`date=${trainlogSelectedDate}`)
-            }
-                // if (selectedDuration === 'Custom' && startTimestamp && endTimestamp) {
-                //     params.push(`from=${startTimestamp}`);
-                //     params.push(`to=${endTimestamp}`);
-                // }
-                // if(selectedDuration !== 'Custom'){
-                //     params.push(`time=${eventtimeSel}`)
-                // }
-                params.push(`offset=${fromValue}`);
-                params.push(`limit=${eventmainLimitValueSel}`);
-
-                if (params.length > 0) {
-                    url += "?" + params.join("&");
-                }
         }
+        // else if( typevalueSel === 'syslogd'){
+            // url = `api/v2/events/train/syslogs/${nodeDataId}`;
+            //     const params = [];
+
+            //     if (eventipText) {
+            //         params.push(`search=${encodeURIComponent(eventipText)}`);
+            //     }
+            //     if(trainlogSelectedDate){
+            //     params.push(`date=${trainlogSelectedDate}`)
+            // }
+            //     params.push(`offset=${fromValue}`);
+            //     params.push(`limit=${eventmainLimitValueSel}`);
+
+            //     if (params.length > 0) {
+            //         url += "?" + params.join("&");
+            //     }
+        // }
         reportUrlRef.current = url;
         setReportUrl(url); 
         getDataEvntMain(url);
@@ -310,6 +304,7 @@ useEffect(() => {
         const fetchData = async() => {
 
              if(searchBtn) return;
+             if(executedSearch?.trim()) return;
              if (isFetching.current) return;
             isFetching.current = true;
             const durationMs = parseInt(selectedDuration);
@@ -360,7 +355,7 @@ useEffect(() => {
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
 
-    }, [typevalueSel, nodeDataId,eventmainSeverityValueSel,eventtimeSel,eventmainLimitValueSel,searchBtn,fromValue,selectedDuration,trainlogSelectedDate]);
+    }, [typevalueSel, nodeDataId,eventmainSeverityValueSel,eventtimeSel,eventmainLimitValueSel,searchBtn,fromValue,selectedDuration,trainlogSelectedDate,executedSearch]);
 
     const formatTime = (timestamp) => {
         const date = new Date(timestamp);
@@ -433,7 +428,8 @@ useEffect(() => {
         setEventmainLimitValueSel(value);
         setEventmainLimitLabelSel(label);
         setSearchBtn(false);
-        setEventipText('');
+        // setEventipText('');
+        // setExecutedSearch('');
     }
 
     const handleMainAuditLimitValue = (event) => {

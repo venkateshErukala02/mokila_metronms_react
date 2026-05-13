@@ -808,3 +808,8 @@ button i.fa-paperclip {
     margin-right: 5px;
     width: 35px;
 }
+
+.active-menu {
+    color: #006eff !important;
+    font-weight: 500;
+}

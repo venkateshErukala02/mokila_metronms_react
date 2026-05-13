@@ -33,6 +33,7 @@ const SettPage = () => {
     const isVisible = useSelector(state => state.visibility.isVisible);
 
     const [containerSetting, setContainerSetting] = useState('');
+    const [activeSetting, setActiveSetting] = useState('lines');
 
     const showDropdown = (value,e) => {
         e.preventDefault()
@@ -106,16 +107,16 @@ const SettPage = () => {
                             <ul className="list-pn proflist">
                                 <li><a href="" className="profilel new" onClick={(e) => showDropdown('profile',e)}><i className="fa fa-lg fa-cog"></i>Settings</a>
                                     <ul className="profsublist list-pn" id="vlan" style={{ display: 'block' }}>
-                                        <li onClick={() => SelectSettingCont('lines')}><img src={LinesIcon} alt="line"/> Lines</li>
-                                        <li onClick={() => SelectSettingCont('sections')}><img src={SectionIcon} alt="section"/> Sections</li>
-                                        <li onClick={() => SelectSettingCont('stations')}><img src={StationIcon} alt="station"/> Stations</li>
-                                        <li onClick={() => SelectSettingCont('waysidetags')}><i className="fa-solid fa-tag "></i> Wayside Tags</li>
-                                        <li onClick={() => SelectSettingCont('users')}><img src={UsersIcon} alt="user"/> Users</li>
-                                        <li onClick={() => SelectSettingCont('groups')}><img src={GroupsIcon} alt="group"/> Groups</li>
-                                        <li onClick={() => SelectSettingCont('threshold')}><img src={ThresholdIcon} alt="threshold"/> Threshold</li>
-                                        <li onClick={() => SelectSettingCont('snmpconfig')}><img src={SnmpIcon} alt="snmp config"/> SNMP Config</li>
-                                        <li onClick={() => SelectSettingCont('notification')}><img src={AlarmIcon} alt="notification config"/> Notifications Config</li>
-                                        <li onClick={() => SelectSettingCont('severconfig')}><img src={ConfigIcon} alt="sever configuration"/> Server Configurations</li>
+                                        <li className={activeSetting === 'lines' ? 'active-menu' : ''} onClick={() =>{ SelectSettingCont('lines');setActiveSetting('lines');}}><img src={LinesIcon} alt="line"/> Lines</li>
+                                        <li className={activeSetting === 'sections' ? 'active-menu' : ''} onClick={() =>{ SelectSettingCont('sections');setActiveSetting('sections')}}><img src={SectionIcon} alt="section"/> Sections</li>
+                                        <li className={activeSetting === 'stations' ? 'active-menu' : ''} onClick={() =>{ SelectSettingCont('stations');setActiveSetting('stations')}}><img src={StationIcon} alt="station"/> Stations</li>
+                                        <li className={activeSetting === 'waysidetags' ? 'active-menu' : ''} onClick={() =>{ SelectSettingCont('waysidetags');setActiveSetting('waysidetags')}}><i className="fa-solid fa-tag "></i> Wayside Tags</li>
+                                        <li className={activeSetting === 'users' ? 'active-menu' : ''} onClick={() =>{ SelectSettingCont('users');setActiveSetting('users')}}><img src={UsersIcon} alt="user"/> Users</li>
+                                        <li className={activeSetting === 'groups' ? 'active-menu' : ''} onClick={() =>{ SelectSettingCont('groups');setActiveSetting('groups')}}><img src={GroupsIcon} alt="group"/> Groups</li>
+                                        <li className={activeSetting === 'threshold' ? 'active-menu' : ''} onClick={() =>{ SelectSettingCont('threshold');setActiveSetting('threshold')}}><img src={ThresholdIcon} alt="threshold"/> Threshold</li>
+                                        <li className={activeSetting === 'snmpconfig' ? 'active-menu' : ''} onClick={() =>{ SelectSettingCont('snmpconfig');setActiveSetting('snmpconfig')}}><img src={SnmpIcon} alt="snmp config"/> SNMP Config</li>
+                                        <li className={activeSetting === 'notification' ? 'active-menu' : ''} onClick={() =>{ SelectSettingCont('notification');setActiveSetting('notification')}}><img src={AlarmIcon} alt="notification config"/> Notifications Config</li>
+                                        <li className={activeSetting === 'severconfig' ? 'active-menu' : ''} onClick={() =>{ SelectSettingCont('severconfig');setActiveSetting('severconfig')}}><img src={ConfigIcon} alt="sever configuration"/> Server Configurations</li>
                                     </ul>
                                 </li>
 

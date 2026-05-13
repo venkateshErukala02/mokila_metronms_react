@@ -241,7 +241,7 @@ const Tableone = () => {
                             <tr key={index} className={`col-12 ${severityClass}`}>
                                 <td className="col-2">{event.host}</td>
                                 <td className="col-4" >{formatDate(event.createTime)}</td>
-                                <td className="col-5">{event.logMessage}</td>
+                                <td className="col-5" title={event.logMessage}>{event.logMessage}</td>
                             </tr>
                                 );
                         })}

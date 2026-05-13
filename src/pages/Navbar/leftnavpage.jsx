@@ -73,7 +73,7 @@ const LeftNavList = () => {
                         <span className="tooltipcll">Events</span></a>
                     </li>
                     <li onClick={() => handleClick("/Inventory")}>
-                    <a>   <i className={`fas fa-lg fa-file-alt ${activeIndex === 5 ? 'activee' : ''}`}></i>
+                    <a style={{paddingLeft:"4px"}}>   <i className={`fas fa-lg fa-file-alt ${activeIndex === 5 ? 'activee' : ''}`}></i>
                         <span className="tooltipcll">Inventory Reports</span></a>
                     </li>
                   {currentUser !== "Read-only" && (  <li onClick={() => handleClick("/Setting")}>
