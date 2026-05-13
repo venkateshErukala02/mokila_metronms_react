@@ -4,7 +4,7 @@ import '../Dashboard/dashboard.css';
 
 
 
-const WaysideTable = ({ westSideView, circleId, setShowPopup, showPopup,lineId,handleTagsPopup,stationCount,lineCount ,allTagfailCount,textName,stationTagview}) => {
+const WaysideTable = ({ westSideView, circleId, setShowPopup, showPopup,lineId,handleTagsPopup,stationCount,lineCount ,allTagfailCount,textName,stationTagview,selectedNodeId }) => {
     const [rdData, setRdData] = useState('');
     const [searchBtn, setSearchBtn] = useState(false);
     const [radialipText, setRadialipText] = useState('');
@@ -17,8 +17,8 @@ const WaysideTable = ({ westSideView, circleId, setShowPopup, showPopup,lineId,h
     const [tagTypeValue, setTagTypeValue] = useState('all');
     const [tagTypeLabel,setTagTypeLabel] = useState('All');
     const [stationCodeData,setStationCodeData] = useState('');
-   
-
+    const circleIdtoMapTable = selectedNodeId.id;
+    
     const fetchDataRadial = async (url,isInterval = false) => {
           if (!isInterval) {
         setIsLoading(true);
@@ -128,14 +128,16 @@ useEffect(() => {
 
 // }, []); 
 useEffect(() => {
-  if (!tagTypeValue || !textName) return; 
+  if (!tagTypeValue) return; 
 
   const fetchIntervalData = () => {
-     if (!tagTypeValue || !textName) return; 
+     if (!tagTypeValue) return; 
     let url = `api/v2/wayside/fetch?show=${tagTypeValue}`;
 
     if (textName?.data?.type === 'facility') {
       url += `&station=${textName.data.display}`;
+    }else if(circleIdtoMapTable){
+      url += `&station=${circleIdtoMapTable}`;
     } else {
       url += '&station=all';
     }
@@ -143,7 +145,7 @@ useEffect(() => {
     if (textName?.data?.type === 'facility' || textName?.text ==='Global' ) {
         url += '&time=1800&region=all';     
     } else {
-     url += `&time=1800&region=${textName.data.display}`;
+      url += `&time=1800&region=all`;
     }
 
     fetchDataRadial(url, true);
@@ -154,7 +156,7 @@ useEffect(() => {
   const intervalId = setInterval(fetchIntervalData, 30000);
 
   return () => clearInterval(intervalId);
-}, [tagTypeValue, textName,allTagfailCount]); 
+}, [tagTypeValue, textName,allTagfailCount,circleIdtoMapTable]); 
 
 // useEffect(() => {
 
@@ -214,6 +216,17 @@ useEffect(() => {
 
     return (
         <>
+            {
+                !textName && (
+                    <article className="row">
+                        <article className="col-8">
+                            <h1 className="mapheading">Global (Failed Tags)</h1>
+                        </article>
+                        <article className="col-4">
+                        </article>
+                    </article>
+                )
+            }
           {((['facility', 'location', 'region','yard'].includes(textName?.data?.type)) && stationTagview === false) && (
                         <article className="row">
                         <article className="col-8">
@@ -258,7 +271,7 @@ useEffect(() => {
             <article className="row">
             <article
                 style={{
-                height: textName?.data?.type === 'facility' ? '40.5vh' : '80vh',
+                height: (textName?.data?.type === 'facility' || circleIdtoMapTable)  ? '40.5vh' : '80vh',
                 overflowY: "auto",
                 border: "1px solid rgb(33 35 39 / 7%)",
                 position: "relative"

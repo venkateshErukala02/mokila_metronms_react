@@ -29,7 +29,7 @@ import LineNodeTableView from "./linetagNodetableview";
 
 const TopoPg = () => {
 
-    const [textName, setTextName] = useState(null);
+    const [textName, setTextName] = useState();
     const [parentTextName,setParentTextName] = useState(null);
     const [childrenTextName,setChildrenTextName] = useState(null);
     const [lineId, setLineId] = useState('');
@@ -621,6 +621,7 @@ useEffect(() => {
     }
 
     const handleTrainVwVisible=()=>{
+        setLineTagview(false);
     if (!previousViewRef.current) return;
 
   const prev = previousViewRef.current;
@@ -764,9 +765,12 @@ useEffect(() => {
 
         useEffect(() => {
     let url = '';
+    const circleIdMaptable = selectedTreeNodeId?.id;
     if (circleId) {
         url = `api/v2/wayside/tagdetails?station=${circleId}&sortBy=${sortField}&order=${sortOrder}`;
-    } else if (lineId) {
+    }else if (circleIdMaptable) {
+        url = `api/v2/wayside/tagdetails?station=${circleIdMaptable}&sortBy=${sortField}&order=${sortOrder}`;
+    }else if (lineId) {
         url = `api/v2/wayside/tagdetails?station=${lineId}&sortBy=${sortField}&order=${sortOrder}`;
     }else if(textName?.data?.type === 'facility'){
         url = `api/v2/wayside/tagdetails?station=${textName.data.display}&sortBy=${sortField}&order=${sortOrder}`;
@@ -781,7 +785,7 @@ useEffect(() => {
 
         return()=> clearInterval(intervalId);
     }
-}, [circleId, lineId,textName,selectedTab,sortField,sortOrder]);
+}, [circleId, lineId,textName,selectedTab,sortField,sortOrder,selectedTreeNodeId]);
 
     const handleTagsPopup = (value, id) => {
         setShowPopup(value);
@@ -934,9 +938,9 @@ const onSortChange = (field) => {
                 {tagTableView === true ? (
                     <>
                     <article style={{margin:'5px'}}>
-                    <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} textName={textName} stationTagview={stationTagview}/>
+                    <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} textName={textName} stationTagview={stationTagview} selectedNodeId={selectedTreeNodeId} />
                     </article>
-                    {textName && textName?.data?.type === 'facility' ? (<article style={{margin:'5px',marginTop:'15px'}}>
+                    {((textName && textName?.data?.type === 'facility') ||  selectedTreeNodeId?.id )   ? (<article style={{margin:'5px',marginTop:'15px'}}>
                     <StationTagsTable textName={textName} circleId={circleId} lineId={lineId}  rdDataRef={rdDataRef} onSortChange={onSortChange}/>
                     </article>) : ('')}
                     {showPopup && (
@@ -1017,7 +1021,37 @@ const onSortChange = (field) => {
                         </article>
                             </>
                     )}
-                    {((['facility', 'location', 'region','yard'].includes(textName?.data?.type)) && stationTagview === false) && (
+                     {((textName !== '' && lineTagview === true)) &&(
+                            <>
+                            <article className="row">
+                        <article className="col-4">
+                            {trainView === true ? (
+                            <h1 className="mapheading">Train View : {trainId}</h1>
+                            ) : (
+                                <>
+                            <h1 className="mapheading"> {rdDataRef.current?.[0]?.station && `Station- ${rdDataRef.current[0].station}`}</h1>
+                            </>
+                            )}
+                        </article>
+                        <article className="col-8" style={{justifyContent:'end',display:'flex',paddingTop:'6px',paddingRight:'8px'}}>
+                          {trainView === true ? (
+                           ''
+                            ) : (
+                                <>
+                              {/* {stationView === false ? <button className="createbtn" type="button" onClick={handleTrainVwVisible}>Back</button> : ''} */}
+                              {/* {canGoBack && ( */}
+                        <button className="createbtn" onClick={handleTrainVwVisible}>
+                            Back
+                        </button>
+                        {/* )} */}
+
+                            </>
+                            )}
+                        </article>
+                        </article>
+                            </>
+                    )}
+                    {((['facility', 'location', 'region','yard'].includes(textName?.data?.type)) && stationTagview === false && lineTagview === false) && (
                         <article className="row">
                         <article className="col-4">
                             {trainView === true ? (
