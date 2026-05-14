@@ -127,13 +127,20 @@ useEffect(() => {
   if (!treeData?.length) return;
   if (hasExpandedRef.current) return;
 
+  hasExpandedRef.current = true;
+
   const expandByMode = async () => {
     let currentNode = treeData[0]; // Global
     setSelectedNode(currentNode);
 
     for (const mode of ["region", "location","facility"]) {
+
+      const url = getUrl(currentNode);
+
+      if (!url) return;
+
       const children = await getDatanodesLine(
-        getUrl(currentNode),
+        url,
         currentNode
       );
 
@@ -208,11 +215,13 @@ useEffect(() => {
       currentNode = matchingNode;
       setSelectedNode(currentNode);
     }
-    hasExpandedRef.current = true;
+    // hasExpandedRef.current = true;
   };
 
   expandByMode();
-}, [regionId, locationId, selectedNodeId, regionName, locationName,stationName,treeData]);
+}, [regionName,locationName,stationName]);
+
+// regionId, locationId, selectedNodeId, regionName, locationName,stationName,treeData
 
 useEffect(() => {
   hasExpandedRef.current = false;

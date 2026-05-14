@@ -620,8 +620,26 @@ useEffect(() => {
         setStationView(true);
     }
 
-    const handleTrainVwVisible=()=>{
+    const handleLineVwdisable=()=>{
         setLineTagview(false);
+        if (!previousViewRef.current) return;
+
+    const prev = previousViewRef.current;
+        setEnableStationPolling(false);
+        setTextName(prev.textName);
+        setStationView(prev.stationView);
+        setTimeLeft(30);
+        setStationTagview(prev.stationTagview);
+        // setStationTagview(false);
+        setLineTagview(prev.lineTagview);
+        setTrainView(prev.trainView);
+        setSelectedTreeNodeId(prev.textName.data.id);
+        setPrevIdActive(true);
+        previousViewRef.current = null;
+        return;
+    }
+
+    const handleTrainVwVisible=()=>{
     if (!previousViewRef.current) return;
 
   const prev = previousViewRef.current;
@@ -716,6 +734,15 @@ useEffect(() => {
 
     }
     const getLineId = (id) => {
+          if (!previousViewRef.current) {
+    previousViewRef.current = {
+      textName,
+      stationView,
+      stationTagview,
+      lineTagview,
+      trainView,
+    };
+  }
         setLineId(id);
         setLineTagview(true);
         setLineCount(prev => !prev)
@@ -1040,7 +1067,7 @@ const onSortChange = (field) => {
                                 <>
                               {/* {stationView === false ? <button className="createbtn" type="button" onClick={handleTrainVwVisible}>Back</button> : ''} */}
                               {/* {canGoBack && ( */}
-                        <button className="createbtn" onClick={handleTrainVwVisible}>
+                        <button className="createbtn" onClick={handleLineVwdisable}>
                             Back
                         </button>
                         {/* )} */}
@@ -1069,7 +1096,7 @@ const onSortChange = (field) => {
                                 <>
                               {/* {stationView === false ? <button className="createbtn" type="button" onClick={handleTrainVwVisible}>Back</button> : ''} */}
                               {canGoBack && (
-  <button className="createbtn" onClick={handleTrainVwVisible}>
+  <button className="createbtn" onClick={handleLineVwdisable}>
     Back
   </button>
 )}

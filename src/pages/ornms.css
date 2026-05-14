@@ -1340,7 +1340,7 @@ margin-right: 3px;
     .profsublist>li:hover{
         color: #006eff;
     }
-    .profsublist>li:hover>i{
+    .profsublist>li:hover{
         color: #006eff;
     }
    
@@ -4633,6 +4633,11 @@ svg *:focus {
     padding: 4px 4px 4px 8px;
     font-family: monospace;
     white-space: pre-wrap;
+}
+
+.active-menu {
+    color: #006eff !important;
+    font-weight: 500;
 }
  /* width={700} height={240} */
 
