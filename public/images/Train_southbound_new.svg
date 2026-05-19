@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1 Tiny//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-tiny.dtd">
+<svg version="1.1" baseProfile="tiny" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	 x="0px" y="0px" width="70.25px" height="25px" viewBox="0 0 86.25 25" xml:space="preserve">
+<g id="train_northbound">
+	<g>
+		<path class="pointer" fill="#1CD4C6" stroke="#000000" stroke-miterlimit="10" d="M84.648,12.5c0,5.621-4.557,10.177-10.176,10.177H11.177
+			c-5.62,0-10.176-4.556-10.176-10.177l0,0c0-5.619,4.556-10.176,10.176-10.176h63.296C80.092,2.324,84.648,6.881,84.648,12.5
+			L84.648,12.5z"/>
+		<path class="pointer" fill="#07493F" d="M74.612,2.715h-2.737v19.571h2.737c5.405,0,9.786-4.381,9.786-9.786
+			C84.398,7.097,80.018,2.715,74.612,2.715z"/>
+	</g>
+	<text class="pointer" id="northboundtext" transform="matrix(1 0 0 1 29.9058 16.6816)" font-family="'MyriadPro-Bold'" font-size="14" style="font-size:12.5px;"></text>
+</g>
+</svg>

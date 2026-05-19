@@ -2,7 +2,7 @@ import React,{useState,useEffect,useRef, useCallback} from "react";
 import southboundtr from '../../assets/img/Train_southbound_new.svg'
 import northboundtr from '../../assets/img/Train_northbound_new.svg'
 import northgreen from '../../assets/Train_northboundgreen.svg'
-import southred from '../../assets/Train_southboundgreen copy.svg'
+import southred from '../../assets/Train_southboundgreen.svg'
 import { Prev } from "react-bootstrap/esm/PageItem";
 
 const MainlineView=({textName})=>{

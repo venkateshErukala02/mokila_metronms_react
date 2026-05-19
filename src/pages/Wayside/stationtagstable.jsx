@@ -19,7 +19,8 @@ const StationTagsTable = ({ circleId, lineId,textName,selectedTab,rdDataRef,onSo
     const [success, setSuccess] = useState('');
     // const rdData = rdDataRef.current === null ? [] : [rdDataRef.current[0].tags] ;
     const [tagData,setTagData] = useState([]);
-    const displayData = tagData.length > 0 ? tagData : (rdDataRef?.current ? rdDataRef?.current[0]?.tags : []);
+    const [isSearchMode, setIsSearchMode] = useState(false);
+    const displayData = isSearchMode ? tagData : (rdDataRef?.current ? rdDataRef?.current[0]?.tags : []);
     const [tagIdText,setTagIdText] = useState('');
     const [searchTrigger, setSearchTrigger] = useState(0);
     const [sortField, setSortField] = useState('sysUptime');
@@ -81,10 +82,10 @@ const StationTagsTable = ({ circleId, lineId,textName,selectedTab,rdDataRef,onSo
                             return;
                         }
                     const tgData = await response.json();
-                    const data = tgData?.tags[0];
+                    const data = tgData?.tags || [];
                     if (response.ok) {
                         setIsLoading(false);
-                        setTagData(Array.isArray(data) ? data : [data]);
+                        setTagData(Array.isArray(data) ? data : []);
                         setError({ status: false, msg: "" });
                     } else {
                         throw new Error("data not found");
@@ -106,6 +107,7 @@ const StationTagsTable = ({ circleId, lineId,textName,selectedTab,rdDataRef,onSo
 
         } else {
             setSearchBtn(true);
+            setIsSearchMode(true);
             setSearchTrigger(prev => prev + 1);
         }
     }
@@ -115,6 +117,7 @@ const StationTagsTable = ({ circleId, lineId,textName,selectedTab,rdDataRef,onSo
         setSearchBtn(false);
         setTagIdText('');
         setTagData([]); 
+        setIsSearchMode(false);
         // setInvenData([]);
         // fetchDataRadial();
       }
@@ -321,7 +324,7 @@ const handleSort = (field) => {
                                 ) :(
                                     displayData.length !== 0 && displayData.map((value, index) => (
                                      <tr key={index}>
-                                        <td style={{padding:"4px 6px"}}>{value[0]?.tag || value?.tag}</td>
+                                        <td style={{padding:"4px 6px"}}>{value?.tag}</td>
                                         <td style={{padding:"4px 12px"}}>{value.line}</td>
                                         <td style={{padding:"4px 6px"}} className="">{value.position}</td>
                                         <td style={{padding:"4px 6px"}} className="">{value.role}</td>

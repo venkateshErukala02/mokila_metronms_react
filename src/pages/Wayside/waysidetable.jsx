@@ -143,9 +143,9 @@ useEffect(() => {
     }
 
     if (textName?.data?.type === 'facility' || textName?.text ==='Global' ) {
-        url += '&time=1800&region=all';     
+        url += '&time=3600&region=all';     
     } else {
-      url += `&time=1800&region=all`;
+      url += `&time=3600&region=all`;
     }
 
     fetchDataRadial(url, true);
