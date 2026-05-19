@@ -161,7 +161,7 @@ const NotificationContainer=()=>{
 
         const getNotificationPathDt = async (url) => {
             setIsLoading(true);
-            setIsError({ status: false, msg: "" });
+            // setIsError({ status: false, msg: "" });
             try {
                 const options = {
                     method: "GET",
@@ -177,13 +177,13 @@ const NotificationContainer=()=>{
                 if (response.ok) {
                     setIsLoading(false);
                     setNotificationPathDt(data);
-                    setIsError({ status: false, msg: "" });
+                    // setIsError({ status: false, msg: "" });
                 } else {
                     throw new Error("data not found");
                 }
             } catch (error) {
                 setIsLoading(false);
-                setIsError({ status: true, msg: error.message });
+                // setIsError({ status: true, msg: error.message });
             }
         };
 
@@ -538,7 +538,7 @@ const NotificationContainer=()=>{
                                         <tr key={item.id}>
                                              <td>{item.name}</td>
                                             <td>{item.uei}</td>
-                                            <td><><label className="radiolabelnotifipg">
+                                            <td style={{paddingLeft:"3px"}}><><label className="radiolabelnotifipg">
                                         <input type="radio" 
                                         checked={item.status === 'off'}
                                         onChange={currentUser !== 'Read-only' ?() => handleToggleStatus(item) : undefined}

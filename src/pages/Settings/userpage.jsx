@@ -23,24 +23,24 @@ const UserContainer=()=>{
         const [pageSize, setPageSize] = useState(1);
         const [fromValue,setFromValue] =useState('0');
 
-        const getUserData = async (url) => {
-            setIsLoading(true);
+        const getUserData = async (url,showLoader = false) => {
+             if (showLoader) {
+                setIsLoading(true);
+             }
             setIsError({ status: false, msg: "" });
             try {
-                const username = 'admin';
-                const password = 'admin';
-                const token = btoa(`${username}:${password}`)
                 const options = {
                     method: "GET",
                     headers: {
-                        'Authorization': `Basic ${token}`,
                         "Content-Type": "application/json",
                     },
     
                 };
                 const response = await fetch(url, options);
                    if (response.status === 204) {
-                    setIsLoading(false);
+                    if (showLoader) {
+                        setIsLoading(false);
+                    }
                     setUserData([]);
                     setIsError({ status: false, msg: '' });
                     return;
@@ -61,20 +61,22 @@ const UserContainer=()=>{
             } catch (error) {
                 setIsLoading(false);
                 setIsError({ status: true, msg: error.message });
+            }finally {
+                if (showLoader) {
+                    setIsLoading(false);
+                }
             }
         };
 
 
      useEffect(() => {
-        const fetchUserData = async()=>{
-            // const url = `rest/users/list?limit=${userLimitValueSel}&offset=0&sort=asc`
             const url=`rest/users/list?limit=${userLimitValueSel}&offset=${fromValue}&sort=${sortOrder}`
-            getUserData(url);
-        }
+            getUserData(url,true);
 
-        fetchUserData();
+        const intervalId = setInterval(() => {
+            getUserData(url, false);
+            }, 30000);
 
-        const intervalId = setInterval(fetchUserData,30000);
 
         return ()=> clearInterval(intervalId);
     

@@ -24,19 +24,17 @@ const LineContainer=()=>{
         const [pageSize, setPageSize] = useState(1);
         const [fromValue,setFromValue] =useState('0');
 
-        const getLineData = async (url) => {
-            setIsLoading(true);
+        const getLineData = async (url,showLoader = false) => {
+               if (showLoader) {
+                setIsLoading(true);
+               }
             setIsError({ status: false, msg: "" });
-              setLineData([]);
+            //   setLineData([]);
 
             try {
-                const username = 'admin';
-                const password = 'admin';
-                const token = btoa(`${username}:${password}`)
                 const options = {
                     method: "GET",
                     headers: {
-                        'Authorization': `Basic ${token}`,
                         "Content-Type": "application/json",
                     },
               
@@ -45,9 +43,11 @@ const LineContainer=()=>{
                 const response = await fetch(url, options);
     
                  if (response.status === 204) {
-                    setIsLoading(false);
                     setLineData([]);
                     setIsError({ status: false, msg: '' });
+                     if (showLoader) {
+                        setIsLoading(false);
+                    }
                     return;
                 }
     
@@ -63,19 +63,21 @@ const LineContainer=()=>{
             } catch (error) {
                 setIsLoading(false);
                 setIsError({ status: true, msg: error.message });
+            } finally {
+                if (showLoader) {
+                    setIsLoading(false);
+                }
             }
         };
 
      useEffect(() => {
-        const fetchLinesData = async()=>{
             const url= `api/v2/regions?_s=&limit=${regionLimitValueSel}&offset=${fromValue}&order=${sortOrder}&orderBy=${sortField}`
-            // const url = `api/v2/regions?_s=&limit=${regionLimitValueSel}&offset=0&order=asc&orderBy=name`
-           await getLineData(url);
+            getLineData(url,true);
          
-        }
-        fetchLinesData();
+        const intervalId = setInterval(() => {
+        getLineData(url, false);
+        }, 30000);
 
-        const intervalId = setInterval(fetchLinesData,30000);
 
         return ()=> clearInterval(intervalId);
     

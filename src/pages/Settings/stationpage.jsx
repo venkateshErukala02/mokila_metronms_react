@@ -21,17 +21,15 @@ const StationContainer=()=>{
         const [pageSize, setPageSize] = useState(1);
         const [fromValue,setFromValue] =useState('0');
 
-        const getStationData = async (url) => {
-            setIsLoading(true);
+        const getStationData = async (url,showLoader = false) => {
+             if (showLoader) {
+                setIsLoading(true);
+             }
             setIsError({ status: false, msg: "" });
             try {
-                const username = 'admin';
-                const password = 'admin';
-                const token = btoa(`${username}:${password}`)
                 const options = {
                     method: "GET",
                     headers: {
-                        'Authorization': `Basic ${token}`,
                         "Content-Type": "application/json",
                     },
     
@@ -39,7 +37,9 @@ const StationContainer=()=>{
                 const response = await fetch(url, options);
 
                  if (response.status === 204) {
-                    setIsLoading(false);
+                     if (showLoader) {
+                        setIsLoading(false);
+                    }
                     setStationData([]);
                     setIsError({ status: false, msg: '' });
                     return;
@@ -57,14 +57,24 @@ const StationContainer=()=>{
             } catch (error) {
                 setIsLoading(false);
                 setIsError({ status: true, msg: error.message });
+            }finally {
+                if (showLoader) {
+                    setIsLoading(false);
+                }
             }
         };
 
 
      useEffect(() => {
-            // const url = `api/v2/locations?_s=&limit=${locationLimitValueSel}&offset=0&order=asc&orderBy=name`
+           
             const url=`api/v2/facilities?_s=&limit=${locationLimitValueSel}&offset=${fromValue}&order=${sortOrder}&orderBy=${sortField}`
-            getStationData(url);
+            getStationData(url,true);
+
+             const intervalId = setInterval(() => {
+            getStationData(url, false);
+            }, 30000);
+
+        return ()=> clearInterval(intervalId);
     
         }, [locationLimitValueSel,sortOrder,fromValue]);
 

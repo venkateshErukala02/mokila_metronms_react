@@ -44,17 +44,15 @@ const WaysideTagContainer=()=>{
             fetchData();
         }, [searchTrigger]);
 
-        const getTagData = async (url) => {
-            setIsLoading(true);
+        const getTagData = async (url,showLoader = false) => {
+              if (showLoader) {
+                setIsLoading(true);
+             }
             setIsError({ status: false, msg: "" });
             try {
-                const username = 'admin';
-                const password = 'admin';
-                const token = btoa(`${username}:${password}`)
                 const options = {
                     method: "GET",
                     headers: {
-                        'Authorization': `Basic ${token}`,
                         "Content-Type": "application/json",
                     },
     
@@ -73,19 +71,22 @@ const WaysideTagContainer=()=>{
             } catch (error) {
                 setIsLoading(false);
                 setIsError({ status: true, msg: error.message });
+            }finally {
+                if (showLoader) {
+                    setIsLoading(false);
+                }
             }
         };
 
 
      useEffect(() => {
          if (searchBtn) return;
-            const fetchData =async()=>{
             const url=`api/v2/wayside/waySideTags?page=${pageCount}`;
-            await getTagData(url);
-            }
-            fetchData();
+             getTagData(url,true);
 
-            const intervalId=setInterval(fetchData,30000);
+             const intervalId = setInterval(() => {
+            getTagData(url, false);
+            }, 30000);
 
             return ()=> clearInterval(intervalId);
     
@@ -342,6 +343,7 @@ const WaysideTagContainer=()=>{
 
             if (response.ok) {
             setShowDeleteSuccessPopup(true);
+            setSelectedIds([]);
             const url=`api/v2/wayside/waySideTags?page=${pageCount}`;
             getTagData(url);
             } else {

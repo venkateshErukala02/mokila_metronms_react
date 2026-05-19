@@ -25,17 +25,15 @@ const SectionContainer=()=>{
         const [pageSize, setPageSize] = useState(1);
         const [fromValue,setFromValue] =useState('0');
 
-        const getSectionData = async (url) => {
-            setIsLoading(true);
+        const getSectionData = async (url,showLoader = false) => {
+             if (showLoader) {
+                setIsLoading(true);
+             }
             setIsError({ status: false, msg: "" }); 
             try {
-                const username = 'admin';
-                const password = 'admin';
-                const token = btoa(`${username}:${password}`)
                 const options = {
                     method: "GET",
                     headers: {
-                        'Authorization': `Basic ${token}`,
                         "Content-Type": "application/json",
                     },
     
@@ -43,9 +41,11 @@ const SectionContainer=()=>{
                 const response = await fetch(url, options);
 
                  if (response.status === 204) {
-                    setIsLoading(false);
                     setSectionData([]);
                     setIsError({ status: false, msg: '' });
+                     if (showLoader) {
+                        setIsLoading(false);
+                    }
                     return;
                 }
     
@@ -61,20 +61,23 @@ const SectionContainer=()=>{
             } catch (error) {
                 setIsLoading(false);
                 setIsError({ status: true, msg: error.message });
+            }finally {
+                if (showLoader) {
+                    setIsLoading(false);
+                }
             }
         };
 
 
      useEffect(() => {
-        const fetchSectionData=async()=>{
+
         const url=`api/v2/locations?_s=&limit=${cityLimitValueSel}&offset=${fromValue}&order=${sortOrder}&orderBy=${sortField}`
-            // const url = `api/v2/cities?_s=&limit=${cityLimitValueSel}&offset=0&order=asc&orderBy=name`
-            await getSectionData(url);
-        }
+             getSectionData(url,true);
 
-        fetchSectionData();
 
-        const intervalId = setInterval(fetchSectionData,30000);
+         const intervalId = setInterval(() => {
+            getSectionData(url, false);
+            }, 30000);
 
         return ()=> clearInterval(intervalId);
     
