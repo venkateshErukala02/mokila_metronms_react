@@ -12,6 +12,7 @@ const EventPg = () => {
 
     const isVisible = useSelector(state => state.visibility.isVisible);
     const [cabNumber,setCabNumber] = useState('');
+    const [searchTextInTrain,setSearchTextInTrain] = useState('');
     const [selectedFromDate,setSelectedFromDate] = useState(null);
     const [selectedToDate,setSelectedToDate] = useState(null);
     const [selectedStartDate,setSelectedStartDate] = useState(null);
@@ -131,7 +132,12 @@ const EventPg = () => {
            setShowCustomDateLimitAlertPopup(true)
             return;
         }
-            const url =`api/v2/nodes/cabreport/${tId}/${cId}/${timestampFrom}/${timestampTo}`;
+        
+            let url =`api/v2/nodes/cabreport/${tId}/${cId}/${timestampFrom}/${timestampTo}`;
+
+            if (searchTextInTrain?.trim()) {
+                url += `?search=${encodeURIComponent(searchTextInTrain.trim())}`;
+            }
 
              try {
         const response = await fetch(url, {
@@ -173,6 +179,7 @@ const EventPg = () => {
     setTimestampFrom(null);
     setTimestampTo(null);
     setCabNumberIpsData([]);
+    setSearchTextInTrain('');
         } else {
             console.error('Error fetching data:', response.statusText);
         }
@@ -463,6 +470,29 @@ useEffect(() => {
                                             setCabNumberIpsData({});
                                         }
                                     }}
+                                    >
+                                    ✖
+                                    </button>
+                                )}
+                                </div>
+                              
+                                </div>
+                                 {/* <label className="settinglabelsub labelaligncl">Cab Number</label> */}
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px',marginBottom:'12px' }}>
+                                
+                                <div style={{position:"relative",display:"inline-block"}}>
+                            <input type="text"
+                             value={searchTextInTrain}
+                                required
+                                // onChange={handleCabNumberChange}
+                                // maxLength={4}
+                                onChange={(e) => setSearchTextInTrain(e.target.value)}
+                                name="" placeholder="Search Text" id="" className="settinglabelsubinp" />
+                                {searchTextInTrain && (
+                                    <button
+                                    type="button"
+                                    className="clear-btn"
+                                    onClick={() =>{ setSearchTextInTrain("");}}
                                     >
                                     ✖
                                     </button>

@@ -18,6 +18,7 @@ import ConfigPage from '../pages/Config/configpage';
 import EncoderNodeView from '../pages/Dashboard/encodernodeview';
 import { useSelector } from 'react-redux';
 import IoboxNodeView from '../pages/Dashboard/ioboxnodeview';
+import CamNodeDetails from '../pages/Dashboard/camnodeview';
 
 
 const RoutesPage = () => {
@@ -32,6 +33,7 @@ const RoutesPage = () => {
             <Route path="/transcoder-view" element={<TranscoderView />} />
             <Route path="/TR-view" element={<TrainNodeView />} />
             <Route path="/obc-view" element={<ObcNodeView />} />
+            <Route path="/CAM-view" element={<CamNodeDetails />} />
             <Route path="/encoder-view" element={<EncoderNodeView />} />
             <Route path="/ioc-view" element={<IoboxNodeView />} />
             <Route path="/Discovery" element={<DiscovPag />} />

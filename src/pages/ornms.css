@@ -4639,6 +4639,19 @@ svg *:focus {
     color: #006eff !important;
     font-weight: 500;
 }
+
+.cam-alignsystem{
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding-top: 29px;
+}
+
+.cam-alignbtn{
+    justify-content: center;
+    display: flex;
+    padding-left: 163px
+}
  /* width={700} height={240} */
 
 /*  */

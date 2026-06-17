@@ -331,9 +331,11 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
         if (`${node.productCode}` === 'AP') {
             navigate('/SN-view')
             dispatch(handleNodeData(node))
-        }else if(`${node.productCode}` === 'CAM'){
-            alert('Node-View Not Supported')
-        } else {
+        }
+        // else if(`${node.productCode}` === 'CAM'){
+        //     alert('Node-View yes Supported')
+        // } 
+        else {
             navigate(`${node.productCode}-view`, { state: { node } });
             dispatch(handleNodeData(node))
         }
