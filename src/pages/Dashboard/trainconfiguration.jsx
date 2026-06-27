@@ -750,7 +750,7 @@ useEffect(() => {
 
                     <article className="container-fluid">
                         <article className="row" style={{ display: "flex" }}>
-                            <article className="col-md-2" id="summary-1 div1" style={{ minHeight: '850px', maxHeight: '850px', background: 'white' }}>
+                            <article className="col-md-2" id="summary-1 div1" style={{ minHeight: '898px', maxHeight: '898px', background: 'white' }}>
                                 <article>
 
                                     <article className="card" id="div2">

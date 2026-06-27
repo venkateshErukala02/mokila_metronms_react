@@ -80,8 +80,7 @@ const FirmwareMngSubCont = ({ handleSubContainer, refreshLineData, mode, line })
     }, [mode, line]);
 
 
-    const handleUpload = async (e) => {
-        e.preventDefault();
+    const handleUpload = async () => {
         if (!selectedFile) {
             alert("Please select a file first.");
             return;

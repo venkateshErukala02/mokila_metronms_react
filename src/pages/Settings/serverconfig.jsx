@@ -147,8 +147,8 @@ const ServerConfigContainer = () => {
         )
     }
 
-       const handleAddServerConfig = async (user,e) => {
-          e.preventDefault(); 
+       const handleAddServerConfig = async (user) => {
+        //   e.preventDefault(); 
         if(!serverAddress?.trim()) return;
         if (userFtp) {
             if (!username?.trim() || !password?.trim()) {
@@ -203,8 +203,8 @@ const ServerConfigContainer = () => {
 
     }
 
-     const handleAddEmailConfig = async (user,e) => {
-          e.preventDefault(); 
+     const handleAddEmailConfig = async (user) => {
+        //   e.preventDefault(); 
         if(!hostName?.trim() || !fromAddress?.trim() || !smptPort?.trim() || !authUser?.trim() || !authUserPswd?.trim()) return;
        
         const method = 'POST';

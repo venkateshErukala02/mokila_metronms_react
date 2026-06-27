@@ -17,13 +17,13 @@ const ProvisionTb = ({ getProviContData }) => {
           { key: 'firmware', label: 'Firmware' },
           { key: 'status', label: 'Status' },
           { key: 'sysUptime', label: 'Uptime' },
-          { key: 'productCode', label: 'Product Code' },
           { key: 'radioMode', label: 'Radio Mode' },
+          // { key: 'productCode', label: 'Product Code' },
         ];
         const DEFAULT_COLUMNS = [
             "sysName",
             "ipAddress",
-            "status",  
+            // "productCode",  
             "sysUptime",
             "radioMode",
             ];
@@ -33,6 +33,16 @@ const ProvisionTb = ({ getProviContData }) => {
           { key: 'line1-sec2', label: 'Line1-Section2' },
           { key: 'line4-sec1', label: 'Line4' },
             ]
+
+             const PRODUCT_CODES = [
+            { key: 'SN', label: 'SN' },
+            { key: 'TR', label: 'TR' },
+            { key: 'obc', label: 'OBC' },
+            { key: 'transcoder', label: 'Transcoder' },
+            { key: 'encoder', label: 'Encoder' },
+            { key: 'CAM', label: 'CAM' }
+          ];
+
   const [provisionSel, setProvisionSel] = useState('1');
   const [radioSel, setRadioSel] = useState('');
   const [linktypeSel, setLinktypeSel] = useState('');
@@ -57,13 +67,33 @@ const ProvisionTb = ({ getProviContData }) => {
   const firstLoadRef = useRef(true);
   const [lineNameSel,setLineNameSel] = useState('-1');
   const [stationData,setStationData] = useState([]);
-  const [stationNameSel,setStationNameSel] = useState('-1');
+  const [stationNameSel,setStationNameSel] = useState({});
   const [positionNameSel,setPositionNameSel] = useState('-1');
   const [success, setSuccess] = useState('');
   const currentUser = useSelector((state) => state?.loginuser?.node?.role);
   const isReadOnly = currentUser === 'Read-only';
   const [pageSize, setPageSize] = useState(1);
   const [fromValue,setFromValue] =useState('0');
+  const [selectedProductCodes, setSelectedProductCodes] = useState([]);
+
+  useEffect(() => {
+  if (firmData?.region) {
+    setLineNameSel(firmData.region);
+    stationNameSel(firmData.location); 
+    selectedProductCodes(firmData.productCode)
+  }
+}, [firmData]);
+
+
+  useEffect(() => {
+  if (firmData?.length) {
+    setStationNameSel(firmData[0].location);
+    setPositionNameSel(firmData[0].radioMode);
+    setLineNameSel(firmData[0].region);
+    setSelectedProductCodes(firmData[0].productCode);
+  }
+}, [firmData]);
+
 
    useEffect(()=>{
     if(lineNameSel === '-1') return;
@@ -141,6 +171,11 @@ const ProvisionTb = ({ getProviContData }) => {
             "Content-Type": "application/json",
           },
         });
+          if (response.status === 204) {
+          setFirmData([]);
+          setIsError({ status: false, msg: "" });
+          return;
+        }
         const data = await response.json();
 
         if (response.ok) {
@@ -318,20 +353,25 @@ const ProvisionTb = ({ getProviContData }) => {
                 setLineNameSel(e.target.value);
             }
 
-            const handleSelectStation=(e)=>{
-              setStationNameSel(e.target.value);
+            const handleSelectStation=(value)=>{
+              setStationNameSel(value);
             }
 
             const handleSelectPosition=(e)=>{
                 setPositionNameSel(e.target.value);
             }
 
+            const handleProductCodeChange = ( e) => {
+              setSelectedProductCodes(e.target.value);
+            };
+
 
             const handleDiscoveryConfig=async(node)=>{
                const requestBody = [{
-                nodeId : node.nodeId,
-                stationId : stationNameSel,
-                position : positionNameSel,
+                nodeId : node.nodeId || [],
+                stationId : stationNameSel || [],
+                position : positionNameSel || [],
+                deviceType : selectedProductCodes || []
                }];
               const url = 'api/v2/discovery/configure';
 
@@ -393,7 +433,6 @@ const ProvisionTb = ({ getProviContData }) => {
           radioMode: "24px"
           };
 
-            
 
 
   return (
@@ -500,7 +539,9 @@ const ProvisionTb = ({ getProviContData }) => {
                 />
               </th>
             ))}
-
+            <th style={{ paddingLeft: '18px' }}>
+             Product Code
+            </th>
             <th style={{ paddingLeft: '18px' }}>
              Line
             </th>
@@ -567,25 +608,95 @@ const ProvisionTb = ({ getProviContData }) => {
                         {node[col.key]}
                       </td>
                     ))}
-                     <td style={{ paddingLeft: '18px' }}>
-                       <select className="provisionselinput" defaultValue={-1} value={lineNameSel} onChange={handleSelectLine}>
-                      <option value="-1" disabled>Select</option>
-                      {ALL_LINES && ALL_LINES.map((item,index)=>(
-                          <option value={item.key} key={index}>{item.label}</option>
-                      ))}
-                  </select>
+                    <td style={{ paddingLeft: "18px" }}>
+
+                      <select
+  className="provisionselinput"
+  value={selectedProductCodes}
+  onChange={handleProductCodeChange}
+>
+
+  <option value="">N/A</option>
+
+  {node.productCode && !PRODUCT_CODES?.some(
+    (item) => item.key === node.productCode
+  ) && (
+    <option value={node.productCode}>
+      {node.productCode}
+    </option>
+  )}
+
+  {PRODUCT_CODES.map((item) => (
+    <option value={item.key} key={item.key}>
+      {item.label}
+    </option>
+  ))}
+</select>
                     </td>
                      <td style={{ paddingLeft: '18px' }}>
-                       <select className="provisionselinput" defaultValue={-1} value={stationNameSel} onChange={handleSelectStation}>
-                        <option value="-1" disabled>Select</option>
-                        {stationData && stationData.map((item,index)=>(
-                            <option value={item.value} key={index}>{item.display}</option>
-                        ))}
-                    </select>
+                      
+                  <select
+  className="provisionselinput"
+  value={lineNameSel}
+  onChange={handleSelectLine}
+>
+
+  <option value="">N/A</option>
+
+  {node.region && !ALL_LINES?.some(
+    (item) => item.key === node.region
+  ) && (
+    <option value={node.region}>
+      {node.region}
+    </option>
+  )}
+
+  {ALL_LINES.map((item) => (
+    <option value={item.key} key={item.key}>
+      {item.label}
+    </option>
+  ))}
+</select>
+                    </td>
+                     <td style={{ paddingLeft: '18px' }}>
+                      
+                    <select
+  className="provisionselinput"
+  value={stationNameSel}
+  onChange={(e) => handleSelectStation(e.target.value)}
+>
+  {/* fallback option */}
+  <option value="">N/A</option>
+
+  {/* current node location (only if not already in list) */}
+  {node.location && !stationData?.some(
+    (item) => item.display === node.location
+  ) && (
+    <option value={node.location}>
+      {node.location}
+    </option>
+  )}
+
+  {/* API data */}
+  {stationData?.map((item, index) => (
+    <option value={item.id} key={item.id ?? index}>
+      {item.display}
+    </option>
+  ))}
+</select>
                     </td>
                      <td style={{ paddingLeft: '18px' }}>
                        <select className="provisionselinput" defaultValue={-1} value={positionNameSel} onChange={handleSelectPosition}>
-                      <option value="-1" disabled>Select</option>
+                      {/* <option value="-1" disabled>Select</option> */}
+                      {!node.radioMode && (
+                        <option value="NA">N/A</option>
+                      )}
+
+                      {node.radioMode && (
+                        <option value={node.radioMode}>
+                          {node.radioMode}
+                        </option>
+                      )}
                       <option value="SBSE" label="SN-SBSE">SN-SBSE</option>
                       <option value="SBNE" label="SN-SBNE">SN-SBNE</option>
                       <option value="NBSE" label="SN-NBSE">SN-NBSE</option>

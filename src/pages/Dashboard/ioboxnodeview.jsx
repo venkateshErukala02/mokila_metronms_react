@@ -125,10 +125,10 @@ const IoboxNodeView = () => {
                 <li><a href={`http://${nodeIpaddress}`} target="_blank">{nodeIpaddress}</a></li>
                 <li onClick={() => handleRowClick('summary')} className={`${currentTab === 'summary' ? 'active' : ''}`}> <a> <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Summary</a></li>
                 <li onClick={() => handleRowClick('monitoring')} className={`${currentTab === 'monitoring' ? 'active' : ''}`}> <a> <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Monitoring</a></li>
-                <li onClick={() => handleRowClick('events')} className={`${currentTab === 'events' ? 'active' : ''}`}> <a> <i
+                {/* <li onClick={() => handleRowClick('events')} className={`${currentTab === 'events' ? 'active' : ''}`}> <a> <i
                   className="fas fa-chart-area Monitor-icon"
                   style={{ fontSize: "22px" }}
-                ></i> Events </a></li>
+                ></i> Events </a></li> */}
               </ul>
             </article>
           </article>

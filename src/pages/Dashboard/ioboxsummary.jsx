@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import obcimage from '../../assets/img/obcimg1.png'
+import obcimage from '../../assets/img/ioboxim.jpg'
 
 
 const IoboxSummaryTab = ({currentTab }) => {
-  const [upTimeData, setUpTimeData] = useState([]);
+  const [cartData, setCartData] = useState("");
   const [isLoading, setIsLoading] = useState("");
   const [isError, setIsError] = useState("");
-  const [diskData, setDiskData] = useState("");
+  // const [diskData, setDiskData] = useState("");
   const [currentObcsubTab, setCurrentObcsubTab] = useState('obc')
   const [nodeItemDt, setNodeItemDt] = useState([]);
   const [eventmainData,setEventMainData] = useState([]);
@@ -22,78 +22,77 @@ const IoboxSummaryTab = ({currentTab }) => {
     }
   }, [nodeIpaddress]);
 
-  // useEffect(() => {
-  //     const fetchData = async () => {
-  //      let url = `api/v2/nodemanageview/encodersum?nodeId=${nodeDataId}`;
-  //       // let url = `api/v2/nodemanageview/summarydb?nodeId=${nodeDataId}`;
-  //       await getServerStatusDt(url);
-  //     };
-  //     fetchData();
-  //   }, [nodeDataId]);
+  useEffect(() => {
+      const fetchData = async () => {
+       let url = `api/v2/iobox/ethernetstat`;
+        await getEtherStatusDt(url,nodeIpaddress);
+      };
+      fetchData();     
+      const intervalId = setInterval(fetchData, 30000);
+
+      return () => clearInterval(intervalId);
+    }, [nodeIpaddress]);
 
 
 
-  // const getServerStatusDt = async (url) => {
-  //   setIsLoading(true);
-  //   setIsError({ status: false, msg: "" });
-  //   try {
-  //     const username = "admin";
-  //     const password = "admin";
-  //     const token = btoa(`${username}:${password}`);
-  //     const options = {
-  //       method: "GET",
-  //        headers: {
-  //       //   "Authorization": `Basic ${token}`,
-  //         "Content-Type": "application/json",
-  //       },
-  //     };
-  //     const response = await fetch(url, options);
-  //     const data1 = await response.json();
-  //   //   const data = await JSON.parse(data1)
+  const getEtherStatusDt = async (url,nodeIpaddress) => {
+    setIsLoading(true);
+    setIsError({ status: false, msg: "" });
+    try {
+     
+      const options = {
+        method: "POST",
+         headers: {
+          "Content-Type": "application/json",
+        },
+         body: JSON.stringify({
+          ip: nodeIpaddress,
+        }),
+      };
+      const response = await fetch(url, options);
+      const data1 = await response.json();
+    //   const data = await JSON.parse(data1)
       
-  //     if (response.ok) {
-  //       setIsLoading(false);
-  //       setNodeItemDt(data1);
-  //       setIsError({ status: false, msg: "" });
-  //     } else {
-  //       throw new Error("Data not found");
-  //     }
-  //   } catch (error) {
-  //     setIsLoading(false);
-  //     setIsError({ status: true, msg: error.message });
-  //   }
-  // };
+      if (response.ok) {
+        setIsLoading(false);
+        // setNodeItemDt(data1);
+        setEventMainData(data1.interfaces);
+        setIsError({ status: false, msg: "" });
+      } else {
+        throw new Error("Data not found");
+      }
+    } catch (error) {
+      setIsLoading(false);
+      // setIsError({ status: true, msg: error.message });
+    }
+  };
 
 
 
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     let url = `http://${nodeIpaddress}:8084/${currentTab}/api/v1/uptime`;
-  //     await getServerStatusUptimeDt(url);
-  //   };
-  //   fetchData();
+  useEffect(() => {
+    const fetchData = async () => {
+      let url = `api/v2/iobox/getcart`;
+      await getCartDt(url,nodeIpaddress);
+    };
+    fetchData();
 
-  //   const intervalId = setInterval(fetchData, 30000);
-
-  // return () => clearInterval(intervalId);
-  // }, [nodeIpaddress, currentTab]);
+  }, [nodeIpaddress]);
 
 
 
-  const getServerStatusUptimeDt = async (url) => {
+  const getCartDt = async (url,nodeIpaddress) => {
     setIsLoading(true);
     setIsError({ status: false, msg: "" });
     try {
-      const username = "admin";
-      const password = "admin";
-      const token = btoa(`${username}:${password}`);
       const options = {
-        method: "GET",
+        method: "POST",
         headers: {
-          "Authorization": `Basic ${token}`,
           "Content-Type": "application/json",
         },
+         body: JSON.stringify({
+          ip: nodeIpaddress,
+        }),
       };
       const response = await fetch(url,options);
       const data = await response.json();
@@ -102,61 +101,87 @@ const IoboxSummaryTab = ({currentTab }) => {
         setIsLoading(false);
 
 
-        setUpTimeData(data);
+        setCartData(data);
         setIsError({ status: false, msg: "" });
       } else {
         throw new Error("Data not found");
       }
     } catch (error) {
       setIsLoading(false);
-      setIsError({ status: true, msg: error.message });
+      // setIsError({ status: true, msg: error.message });
     }
   };
 
 
-  const getDiskData = async (url) => {
+  const getUpdateCart = async () => {
+     const url = `api/v2/iobox/setcart`;
     setIsLoading(true);
     setIsError({ status: false, msg: "" });
     try {
-      const username = "admin";
-      const password = "admin";
-      const token = btoa(`${username}:${password}`);
       const options = {
-        method: "GET",
+        method: "POST",
         headers: {
-          "Authorization": `Basic ${token}`,
           "Content-Type": "application/json",
         },
+          body: JSON.stringify({
+          ip: nodeIpaddress,
+          cart: cartData,
+        }),
       };
       const response = await fetch(url,options);
       const data = await response.json();
 
       if (response.ok) {
         setIsLoading(false);
-        setDiskData(data);
+        // setDiskData(data);
         setIsError({ status: false, msg: "" });
+        await getCartDt("api/v2/iobox/getcart", nodeIpaddress);
       } else {
         throw new Error("Data not found");
       }
     } catch (error) {
       setIsLoading(false);
-      setIsError({ status: true, msg: error.message });
+      // setIsError({ status: true, msg: error.message });
     }
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     let url = `http://${nodeIpaddress}:8084/${currentTab}/api/v1/disk`;
-  //     await getDiskData(url);
-  //   };
-  //   fetchData();
 
-  //   const intervalId = setInterval(fetchData, 30000);
+ useEffect(() => {
+        const fetchData = async () => {
+            let url = `api/v2/nodemanageview/summarydb?nodeId=${nodeDataId}`;
+            await getConfigSummaryDt(url);
+        };
+        fetchData();
+    }, [nodeDataId]);
 
-  // return () => clearInterval(intervalId);
-  // }, [nodeIpaddress, currentTab]);
+     const getConfigSummaryDt = async (url) => {
+        setIsLoading(true);
+        setIsError({ status: false, msg: "" });
+        try {
+
+            const options = {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            };
+            const response = await fetch(url, options);
+            const data = await response.json();
+
+            if (response.ok) {
+                setIsLoading(false);
 
 
+                setNodeItemDt(data);
+                setIsError({ status: false, msg: "" });
+            } else {
+                throw new Error("Data not found");
+            }
+        } catch (error) {
+            setIsLoading(false);
+            setIsError({ status: true, msg: error.message });
+        }
+    };
 
 
 //   const handleRowClick = (value) => {
@@ -167,100 +192,6 @@ const IoboxSummaryTab = ({currentTab }) => {
 //     setGraphOption(value);
 //     setGraphOptionValue(numb);
 //   }
-
-
-useEffect(() => {
-  setEventMainData(myData.interfaces);
-}, []);
-
-
-const myData = {
-    "status": "success",
-    "host_used": "10.205.8.10",
-    "interfaces": [
-        {
-            "name": "ether1",
-            "type": "ether",
-            "running": "true",
-            "mtu": "1500",
-            "rx-byte": "360.67 mbps",
-            "tx-byte": "3984.13 mbps",
-            "rx-packet": "336325",
-            "tx-packet": "3765665"
-        },
-        {
-            "name": "ether2",
-            "type": "ether",
-            "running": "false",
-            "mtu": "1500",
-            "rx-byte": 0,
-            "tx-byte": 0,
-            "rx-packet": "0",
-            "tx-packet": "0"
-        },
-        {
-            "name": "ether3",
-            "type": "ether",
-            "running": "true",
-            "mtu": "1500",
-            "rx-byte": "43.70 mbps",
-            "tx-byte": "482.81 mbps",
-            "rx-packet": "328416",
-            "tx-packet": "354144"
-        },
-        {
-            "name": "ether4",
-            "type": "ether",
-            "running": "false",
-            "mtu": "1500",
-            "rx-byte": "129.68 mbps",
-            "tx-byte": "46.25 mbps",
-            "rx-packet": "37403",
-            "tx-packet": "19265"
-        },
-        {
-            "name": "ether5",
-            "type": "ether",
-            "running": "false",
-            "mtu": "1500",
-            "rx-byte": 0,
-            "tx-byte": 0,
-            "rx-packet": "0",
-            "tx-packet": "0"
-        },
-        {
-            "name": "sfp1",
-            "type": "ether",
-            "running": "true",
-            "mtu": "1500",
-            "rx-byte": 0,
-            "tx-byte": "424.52 mbps",
-            "rx-packet": "0",
-            "tx-packet": "5070166"
-        },
-        {
-            "name": "bridge",
-            "type": "bridge",
-            "running": "true",
-            "mtu": "auto",
-            "rx-byte": "314.96 mbps",
-            "tx-byte": "0.06 mbps",
-            "rx-packet": "4792993",
-            "tx-packet": "422"
-        },
-        {
-            "name": "lo",
-            "type": "loopback",
-            "running": "true",
-            "mtu": "65536",
-            "rx-byte": 0,
-            "tx-byte": 0,
-            "rx-packet": "0",
-            "tx-packet": "0"
-        }
-    ]
-}
-
  
 
   return (
@@ -278,10 +209,10 @@ const myData = {
                 <article>
 
                   <article className="card" id="div2">
-                    <article style={{ margin: "auto", textAlign: 'center' }}>
-                      {/* <img className="nodeimg" style={{ width: '70px', height: '58px' }} src={obcimage} alt="node" />
+                    <article style={{ margin: "auto", textAlign: 'center' ,marginTop:'22px'}}>
+                      <img className="nodeimg" style={{ width: '170px', height: '158px' }} src={obcimage} alt="node" />
                       <label className="summarymode"> {nodeItemDt.nodeDesc}</label>
-                      <label className="summarymode" style={{ display: 'block' }}> Cab - {nodeItemDt?.carnumber || ""}</label> */}
+                      <label className="summarymode" style={{ display: 'block' }}> Cab - {cartData || ""}</label>
                       {/* <label className="summarysytem"><i className="fas fa-arrow-up fa-1x ng-scope "></i>{upTimeData}</label> */}
                     </article>
                     <article style={{ margin: "auto" }}>
@@ -295,7 +226,7 @@ const myData = {
                         </article>
                       </article>
 
-                      {/* <ul className="summarylist">
+                      <ul className="summarylist">
                         <li>
                           <h6> SystemName<span> {nodeItemDt.systemName}</span></h6></li>
                         <li>
@@ -309,7 +240,7 @@ const myData = {
                         <li>
                           <h6>SoftwareVersion<span> {nodeItemDt.softwareVersion}</span></h6></li>
                        
-                      </ul> */}
+                      </ul>
                     </article>
                   </article>
                 </article>
@@ -329,11 +260,21 @@ const myData = {
 
                             <article>
                                 <article className="row" style={{padding:'38px 0 38px 128px'}}>
+                                  <form
+                                    onSubmit={(e) => {
+                                      e.preventDefault();
+                                      getUpdateCart();
+                                    }}
+                                  >
                                     <article className="col-6">
-                                         <span class="scopesel">Cab:</span>
-                                         <input type="text" className="form-controldis searchbar" style={{margin:'0 12px'}} name="" id="" />
-                                         <button className="createbtn">Verify</button>
+                                         <span className="scopesel">Cab:</span>
+                                         <input type="text" className="form-controldis searchbar" style={{margin:'0 12px'}} name="" id="" 
+                                          value={cartData}
+                                          onChange={(e) => setCartData(Number(e.target.value))}
+                                         />
+                                         <button type="submit" className="createbtn">Update</button>
                                     </article> 
+                                    </form>
                                 </article>
                             </article>
                           
@@ -372,9 +313,10 @@ const myData = {
                                     </tr>
                                 ))
                             ) : (
-                                <tr>
-                                    <td colSpan="5" className="datacl centered-text">No Data</td>
-                                </tr>
+                                // <tr>
+                                //     <td colSpan="5" className="datacl centered-text">No Data</td>
+                                // </tr>
+                                ''
                             )}
                         </tbody>
                     </table>

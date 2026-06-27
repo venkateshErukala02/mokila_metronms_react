@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import '../../../src/pages/ornms.css';
-import nodeimage from "../../assets/img/suinodeview.png";
+import nodeimage from "../../assets/img/camimg.webp";
 import radioimage from "../../assets/img/radiomode.png";
 import bootloader from "../../assets/img/bootloader.png";
 import SignalIconn from "./configsignal";
@@ -24,7 +24,7 @@ const CamConfigurationTab = ({ }) => {
     const [svgTemplate, setSvgTemplate] = useState("");
     const [localsnrSignal, setLocalsnrSignal] = useState(null);
     const [remotesnrSignal, setRemotesnrSignal] = useState(null);
-
+    const [sysName,setSysName] = useState("");
 
     const initialConfig = {
         systemName: '',
@@ -80,6 +80,11 @@ const CamConfigurationTab = ({ }) => {
     const [showApplyPopup, setShowApplyPopup] = useState(false);
     const [showApplySuccessPopup, setShowApplySuccessPopup] = useState(false);
 
+     useEffect(() => {
+    if (nodeItemDt?.systemName) {
+        setSysName(nodeItemDt.systemName);
+        }
+    }, [nodeItemDt]);
 
     useEffect(() => {
         if (nodeDataId) {
@@ -583,6 +588,38 @@ const CamConfigurationTab = ({ }) => {
     };
 
 
+     const handleAddSysname = async (e) => {
+          e.preventDefault(); 
+          if (!sysName?.trim() ) return;
+
+        const method = "POST";
+        const url = `http://localhost:8980/metronms/api/v2/nodelinks/setCam/sysName?nodeId=${nodeDataId}&sysName=${encodeURIComponent(sysName)}`
+        try {
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            if (response.ok) {
+                // setShowScuccessMessage(
+                //     isEditMode ? 'The line has been updated successfully.':
+                //     'The line has been created successfully.'
+                // )
+                // setShowAddedSuccessPopup(true);
+                // if (refreshLineData) refreshLineData();
+                // setLineName('')
+            } else {
+                setIsError('Error starting discovery');
+            }
+        } catch (error) {
+            setIsError('An error occurred while contacting the server.');
+        } finally {
+            setIsLoading(false); // Turn off loading state
+        }
+
+    }
+
 
 
 
@@ -601,8 +638,9 @@ const CamConfigurationTab = ({ }) => {
                                 <article>
 
                                     <article className="card" id="div2">
-                                        <article style={{ margin: "auto", textAlign: 'center' }}>
-                                            <img className="nodeimg" src={nodeimage} alt="node" />
+                                        <article style={{ margin: "auto", textAlign: 'center',marginTop:'18px' }}>
+                                            <img className="nodeimg" src={nodeimage} alt="node" width="147"
+                                                    height="150" style={{objectFit:"cover"}} />
                                             <label className="summarymode"> {nodeItemDt.nodeDesc}</label>
                                             <label className="summarymode" style={{ display: 'block' }}> {nodeItemDt.station} ({nodeItemDt.systemName})</label>
                                             <label className="summarysytem"><i className="fas fa-arrow-up fa-1x ng-scope "></i>{nodeItemDt.uptime}</label>
@@ -708,23 +746,28 @@ const CamConfigurationTab = ({ }) => {
                                      <article className="col-12 cam-alignsystem">
                                         <article className="col-4">
                                 <article className="form-row-config "><label for="" className="col-4 config-label" style={{fontSize:"16px"}}>System Name</label><article className="col-sm-5 col-md-5 col-lg-5 ">
-                                    <input type="text" className="config-input" />
+                                   <input
+                                    type="text"
+                                    className="config-input"
+                                    value={sysName}
+                                    onChange={(e) => setSysName(e.target.value)}
+                                    />
                                 </article>
                                 </article>
                                 <article className="cam-alignbtn">
-                                    <button  className="createbtn" type="button">Save</button>
+                                    <button  className="createbtn" type="button" onClick={handleAddSysname}>Save</button>
                                 </article>
-                                <div style={{marginTop:"100px"}}>
+                                {/* <div style={{marginTop:"100px"}}>
                                  <iframe
                                     width="560"
                                     height="315"
-                                    src="https://www.youtube.com/watch?v=oRdxUFDoQe0&list=RDoRdxUFDoQe0&start_radio=1"
+                                    src="http://192.168.66.125"
                                     title="YouTube video player"
                                     frameBorder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    // allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowFullScreen
                                     />
-                                    </div>
+                                    </div> */}
                                 </article>
                                 </article>
                                 
