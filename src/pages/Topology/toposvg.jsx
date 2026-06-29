@@ -490,7 +490,12 @@ useEffect(() => {
       el.setAttribute("fill", "rgb(102, 204, 51)");
     }
 
-      const titleEl = svgRoot.querySelector(`#${position} + title`);
+      let titleEl = svgRoot.querySelector(`#${position} + title`);
+
+      if (!titleEl) {
+        titleEl = svgRoot.querySelector(`#${position} > title`);
+      }
+
       if (titleEl) {
         titleEl.textContent = `${yarditem.systemName} ${yarditem.ipAddress}`;
       }

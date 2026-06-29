@@ -23,12 +23,15 @@ const EventMainTB = () => {
     const [searchBtn, setSearchBtn] = useState(false);
     const [eventipText, setEventipText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isAuditLoading, setIsAuitLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [pageSize, setPageSize] = useState(1);
     const [nodeIdData,setNodeIdData] = useState('');
     const nodeIdRef = useRef(null);
     const [showEventPopup,setShowEventPopup] = useState(false);
+    const [showAuditPopup,setShowAuditPopup] = useState(false);
     const [eventpopupData,setEventpopupData] = useState([]);
+    const [auditpopupData,setAuditpopupData] = useState([]);
     const popupRef = useRef(null);
     const [date, setDate] = useState(null);
     const [fromValue,setFromValue] =useState('0');
@@ -157,12 +160,32 @@ useEffect(() => {
     };
 }, [showEventPopup]);
 
+useEffect(() => {
+    const handleClickOutside = (event) => {
+        if (
+            showAuditPopup &&
+            popupRef.current &&
+            !popupRef.current.contains(event.target)
+        ) {
+            setShowAuditPopup(false);
+        }
+    };
 
-    const getDataEvntMain = async (url) => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+    };
+}, [showAuditPopup]);
+
+
+    const getDataEvntMain = async (url,showLoading = false) => {
         reportUrlRef.current = url;
         setReportUrl(url);
        if(eventipText === ''){
-        setIsLoading(true);
+         if (showLoading) {
+        setIsAuitLoading(true);
+         }
         setIsError({ status: false, msg: "" });
         try {
             const options = {
@@ -177,7 +200,7 @@ useEffect(() => {
 
 
             if (response.status === 204) {
-                setIsLoading(false);
+                // setIsAuitLoading(false);
                 setCustomStartDate(null);
                 setCustomEndDate(null);
                 setEventmainData([]);
@@ -189,7 +212,7 @@ useEffect(() => {
             if (typevalueSel === 'syslogd') {
                     const textData = await response.text(); // ✅ only text
                     setEventmainData(textData || "");
-                    setIsLoading(false);
+                    // setIsLoading(false);
                     return;
                 }
             const data = await response.json();
@@ -208,14 +231,16 @@ useEffect(() => {
                 // setCustomStartDate(null);
                 // setCustomEndDate(null);
             }
-            setIsLoading(false);
+            // setIsAuitLoading(false);
         } catch (error) {
-            setIsLoading(false);
+            // setIsAuitLoading(false);
             setIsError({ status: true, msg: error.message });
         }finally {
             // setCustomStartDate(null);
             // setCustomEndDate(null);
-            setIsLoading(false);
+             if (showLoading) {
+            setIsAuitLoading(false);
+             }
         }
     }
     };
@@ -238,7 +263,7 @@ useEffect(() => {
     useEffect(() => {
         if(selectedDuration === 'Custom') return;
 
-        const fetchData = async() => {
+        const fetchData = async(showLoading = false) => {
             
             if (searchBtn) return;
              if (isFetching.current) return;
@@ -279,7 +304,7 @@ useEffect(() => {
      if (url) {
         reportUrlRef.current = url;
         setReportUrl(url);
-         await getDataEvntMain(url);
+         await getDataEvntMain(url,showLoading);
      }
     }catch (err) {
             console.error(err);
@@ -288,9 +313,9 @@ useEffect(() => {
         }
     };
 
-    fetchData();
+    fetchData(true);
 
-    const interval = setInterval(fetchData, 30000);
+    const interval = setInterval(() => {fetchData(false)}, 30000);
     return () => clearInterval(interval);
 
     }, [typevalueSel, eventmainLimitLabelSel,eventmainSeverityValueSel,searchBtn,fromValue,selectedDuration]);
@@ -455,7 +480,8 @@ useEffect(() => {
         }
     }
 
-     const handleRadialIP = async () => {
+     const handleRadialIP = async (eventipText) => {
+        setExecutedSearch(eventipText);
         const startTimestamp = customStartDate?.getTime();
         const endTimestamp = customEndDate?.getTime();  
         const durationMs = parseInt(selectedDuration);
@@ -470,7 +496,7 @@ useEffect(() => {
             // let filter = "eventSource!%3Dsyslogd" + ';';
             if (typevalueSel ==='auditlog') {
                 // start  = `api/v2/audit/list?_s=`
-                url = `api/v2/audit/list?_s=logDesc==*${eventipText}*;datentime%3Dgt%3D1760080111575&limit=100&offset=0&order=desc&orderBy=id`
+                url = `api/v2/audit/list?_s=&logDesc==*${eventipText}*;datentime%3Dgt%3D${timeParam}&limit=${eventmainLimitLabelSel}&offset=0&order=desc&orderBy=id`
                  handleRadialIPa(url);
             } else {
                 start = `api/v2/events/list?_s=`
@@ -492,7 +518,7 @@ useEffect(() => {
                         filter  =  filter + '&eventSeverity==' + `${eventmainSeverityValueSel}`;
                         }
                          if (timeParam && selectedDuration !== 'Custom') {
-                    filter  =  filter +  '&eventCreateTime%3Dgt%3D' + `${timeParam}`;
+                    filter  =  filter +  'eventCreateTime%3Dgt%3D' + `${timeParam}`;
                     }
                     if(selectedDuration === 'Custom' && startTimestamp && endTimestamp){
                         filter = filter + `eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}`;
@@ -695,8 +721,17 @@ useEffect(() => {
         setEventpopupData(event)
     }
 
+     const handleAuditPopup=(event)=>{
+        setShowAuditPopup(true);
+        setAuditpopupData(event)
+    }
+
     const handleEventPopupClose=()=>{
         setShowEventPopup(false);
+    }
+
+     const handleAuditPopupClose=()=>{
+        setShowAuditPopup(false);
     }
 
 
@@ -803,7 +838,7 @@ useEffect(() => {
                         <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
 
                         <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
-                        <button type="button" className="createbtn" onClick={() => { handleRadialIP();}} >Search</button>
+                        <button type="button" className="createbtn" onClick={() => { handleRadialIP(eventipText);}} >Search</button>
                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{  marginLeft: '7px', display: executedSearch?.trim() ? 'inline-block' : 'none' }}> Clear Search</button>
                     </article>
                     <article style={{ display: typevalueSel === 'syslogd' ? 'block' : 'none' }}>
@@ -822,7 +857,7 @@ useEffect(() => {
                         <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
 
                          <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="IP Address " id="" className="form-controlevents" />
-                        <button type="button" className="createbtn" onClick={() => { handleRadialIP();}} >Search</button>
+                        <button type="button" className="createbtn" onClick={() => { handleRadialIP(eventipText);}} >Search</button>
                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{  marginLeft: '7px', display: executedSearch?.trim() ? 'inline-block' : 'none' }}> Clear Search</button>
                     </article>
 
@@ -843,7 +878,7 @@ useEffect(() => {
                             </select>
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Severity :</label>
 
-                            <select name="name" id="name" value={eventmainSeverityValueSel} onChange={handleSeverityMode} className="form-controll1" style={{ maxWidth: '116px', minWidth: '116px' }}>
+                            <select name="name" id="name" value={eventmainSeverityValueSel} onChange={handleSeverityMode} className="form-controll1" style={{ maxWidth: '116px', minWidth: '116px' }}  disabled={selectedDuration === 'Custom'}>
                                 <option value="" selected="selected" label="All">All</option>
                                 <option value="7" label="Critical">Critical</option>
                                 <option value="6" label="Major">Major</option>
@@ -863,7 +898,7 @@ useEffect(() => {
                                 <option value="Custom" label="Custom">Custom</option>
                             </select>
 
-                            <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
+                            <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false"  disabled={selectedDuration === 'Custom'}>
                                 <option value="25" label="25">25</option>
                                 <option value="50" label="50">50</option>
                                 <option value="100" label="100">100</option>
@@ -1021,10 +1056,17 @@ useEffect(() => {
                                 </tr>
                             </thead>
                             <tbody className="eventstbdtb">
-                                {Array.isArray(auditmainData) && auditmainData?.length > 0 ? (
+                                {isAuditLoading ? (
+                                <tr>
+                                    <td colSpan="4" className="centered-text">
+                                        Loading...
+                                    </td>
+                                </tr>
+                            ) :
+                                Array.isArray(auditmainData) && auditmainData?.length > 0 ? (
                                     auditmainData.map((event) => (
-                                        <tr key={event.id}>
-                                            <td>{event.date}</td>
+                                        <tr key={event.id} onClick={()=>handleAuditPopup(event)}>
+                                            <td style={{paddingLeft:"5px"}}>{event.date}</td>
                                             <td>{event.type}</td>
                                             <td>{event.user}</td>
                                             <td>{event.log}</td>
@@ -1082,6 +1124,54 @@ useEffect(() => {
                                 </article>
                                 <article style={{textAlign:'center',marginBottom:'12px'}}>
                                     <button className="createbtn" type="button" onClick={handleEventPopupClose}>Close</button>
+                                </article>
+                            </article>
+                        ) }
+                    </article>
+                </article>}
+
+                  {showAuditPopup  && <article className="eventpopupcont">
+                    <article className="eventboxstyle" ref={popupRef}>
+                        {auditpopupData &&(
+                            <article>
+                                <article className="evntdetailtitle">
+                                    Audit log details
+                                </article>
+                                <article style={{fontSize:'15px',padding:'15px 14px 0 14px'}}>
+                                    <fieldset className="ip-fieldset">
+                                        {/* <legend>{eventpopupData.nodeLabel}</legend> */}
+                                    <h4>{auditpopupData.nodeLabel}</h4>
+                                    <article className="col-12 row">
+                                <div className="col-3">
+                                    <label className="eventpopuplabel">Audit Id:</label>
+                                </div>
+                                <div className="col-9 eventpopuplabel">
+                                    {auditpopupData.id}
+                                </div>
+                                </article>
+
+                                <article className="col-12 row">
+                                <div className="col-3">
+                                    <label className="eventpopuplabel">Audit Time:</label>
+                                </div>
+                                <div className="col-9 eventpopuplabel">
+                                    {auditpopupData.date}
+                                </div>
+                                </article>
+
+                                <article className="col-12 row">
+                                <div className="col-3">
+                                    <label className="eventpopuplabel">Type:</label>
+                                </div>
+                                <div className="col-9 eventpopuplabel">
+                                    {auditpopupData.type}
+                                </div>
+                                </article>
+                                <p className="eventpopupdescrpt">{auditpopupData.logDesc}</p>
+                                </fieldset>
+                                </article>
+                                <article style={{textAlign:'center',marginBottom:'12px'}}>
+                                    <button className="createbtn" type="button" onClick={handleAuditPopupClose}>Close</button>
                                 </article>
                             </article>
                         ) }

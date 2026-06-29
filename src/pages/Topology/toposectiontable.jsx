@@ -263,9 +263,11 @@ const TopoSectionTable=({textName,textId,stationView, stationTagview,lineTagview
             
               if (`${node.productCode}` === 'AP') {
                 navigate('/SN-view', { state: { previousState } });
-              } else if(`${node.productCode}` === 'CAM'){
-                    alert('Node-View Not Supported')
-                }  else {
+              } 
+            //   else if(`${node.productCode}` === 'CAM'){
+            //         alert('Node-View Not Supported')
+            //     } 
+                 else {
                 navigate(`/${node.productCode}-view`, {
                   state: { node, previousState },
                 });
