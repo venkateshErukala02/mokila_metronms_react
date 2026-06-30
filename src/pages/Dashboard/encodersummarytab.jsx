@@ -307,7 +307,7 @@ const getCameraData = async (url) => {
                     <article className="row">
                         <article className="col-md-12">
                           <article className="col-12">
-                            <h3 class="configlinktitle">Camera Connectivity Status</h3>
+                            <h3 className="configlinktitle">Camera Connectivity Status</h3>
                             <article style={{paddingLeft:'72px'}}>
                             <table className="col-6 w-full table-fixed border-allsd">
                             <thead className="encodertbtwo">

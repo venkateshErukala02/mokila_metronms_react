@@ -3,7 +3,7 @@ import { useLayoutEffect } from 'react';
 import '../ornms.css'
  
 
-const StationSvg = ({ textName, setTrainView, setStationView,setStationTagview, setTrainLabelDiply, setTrainId ,rdDataRef,trainView,trainId,stationNode,goToStationView,yardfacilitieData,yardfacilitieDataRef,trainData,trainDataRef ,stationIdFromSvg }) => {
+const StationSvg = ({ textName, setTrainView, setStationView,setStationTagview, setTrainLabelDiply, setTrainId ,rdDataRef,trainView,trainId,stationNode,goToStationView,yardfacilitieData,yardfacilitieDataRef,trainData,trainDataRef ,stationIdFromSvg ,parentTextName,childrenTextName,lineName }) => {
     // const [trainData, setTrainData] = useState('')
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [isLoading, setIsLoading] = useState(false);
@@ -256,7 +256,7 @@ const resetTrainLayers = (svgRoot) => {
     }
 
     useEffect(() => {
-        if (!svgContent || textName?.data?.mode === 'facility') {
+        if (!svgContent || textName?.data?.mode === 'facility' || !!lineName) {
 
             const svgRoot = svgContainerRef.current;
             if (!svgRoot) return;
@@ -279,141 +279,138 @@ const resetTrainLayers = (svgRoot) => {
                 el.classList.add("svgstationname");
             }
         }
-    }, [textName?.text, svgContent]);
+    }, [textName?.text, svgContent,lineName]);
 
     useEffect(() => {
-        const controller = new AbortController();
+        if(lineName) return
+    const controller = new AbortController();
 
-        let svg = '';
+    let svg = "";
 
-        if (textName != "") {
-            if (textName?.data.mode == 'facility') {
-                svg = 'Station_Line1.svg';
-            }else{
-                svg = 'Station_Line1.svg'; 
-            }
+    if (textName !== "") {
+        const lineNa =
+            parentTextName?.data?.display;
+
+        if (!lineNa) return;
+
+        if (lineNa === "line1-sec1" || lineNa === "line1-sec2" || parentTextName?.data?.display == 'line1' || parentTextName?.data?.display == 'line2' || childrenTextName?.data?.display == 'line1-sec1' || childrenTextName?.data?.display == 'line1-sec2') {
+            svg = "Station_Line1.svg";
+        } else if (lineNa === "line4-sec1"  || parentTextName?.data?.display == 'line4' || childrenTextName?.data?.display == 'line4-sec1') {
+            svg = "Station_Line2.svg";
+        } else {
+            return;
         }
-         else {
-            
+    } 
+    else {
+        
+    }
+
+    setSvgContent("");
+
+    fetch(`images/${svg}`, {
+        signal: controller.signal,
+    })
+        .then((res) => res.text())
+        .then((data) => setSvgContent(data));
+
+    return () => controller.abort();
+}, [textName, lineName, parentTextName]);
+
+useEffect(() => {
+    const controller = new AbortController();
+
+    let svg = "";
+
+    if (textName !== "" || textName =='') {
+        const lineNa = lineName;
+
+        if (!lineNa) return;
+
+        if (lineNa === "line1-sec1" || lineNa === "line1-sec2") {
+            svg = "Station_Line1.svg";
+        } else if (lineNa === "line4-sec1") {
+            svg = "Station_Line2.svg";
+        } else {
+            return;
         }
-        svg = 'Station_Line1.svg';
-        let url = 'images/' + svg;
-        setSvgContent('');
-        // Api call fetchSvg with signal
-        fetch(url, controller.signal)
-            .then((res) => res.text())
-            .then((data) => {
-                setSvgContent(data);
-            });
+    } else {
+       
+    }
 
+    setSvgContent("");
 
-        // Cleaning up on unmount or textName change
-        return () => controller.abort();
-    }, [textName]);
+    fetch(`images/${svg}`, {
+        signal: controller.signal,
+    })
+        .then((res) => res.text())
+        .then((data) => setSvgContent(data));
 
+    return () => controller.abort();
+}, [textName, lineName]);
+
+    
     useLayoutEffect(() => {
-        if (!svgContent || !trainData.length) return;
-     const rafId = requestAnimationFrame(() => {
-        const svgRoot = svgContainerRef.current;
+    if (!svgContent || !trainData.length) return;
 
-        let svgTopArray = ['#toptrainclick', '#toptrainclick2', '#toptrainclicktext', '#toptrainclick3']
+    const svgRoot = svgContainerRef.current;
+    if (!svgRoot) return;
 
-        let svgBottomArray = ['#bottomtrainclick', '#bottomtrainclick1', '#bottomtrainclick2', '#bottomtrainclick3', '#bottomtrainclicktext'
+     let svgTopArray = ['#toptrainclick', '#toptrainclick2', '#toptrainclicktext', '#toptrainclick3']
+
+      let svgBottomArray = ['#bottomtrainclick', '#bottomtrainclick1', '#bottomtrainclick2', '#bottomtrainclick3', '#bottomtrainclicktext'
         ]
 
-        // resetTrainLayers(svgRoot);
+    // resetTrainLayers(svgRoot); // 👈 VERY IMPORTANT
 
-        trainData.forEach((item) => {
-            let trainName = 'Train: ' + item.trainId + item.obc;
-            if (item.direction === 'NBNE') {
-                const tnelement = svgRoot.querySelector('#bottomtrainclicktext');
-                if (tnelement != null) {
-                    tnelement.textContent = trainName;
-                }
+    trainData.forEach((item) => {
+        let trainName = 'Train: ' + item.trainId + item.obc;
 
-                const bottomLayer = svgRoot.querySelector('#bottom_train_layer');
+        const isBottom =
+            item.direction === 'NBNE' ||
+            item.direction === 'NBSE' ||
+            item.direction === 'EB';
 
-                if (bottomLayer) {
-                    bottomLayer.style.display = "block";
-                    bottomLayer.setAttribute('train-id', item.trainId + item.obc);
-                    bottomLayer.style.cursor = "pointer";
-                    bottomLayer.addEventListener('click', handleTrainClick);
-                }
+        const isTop =
+            item.direction === 'SBNE' ||
+            item.direction === 'SBSE' ||
+            item.direction === 'WB';
 
-                if (bottomLayer !== null)
-                    bottomLayer.style.visibility = 'visible';
-                svgBottomArray.map((i) => {
-                    let bottomClick0 = svgRoot.querySelector(i);
-                    if (bottomClick0 != null)
-                        if (i !== '#bottomtrainclick3')
-                            Callfun(bottomClick0, 'block');
-                })
-            } else if (item.direction === 'NBSE' || item.direction === 'EB') {
-                const bottomLayer = svgRoot.querySelector('#bottom_train_layer');
+        if (isBottom) {
+            const textEl = svgRoot.querySelector('#bottomtrainclicktext');
+            if (textEl) textEl.textContent = trainName;
 
-                if (bottomLayer) {
-                    bottomLayer.style.display = "block";
-                    bottomLayer.style.cursor = "pointer"; 
-                    bottomLayer.setAttribute('train-id', item.trainId + item.obc);
-                    bottomLayer.addEventListener('click', handleTrainClick);
-                }
-                const tnelement = svgRoot.querySelector('#bottomtrainclicktext');
-                if (tnelement != null) {
-                    tnelement.textContent = trainName;
-                }
-                svgBottomArray.map((i) => {
-                    let bottomClick0 = svgRoot.querySelector(i);
-                    if (bottomClick0 != null)
-                        if (i !== '#bottomtrainclick2')
-                            Callfun(bottomClick0, 'block');
-                })
-            } else if (item.direction === 'SBNE') {
-                const topLayer = svgRoot.querySelector('#top_train_layer');
-
-                if (topLayer) {
-                    topLayer.style.display = "block";
-                    topLayer.style.cursor = "pointer";
-                    topLayer.setAttribute('train-id', item.trainId + item.obc);
-                    topLayer.addEventListener('click', handleTrainClick);
-                }
-                const tnelement = svgRoot.querySelector('#toptrainclicktext');
-                if (tnelement != null) {
-                    tnelement.textContent = trainName;
-                }
-                svgTopArray.map((i) => {
-                    let bottomClick0 = svgRoot.querySelector(i);
-                    if (bottomClick0 != null)
-                        if (i !== '#toptrainclick2')
-                            Callfun(bottomClick0, 'block');
-                })
-            } else if (item.direction === 'SBSE' || item.direction === 'WB') {
-                const topLayer = svgRoot.querySelector('#top_train_layer');
-
-                if (topLayer) {
-                    topLayer.style.display = "block";
-                    topLayer.style.cursor = "pointer";
-                    topLayer.setAttribute('train-id', item.trainId + item.obc);
-                    topLayer.addEventListener('click', handleTrainClick);
-                }
-                const tnelement = svgRoot.querySelector('#toptrainclicktext');
-                if (tnelement != null) {
-                    tnelement.textContent = trainName;
-                }
-                svgTopArray.map((i) => {
-                    let bottomClick0 = svgRoot.querySelector(i);
-                    if (bottomClick0 != null)
-                        if (i !== '#toptrainclick3')
-                            Callfun(bottomClick0, 'block');
-                })
+            const layer = svgRoot.querySelector('#bottom_train_layer');
+            if (layer) {
+                layer.style.display = 'block';
+                layer.onclick = handleTrainClick; // ✅ FIX
+                layer.setAttribute('train-id', item.trainId + item.obc);
             }
 
-        })
+            svgBottomArray.forEach((id) => {
+                const el = svgRoot.querySelector(id);
+                if (el) Callfun(el, 'block');
+            });
+        }
 
-     });
-     
-    return () => cancelAnimationFrame(rafId);
+        if (isTop) {
+            const textEl = svgRoot.querySelector('#toptrainclicktext');
+            if (textEl) textEl.textContent = trainName;
 
-    }, [svgContent,trainData]);
+            const layer = svgRoot.querySelector('#top_train_layer');
+            if (layer) {
+                layer.style.display = 'block';
+                layer.onclick = handleTrainClick; // ✅ FIX
+                layer.setAttribute('train-id', item.trainId + item.obc);
+            }
+
+            svgTopArray.forEach((id) => {
+                const el = svgRoot.querySelector(id);
+                if (el) Callfun(el, 'block');
+            });
+        }
+    });
+
+}, [svgContent, trainData, lineName]);
 
     const handleTrainClick = (event) => {
         let trainIcon = event.target.parentElement

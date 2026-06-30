@@ -25,6 +25,7 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
     const [searchBtn, setSearchBtn] = useState(false);
     const [searchTrigger, setSearchTrigger] = useState(0);
     const dropdownRef = useRef(null);
+    const dropdownSearchParamRef = useRef(null);
     const [deviceTypeRequired,setDeviceTypeRequired] = useState(true);
     const [deviceType,setDeviceType] = useState('');
     const [uciData,setUciData] = useState([]);
@@ -35,7 +36,6 @@ const ConfigChangeSub = ({ handleSubContainer, refreshLineData, mode, line }) =>
     const [timestamp, setTimestamp] = useState(Date.now());
     const [showApplyPopup, setShowApplyPopup] = useState(false);
     const [showApplySuccessPopup, setShowApplySuccessPopup] = useState(false);
-
     const handleProfileContclose = () => {
         handleSubContainer(true);
         setDeviceType('');
@@ -315,6 +315,23 @@ const handleAddAll = () => {
     });
 };
 
+useEffect(() => {
+    const handleClickOutside = (event) => {
+        if (
+            dropdownSearchParamRef.current &&
+            !dropdownSearchParamRef.current.contains(event.target)
+        ) {
+            setIsOpen(false);
+        }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+    };
+}, []);
+
 
     return (
 
@@ -348,8 +365,9 @@ const handleAddAll = () => {
                            <article style={{display:'flex' ,position:'relative'}}>
                                 <label className="settinglabelsub">Select Config Parameter</label>
                                 <div>
-
+                                 <div ref={dropdownSearchParamRef}>                   
                                 <button
+                                    type="button"
                                     className="form-controlfirm"
                                     style={{ width: '50px', marginTop: '4px' }}
                                     onClick={() => setIsOpen(!isOpen)}
@@ -384,6 +402,7 @@ const handleAddAll = () => {
                                     </ul>
                                     </article>
                                 )}
+                                </div>
                                 </div>
                                 </article>
                             </article>

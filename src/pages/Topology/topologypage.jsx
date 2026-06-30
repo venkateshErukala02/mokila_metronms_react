@@ -74,6 +74,11 @@ const TopoPg = () => {
     const [sortField, setSortField] = useState('status');
     const [sortOrder, setSortOrder] = useState('desc');
     const childrenTextNameRef = useRef([]);
+    const [lineName,setLineName] = useState('')
+
+    const onLocationNameChange = (value) => {
+        setLineName(value);
+    };
 
     const handleNodeClick = (value,parent) => {
         setTextNameChanged(true); 
@@ -293,6 +298,7 @@ useEffect(() => {
   if (!enableStationPolling) return;
   if (stationRefreshKey < 0) return;
   if (!stationIdFromSvg) return;
+  setTrainData('');
 
   const stationId = stationIdFromSvg;
 
@@ -465,7 +471,7 @@ useEffect(() => {
     const renderSectFacility=(textName)=>{
         switch (textName?.data?.type) {
             case 'facility':
-               return ( <> <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg}/>
+               return ( <> <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg} parentTextName={parentTextName} childrenTextName={childrenTextName} lineName={lineName}/>
               <StationNodeTableView  yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange}/>
                       </> );
             /*{
@@ -514,7 +520,7 @@ useEffect(() => {
      const renderTagView = (stationTagview, lineTagview) => {
         if (stationTagview) {
             return <>
-                <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg}/>
+                <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg} parentTextName={parentTextName} childrenTextName={childrenTextName}lineName={lineName}/>
               <StationNodeTableView yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange} />
             </>
         } else if (lineTagview) {
@@ -931,7 +937,7 @@ const onSortChange = (field) => {
                         <hr  className="hrll" style={{marginBottom:'0px'}}/>
                         <article>
                         <TreeList onTreeDataChange={handleExpandedPrevTreeData} getElementAtEvent={handleNodeClick} selectedNodeId={selectedTreeNodeId} circleId={circleId} onStationResolved={setStationNode} selectedPrevNodeId={selectedPrevNodeId} prevIdActive={prevIdActive}  onStationCircleIdChange={setStationIdFromSvg} stationRefreshKey={stationRefreshKey}
-                       onChildrenData={handleChildrenData} prevTreeDt={prevTreeDt} selectedTreeNodeId ={selectedTreeNodeId}
+                       onChildrenData={handleChildrenData} prevTreeDt={prevTreeDt} selectedTreeNodeId ={selectedTreeNodeId}  onLocationNameChange={onLocationNameChange}
                        />
                             </article>
                             <article>

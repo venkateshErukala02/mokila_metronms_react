@@ -4,7 +4,7 @@ import './../Topology/topology.css';
 
 
 
-const TreeList = ({ getElementAtEvent,selectedNodeId,circleId,onStationResolved ,selectedTreeNodeId,selectedPrevNodeId,prevIdActive,onStationCircleIdChange,stationRefreshKey,onChildrenData,onTreeDataChange,prevTreeDt}) => {
+const TreeList = ({ getElementAtEvent,selectedNodeId,circleId,onStationResolved ,selectedTreeNodeId,selectedPrevNodeId,prevIdActive,onStationCircleIdChange,stationRefreshKey,onChildrenData,onTreeDataChange,prevTreeDt,onLocationNameChange}) => {
   const [nodeData, setNodeData] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   const defaultTree = [
@@ -250,6 +250,7 @@ const facilityIdRef = useRef(null);
               setLocationId(facility?.locationId || null);
               setRegionName(facility?.regionName || null);
               setLocationName(facility?.locationName || null);
+              onLocationNameChange?.(facility?.locationName);
               setStationName(facility?.name || null);
               // onStationCircleIdChange?.(facility?.id || null);
               onStationCircleIdChange?.(facilityIdRef.current);
