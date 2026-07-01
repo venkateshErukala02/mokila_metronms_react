@@ -4442,7 +4442,7 @@ svg *:focus {
   color:#4ade80;
   width:500px;
   min-height:400px;
-  max-height:500px;
+  max-height:410px;
   overflow-y:auto;
   border-radius:8px;
   box-shadow:0 0 20px rgba(0,0,0,0.8);

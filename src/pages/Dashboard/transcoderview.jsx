@@ -18,9 +18,11 @@ const TranscoderView = () => {
     const [currentTab, setCurrentTab] = useState('summary')
     const [transcoderData, setTranscoderData] = useState([]);
 
-    const nodeDataId = useSelector((state) => state.node?.node?.nodeId || state.node?.node?.id);
-    const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress || state.node?.node?.primaryIP);
-     const nodeLocation = useSelector((state) => state.node?.node?.location);
+    const nodeDataId = useSelector((state) => state.node?.node?.nodeId ?? state.node?.node?.id);
+    const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress ?? state.node?.node?.primaryIP);
+    const nodeLocation = useSelector((state) => state.node?.node?.location);
+    const ipValue = localStorage.getItem('nodeIpaddress')
+    const nodeIdValue = localStorage.getItem('nodeId')
 
 
     useEffect(()=>{
@@ -103,10 +105,6 @@ const TranscoderView = () => {
     }, [nodeLocation]);
 
 
-
- const IPadd = localStorage.getItem('nodeIpaddress')
-
-
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -149,7 +147,7 @@ const TranscoderView = () => {
 
                             <ul className="nodelist">
                                 <li><a>Node View</a></li>
-                                <li><a href={`http://${transcoderData?.System?.nwkip}`} target="_blank">{transcoderData?.System?.nwkip}</a></li>
+                                <li><a href={`http://${transcoderData?.System?.nwkip || ipValue}`} target="_blank">{transcoderData?.System?.nwkip || ipValue}</a></li>
                                 <li onClick={() => handleRowClick('summary')} className={`${currentTab === 'summary' ? 'active' : ''}`}> <a>  <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Summary</a></li>
                                  <li onClick={() => handleRowClick('monitoring')} className={`${currentTab === 'monitoring' ? 'active' : ''}`}> <a>  <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Monitoring</a></li>
                                 <li onClick={() => handleRowClick('events')} className={`${currentTab === 'events' ? 'active' : ''}`}> <a> <i

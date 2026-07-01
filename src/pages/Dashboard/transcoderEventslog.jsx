@@ -90,6 +90,17 @@ const TranscoderEventLog = ({ currentTab, nodeItemDt }) => {
     const handleClearSearch = () => {
         setSearchText('');
         setSearch('');
+        // setExecutedSearch('');
+        setSelectedDate(new Date());
+        const targetDate = new Date();
+        if (!targetDate) return;
+
+        const y = targetDate.getFullYear();
+        const month = String(targetDate.getMonth() + 1).padStart(2, "0");
+        const day = String(targetDate.getDate()).padStart(2, "0");
+        const formattedDate = `${y}-${month}-${day}`;
+        let url = `http://${nodeIpaddress}:8084/${currentTab}/api/v1/logs?since=${formattedDate}&search=%27%27`;
+        getTranscoderLogData(url);
     }
 
     const handleSearch = (searchText, selectedDate) => {
