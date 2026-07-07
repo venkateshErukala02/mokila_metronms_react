@@ -595,11 +595,11 @@ const TcSummaryTab = ({  }) => {
     const rebootQuadTranscoderService = async () => {
         try {
             setIsApplyingQuad(true);
-            const stopUrl = `http://${nodeIpaddress}:8084/transcoder/api/v1/service/stop`;
-            const startUrl = `http://${nodeIpaddress}:8084/transcoder/api/v1/service/start`;
+            // const stopUrl = `http://${nodeIpaddress}:8084/transcoder/api/v1/service/stop`;
+            // const startUrl = `http://${nodeIpaddress}:8084/transcoder/api/v1/service/start`;
 
             // Stop service
-            const stopResponse = await fetch(stopUrl, { method: "POST" });
+            const stopResponse = await fetch('api/v2/troubleshoot/transcoder/stop', { method: "POST",body: `http://${nodeIpaddress}:8084/transcoder/api/v1/service/stop`});
             if (!stopResponse.ok) {
                 throw new Error(`Failed to stop transcoder. Status: ${stopResponse.status}`);
             }
@@ -609,7 +609,7 @@ const TcSummaryTab = ({  }) => {
             await new Promise((resolve) => setTimeout(resolve, 10000));
 
             // Start service
-            const startResponse = await fetch(startUrl, { method: "POST" });
+            const startResponse = await fetch('api/v2/troubleshoot/transcoder/start', { method: "POST",body: `http://${nodeIpaddress}:8084/transcoder/api/v1/service/start` });
             if (!startResponse.ok) {
                 throw new Error(`Failed to start transcoder. Status: ${startResponse.status}`);
             }
@@ -632,11 +632,11 @@ const TcSummaryTab = ({  }) => {
     const rebootRstpTranscoderService = async () => {
         try {
             setIsApplyingRstpurl(true);
-            const stopUrl = `http://${nodeIpaddress}:8084/transcoder/api/v1/service/stop`;
-            const startUrl = `http://${nodeIpaddress}:8084/transcoder/api/v1/service/start`;
+            // const stopUrl = `http://${nodeIpaddress}:8084/transcoder/api/v1/service/stop`;
+            // const startUrl = `http://${nodeIpaddress}:8084/transcoder/api/v1/service/start`;
 
             // Stop service
-            const stopResponse = await fetch(stopUrl, { method: "POST" });
+            const stopResponse = await fetch('api/v2/troubleshoot/transcoder/stop', { method: "POST",body: `http://${nodeIpaddress}:8084/transcoder/api/v1/service/stop`, });
             if (!stopResponse.ok) {
                 throw new Error(`Failed to stop transcoder. Status: ${stopResponse.status}`);
             }
@@ -646,7 +646,7 @@ const TcSummaryTab = ({  }) => {
             await new Promise((resolve) => setTimeout(resolve, 10000));
 
             // Start service
-            const startResponse = await fetch(startUrl, { method: "POST" });
+            const startResponse = await fetch('api/v2/troubleshoot/transcoder/start', { method: "POST",body: `http://${nodeIpaddress}:8084/transcoder/api/v1/service/start` });
             if (!startResponse.ok) {
                 throw new Error(`Failed to start transcoder. Status: ${startResponse.status}`);
             }

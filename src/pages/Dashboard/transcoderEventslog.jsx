@@ -258,34 +258,36 @@ const handleRowClick = (value) => {
 
     const getReportData = async (reportUrl) => {
   try {
-    const response = await fetch('api/v2/troubleshoot/transcoder/logs', {
-      method: "POST",
-      body: reportUrl
-    });
+  const response = await fetch("api/v2/troubleshoot/transcoder/logs", {
+    method: "POST",
+    body: reportUrl
+  });
 
-    if (!response.ok) {
-      throw new Error("Failed to download file");
-    }
-
-    const blob = await response.blob();
-
-    // Create a download link
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-
-    // File name
-    a.download = `logs_${Date.now()}.txt`;
-
-    document.body.appendChild(a);
-    a.click();
-
-    // Cleanup
-    a.remove();
-    window.URL.revokeObjectURL(url);
-  } catch (error) {
-    console.error("Download error:", error);
+  if (!response.ok) {
+    throw new Error("Failed to download logs");
   }
+
+  const data = await response.json();
+
+  const logText = data.logs.join("\n");
+
+  const blob = new Blob([logText], { type: "text/plain" });
+
+  const url = window.URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `logs_${Date.now()}.txt`;
+
+  document.body.appendChild(a);
+  a.click();
+
+  a.remove();
+  window.URL.revokeObjectURL(url);
+
+} catch (error) {
+  console.error("Download error:", error);
+}
 };
 
     return (
