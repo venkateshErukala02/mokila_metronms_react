@@ -60,18 +60,15 @@ const TxErrorChart = ({ graphOption,graphOptionValue,currentTab}) => {
     setIsLoading(true);
     setIsError({ status: false, msg: "" });
     try {
-      const username = "admin";
-      const password = "admin";
-      const token = btoa(`${username}:${password}`);
       const options = {
-        method: "GET",
+        method: "POST",
         headers: {
-          "Authorization": `Basic ${token}`,
           "Content-Type": "application/json",
         },
+        body: `http://${nodeIpaddress}:8084/${currentTab}/api/v1/netstats`,
       };
 
-      const response = await fetch(url);
+      const response = await fetch(url,options);
       
       if (response.status === 200) {
         const data = await response.json();
@@ -79,7 +76,7 @@ const TxErrorChart = ({ graphOption,graphOptionValue,currentTab}) => {
         if (graphOption === 'live') {
              let dt = new Date();
             const dataNew = {
-            txErrorValue: data.tx_errors || 0,
+            txErrorValue: data.data.tx_errors || 0,
             timestamp: dt.getTime() || 0,
             index: counterRef.current
           }
@@ -90,7 +87,7 @@ const TxErrorChart = ({ graphOption,graphOptionValue,currentTab}) => {
           }
           counterRef.current += 1;
         }else{
-           const formatted = formatChartData(data);
+           const formatted = formatChartData(data.data);
           setTxErrorDt(formatted);
         }
       } else if (response.status === 304) {
@@ -120,7 +117,7 @@ const TxErrorChart = ({ graphOption,graphOptionValue,currentTab}) => {
     }
     if(graphOption ==='live'){
     const setTime =  setInterval(() => {
-        const url = `http://${nodeIpaddress}:8084/${currentTab}/api/v1/netstats`;
+        const url = `api/v2/troubleshoot/${currentTab}/netstats`;
        getServerStatusDt(url);
     }, 5000);
    
@@ -134,7 +131,7 @@ const TxErrorChart = ({ graphOption,graphOptionValue,currentTab}) => {
     useEffect(() => {
       let url='';
       if(graphOption ==='live'){
-          url = `http://${nodeIpaddress}:8084/${currentTab}/api/v1/netstats`;
+          url = `api/v2/troubleshoot/${currentTab}/netstats`;
       }
       else{
       url=`rest/measurements/node%5B${nodeDataId}%5D.nodeSnmp%5B%5D?aggregation=AVERAGE&att=tx_errors&duration=${graphOptionValue}`;

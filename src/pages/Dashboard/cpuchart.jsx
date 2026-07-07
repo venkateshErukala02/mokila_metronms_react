@@ -62,18 +62,15 @@ const CpuChart = ({ graphOption,graphOptionValue,currentTab}) => {
     setIsLoading(true);
     setIsError({ status: false, msg: "" });
     try {
-      const username = "admin";
-      const password = "admin";
-      const token = btoa(`${username}:${password}`);
       const options = {
-        method: "GET",
+        method: "POST",
         headers: {
-          "Authorization": `Basic ${token}`,
           "Content-Type": "application/json",
         },
+        body: `http://${nodeIpaddress}:8084/${currentTab}/api/v1/cpu`,
       };
 
-      const response = await fetch(url);
+      const response = await fetch(url,options);
       
       if (response.status === 200) {
         const data = await response.json();
@@ -81,7 +78,7 @@ const CpuChart = ({ graphOption,graphOptionValue,currentTab}) => {
         if (graphOption === 'live') {
              let dt = new Date();
             const dataNew = {
-            cpu: data.cpu || 0,
+            cpu: data.data.cpu || 0,
             // lsnr: data.remotesnr,
             timestamp: dt.getTime() || 0,
             index: counterRef.current
@@ -93,7 +90,7 @@ const CpuChart = ({ graphOption,graphOptionValue,currentTab}) => {
           }
           counterRef.current += 1;
         }else{
-           const formatted = formatChartData(data);
+           const formatted = formatChartData(data.data);
           setCpuData(formatted);
 
            if (formatted.length === 0) {
@@ -139,7 +136,7 @@ const CpuChart = ({ graphOption,graphOptionValue,currentTab}) => {
 
        const setTime =  setInterval(() => {
         // const url = `http://${nodeIpaddress}:8084/transcoder/api/v1/netstats`;
-        const url=`http://${nodeIpaddress}:8084/${currentTab}/api/v1/cpu`;
+        const url= `api/v2/troubleshoot/${currentTab}/cpu`;
        getServerStatusDt(url);
     }, 5000);
    
@@ -155,7 +152,7 @@ const CpuChart = ({ graphOption,graphOptionValue,currentTab}) => {
       let url='';
       if(graphOption ==='live'){
         //   url = `http://${nodeIpaddress}:8084/transcoder/api/v1/netstats`;
-          url=`http://${nodeIpaddress}:8084/${currentTab}/api/v1/cpu`;
+          url= `api/v2/troubleshoot/${currentTab}/cpu`;
       }
       else{
         url =`rest/measurements/node%5B${nodeDataId}%5D.nodeSnmp%5B%5D?aggregation=AVERAGE&att=cpu&duration=${graphOptionValue}`;

@@ -27,28 +27,28 @@ const ObcNodeView = () => {
   const nodeDataId = useSelector((state) => state.node?.node?.nodeId || state.node?.node?.id)
 
   const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress || state.node?.node?.primaryIP);
+const ipValue = localStorage.getItem('nodeIpaddress')
+    const nodeIdValue = localStorage.getItem('nodeId')
+
 
 
    const getDiskData = async (url) => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
-            const username = "admin";
-            const password = "admin";
-            const token = btoa(`${username}:${password}`);
             const options = {
-                method: "GET",
+                method: "POST",
                 headers: {
-                    "Authorization": `Basic ${token}`,
                     "Content-Type": "application/json",
                 },
+                body: `http://${ipValue}:8084/obc/api/v1/disk`,
             };
-            const response = await fetch(url);
+            const response = await fetch(url,options);
             const data = await response.json();
 
             if (response.ok) {
                 setIsLoading(false);
-                setDiskData(data);
+                setDiskData(data.data);
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("Data not found");
@@ -62,7 +62,7 @@ const ObcNodeView = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            let url = `http://${nodeIpaddress}:8084/obc/api/v1/disk`;
+            let url = 'api/v2/troubleshoot/obc/disk';
             await getDiskData(url);
         };
         fetchData();
@@ -76,15 +76,13 @@ const ObcNodeView = () => {
     setIsLoading(true);
     setIsError({ status: false, msg: "" });
     try {
-      const username = "admin";
-      const password = "admin";
-      const token = btoa(`${username}:${password}`);
       const options = {
-        method: "GET",
+        method: "POST",
         //  headers: {
         //   "Authorization": `Basic ${token}`,
         //   "Content-Type": "application/json",
         // },
+        body: `http://${ipValue}:8084/obc/api/v1/config`,
       };
       const response = await fetch(url, options);
       const data1 = await response.json();
@@ -92,7 +90,7 @@ const ObcNodeView = () => {
       
       if (response.ok) {
         setIsLoading(false);
-        setNodeItemDt(data);
+        setNodeItemDt(data.data);
         setIsError({ status: false, msg: "" });
       } else {
         throw new Error("Data not found");
@@ -105,7 +103,7 @@ const ObcNodeView = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-     let url = `http://${nodeIpaddress}:8084/obc/api/v1/config`;
+     let url = 'api/v2/troubleshoot/obc/config';
       // let url = `api/v2/nodemanageview/summarydb?nodeId=${nodeDataId}`;
       await getServerStatusDt(url);
     };
@@ -167,7 +165,7 @@ const ObcNodeView = () => {
 
               <ul className="nodelist">
                 <li><a>Node View</a></li>
-                <li><a href={`http://${nodeIpaddress}`} target="_blank">{nodeIpaddress}</a></li>
+                <li><a href={`http://${ipValue}`} target="_blank">{ipValue}</a></li>
                 <li onClick={() => handleRowClick('summary')} className={`${currentTab === 'summary' ? 'active' : ''}`}> <a> <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Summary</a></li>
                 <li onClick={() => handleRowClick('monitoring')} className={`${currentTab === 'monitoring' ? 'active' : ''}`}> <a> <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Monitoring</a></li>
                 <li onClick={() => handleRowClick('events')} className={`${currentTab === 'events' ? 'active' : ''}`}> <a> <i

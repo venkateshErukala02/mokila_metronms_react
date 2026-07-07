@@ -362,7 +362,7 @@ const ObcEventTab=({nodeItemDt})=>{
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Severity :</label>
 
                             <select name="name" id="name" value={eventmainSeverityValueSel} onChange={handleSeverityMode} className="form-controll1" style={{ maxWidth: '116px', minWidth: '116px' }}>
-                                <option value="-1" selected="selected" label="All">All</option>
+                                <option value="" selected="selected" label="All">All</option>
                                 <option value="7" label="Critical">Critical</option>
                                 <option value="6" label="Major">Major</option>
                                 <option value="5" label="Minor">Minor</option>

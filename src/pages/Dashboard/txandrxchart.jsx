@@ -60,17 +60,14 @@ const TxRxDiffchart = ({ graphOption, graphOptionValue,currentTab }) => {
         let traincab = 0;
         const dt = new Date();
         try {
-            const username = "admin";
-            const password = "admin";
-            const token = btoa(`${username}:${password}`);
             const options = {
-                method: "GET",
+                method: "POST",
                 headers: {
-                    "Authorization": `Basic ${token}`,
                     "Content-Type": "application/json",
                 },
+                body: `http://${nodeIpaddress}:8084/${currentTab}/api/v1/netstats`,
             };
-            const response = await fetch(url);
+            const response = await fetch(url,options);
             
             if (response.status === 200) {
                 const data = await response.json();
@@ -78,16 +75,16 @@ const TxRxDiffchart = ({ graphOption, graphOptionValue,currentTab }) => {
                 if (graphOption === 'live') {
                     
 
-                    tx_bytes = parseInt(data.tx_bytes) - lastTx;
-                    rx_bytes = parseInt(data.rx_bytes) - lastRx;
+                    tx_bytes = parseInt(data.data.tx_bytes) - lastTx;
+                    rx_bytes = parseInt(data.data.rx_bytes) - lastRx;
 
                     if (lastTx == 0 && lastRx == 0) {
                         tx_bytes = 0;
                         rx_bytes = 0;
                     }
 
-                    lastTx = parseInt(data.tx_bytes);
-                    lastRx = parseInt(data.rx_bytes);
+                    lastTx = parseInt(data.data.tx_bytes);
+                    lastRx = parseInt(data.data.rx_bytes);
 
                     tx_bytes = tx_bytes < 0 ? 0 : tx_bytes/1024;
                     rx_bytes = rx_bytes < 0 ? 0 : rx_bytes/1024;
@@ -110,7 +107,7 @@ const TxRxDiffchart = ({ graphOption, graphOptionValue,currentTab }) => {
                     }
                     counterRef.current += 1;                 
                 } else {
-                    const formatted = formatChartData(data);
+                    const formatted = formatChartData(data.data);
                     setDifferenceData(Array.isArray(formatted) ? formatted : []);
                 }
             } else if (response.status === 304) {
@@ -126,11 +123,11 @@ const TxRxDiffchart = ({ graphOption, graphOptionValue,currentTab }) => {
                     {   
                         const text = await response.text();
                         const data = text ? JSON.parse(text) : {};  
-                        const formatted = formatChartData(data);
+                        const formatted = formatChartData(data.data);
                         setDifferenceData(Array.isArray(formatted) ? formatted : []);
                     } catch (err) {
                         const data =[];
-                        const formatted = formatChartData(data);
+                        const formatted = formatChartData(data.data);
                         setDifferenceData(Array.isArray(formatted) ? formatted : []);
                     }
                 }
@@ -170,7 +167,7 @@ useEffect(() => {
     let interval;
     if (graphOption === 'live') {
         interval = setInterval(() => {
-            const url = `http://${nodeIpaddress}:8084/${currentTab}/api/v1/netstats`;
+            const url = `api/v2/troubleshoot/${currentTab}/netstats`;
             getServerStatusDt(url);
         }, 5000);
     }
@@ -182,7 +179,7 @@ useEffect(() => {
 useEffect(() => {
     let url = '';
     if (graphOption === 'live') {
-        url = `http://${nodeIpaddress}:8084/${currentTab}/api/v1/netstats`;
+        url = `api/v2/troubleshoot/${currentTab}/netstats`;
     } else {
         url = `rest/measurements/node%5B${nodeDataId}%5D.nodeSnmp%5B%5D?aggregation=AVERAGE&att=rx_bytes,tx_bytes&duration=${graphOptionValue}`;
     }

@@ -24,6 +24,8 @@ const ObcSummaryTab = ({ nodeItemDt, currentTab }) => {
   
     const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress || state.node?.node?.primaryIP);
   
+    const ipValue = localStorage.getItem('nodeIpaddress')
+    const nodeIdValue = localStorage.getItem('nodeId')
 
   useEffect(() => {
     if (nodeIpaddress) {
@@ -37,24 +39,22 @@ const ObcSummaryTab = ({ nodeItemDt, currentTab }) => {
     setIsLoading(true);
     setIsError({ status: false, msg: "" });
     try {
-      // const username = "admin";
-      // const password = "admin";
-      // const token = btoa(`${username}:${password}`);
       const options = {
-        method: "GET",
+        method: "POST",
         headers: {
           // "Authorization": `Basic ${token}`,
           "Content-Type": "application/json",
         },
+        body: `http://${ipValue}:8084/${currentTab}/api/v1/uptime`,
       };
-      const response = await fetch(url);
+      const response = await fetch(url,options);
       const data = await response.json();
 
       if (response.ok) {
         setIsLoading(false);
 
 
-        setUpTimeData(data);
+        setUpTimeData(data.data);
         setIsError({ status: false, msg: "" });
       } else {
         throw new Error("Data not found");
@@ -70,7 +70,7 @@ const ObcSummaryTab = ({ nodeItemDt, currentTab }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      let url = `http://${nodeIpaddress}:8084/${currentTab}/api/v1/uptime`;
+      let url = `api/v2/troubleshoot/${currentTab}/uptime`;
       await getServerStatusDt(url);
     };
     fetchData();
