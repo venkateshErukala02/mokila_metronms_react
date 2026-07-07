@@ -164,7 +164,7 @@ const Tableone = () => {
 
                                 </span>
                                 <select className="form-controll1" value={eventSeverityValueSel} onChange={handleSeverityMode}>
-                                    <option value="-1" selected="selected" label="All">All</option>
+                                    <option value="" selected="selected" label="All">All</option>
                                     <option value="7" label="Critical">Critical</option>
                                     <option value="6" label="Major">Major</option>
                                     <option value="5" label="Minor">Minor</option>

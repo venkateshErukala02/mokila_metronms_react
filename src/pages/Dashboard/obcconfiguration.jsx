@@ -64,7 +64,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
     });
     const [diskData, setDiskData] = useState("");
     const [triggerConfig,setTriggerConfig] = useState(0);
-    const [configData,setConfigData] = useState([]);
+    const [configData,setConfigData] = useState({});
     const [changedData,setChangedData] = useState({});
     const [selectedFile, setSelectedFile] = useState(null);
     const [success, setSuccess] = useState('');
@@ -148,17 +148,18 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
         setIsError({ status: false, msg: "" });
         try {
             const options = {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
+                body: `http://${nodeIpaddress}:8084/obc/api/v1/disk`,
             };
-            const response = await fetch(url);
+            const response = await fetch(url,options);
             const data = await response.json();
 
             if (response.ok) {
                 setIsLoading(false);
-                setDiskData(data);
+                setDiskData(data.data);
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("Data not found");
@@ -171,7 +172,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            let url = `http://${nodeIpaddress}:8084/obc/api/v1/disk`;
+            let url = 'api/v2/troubleshoot/obc/disk';
             await getDiskData(url);
         };
         fetchData();
@@ -187,12 +188,13 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
         setIsError({ status: false, msg: "" });
         try {
             const options = {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
+                body: `http://${nodeIpaddress}:8084/obc/api/v1/`,
             };
-            const response = await fetch(url);
+            const response = await fetch(url,options);
             const data = await response.json();
 
             if (response.ok) {
@@ -286,19 +288,20 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
         setIsError({ status: false, msg: "" });
         try {
             const options = {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
+                body: `http://${nodeIpaddress}:8084/obc/api/v1/uptime`,
             };
-            const response = await fetch(url);
+            const response = await fetch(url,options);
             const data = await response.json();
 
             if (response.ok) {
                 setIsLoading(false);
 
 
-                setUpTimeData(data);
+                setUpTimeData(data.data);
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("Data not found");
@@ -343,7 +346,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            let url = `http://${nodeIpaddress}:8084/obc/api/v1/uptime`;
+            let url = 'api/v2/troubleshoot/obc/uptime';
             await getServerStatusDt(url);
         };
         fetchData();
@@ -393,21 +396,23 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
         try {
 
             const options = {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
+                body: `http://${nodeIpaddress}:8084/obc/api/v1/config`,
             };
-            const response = await fetch(url);
-            let data = await response.json();
+            const response = await fetch(url,options);
+            let res = await response.json();
 
             if (response.ok) {
                 setIsLoading(false);
-                    if (typeof data === "string") {
-                    data = JSON.parse(data);
-                    }
+                  const configData =
+            typeof res.data === "string"
+                ? JSON.parse(res.data)
+                : res.data;
 
-                setConfigData(data);
+            setConfigData(configData);
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("Data not found");
@@ -420,7 +425,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            let url = `http://${nodeIpaddress}:8084/obc/api/v1/config`;
+            let url = 'api/v2/troubleshoot/obc/config';
             await getConfigDt(url);
         };
         fetchData();
@@ -539,7 +544,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                         <article style={{ margin: "auto", textAlign: 'center' }}>
                                             <img className="nodeimg" style={{ width: '70px', height: '58px' }} src={obcimage} alt="node" />
                                             {/* <label className="summarymode"> {nodeItemDt.nodeDesc}</label> */}
-                                            <label className="summarymode" style={{ display: 'block' }}> Cab - {nodeItemDt?.carnumber || "loading.."}</label>
+                                            <label className="summarymode" style={{ display: 'block' }}> Cab - {configData?.carnumber || ""}</label>
                                             <label className="summarysytem"><i className="fas fa-arrow-up fa-1x ng-scope "></i>{upTimeData}</label>
                                         </article>
                                         <article style={{ margin: "auto" }}>
@@ -555,33 +560,33 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
 
                                             <ul className="summarylist">
                                                 <li>
-                                                    <h6> IP<span> {nodeItemDt.obcnetip}</span></h6></li>
+                                                    <h6> IP<span> {configData?.trainradioip}</span></h6></li>
                                                 <li>
-                                                    <h6>Encoder <span>{nodeItemDt.encoderip}</span></h6>
+                                                    <h6>Encoder <span>{configData?.encoderip}</span></h6>
                                                 </li>
                                                 <li>
-                                                    <h6>NTP <span>{nodeItemDt.ntpserverip}</span></h6>
+                                                    <h6>NTP <span>{configData?.ntpserverip}</span></h6>
                                                 </li>
                                                 <li>
-                                                    <h6>Total<span> {diskData.total}</span></h6></li>
+                                                    <h6>Total<span> {diskData?.total}</span></h6></li>
                                                 <li>
                                                     <h6> Free
                                                         <span>
-                                                            {diskData.free}
+                                                            {diskData?.free}
                                                         </span>
                                                     </h6>
                                                 </li>
                                                 <li>
                                                     <h6> Used
                                                         <span>
-                                                            {diskData.used}
+                                                            {diskData?.used}
                                                         </span>
                                                     </h6>
                                                 </li>
                                                 <li>
                                                     <h6> Percentage
                                                         <span>
-                                                            {diskData.percentage}
+                                                            {diskData?.percentage}
                                                         </span>
                                                     </h6>
                                                 </li>
@@ -621,7 +626,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                                 </article>
                                                                 <article className="form-row-config "><label for="" className="col-5 config-label">Encoder IP</label><article className="col-sm-4 col-md-4 col-lg-4">
                                                                     <input type="text" className="config-input"
-                                                                     value={configData?.encoderip || ""}
+                                                                     value={configData?.encoderip ?? ""}
                                                                          onChange={(e) => handleObcConfigChange("encoderip", e.target.value)}
                                                                     />
                                                                 </article>

@@ -43,7 +43,7 @@ const TcSummaryTab = ({  }) => {
     const [isEditMode, setIsEditMode] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [tempData, setTempData] = useState('');
+    const [tempData, setTempData] = useState({});
     const [serviceStatus, setServiceStatus] = useState([]);
     const [parsedServices, setParsedServices] = useState(
         checkServicesList.map(item => ({ ...item, status: "checking", value: null }))
@@ -134,21 +134,18 @@ const TcSummaryTab = ({  }) => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
-            const username = "admin";
-            const password = "admin";
-            const token = btoa(`${username}:${password}`);
             const options = {
-                method: "GET",
+                method: "POST",
                 headers: {
-                    "Authorization": `Basic ${token}`,
                     "Content-Type": "application/json",
                 },
+                body: `http://${nodeIpaddress}:8084/transcoder/api/v1/config`,
             };
-            const response = await fetch(url);
+            const response = await fetch(url,options);
             const data = await response.json();
 
             if (response.ok) {
-                const { System, Quad, RSTPURL, temp, uptime } = data;
+                const { System, Quad, RSTPURL, temp, uptime } = data.data;
 
                 setIsLoading(false);
 
@@ -262,12 +259,13 @@ const TcSummaryTab = ({  }) => {
         setIsError({ status: false, msg: "" });
         try {
             const options = {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
+                body: `http://${nodeIpaddress}:8084/transcoder/api/v1/`,
             };
-            const response = await fetch(url);
+            const response = await fetch(url,options);
             const data = await response.json();
 
             if (response.ok) {
@@ -364,15 +362,12 @@ const TcSummaryTab = ({  }) => {
             controller.abort();
         }, 10000);
         try {
-            // const username = "admin";
-            // const password = "admin";
-            // const token = btoa(`${username}:${password}`);
             const options = {
-                method: "GET",
+                method: "POST",
                 headers: {
-                    // "Authorization": `Basic ${token}`,
                     // "Content-Type": "application/json",
                 },
+                body: `http://${nodeIpaddress}:8084/transcoder/api/v1/uptime`,
                 signal: controller.signal,
             };
             const response = await fetch(url, options);
@@ -389,11 +384,11 @@ const TcSummaryTab = ({  }) => {
 
             if (response.ok && response.status === 200) {
                 setUptimeIsLoading(false);
-                setUpTimeData(data);
+                setUpTimeData(data.data);
                 setHasFetchedUpTime(true);
-                const urlTemp = `http://${nodeIpaddress}:8084/transcoder/api/v1/temp`;
+                const urlTemp = 'api/v2/troubleshoot/transcoder/temp';
                 const urlService = `api/v2/troubleshoot/transcoder/${nodeIpaddress}/servicecheck`;
-                const urlConfig = `http://${nodeIpaddress}:8084/transcoder/api/v1/config`;
+                const urlConfig = 'api/v2/troubleshoot/transcoder/config';
                 await Promise.all([
                     getTemperatureDt(urlTemp),
                     getServiceCheckStatus(urlService),
@@ -428,24 +423,21 @@ const TcSummaryTab = ({  }) => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
-            const username = "admin";
-            const password = "admin";
-            const token = btoa(`${username}:${password}`);
             const options = {
-                method: "GET",
+                method: "POST",
                 headers: {
-                    "Authorization": `Basic ${token}`,
                     "Content-Type": "application/json",
                 },
+                body: `http://${nodeIpaddress}:8084/transcoder/api/v1/temp`,
             };
-            const response = await fetch(url);
+            const response = await fetch(url,options);
             const data = await response.json();
 
             if (response.ok) {
                 setIsLoading(false);
 
 
-                setTempData(data);
+                setTempData(data.data);
                 setIsError({ status: false, msg: "" });
             } else {
                 throw new Error("Data not found");
@@ -459,7 +451,7 @@ const TcSummaryTab = ({  }) => {
     useEffect(() => {
         if (!nodeIpaddress) return;
         const fetchData = async () => {
-            let url = `http://${nodeIpaddress}:8084/transcoder/api/v1/uptime`;
+            let url = 'api/v2/troubleshoot/transcoder/uptime';
             await getServerStatusDt(url);
         };
         fetchData();
@@ -525,16 +517,12 @@ const TcSummaryTab = ({  }) => {
             setIsLoading(true);
             setIsError({ status: false, msg: "" });
 
-            const username = "admin";
-            const password = "admin";
-            const token = btoa(`${username}:${password}`);
-
             const response = await fetch(url, {
-                method: "GET",
+                method: "POST",
                 headers: {
-                    Authorization: `Basic ${token}`,
                     "Content-Type": "application/json",
                 },
+                body: `http://${nodeIpaddress}:8084/transcoder/api/v1/cam/${camName}`,
             });
 
             const data = await response.json();
@@ -543,7 +531,7 @@ const TcSummaryTab = ({  }) => {
                 throw new Error("Data not found");
             }
 
-            setTempData(data);
+            // setTempData(data);
 
             // Parse microseconds
             let ms, bytes;
@@ -831,7 +819,7 @@ const TcSummaryTab = ({  }) => {
                                             <label className="summarymode"> {transcoderStats?.System?.ser}</label>
                                             <label className="summarymode" style={{ display: 'block' }}> {nodeLocation} ({transcoderStats?.System?.sysname})</label>
                                             <label className="summarysytem"><i className="fas fa-arrow-up fa-1x ng-scope "></i>{upTimeData}</label>
-                                            <label className="summarymode" style={{ display: 'block', marginTop: '7px' }}>Temperature : {tempData.temp} °C</label>
+                                            <label className="summarymode" style={{ display: 'block', marginTop: '7px' }}>Temperature : {tempData?.temp} °C</label>
                                         </article>
                                         <article style={{ margin: "auto" }}>
                                             <article>

@@ -39,49 +39,49 @@ const TranscoderView = () => {
       },[nodeIpaddress]);
     
 
-    const getServerStatusDt = async (url) => {
-        setIsLoading(true);
-        setIsError({ status: false, msg: "" });
-        try {
-            const username = "admin";
-            const password = "admin";
-            const token = btoa(`${username}:${password}`);
-            const options = {
-                method: "GET",
-                headers: {
-                    "Authorization": `Basic ${token}`,
-                    "Content-Type": "application/json",
-                },
-            };
-            const response = await fetch(url);
-            const data = await response.json();
+    // const getServerStatusDt = async (url) => {
+    //     setIsLoading(true);
+    //     setIsError({ status: false, msg: "" });
+    //     try {
+    //         const username = "admin";
+    //         const password = "admin";
+    //         const token = btoa(`${username}:${password}`);
+    //         const options = {
+    //             method: "GET",
+    //             headers: {
+    //                 "Authorization": `Basic ${token}`,
+    //                 "Content-Type": "application/json",
+    //             },
+    //         };
+    //         const response = await fetch(url);
+    //         const data = await response.json();
 
-            if (response.ok) {
-                setIsLoading(false);
+    //         if (response.ok) {
+    //             setIsLoading(false);
 
 
-                setTranscoderData(data);
-                setIsError({ status: false, msg: "" });
-            } else {
-                throw new Error("Data not found");
-            }
-        } catch (error) {
-            setIsLoading(false);
-            setIsError({ status: true, msg: error.message });
-        }
-    };
+    //             setTranscoderData(data);
+    //             setIsError({ status: false, msg: "" });
+    //         } else {
+    //             throw new Error("Data not found");
+    //         }
+    //     } catch (error) {
+    //         setIsLoading(false);
+    //         setIsError({ status: true, msg: error.message });
+    //     }
+    // };
 
-    useEffect(() => {
-          if (!nodeIpaddress) return;
-        const fetchData = async () => {
-            const nodeId = localStorage.getItem('nodeId');
-            let url = `http://${nodeIpaddress}:8084/transcoder/api/v1/config`;
-          //let url = '/transcoder/api/v1/config';
+    // useEffect(() => {
+    //       if (!nodeIpaddress) return;
+    //     const fetchData = async () => {
+    //         const nodeId = localStorage.getItem('nodeId');
+    //         let url = `http://${nodeIpaddress}:8084/transcoder/api/v1/config`;
+    //       //let url = '/transcoder/api/v1/config';
 
-            await getServerStatusDt(url);
-        };
-        fetchData();
-    }, [nodeIpaddress]);
+    //         await getServerStatusDt(url);
+    //     };
+    //     fetchData();
+    // }, [nodeIpaddress]);
 
     useEffect(() => {
         if (nodeDataId) {

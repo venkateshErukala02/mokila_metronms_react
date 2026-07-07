@@ -44,18 +44,15 @@ const TemperatureChart = ({ graphOption, graphOptionValue }) => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
-            const username = "admin";
-            const password = "admin";
-            const token = btoa(`${username}:${password}`);
             const options = {
-                method: "GET",
+                method: "POST",
                 headers: {
-                    "Authorization": `Basic ${token}`,
                     "Content-Type": "application/json",
                 },
+                body: `http://${nodeIpaddress}:8084/transcoder/api/v1/temp`,
             };
 
-            const response = await fetch(url);
+            const response = await fetch(url,options);
 
             if (response.status === 200) {
                 const data = await response.json();
@@ -63,7 +60,7 @@ const TemperatureChart = ({ graphOption, graphOptionValue }) => {
                 if (graphOption === 'live') {
                     let dt = new Date();
                     const dataNew = {
-                        Temperature: data.temp || 0,
+                        Temperature: data.data.temp || 0,
                         timestamp: dt.getTime(),
                         index: counterRef.current
                     }
@@ -75,7 +72,7 @@ const TemperatureChart = ({ graphOption, graphOptionValue }) => {
                     counterRef.current += 1;
                 } else {
                     setTemperatureData([])
-                    const formatted = formatChartData(data);
+                    const formatted = formatChartData(data.data);
                     setTemperatureData(formatted);
                 }
             } else if (response.status === 304) {
@@ -112,7 +109,7 @@ const TemperatureChart = ({ graphOption, graphOptionValue }) => {
         }
         if (graphOption === 'live') {
             const setTime = setInterval(() => {
-                const url = `http://${nodeIpaddress}:8084/transcoder/api/v1/temp`;
+                const url = 'api/v2/troubleshoot/transcoder/temp';
                 getServerStatusDt(url);
             }, 5000);
 
@@ -127,7 +124,7 @@ const TemperatureChart = ({ graphOption, graphOptionValue }) => {
     useEffect(() => {
         let url = '';
         if (graphOption === 'live') {
-            url = `http://${nodeIpaddress}:8084/transcoder/api/v1/temp`
+            url = 'api/v2/troubleshoot/transcoder/temp'
         }
         else {
             url=`rest/measurements/node%5B${nodeDataId}%5D.nodeSnmp%5B%5D?aggregation=AVERAGE&att=temp&duration=${graphOptionValue}`

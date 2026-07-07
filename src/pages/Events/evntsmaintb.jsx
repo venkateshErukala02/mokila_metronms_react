@@ -201,8 +201,8 @@ useEffect(() => {
 
             if (response.status === 204) {
                 // setIsAuitLoading(false);
-                setCustomStartDate(null);
-                setCustomEndDate(null);
+                // setCustomStartDate(null);
+                // setCustomEndDate(null);
                 setEventmainData([]);
                 // setSelectedDuration("86400000");
                 setIsError({ status: false, msg: '' });
@@ -396,7 +396,7 @@ useEffect(() => {
         setEventmainSeverityValueSel(value);
         setEventmainSeverityLabelSel(label);
         setSearchBtn(false);
-        setEventipText('');
+        // setEventipText('');
     };
 
 
@@ -464,21 +464,42 @@ useEffect(() => {
         });
     }
 
+     const handleIncreamentOffsetAudit = () => {
+         setPageSize(prev => {
+        if (!auditmainData || auditmainData.length === 0) return prev;
+
+        const newPage = prev + 1;
+        setFromValue(parseInt(newPage-1) * parseInt(eventmainLimitLabelSel));
+        return newPage;
+        });
+    }
+
 
 
     const handleDecrementOffset = () => {
-        if (pageSize > 1) {
-            setPageSize(prevPageSize => {
-                const newPageSize = prevPageSize - 1;
-                const fromCal = (parseInt(newPageSize)-1) * parseInt(eventmainLimitLabelSel);
-                 setFromValue(fromCal);
-                return newPageSize;
-            });
-        } else {
-            setPageSize(1);
-            //   setFromValue('0');
-        }
+          if (pageSize <= 1) return;
+            const newPageSize = pageSize - 1;
+              setPageSize(newPageSize);
+         setFromValue((newPageSize - 1) * Number(eventmainLimitLabelSel));
+        // if (pageSize > 1) {
+        //     setPageSize(prevPageSize => {
+        //         const newPageSize = prevPageSize - 1;
+        //         const fromCal = (parseInt(newPageSize)-1) * parseInt(eventmainLimitLabelSel);
+        //          setFromValue(fromCal);
+        //         return newPageSize;
+        //     });
+        // } else {
+        //     setPageSize(1);
+        //     //   setFromValue('0');
+        // }
     }
+
+        // useEffect(() => {
+        //     if (executedSearch) {
+        //     handleRadialIP(executedSearch);
+        //     }
+        // }, [fromValue,eventmainLimitLabelSel,eventmainSeverityValueSel]);
+
 
      const handleRadialIP = async (eventipText) => {
         setExecutedSearch(eventipText);
@@ -831,30 +852,40 @@ useEffect(() => {
             <article className="row border-tlr custom-row">
                 <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6">
                     <article style={{ display: typevalueSel === 'events' ? 'block' : 'none' }}>
-                        <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
+                        <button type="button" className="arrowlf" onClick={handleDecrementOffset} disabled={selectedDuration === 'Custom'}>
                             <i className="fa-solid fa-arrow-left"></i>
                         </button>
                         <button type="button" className="numcl"><span>{pageSize}</span></button>
-                        <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
+                        <button type="button" className="arrowlf" onClick={handleIncreamentOffset} disabled={selectedDuration === 'Custom'}><i className="fa-solid fa-arrow-right"></i></button>
 
                         <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
                         <button type="button" className="createbtn" onClick={() => { handleRadialIP(eventipText);}} >Search</button>
                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{  marginLeft: '7px', display: executedSearch?.trim() ? 'inline-block' : 'none' }}> Clear Search</button>
                     </article>
                     <article style={{ display: typevalueSel === 'syslogd' ? 'block' : 'none' }}>
-                       <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
+                       <button type="button" className="arrowlf" onClick={handleDecrementOffset} disabled={selectedDuration === 'Custom'}>
                             <i className="fa-solid fa-arrow-left"></i>
                         </button>
                         <button type="button" className="numcl"><span>{pageSize}</span></button>
-                        <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
+                        <button type="button" className="arrowlf" onClick={handleIncreamentOffset} disabled={selectedDuration === 'Custom'}><i className="fa-solid fa-arrow-right"></i></button>
+                        <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />   
+                         <button type="button" className="createbtn" style={{ marginLeft: '10px' }}
+                            onClick={() => {
+                                handleSearch(eventipText, sysSelectedDate)
+                            }
+                            }
+                        >Search</button>
+
+                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{ marginLeft: '10px', display: executedSearch?.trim() ? 'inline-block' : 'none' }}> Clear Search</button> 
+
                     </article>
                  
                     <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
-                        <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
+                        <button type="button" className="arrowlf" onClick={handleDecrementOffset} disabled={selectedDuration === 'Custom'}>
                             <i className="fa-solid fa-arrow-left"></i>
                         </button>
                         <button type="button" className="numcl"><span>{pageSize}</span></button>
-                        <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>
+                        <button type="button" className="arrowlf" onClick={handleIncreamentOffsetAudit} disabled={selectedDuration === 'Custom'}><i className="fa-solid fa-arrow-right"></i></button>
 
                          <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="IP Address " id="" className="form-controlevents" />
                         <button type="button" className="createbtn" onClick={() => { handleRadialIP(eventipText);}} >Search</button>
@@ -916,13 +947,13 @@ useEffect(() => {
                                 <option value="auditlog" label="Audit Log">Audit Log</option>
                             </select>
                             
-                                <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
+                                {/* <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" /> */}
     
                         <article className="trans-datepickerbg" style={{ display: 'inline-block', marginTop: '5px' }}>
 
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
                             <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px',
-                                 minWidth: '94px' }} onClick={handleCustomPopup}>
+                                 minWidth: '94px' }} onClick={handleCustomPopup} >
                                 <option value="3600000" label="Last hour">Last hour</option>
                                 <option value="28800000" label="8 hours">8 hours</option>
                                 <option value="86400000" label="24 hours">24 hours</option>
@@ -931,20 +962,20 @@ useEffect(() => {
                             </select>
     
                         </article>
-                        <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
+                        <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false" disabled={selectedDuration === 'Custom'}>
                                 <option value="25" label="25">25</option>
                                 <option value="50" label="50">50</option>
                                 <option value="100" label="100">100</option>
                                 <option value="500" label="500">500</option>
                             </select>
-                        <button type="button" className="createbtn" style={{ marginLeft: '10px' }}
+                        {/* <button type="button" className="createbtn" style={{ marginLeft: '10px' }}
                             onClick={() => {
                                 handleSearch(eventipText, sysSelectedDate)
                             }
                             }
                         >Search</button>
 
-                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{ marginLeft: '10px', display: executedSearch?.trim() ? 'inline-block' : 'none' }}> Clear Search</button>
+                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{ marginLeft: '10px', display: executedSearch?.trim() ? 'inline-block' : 'none' }}> Clear Search</button> */}
                     </article>
                         <article style={{ display: typevalueSel === 'auditlog' ? 'block' : 'none' }}>
 
@@ -965,7 +996,7 @@ useEffect(() => {
                                 {/* <option value="Custom">Custom</option> */}
                             </select>
 
-                            <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
+                            <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false" disabled={selectedDuration === 'Custom'}> 
                                 <option value="25" label="25">25</option>
                                 <option value="50" label="50">50</option>
                                 <option value="100" label="100">100</option>

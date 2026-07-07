@@ -44,14 +44,54 @@ const TranscoderEventLog = ({ currentTab, nodeItemDt }) => {
 
 
     const getTranscoderLogData = async (url) => {
+      if (selectLog === "trainlogs") {
+            return;
+        }
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         setEventLogDt([]);
         try {
-            const username = "admin";
-            const password = "admin";
-            const token = btoa(`${username}:${password}`);
 
+            const options = {
+                method: "POST",
+                // headers: {
+                //     'Authorization': `Basic ${token}`,
+                //     'Accept': 'application/json',
+                //     'Content-Type': 'application/json'
+                // }
+                body: url
+
+            }
+            const response = await fetch(`api/v2/troubleshoot/${currentTab}/logs`, options)
+            const data = await response.json();
+            if (response.ok) {
+                setIsLoading(false);
+
+                setEventLogDt(data.logs || []);
+                setIsLoading(false);
+                setIsError({ status: false, msg: "" });
+
+            }else if(response.status === '404'){
+                setEventLogDt([]);
+
+            } 
+            else {
+                throw new Error("data not found");
+            }
+
+        } catch (error) {
+            setIsLoading(false)
+            setIsError({ status: true, msg: error.message })
+        }
+
+
+    }
+
+    const getTrainLogData = async (url) => {
+        setIsLoading(true);
+        setIsError({ status: false, msg: "" });
+        setEventLogDt([]);
+        try {
 
             const options = {
                 method: "GET",
@@ -60,13 +100,15 @@ const TranscoderEventLog = ({ currentTab, nodeItemDt }) => {
                 //     'Accept': 'application/json',
                 //     'Content-Type': 'application/json'
                 // }
+                // body: url
+
             }
             const response = await fetch(url, options)
-            const data = await response.text();
+            const data = await response.json();
             if (response.ok) {
                 setIsLoading(false);
 
-                setEventLogDt(data || []);
+                setEventLogDt(data.logs || []);
                 setIsLoading(false);
                 setIsError({ status: false, msg: "" });
 
@@ -91,8 +133,9 @@ const TranscoderEventLog = ({ currentTab, nodeItemDt }) => {
         setSearchText('');
         setSearch('');
         // setExecutedSearch('');
-        setSelectedDate(new Date());
-        const targetDate = new Date();
+        // setSelectedDate(new Date());
+        // const targetDate = new Date();
+         const targetDate = executedDate || selectedDate;
         if (!targetDate) return;
 
         const y = targetDate.getFullYear();
@@ -143,6 +186,7 @@ useEffect(() => {
         }
     } else if (selectLog === "trainlogs") {
       url = `api/v2/treeview/trainlogs/${nodeDataId|| ""}/${formattedDate}?q=${executedSearch}`;
+      getTrainLogData(url)
     }
   } else {
     const targetDate = executedDate || selectedDate;
@@ -214,8 +258,9 @@ const handleRowClick = (value) => {
 
     const getReportData = async (reportUrl) => {
   try {
-    const response = await fetch(reportUrl, {
-      method: "GET",
+    const response = await fetch('api/v2/troubleshoot/transcoder/logs', {
+      method: "POST",
+      body: reportUrl
     });
 
     if (!response.ok) {
@@ -281,6 +326,7 @@ const handleRowClick = (value) => {
                         className="form-controldistwo searchbar"
                         onChange={(e) => setSearchText(e.target.value)}
                     />
+                    
                     <label for="name" className="radiolabel" style={{ display: 'inline-block' }}>Time:</label>
 
                     <article className="trans-datepickerbg" style={{ display: 'inline-block', marginTop: '5px' }}>
@@ -306,23 +352,26 @@ const handleRowClick = (value) => {
                 </>
             </article>
             {currentTab === 'obc' && selectLog === 'obclogs' &&  <article className="row" style={{ height: '86vh', overflowY: 'auto', border: '1px solid #21232712' }}>
-                <article>
+                {/* <article> */}
                      <article className="col-md-12" style={{display:'flex',justifyContent:'center'}}>
                     <ul className="obcsublist">
                       <li  onClick={() => handleRowClick('obcbackup')} className={`${currentObcsubTab === 'obcbackup' ? 'active' : ''}`}><a>OBC Backup</a></li>
                       <li  onClick={() => handleRowClick('obccurrent')} className={`${currentObcsubTab === 'obccurrent' ? 'active' : ''}`}><a>OBC Current</a></li>
                     </ul>
-                  </article>
+                  {/* </article> */}
                 </article>
                {/* {currentObcsubTab === 'obcbackup' ? ( */}
                 <>
                 <ul className="log-list">
-                    {eventLogDt && String(eventLogDt)
-                        .split('\n')
-                        .filter(line => line.trim() !== '')
-                        .map((line, index) => (
+                            {Array.isArray(eventLogDt) &&  eventLogDt.length > 0 ? (
+                        eventLogDt.map((line, index) => (
                             <li key={index}>{line}</li>
-                        ))}
+                        ))
+                      ) :( 
+                        ''
+                        // <li className="no-data">No data available</li>
+                      )
+                    }
                 </ul></>
                 {/* )  : (<>
                 hello</>)}  */}
@@ -330,12 +379,15 @@ const handleRowClick = (value) => {
             </article>}
             <article className="row" style={{ height: '86vh', overflowY: 'auto', border: '1px solid #21232712' }}>
                 <ul className="log-list">
-                    {eventLogDt && String(eventLogDt)
-                        .split('\n')
-                        .filter(line => line.trim() !== '')
-                        .map((line, index) => (
-                            <li key={index}>{line}</li>
-                        ))}
+                    {Array.isArray(eventLogDt) &&  eventLogDt.length > 0 ? (
+                      eventLogDt.map((line, index) => (
+                          <li key={index}>{line}</li>
+                      ))
+                      ) :( 
+                        ''
+                        // <li className="no-data">No data available</li>
+                      )
+                  }
                 </ul>
 
             </article>

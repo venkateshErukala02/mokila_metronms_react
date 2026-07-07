@@ -111,7 +111,9 @@ if (!hasItem('ioc')) {
 // }
 
 const customOrder = ['ap', 'transcoder', 'cam', 'obc', 'sta', 'encoder','ioc'];
-const staArray = staArrayRaw.sort((a, b) => {
+const staArray = staArrayRaw
+  .filter(item => customOrder.includes(item.name))
+  .sort((a, b) => {
   const indexA = customOrder.indexOf(a.name);
   const indexB = customOrder.indexOf(b.name);
 

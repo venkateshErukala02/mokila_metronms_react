@@ -178,7 +178,7 @@ const handleCustomSubmit = (e) => {
 
         const filterString = filterParts.join(";");
 
-         url = `api/v2/events/list?_s=${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
+         url = `api/v2/events/list?_s=node.id%3D%3D${nodeDataId};${encodeURIComponent(filterString)};eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}&ar=glob&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
         }
         // else if( typevalueSel === 'syslogd'){
             // url = `api/v2/events/train/syslogs/${nodeDataId}`;
@@ -253,8 +253,8 @@ useEffect(() => {
 
             if (response.status === 204) {
                 setIsLoading(false);
-                setCustomStartDate(null);
-                setCustomEndDate(null);
+                // setCustomStartDate(null);
+                // setCustomEndDate(null);
                 setEventmainData([]);
                 setIsError({ status: false, msg: '' });
                 return;
@@ -279,8 +279,8 @@ useEffect(() => {
             } else if (data.event  && typevalueSel==='events') {
                 normalized = data.event;
                 setEventmainData(normalized || []);
-                setCustomStartDate(null);
-                setCustomEndDate(null);
+                // setCustomStartDate(null);
+                // setCustomEndDate(null);
             }
             setIsLoading(false);
         } catch (error) {
@@ -389,7 +389,7 @@ useEffect(() => {
         setEventmainSeverityValueSel(value);
         setEventmainSeverityLabelSel(label);
         setSearchBtn(false);
-        setEventipText('');
+        // setEventipText('');
     };
 
 
@@ -532,7 +532,15 @@ useEffect(() => {
         setShowEventPopup(false);
     }
 
-      const handleRadialIP = async () => {
+    useEffect(() => {
+        if (executedSearch) {
+            handleRadialIP(executedSearch);
+            }
+    }, [fromValue,eventmainLimitLabelSel,eventmainSeverityValueSel]);
+
+
+      const handleRadialIP = async (eventipText) => {
+        setExecutedSearch(eventipText);
     if (!eventipText) {
         alert("Please enter a search term");
         return;
@@ -571,7 +579,7 @@ useEffect(() => {
         query += `&limit=${eventmainLimitLabelSel}`;
     }
 
-    let url = `${start};${query}&offset=0&order=desc&orderBy=id`;
+    let url = `${start};${query}&offset=${fromValue}&order=desc&orderBy=id`;
 
     handleRadialIPa(url);
 };
@@ -702,7 +710,7 @@ useEffect(() => {
                                         <button type="button" className="numcl"><span>{pageSize}</span></button>
                                         <button type="button" onClick={handleIncreamentOffset} className="arrowlf"><i className="fa-solid fa-arrow-right"></i></button>
                                          <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
-                         <button type="button" className="createbtn" onClick={() => { handleRadialIP();}} >Search</button>
+                         <button type="button" className="createbtn" onClick={() => { handleRadialIP(eventipText);}} >Search</button>
                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{ marginLeft: '7px', display: executedSearch?.trim() ? 'inline-block' : 'none' }}> Clear Search</button>
                     
                                     </article>
@@ -740,7 +748,7 @@ useEffect(() => {
                                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Severity :</label>
 
                                             <select name="name" id="name" value={eventmainSeverityValueSel} onChange={handleSeverityMode} className="form-controll1" style={{ maxWidth: '116px', minWidth: '116px' }}>
-                                                <option value="-1" selected="selected" label="All">All</option>
+                                                <option value="" selected="selected" label="All">All</option>
                                                 <option value="7" label="Critical">Critical</option>
                                                 <option value="6" label="Major">Major</option>
                                                 <option value="5" label="Minor">Minor</option>
@@ -766,7 +774,7 @@ useEffect(() => {
                     }
                     }>Search</button> */}
 
-                     <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Timess:</label>
+                     <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Times:</label>
 
 
                             <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }} onClick={handleCustomPopup}>
