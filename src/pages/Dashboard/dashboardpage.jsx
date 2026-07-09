@@ -108,6 +108,7 @@ const DashBoardPage = () => {
         const label = e.target.options[selectedIndex].label
         setScopeValueSel(value);
         setScopeLabelSel(label);
+        setCircleId('');
     }
 
     useEffect(() => {

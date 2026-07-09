@@ -120,7 +120,7 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
 
     useEffect(() => {
         if (searchBtn) return; 
-
+        if(circleId) return;
         // if (hasFetched.current) return;
         // hasFetched.current = true;
 
@@ -227,12 +227,13 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
 
         return ()=> clearInterval(intervalId);
 
-    }, [radialData, dname, limitValueSelLabel, pageSize, apiStatus,sortOrder,searchBtn]);
+    }, [radialData, dname, limitValueSelLabel, pageSize, apiStatus,sortOrder,searchBtn,circleId]);
 
 
 
     useEffect(() => {
         if (searchBtn) return; 
+        if (!circleId) return; 
         let url = '';
         switch (lineInfo) {
             case 'line1-sec1':
