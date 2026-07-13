@@ -658,75 +658,20 @@ const CamConfigurationTab = ({ }) => {
 
                                             <ul className="summarylist">
                                                 <li>
-                                                    <img
+                                                    {/* <img
                                                         src={radioimage}
                                                         alt=""
                                                         style={{ marginRight: "6px" }}
-                                                    />
-                                                    <h6>Radio Mode <span>{nodeItemDt.radioMode} </span></h6>
+                                                    /> */}
+                                                    <h6>System Name <span>{nodeItemDt?.systemName} </span></h6>
                                                 </li>
                                                 <li>
-                                                    <i
+                                                    {/* <i
                                                         className="hardwareversionicon"
                                                         style={{ marginRight: "6px" }}
-                                                    ></i>
-                                                    <h6>Hardware Version <span>{nodeItemDt.hardwareVersion}</span></h6>
+                                                    ></i> */}
+                                                    <h6>System Description <span>{nodeItemDt?.description}</span></h6>
                                                 </li>
-                                                <li>  <img
-                                                    src={bootloader}
-                                                    alt=""
-                                                    style={{
-                                                        width: "35px",
-                                                        height: "35px",
-                                                        marginRight: "6px",
-                                                    }}
-                                                />
-                                                    <h6> Bandwidth <span>{nodeItemDt.bandwidth} MHz </span></h6></li>
-                                                <li>  <img
-                                                    src={bootloader}
-                                                    alt=""
-                                                    style={{
-                                                        width: "35px",
-                                                        height: "35px",
-                                                        marginRight: "6px",
-                                                    }}
-                                                />
-                                                    <h6> Channel <span>{nodeItemDt.channel} ({nodeItemDt.frequecy} MHz)  </span></h6></li>
-                                                <li>  <img
-                                                    src={bootloader}
-                                                    alt=""
-                                                    style={{
-                                                        width: "35px",
-                                                        height: "35px",
-                                                        marginRight: "6px",
-                                                    }}
-                                                />
-                                                    <h6> SSID <span>{nodeItemDt.ssid} </span></h6></li>
-                                                <li> <i
-                                                    className="serialnumbericon"
-                                                    style={{ marginRight: "6px" }}
-                                                ></i><h6> Serial Number<span> {nodeItemDt.serialNumber}</span></h6></li>
-                                                <li><i
-                                                    className="firmwareicon"
-                                                    style={{ marginRight: "6px" }}
-                                                ></i><h6> Firmware<span> {nodeItemDt.softwareVersion}</span></h6></li>
-                                                <li><i
-                                                    className="ethernetmacicon"
-                                                    style={{ marginRight: "6px" }}
-                                                ></i>
-                                                    <h6>Ethernet MAC<span> {nodeItemDt.ethernetMAC}</span></h6></li>
-                                                <li>
-                                                    <i
-                                                        className="wirelessmacicon"
-                                                        style={{ marginRight: "6px" }}
-                                                    ></i>
-                                                    <h6> Wireless MAC
-                                                        <span>
-                                                            {nodeItemDt.wirelessMAC}
-                                                        </span>
-                                                    </h6>
-                                                </li>
-
                                             </ul>
 
                                         </article>

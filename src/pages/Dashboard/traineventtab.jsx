@@ -410,13 +410,15 @@ useEffect(() => {
                 setSelectedDuration("Custom");   
                 setShowCustomPopup(true);
                 setSearchBtn(false);
-                setEventipText('');        
+                // setEventipText('');        
             } else {
                 const value = parseInt(customvalue); 
                 setSelectedDuration(value);
                 setShowCustomPopup(false); 
                 setSearchBtn(false);
-                setEventipText('');      
+                setCustomStartDate(null);
+                setCustomEndDate(null);
+                // setEventipText('');      
             }
     };
 

@@ -444,6 +444,8 @@ useEffect(() => {
                 setSelectedDuration(value);
                 setShowCustomPopup(false);
                 setSearchBtn(false);
+                setCustomStartDate(null);
+                setCustomEndDate(null);
                 // setEventipText('');       
             }
             };

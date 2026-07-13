@@ -163,9 +163,10 @@ const ProvisionTb = ({ getProviContData }) => {
     } else {
       setSearchBtn(true)
       setIsLoading(true); 
+      let limit = limitValueSelLabel || '100';
 
       try {
-        const response = await fetch(`api/v2/nodes/search?_s=sysName==${firmipText}*,label==${firmipText},assetRecord.serialNumber==${firmipText}&limit=100&offset=0&order=asc`, {
+        const response = await fetch(`api/v2/nodes/search?_s=sysName==${firmipText}*,label==${firmipText},assetRecord.serialNumber==${firmipText}&limit=${limit}&offset=${fromValue}&order=asc`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -195,9 +196,17 @@ const ProvisionTb = ({ getProviContData }) => {
 
   }
 
+  useEffect(() => {
+  if (searchBtn) {
+    handleFirmIP();
+  }
+}, [limitValueSelLabel,fromValue]);
+
   const handleClearSerch = () => {
     setSearchBtn(false);
     setFirmipText('');
+    setLimitValueSelLabel('100');
+    setFromValue('0');
   }
 
   const handleProvision = (event) => {

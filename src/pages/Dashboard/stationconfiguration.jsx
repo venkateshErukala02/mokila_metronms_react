@@ -51,6 +51,7 @@ const currentUser = useSelector((state) => state?.loginuser?.node?.role);
     const [step, setStep] = useState(0);
     const [linkDetails, setLinkDetails] = useState(null);
     const [configData,setConfigData] = useState([]);
+    const [originalConfig, setOriginalConfig] = useState({});
      const relevantKeys = [
         "channel",
         "bandwidth",
@@ -66,12 +67,13 @@ const currentUser = useSelector((state) => state?.loginuser?.node?.role);
         ];
 
 // Initialize empty first
-const [changedConfig, setChangedConfig] = useState(
-  relevantKeys.reduce((acc, key) => {
-    acc[key] = '';
-    return acc;
-  }, {})
-);
+// const [changedConfig, setChangedConfig] = useState(
+//   relevantKeys.reduce((acc, key) => {
+//     acc[key] = '';
+//     return acc;
+//   }, {})
+// );
+const [changedConfig, setChangedConfig] = useState({});
 const [isSaving, setIsSaving] = useState(false);
 const [isApplying, setIsApplying] = useState(false);
 const [triggerConfig,setTriggerConfig] = useState(0);
@@ -109,15 +111,15 @@ const [triggerConfig,setTriggerConfig] = useState(0);
 };
 
 // When API data (configData) arrives, update state
-useEffect(() => {
-  if (configData) {
-    const updatedConfig = relevantKeys.reduce((acc, key) => {
-      acc[key] = configData[key] ?? '';
-      return acc;
-    }, {});
-    setChangedConfig(updatedConfig);
-  }
-}, [configData]);
+// useEffect(() => {
+//   if (configData) {
+//     const updatedConfig = relevantKeys.reduce((acc, key) => {
+//       acc[key] = configData[key] ?? '';
+//       return acc;
+//     }, {});
+//     setChangedConfig(updatedConfig);
+//   }
+// }, [configData]);
 
 
 useEffect(() => {
@@ -436,25 +438,51 @@ const remoteSvg = useMemo(() => {
 
         setIsChanged(true);
 
-        setChangedConfig((prev) => ({
-            ...prev,
-            [key]: value
-        }));
+    //      setChangedConfig(prev => {
+    //     const updated = { ...prev };
+
+    //     if (originalConfig[key] === value) {
+    //         delete updated[key];
+    //     } else {
+    //         updated[key] = value;
+    //     }
+
+    //     return updated;
+    // });
+    setChangedConfig(prev => {
+        const updated = { ...prev };
+
+        if (String(originalConfig[key]) === String(value)) {
+            delete updated[key];
+        } else {
+            updated[key] = value;
+        }
+
+        return updated;
+    });
+
+
+
+        // setChangedConfig((prev) => ({
+        //     ...prev,
+        //     [key]: value
+        // }));
     };
 
 
 
 
     const getTxSelectedAntennas = (value) => {
-        if (!value) return [];
+       const num = Number(value) || 0;
+
         return Object.keys(antennaMap).filter(
-            key => value & antennaMap[key]
-        );
+            (antenna) => (num & antennaMap[antenna]) !== 0
+    );
     };
 
 
     const handleTxAntennaChange = (antenna, checked) => {
-        let current = config?.config?.txAntennas || 0; // assume API stores numeric bitmask
+        let current =  Number(configData?.txAntennas) || 0; // assume API stores numeric bitmask
 
         if (checked) {
             current |= antennaMap[antenna]; // add antenna
@@ -462,7 +490,7 @@ const remoteSvg = useMemo(() => {
             current &= ~antennaMap[antenna]; // remove antenna
         }
 
-        handleStationConfigChange("txAntennas", current);
+        handleStationConfigChange("txAntennas", String(current));
     };
 
 
@@ -473,24 +501,24 @@ const remoteSvg = useMemo(() => {
     };
 
     const getSelectedAntennas = (value) => {
-        if (!value) return [];
+        const num = Number(value) || 0;
 
         return Object.keys(antennaMap).filter(
-            key => value & antennaMap[key]
-        );
+            (antenna) => (num & antennaMap[antenna]) !== 0
+    );
     };
 
 
     const handleRxAntennaChange = (antenna, checked) => {
-        let current = config?.config?.rxAntennas || 0;
+        let current = Number(configData?.rxAntennas) || 0;
 
         if (checked) {
-            current |= antennaMap[antenna]; // add
+            current |= antennaMap[antenna];
         } else {
-            current &= ~antennaMap[antenna]; // remove
+            current &= ~antennaMap[antenna];
         }
 
-        handleStationConfigChange("rxAntennas", current);
+        handleStationConfigChange("rxAntennas", String(current));
     };
 
 
@@ -516,7 +544,7 @@ const remoteSvg = useMemo(() => {
             if (response.ok) {
                 setIsLoading(false);
 
-
+                setOriginalConfig(data)
                 setConfigData(data);
                 setIsError({ status: false, msg: "" });
             } else {
@@ -974,7 +1002,7 @@ const handleSaveConfiguration = async () => {
                                                                         <article className="col-sm-6 col-md-6 col-lg-6">
                                                                             <article className="form-row-config "><label for="" className="col-4 config-label">Preferred Channel </label><article className="col-sm-4 col-md-4 col-lg-4">
                                                                                 <input type="text" className="config-input" value={configData?.channel || ''}
-                                                                                    onChange={(e) => handleStationConfigChange("channel", Number(e.target.value) || 0)}
+                                                                                    onChange={(e) => handleStationConfigChange("channel", (e.target.value) || 0)}
                                                                                 />
                                                                             </article>
                                                                             </article>
@@ -1026,9 +1054,12 @@ const handleSaveConfiguration = async () => {
                                                                                         const selected = getSelectedAntennas(configData?.rxAntennas);
 
                                                                                         return (
-                                                                                            <label key={antenna} className="flex vlanlabel checkbox-mr">
+                                                                                            <label key={antenna} className={`flex vlanlabel checkbox-mr ${
+                                                                                                        antenna === "A3" ? "opacity-50 cursor-not-allowed" : ""
+                                                                                                    }`}>
                                                                                                 <input
                                                                                                     type="checkbox"
+                                                                                                    disabled={antenna === "A3"}
                                                                                                     checked={selected.includes(antenna)}
                                                                                                     onChange={(e) =>
                                                                                                         handleRxAntennaChange(antenna, e.target.checked)
@@ -1056,7 +1087,7 @@ const handleSaveConfiguration = async () => {
                                                                         onChange={(e) =>
                                                                             handleStationConfigChange(
                                                                                 "ddrsStatus",
-                                                                                e.target.value === "" ? null : Number(e.target.value)
+                                                                                e.target.value === "" ? null : (e.target.value)
                                                                             )
                                                                         }
                                                                     >
@@ -1077,9 +1108,9 @@ const handleSaveConfiguration = async () => {
                                                                         onChange={(e) =>{
                                                                              handleStationConfigChange(
                                                                                 "dataStreams",
-                                                                                e.target.value === "" ? null : Number(e.target.value)
+                                                                                e.target.value === "" ? null : (e.target.value)
                                                                             )
-                                                                            setDataStream(e.target.value === "" ? null : Number(e.target.value))
+                                                                            setDataStream(e.target.value === "" ? null : (e.target.value))
                                                                         }
                                                                     }
                                                                     >
@@ -1169,10 +1200,14 @@ const handleSaveConfiguration = async () => {
                                                                             const selected = getTxSelectedAntennas(configData?.txAntennas);
 
                                                                             return (
-                                                                                <label key={antenna} className="flex vlanlabel checkbox-mr">
+                                                                                <label key={antenna} className={`flex vlanlabel checkbox-mr ${
+                                                                                    antenna === "A3" ? "opacity-50 cursor-not-allowed" : ""
+                                                                                }`}
+                                                                                >
                                                                                     <input
                                                                                         type="checkbox"
                                                                                         checked={selected.includes(antenna)}
+                                                                                        disabled={antenna === "A3"}
                                                                                         onChange={(e) =>
                                                                                             handleTxAntennaChange(antenna, e.target.checked)
                                                                                         }
@@ -1251,8 +1286,8 @@ const handleSaveConfiguration = async () => {
                                                 <button
                                                 className="confirmdeletebtn confirmdeletebtnyes"
                                                 onClick={async () => {
-                                                    await handleApplyConfiguration();
                                                     setShowApplyPopup(false);
+                                                    await handleApplyConfiguration();
                                                 }}
                                                 >
                                                 YES
@@ -1297,8 +1332,8 @@ const handleSaveConfiguration = async () => {
                                                 <button
                                                 className="confirmdeletebtn confirmdeletebtnyes"
                                                 onClick={async () => {
-                                                    await handleSaveConfiguration();
                                                     setShowSavePopup(false);
+                                                    await handleSaveConfiguration();
                                                 }}
                                                 >
                                                 YES

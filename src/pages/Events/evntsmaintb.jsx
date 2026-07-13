@@ -422,7 +422,9 @@ useEffect(() => {
             setSearchBtn(false);
             // setEventipText('');
             setSelectedDuration(value);
-            setShowCustomPopup(false);      
+            setShowCustomPopup(false); 
+            setCustomStartDate(null);
+            setCustomEndDate(null);     
         }
     };
 
