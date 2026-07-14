@@ -60,13 +60,18 @@ const TxRxDiffchart = ({ graphOption, graphOptionValue,currentTab }) => {
         let traincab = 0;
         const dt = new Date();
         try {
-            const options = {
+            const options =  graphOption === "live" ? {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: `http://${nodeIpaddress}:8084/${currentTab}/api/v1/netstats`,
-            };
+            } : {
+                  method: "GET",
+                  headers: {
+                      "Content-Type": "application/json",
+                  },
+              };
             const response = await fetch(url,options);
             
             if (response.status === 200) {
@@ -107,7 +112,7 @@ const TxRxDiffchart = ({ graphOption, graphOptionValue,currentTab }) => {
                     }
                     counterRef.current += 1;                 
                 } else {
-                    const formatted = formatChartData(data.data);
+                    const formatted = formatChartData(data);
                     setDifferenceData(Array.isArray(formatted) ? formatted : []);
                 }
             } else if (response.status === 304) {
@@ -123,11 +128,11 @@ const TxRxDiffchart = ({ graphOption, graphOptionValue,currentTab }) => {
                     {   
                         const text = await response.text();
                         const data = text ? JSON.parse(text) : {};  
-                        const formatted = formatChartData(data.data);
+                        const formatted = formatChartData(data);
                         setDifferenceData(Array.isArray(formatted) ? formatted : []);
                     } catch (err) {
                         const data =[];
-                        const formatted = formatChartData(data.data);
+                        const formatted = formatChartData(data);
                         setDifferenceData(Array.isArray(formatted) ? formatted : []);
                     }
                 }
@@ -270,7 +275,7 @@ return (
                         fontFamily="Lato-Regular"
                         letterSpacing="0.2px"
                     />
-                    <YAxis domain={differenceData.length === 0 ? [0, 5] : ['auto', 'auto']} />
+                    <YAxis domain={['auto', 'auto']} />
                     <Tooltip content={<CustomTooltip />} cursor={{ fill: "transparent" }} />
                     <Legend content={<CustomLegend />} />
                     <Area

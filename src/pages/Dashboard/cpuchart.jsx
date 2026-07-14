@@ -62,12 +62,17 @@ const CpuChart = ({ graphOption,graphOptionValue,currentTab}) => {
     setIsLoading(true);
     setIsError({ status: false, msg: "" });
     try {
-      const options = {
+      const options =  graphOption === "live" ?  {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: `http://${nodeIpaddress}:8084/${currentTab}/api/v1/cpu`,
+      }  : {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json",
+          },
       };
 
       const response = await fetch(url,options);
@@ -90,7 +95,7 @@ const CpuChart = ({ graphOption,graphOptionValue,currentTab}) => {
           }
           counterRef.current += 1;
         }else{
-           const formatted = formatChartData(data.data);
+           const formatted = formatChartData(data);
           setCpuData(formatted);
 
            if (formatted.length === 0) {
@@ -142,7 +147,7 @@ const CpuChart = ({ graphOption,graphOptionValue,currentTab}) => {
    
     return()=> clearInterval(setTime);
     }else{
-      setCpuData([]);
+      // setCpuData([]);
     }
    
   }, [nodeDataId,graphOption]);
@@ -246,7 +251,7 @@ const countDtt = isNaN(rawCpu) ? '0.00' : cpuValue.toFixed(2);
                   tickFormatter={(timestamp) => format(new Date(timestamp), hourFormat(graphOption))}
                   // tickFormatter={(tick) => `${tick}`}
                 />
-                <YAxis domain={cpuData.length === 0 ? [0, 100] : ['auto', 'auto']} />
+                <YAxis domain={['auto', 'auto']} />
 
                 <Tooltip  content={<CustomTooltip />} cursor={{ fill: "transparent" }}/>
                 {/* <Legend onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} /> */}

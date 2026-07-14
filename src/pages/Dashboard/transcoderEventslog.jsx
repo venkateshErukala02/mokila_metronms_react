@@ -353,7 +353,7 @@ const handleRowClick = (value) => {
                   </> )}
                 </>
             </article>
-            {currentTab === 'obc' && selectLog === 'obclogs' &&  <article className="row" style={{ height: '86vh', overflowY: 'auto', border: '1px solid #21232712' }}>
+            {currentTab === 'obc' && selectLog === 'obclogs' &&  <article className="row" style={{ height: '83vh', overflowY: 'auto', border: '1px solid #21232712' }}>
                 {/* <article> */}
                      <article className="col-md-12" style={{display:'flex',justifyContent:'center'}}>
                     <ul className="obcsublist">
@@ -379,7 +379,7 @@ const handleRowClick = (value) => {
                 hello</>)}  */}
 
             </article>}
-            <article className="row" style={{ height: '86vh', overflowY: 'auto', border: '1px solid #21232712' }}>
+         {currentTab !== 'obc' ?  <article className="row" style={{ height: '83vh', overflowY: 'auto', border: '1px solid #21232712' }}>
                 <ul className="log-list">
                     {Array.isArray(eventLogDt) &&  eventLogDt.length > 0 ? (
                       eventLogDt.map((line, index) => (
@@ -392,7 +392,7 @@ const handleRowClick = (value) => {
                   }
                 </ul>
 
-            </article>
+            </article> :''}
         </section>
 
 

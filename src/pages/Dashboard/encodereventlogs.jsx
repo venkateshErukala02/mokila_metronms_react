@@ -113,7 +113,7 @@ useEffect(() => {
                          */}
                           </article>
 
-                           <article className="row">
+                           <article className="row" style={{ height: '83vh', overflowY: 'auto', border: '1px solid #21232712' }}>
                     <ul className="log-list">
                         {eventLogDt && String(eventLogDt)
                             .split('\n')

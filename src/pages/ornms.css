@@ -1007,6 +1007,7 @@ tbody.statustagtbbd>tr>td>a{
 }
 
 .eventmaintable{height: 85vh;overflow-y: auto;border: 1px solid rgb(33 35 39 / 7%);margin-bottom: 12px;}
+.nodevieweventmaintable{height: 83vh;overflow-y: auto;border: 1px solid rgb(33 35 39 / 7%);margin-bottom: 12px;}
 
 
 .bouneventtable{height: 19vh;overflow-y: auto;border: 1px solid rgb(33 35 39 / 7%);margin-bottom: 12px;}

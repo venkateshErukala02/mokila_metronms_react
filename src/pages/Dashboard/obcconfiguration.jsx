@@ -43,6 +43,10 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
         }
       },[nodeIpaddress]);
 
+      const ipValue = localStorage.getItem('nodeIpaddress')
+    const nodeIdValue = localStorage.getItem('nodeId')
+
+
     const [isLoading, setIsLoading] = useState("");
     const [isError, setIsError] = useState("");
     const [upTimeData, setUpTimeData] = useState([]);
@@ -458,7 +462,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                 },
                  body: JSON.stringify(configData)
             };
-            const response = await fetch(`api/v2/nodemanageview/obc/setconfig/${nodeDataId}`,options);
+            const response = await fetch(`api/v2/nodemanageview/obc/setconfig/${nodeIdValue}`,options);
             // const data = await response.json();
 
                 let data = null;
@@ -489,7 +493,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
    const handleApplyConfiguration = async () => {
   try {
         setIsApplying(true); 
-    const stopUrl = `api/v2/nodemanageview/obc/reboot/${nodeDataId}`;
+    const stopUrl = `api/v2/nodemanageview/obc/reboot/${nodeIdValue}`;
 
     // Stop service
     const stopResponse = await fetch(stopUrl, { method: "GET" });
@@ -768,8 +772,8 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                 <button
                                                 className="confirmdeletebtn confirmdeletebtnyes"
                                                 onClick={async () => {
-                                                    await handleApplyConfiguration();
                                                     setShowApplyPopup(false);
+                                                    await handleApplyConfiguration();
                                                     setShowApplySuccessPopup(true);
                                                 }}
                                                 >

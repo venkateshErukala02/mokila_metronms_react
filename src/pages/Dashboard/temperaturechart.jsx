@@ -44,13 +44,18 @@ const TemperatureChart = ({ graphOption, graphOptionValue }) => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
-            const options = {
+            const options =  graphOption === "live" ?  {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: `http://${nodeIpaddress}:8084/transcoder/api/v1/temp`,
-            };
+            }  : {
+                  method: "GET",
+                  headers: {
+                      "Content-Type": "application/json",
+                  },
+              };
 
             const response = await fetch(url,options);
 
@@ -71,8 +76,8 @@ const TemperatureChart = ({ graphOption, graphOptionValue }) => {
                     }
                     counterRef.current += 1;
                 } else {
-                    setTemperatureData([])
-                    const formatted = formatChartData(data.data);
+                    // setTemperatureData([])
+                    const formatted = formatChartData(data);
                     setTemperatureData(formatted);
                 }
             } else if (response.status === 304) {

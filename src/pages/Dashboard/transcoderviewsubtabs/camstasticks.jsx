@@ -10,9 +10,10 @@ import TxErrorChart from "../txerrorchart";
 import CpuChart from "../cpuchart";
 import '../../ornms.css';
 import TransEncoderChart from "../obctranscoderandencoder";
+import CamLatencyChart from "./camlatency";
 
 
-const TranscoderObcSubview = () => {
+const CamstatsSubview = () => {
   const [gpItemDt, setGpItemDt] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState({ status: false, msg: "" });
@@ -113,46 +114,34 @@ const handleCpuchart=()=>{
       </article>
       <article>
         <article className="container-fluid">
-          {/* <article className="row">
+          <article className="row">
             <article className="col-md-6 graphbord1">
               <article className="obcsubtabwidthcl">
-                <LatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue} labelName='Cam1'/>
+                <CamLatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue} labelName='cam1'/>
               </article>
             </article>
                 <article className="col-md-6 graphbord1">
               <article className="obcsubtabwidthcl">
-                <LatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue} labelName='Cam2'/>
+                <CamLatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue} labelName='cam2'/>
               </article>
             </article>
-            </article> */}
-            {/* <article className="row">
+            </article>
+            <article className="row">
               <article className="col-md-6 graphbord1" style={{marginTop:'20px'}}>
                  <article className="obcsubtabwidthcl">
-                 <LatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue} labelName='Cam3'/>    
+                 <CamLatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue} labelName='cam3'/>    
                  </article>
                 </article>
                     <article className="col-md-6 graphbord1" style={{marginTop:'20px'}}>
                  <article className="obcsubtabwidthcl">
-                <LatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue} labelName='Cam4'/>
+                <CamLatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue} labelName='cam4'/>
                  </article>
                 </article>
-             </article> */}
-              <article className="row">
-            <article className="col-md-6 graphbord1">
-              <article className="obcsubtabwidthcl">
-                <TxRxDiffchart currentTab='obc' graphOption={graphOption} graphOptionValue={graphOptionValue}/>
-              </article>
-            </article>
-                <article className="col-md-6 graphbord1">
-              <article className="obcsubtabwidthcl">
-                <TransEncoderChart graphOption={graphOption} graphOptionValue={graphOptionValue} labelName='Transcoder/Encoder'/>
-              </article>
-            </article>
-            </article>
+             </article>
             </article>
                 </article>
     </>
   );
 };
 
-export default TranscoderObcSubview;
+export default CamstatsSubview;

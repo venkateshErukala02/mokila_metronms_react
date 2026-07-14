@@ -60,12 +60,17 @@ const TxErrorChart = ({ graphOption,graphOptionValue,currentTab}) => {
     setIsLoading(true);
     setIsError({ status: false, msg: "" });
     try {
-      const options = {
+      const options =  graphOption === "live" ? {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: `http://${nodeIpaddress}:8084/${currentTab}/api/v1/netstats`,
+      }  : {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json",
+          },
       };
 
       const response = await fetch(url,options);
@@ -87,7 +92,7 @@ const TxErrorChart = ({ graphOption,graphOptionValue,currentTab}) => {
           }
           counterRef.current += 1;
         }else{
-           const formatted = formatChartData(data.data);
+           const formatted = formatChartData(data);
           setTxErrorDt(formatted);
         }
       } else if (response.status === 304) {
@@ -222,7 +227,7 @@ const TxErrorChart = ({ graphOption,graphOptionValue,currentTab}) => {
                   tickFormatter={(timestamp) => format(new Date(timestamp), hourFormat(graphOption))}
                   // tickFormatter={(tick) => `${tick}`}
                 />
-                <YAxis domain={txErrorDt.length === 0 ? [0, 100] : ['auto', 'auto']} />
+                <YAxis domain={['auto', 'auto']} />
                 <Tooltip  content={<CustomTooltip />} cursor={{ fill: "transparent" }}/>
                   <Legend content={<CustomLegend />} />
                 <Area

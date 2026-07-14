@@ -422,7 +422,7 @@ const TcEventTab=()=>{
                 </article>
             </article>
             {typevalueSel !== 'auditlog' ? (
-            <article className="eventmaintable">
+            <article className="nodevieweventmaintable">
                 <article className="row">
                     <table className="col-12">
                         <thead className="tncodereventsthtb">
@@ -457,7 +457,7 @@ const TcEventTab=()=>{
                     </table>
                 </article>
             </article>) : (
-            <article className="eventmaintable">
+            <article className="nodevieweventmaintable">
                 <article className="row">
                     <table className="col-12">
                         <thead className="tncodereventsthtb">
