@@ -430,7 +430,7 @@ const EncoderEventTab=()=>{
                 </article>
             </article>
             {typevalueSel !== 'auditlog' ? (
-            <article className="eventmaintable">
+            <article className="nodevieweventmaintable">
                 <article className="row">
                     <table className="col-12">
                         <thead className="tncodereventsthtb">
@@ -465,7 +465,7 @@ const EncoderEventTab=()=>{
                     </table>
                 </article>
             </article>) : (
-            <article className="eventmaintable">
+            <article className="nodevieweventmaintable">
                 <article className="row">
                     <table className="col-12">
                         <thead className="tncodereventsthtb">

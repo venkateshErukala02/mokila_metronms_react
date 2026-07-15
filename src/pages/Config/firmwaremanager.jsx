@@ -148,9 +148,9 @@ const FirmwareMng = () => {
          const statuses = [
             { label: "All", value: "all" },
             { label: "Encoder", value: "encoder" },
-            { label: "Station Node", value: "AP" },
+            { label: "Station Node", value: "SN" },
             { label: "Transcoder", value: "transcoder" },
-            // { label: "train radio", value: "train radio" },
+            // { label: "train radio", value: "sta" },
             { label: "OBC", value: "obc" },
         ];
 

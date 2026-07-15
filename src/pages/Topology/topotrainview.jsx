@@ -444,7 +444,7 @@ useEffect(() => {
                                         className="trainexporticon"
                                         // onClick={() => handleAdd(event)}
                                         >
-                                        <i className="fa-solid fa-plus" onClick={()=> handleTrainPopup(event.cabNode1)}></i>
+                                        <i className="fa-solid fa-plus" onClick={()=> handleTrainPopup(event.nodeid)}></i>
                                         </button>
                                     </div>
                                     </td>
@@ -472,7 +472,7 @@ useEffect(() => {
                                         className="trainexporticon"
                                         // onClick={() => handleAdd(event)}
                                         >
-                                        <i className="fa-solid fa-plus" onClick={()=> handleTrainPopup(event.cabNode6)}></i>
+                                        <i className="fa-solid fa-plus" onClick={()=> handleTrainPopup(event.nodeid)}></i>
                                         </button>
                                     </div>
                                     </td>
@@ -537,7 +537,7 @@ useEffect(() => {
                                         className="trainexporticon"
                                         // onClick={() => handleAdd(event)}
                                         >
-                                        <i className="fa-solid fa-plus" onClick={()=> handleTrainPopup(event.cabNode1)}></i>
+                                        <i className="fa-solid fa-plus" onClick={()=> handleTrainPopup(event.nodeid)}></i>
                                         </button>
                                     </div>
                                     </td>
@@ -564,7 +564,7 @@ useEffect(() => {
                                         className="trainexporticon"
                                         // onClick={() => handleAdd(event)}
                                         >
-                                        <i className="fa-solid fa-plus" onClick={()=> handleTrainPopup(event.cabNode6)}></i>
+                                        <i className="fa-solid fa-plus" onClick={()=> handleTrainPopup(event.nodeid)}></i>
                                         </button>
                                     </div>
                                     </td>
@@ -630,7 +630,7 @@ useEffect(() => {
                                         className="trainexporticon"
                                         // onClick={() => handleAdd(event)}
                                         >
-                                        <i className="fa-solid fa-plus" onClick={()=> handleTrainPopup(event.cabNode1)}></i>
+                                        <i className="fa-solid fa-plus" onClick={()=> handleTrainPopup(event.nodeid)}></i>
                                         </button>
                                     </div>
                                     </td>
@@ -657,7 +657,7 @@ useEffect(() => {
                                         className="trainexporticon"
                                         // onClick={() => handleAdd(event)}
                                         >
-                                        <i className="fa-solid fa-plus" onClick={()=> handleTrainPopup(event.cabNode6)}></i>
+                                        <i className="fa-solid fa-plus" onClick={()=> handleTrainPopup(event.nodeid)}></i>
                                         </button>
                                     </div>
                                     </td>

@@ -1,7 +1,7 @@
 import { useState } from "react"
 import TranscoderDashboard from "./transcoderdashboard"
 import CamstatsSubview from "./transcoderviewsubtabs/camstasticks";
-
+import '../../pages/ornms.css'
 
 const TcMonitoringTab = () => {
 
@@ -47,8 +47,8 @@ const TcMonitoringTab = () => {
                    <article className="row">
                   <article className="col-md-12" style={{display:'flex',justifyContent:'center'}}>
                     <ul className="obcsublist">
-                      <li  onClick={() => handleRowClick('linkstasticks')} className={`${currentObcsubTab === 'obc' ? 'active' : ''}`}><a>Linkstasticks</a></li>
-                      <li  onClick={() => handleRowClick('camstasticks')} className={`${currentObcsubTab === 'transcoder' ? 'active' : ''}`}><a>Camstasticks</a></li>
+                      <li  onClick={() => handleRowClick('linkstasticks')} className={`${currentObcsubTab === 'linkstasticks' ? 'active' : ''}`}><a>Linkstasticks</a></li>
+                      <li  onClick={() => handleRowClick('camstasticks')} className={`${currentObcsubTab === 'camstasticks' ? 'active' : ''}`}><a>Camstasticks</a></li>
                     </ul>
                   </article>
                  
