@@ -1276,7 +1276,7 @@ useEffect(() => {
                         </article>
 
                         <article className="col-1">
-                               <span><i className="fa fa-close noticlose" onClick={handleClosepopup} role="button"></i></span>
+                               <span className="noticloseicon"><i className="fa fa-close noticlose" onClick={handleClosepopup} role="button"></i></span>
                         </article>
                         
                 </article>

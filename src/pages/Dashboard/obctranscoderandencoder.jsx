@@ -233,7 +233,8 @@ const TransEncoderChart = ({ graphOption, graphOptionValue ,labelName }) => {
                 tickFormatter={(timestamp) => format(new Date(timestamp), hourFormat(graphOption))}
               // tickFormatter={(tick) => `${tick}`}
               />
-              <YAxis ticks={[0, 1, 2, 3, 4, 5]} />
+              {/* <YAxis ticks={[0, 1, 2, 3, 4, 5]} /> */}
+              <YAxis domain={['auto', 'auto']} />
               <Tooltip content={<CustomTooltip />} cursor={{ fill: "transparent" }} />
               <Legend content={<CustomLegend />} />
               <Area

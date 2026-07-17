@@ -7,6 +7,8 @@ import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from "react-router-dom";
 import { handleNodeData } from "../Action/action";
+import DatePicker from "react-datepicker";
+import 'react-datepicker/dist/react-datepicker.css';
 
 const InventRpt = () => {
 
@@ -57,10 +59,116 @@ const InventRpt = () => {
     const [showRescanSuccessPopup,setShowRescanSuccessPopup] = useState(false);
     const [showDeleteSuccessPopup,setShowDeleteSuccessPopup] = useState(false);
     const [showWarningPopup,setShowWarningPopup] = useState(false);
-    
+    const [showCustomPopup, setShowCustomPopup] = useState(false);
+    const [customStartDate, setCustomStartDate] = useState(null);
+    const [customEndDate, setCustomEndDate] = useState(null);
+    const [tagType,setTagType]=useState('TDM');
+    const [selectedType,setSelectedType] = useState('cabnumber');
+    const [tagId,setTagId] = useState('');
+    const [cabNumber,setCabNumber] = useState('');
+    const [showCustomDateAlertPopup,setShowCustomDateAlertPopup] = useState(false);
+    // const [showCustomDateLimitAlertPopup,setShowCustomDateLimitAlertPopup] = useState(false);
+    const [isCustomApplied, setIsCustomApplied] = useState(false);
+
 
      const currentUser = useSelector((state) => state?.loginuser?.node?.role);
             const isReadOnly = currentUser === 'Read-only';
+
+             const handleCustomSubmit = (e) => {
+                if (e) e.preventDefault(); 
+                if (!customStartDate && customEndDate !== null ) {
+                        setShowCustomDateAlertPopup(true);
+                        return;
+                    }
+                    if (!customEndDate && customStartDate !== null ) {
+                        setShowCustomDateAlertPopup(true);
+                        return;
+                    }
+
+                    // if (customEndDate <= customStartDate) {
+                    //     setShowCustomDateLimitAlertPopup(true)
+                    //     return;
+                    // }
+
+                    setShowCustomPopup(false);
+                    setIsCustomApplied(true);
+                    fetchCustomData();
+                }
+    const fetchCustomData = () => {
+        let startTimestamp =''; 
+        let endTimestamp = ''
+         if (!customStartDate || !customEndDate ) {
+            startTimestamp = customStartDate?.getTime(); // ms
+            endTimestamp = customEndDate?.getTime();  
+         }
+        let url = '';
+        if( selectedType === 'cabnumber'){
+         let filterParts = []
+
+            if (startTimestamp && endTimestamp) {
+            filterParts.push(`fromTime=${startTimestamp}`);
+             filterParts.push(`toTime=${endTimestamp}`);
+            }
+
+
+        const filterString = filterParts?.join("&");
+
+         url = `api/v2/wayside/failedTag/filteredReport?${encodeURIComponent(filterString)}&cabNumber=${cabNumber}&type=${tagType}`
+        }else if( selectedType === 'tagid'){
+            url = `api/v2/wayside/failedTagReport?&tagId=${tagId}`;
+                const params = [];
+
+                if (startTimestamp && endTimestamp) {
+                    params.push(`fromTime=${startTimestamp}`);
+                    params.push(`toTime=${endTimestamp}`);
+                }
+                params.push(`&type=${tagType}`);
+                if (params.length > 0) {
+                    url = url + params.join("&");
+                }
+        }
+        // reportUrlRef.current = url;
+        // setReportUrl(url); 
+        getTagReportDownload(url);
+  };
+
+  const getTagReportDownload = async(url)=>{
+
+     try {
+
+     const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    // 'Authorization': `Basic ${token}`
+                },
+                // body: formData, 
+            });
+    
+             if (!response.ok) {
+            const errText = await response.text();
+            setIsError(`Error starting download: ${errText}`);
+            return;
+        }
+
+        const blob = await response.blob();
+
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+
+        const filename = response.headers.get('Content-Disposition')?.split('filename=')[1] || 'report.csv';
+        a.href = downloadUrl;
+        a.download = filename.replace(/"/g, '');
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        window.URL.revokeObjectURL(downloadUrl);
+        } catch (error) {
+            setIsError('An error occurred while contacting the server.');
+        } finally {
+            setIsLoading(false);
+        }
+  }
 
     useEffect(()=>{
         const handleClickOutside=(event)=>{
@@ -483,6 +591,12 @@ const InventRpt = () => {
         a.remove();
 
         window.URL.revokeObjectURL(downloadUrl);
+        setCabNumber('');
+        setCustomStartDate('');
+        setCustomEndDate('');
+        setTagId('');
+        setTagType('TDM');
+        setSelectedType('cabnumber');
         } catch (error) {
             setError('An error occurred while contacting the server.');
         } finally {
@@ -508,6 +622,37 @@ const columnPadding = {
   radioMode: "16px",
   deviceType: "35px",
 };
+
+ const handleOpenTagpopup  = ()=>{
+    setShowCustomPopup(true);
+    setCustomEndDate(null);
+    setCustomStartDate(null);
+    setSelectedType('cabnumber');
+    setTagType('TDM');
+    setCabNumber('');
+    setTagId('');
+  }
+  const handleCloseTagpopup=()=>{
+     setShowCustomPopup(false);
+    setCustomEndDate(null);
+    setCustomStartDate(null);
+    setSelectedType('cabnumber');
+    setTagType('TDM');
+    setCabNumber('');
+    setTagId('');
+  }
+
+   const handleType = (event) => {
+        const customvalue = event.target.value;
+        setSelectedType(customvalue);
+        setCabNumber('');
+        setTagId('');
+   }
+
+
+       const handleChange = (event) => {
+        setTagType(event.target.value);
+        };
 
     return (
         <>
@@ -589,7 +734,7 @@ const columnPadding = {
 
                                         </li>
                                         <li>
-                                            <button type="button" className="createbtn" onClick={getRfTagData}>RF TAG Report
+                                            <button type="button" className="createbtn" onClick={handleOpenTagpopup}>RF TAG Report
                                                 <i className="fa fa-file-text" aria-hidden="true"></i>
                                             </button>
 
@@ -759,6 +904,157 @@ const columnPadding = {
                                 </article>
                             </article>
                             </>}
+
+                              {showCustomPopup && (
+                        <article className="confirmdeletepopup">
+                            <article className="">
+                <article className="custom-popup popupStyledate">
+                    <article className="row">
+                        <article className="col-11">
+                <h4 className="customheadtitle">Select Custom Tag Report </h4>
+                        </article>
+
+                        <article className="col-1">
+                               <span className="noticloseicon"><i className="fa fa-close noticlose" onClick={handleCloseTagpopup} role="button"></i></span>
+                        </article>
+                        
+                </article>
+                   <div className="row">
+                <div className="col-6" style={{ marginBottom: '8px' }}>
+                  <label className="radiolabel" style={tagType === 'TDM' ? {fontWeight:700,color:'#495057',marginRight:'10px'}:{marginRight:'10px'}}>
+                        <input
+                        type="radio"
+                        value="TDM"
+                        checked={tagType === 'TDM'}
+                          onChange={handleChange}
+                        className="radiobtn"
+                        />
+                        TDM
+                    </label>
+
+                    <label className="radiolabel" style={tagType === 'NTDM' ? {fontWeight:700,color:'#495057'}:{}}>
+                        <input
+                        type="radio"
+                        value="NTDM"
+                        checked={tagType === 'NTDM'}
+                          onChange={handleChange}
+                        className="radiobtn"
+                        />
+                        NTDM
+                    </label>                   
+                </div>
+                <div className="col-6" style={{ marginBottom: '8px' }}>
+
+                </div>
+                </div>
+                 <div className="row">
+                <div className="col-7" style={{ marginBottom: '8px' }}>
+                     <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Select by Cab No / Tag ID:</label>
+                            <select name="name" id="name" 
+                            value={selectedType} 
+                            onChange={handleType} 
+                            className="form-controll1" style={{ maxWidth: '107px', minWidth: '110px',minHeight: '28px',maxHeight:'30px' }}>
+                                <option value="cabnumber">Cab Number</option>
+                                <option value="tagid">Tag ID</option>
+                            </select>
+                </div>
+                <div className="col-5" style={{ marginBottom: '8px' }}>
+                 {selectedType == 'cabnumber' ?   <input type="text"
+                        value={cabNumber}
+                        maxLength={4}
+                        required
+                        onChange={(e) =>{ 
+                            const val = e.target.value.replace(/\D/g,"").slice(0,4);
+                            setCabNumber(val);
+                        }}
+                        name="" placeholder="Enter Cab Number" id="" className="settinglabelsubinp" />  : 
+                    <input type="text"
+                        value={tagId}
+                        required
+                        maxLength={4}
+                        onChange={(e) =>{ 
+                            const val = e.target.value.replace(/\D/g,"").slice(0,4);
+                             setTagId(val);
+                            }}
+                        name="" placeholder="Enter Tag ID" id="" className="settinglabelsubinp" />   
+                 }             
+                </div>
+                </div>
+
+              <div className="row">
+                <div className="col-6" style={{ marginBottom: '8px' }}>
+                    <label htmlFor="startDate" className="settinglabelsub">
+                    Start:
+                    </label>
+                    <DatePicker
+                    id="startDate"
+                    selected={customStartDate}
+                    onChange={(date) => setCustomStartDate(date)}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={15}
+                    dateFormat="yyyy-MM-dd HH:mm"
+                    placeholderText="Select Start Date"
+                    className="myDatepickercl"
+                    />
+                </div>
+
+                <div className="col-6" style={{ marginBottom: '8px' }}>
+                    <label htmlFor="endDate" className="settinglabelsub">
+                    End:
+                    </label>
+                    <DatePicker
+                    id="endDate"
+                    selected={customEndDate}
+                    onChange={(date) => setCustomEndDate(date)}
+                    minDate={customStartDate}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={15}
+                    dateFormat="yyyy-MM-dd HH:mm"
+                    placeholderText="Select End Date"
+                    className="myDatepickercl"
+                    />
+                </div>
+                </div>
+                <article className="f-r">
+                <button className="createbtn" onClick={handleCustomSubmit}>Export</button>
+                </article>
+                </article>
+                </article>
+                </article>
+            )}
+
+             {showCustomDateAlertPopup && <>
+                            <article className="confirmdeletepopup">
+                                <article className="confirmdeletepopupboxstyle">
+                                <h1 className="confirmdeletetitle">Please select both start and end dates</h1>
+                                <article className="f-r">
+                                      <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() =>{ setShowCustomDateAlertPopup(false);}}
+                                        >
+                                        OK
+                                        </button>
+                                </article>
+                                </article>
+                            </article>
+                            </>}
+                            {/* {showCustomDateLimitAlertPopup && <>
+                            <article className="confirmdeletepopup">
+                                <article className="confirmdeletepopupboxstyle">
+                                <h1 className="confirmdeletetitle">End date must be greater than start date</h1>
+                                <article className="f-r">
+                                      <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => {setShowCustomDateLimitAlertPopup(false);}}
+                                        >
+                                        OK
+                                        </button>
+                                </article>
+                                </article>
+                            </article>
+                            </>} */}
                               {showRescanSuccessPopup && (
                                 <article className="confirmsuccesspopup">
                                     <article className="confirmsuccesspopupboxstyle">

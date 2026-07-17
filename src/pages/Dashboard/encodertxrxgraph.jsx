@@ -286,7 +286,7 @@ const EncoderTxChart = ({graphOption, graphOptionValue }) => {
               onMouseLeave={() => console.log('')}
               style={{ color: itemColor, cursor: 'pointer', margin: '0 10px' }}
             >
-              <span style={{ marginRight: 5, color: dotColor }}>●</span> {entry.value}
+              <span style={{ marginRight: 5, color: dotColor }}>●</span> {entry.value} (in kbps)
             </li>
           );
         })}
@@ -310,7 +310,8 @@ const EncoderTxChart = ({graphOption, graphOptionValue }) => {
                                        fontFamily="Lato-Regular"
                                        letterSpacing="0.2px" 
                                      />
-                                     <YAxis ticks={[0,2,4,6,8,10]} />
+                                     {/* <YAxis ticks={[0,2,4,6,8,10]} /> */}
+                                     <YAxis domain={['auto', 'auto']} />
                                      <Tooltip content={<CustomTooltip />} cursor={{ fill: "transparent" }}/>
                                        <Legend content={<CustomLegend />} />
                                      <Area

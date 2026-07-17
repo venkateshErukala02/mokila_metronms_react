@@ -21,22 +21,22 @@ const TranscoderView = () => {
     const nodeDataId = useSelector((state) => state.node?.node?.nodeId ?? state.node?.node?.id);
     const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress ?? state.node?.node?.primaryIP);
     const nodeLocation = useSelector((state) => state.node?.node?.location);
-    const ipValue = localStorage.getItem('nodeIpaddress')
-    const nodeIdValue = localStorage.getItem('nodeId')
 
 
-    useEffect(()=>{
-        if(nodeDataId){
-          localStorage.setItem('nodeId',nodeDataId);
+    // useEffect(()=>{
+    //     if(nodeDataId){
+    //       localStorage.setItem('nodeId',nodeDataId);
     
-        }
-      },[nodeDataId]);
+    //     }
+    //   },[nodeDataId]);
     
-      useEffect(()=>{
-        if(nodeIpaddress){
-          localStorage.setItem('nodeIpaddress',nodeIpaddress);
-        }
-      },[nodeIpaddress]);
+    //   useEffect(()=>{
+    //     if(nodeIpaddress){
+    //       localStorage.setItem('nodeIpaddress',nodeIpaddress);
+    //     }
+    //   },[nodeIpaddress]);
+
+
     
 
     // const getServerStatusDt = async (url) => {
@@ -130,6 +130,8 @@ const TranscoderView = () => {
         }
     }
 
+    const ipValue = localStorage.getItem('nodeIpaddress')
+    const nodeIdValue = localStorage.getItem('nodeId')
 
 
 
@@ -147,7 +149,7 @@ const TranscoderView = () => {
 
                             <ul className="nodelist">
                                 <li><a>Node View</a></li>
-                                <li><a href={`http://${transcoderData?.System?.nwkip || ipValue}`} target="_blank">{transcoderData?.System?.nwkip || ipValue}</a></li>
+                                <li><a href={`http://${transcoderData?.System?.nwkip || nodeIpaddress || ipValue}`} target="_blank">{transcoderData?.System?.nwkip || nodeIpaddress || ipValue}</a></li>
                                 <li onClick={() => handleRowClick('summary')} className={`${currentTab === 'summary' ? 'active' : ''}`}> <a>  <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Summary</a></li>
                                  <li onClick={() => handleRowClick('monitoring')} className={`${currentTab === 'monitoring' ? 'active' : ''}`}> <a>  <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Monitoring</a></li>
                                 <li onClick={() => handleRowClick('events')} className={`${currentTab === 'events' ? 'active' : ''}`}> <a> <i

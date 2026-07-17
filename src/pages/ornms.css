@@ -4461,6 +4461,7 @@ svg *:focus {
   color:#f87171;
   font-size:18px;
   cursor:pointer;
+  font-size: 24px;
 }
 
 .terminal-body{
@@ -4652,6 +4653,9 @@ svg *:focus {
     justify-content: center;
     display: flex;
     padding-left: 163px
+}
+.noticloseicon>i{
+    font-size: 17px !important;
 }
  /* width={700} height={240} */
 
