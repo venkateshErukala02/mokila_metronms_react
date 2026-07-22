@@ -69,6 +69,7 @@ const ObcSummaryTab = ({ nodeItemDt, currentTab }) => {
 
 
   useEffect(() => {
+    if(currentObcsubTab === 'transcoder' || currentObcsubTab === 'trainradio' || currentObcsubTab === 'obc') return
     const fetchData = async () => {
       let url = `api/v2/troubleshoot/${currentTab}/uptime`;
       await getServerStatusDt(url);

@@ -81,11 +81,7 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
         if (!beginIp?.trim() || !authPassphrase?.trim() || !privacyPassphrase?.trim()) return;
     }
 
-        const requestBody = isEditMode ? {
-        //    comments: comment,
-        //     name : groupName,
-        //     user: selectedUsers
-        }: snmpVersValueSel === 'v2c' ? {
+        const requestBody = snmpVersValueSel === 'v2c' ? {
            
             version: snmpVersValueSel,
             securityName: "roV3user",
@@ -108,7 +104,7 @@ const SnmpSubNewconfigCont=({handleSubNewconfigContainer,Snmp,refreshSnmpData,mo
                 privPassPhrase: privacyPassphrase
             }
 
-        const method = isEditMode ? '' :'POST';
+        const method = isEditMode ? 'POST' :'POST';
         const url= isEditMode ? 'api/v2/nodelinks/udefinition' :'api/v2/nodelinks/udefinition';
 
         try {

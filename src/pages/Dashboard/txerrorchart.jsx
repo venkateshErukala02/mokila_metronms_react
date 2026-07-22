@@ -164,18 +164,20 @@ const TxErrorChart = ({ graphOption,graphOptionValue,currentTab}) => {
 
   const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
+     const countTx = payload[0].payload.txErrorValue;
+    //  === 'number' ? parseInt(payload[0].payload.txErrorValue) : '0';
     return (
       <div className="custom-tooltip">
         <div>{format(new Date(payload[0].payload.timestamp),'HH mm')}</div>
-        {payload.map((pld) =>{
-          const countTx = pld.value === 'number' ? parseInt(pld.value) : '0';
-        return (
+        {/* {payload.map((pld) =>{ */}
+        {/* return ( */}
           <div style={{ display: "inline-block", padding: 10 }}>
           <div style={{ color: 'black' }}>
                         txError: {countTx}
                         </div>
           </div>
-        )})}
+        {/* )})} */}
+        {/* ) */}
       </div>
     );
   }

@@ -61,6 +61,7 @@ const ipValue = localStorage.getItem('nodeIpaddress')
 
 
     useEffect(() => {
+      if(currentTab === 'monitoring' || currentTab === 'events') return;
         const fetchData = async () => {
             let url = 'api/v2/troubleshoot/obc/disk';
             await getDiskData(url);

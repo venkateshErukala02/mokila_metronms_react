@@ -5,14 +5,14 @@ import '../../pages/ornms.css'
 
 const TcMonitoringTab = () => {
 
-    const [currentObcsubTab, setCurrentObcsubTab] = useState('linkstasticks');
+    const [currentObcsubTab, setCurrentObcsubTab] = useState('linkstatistics');
 
      const renderCurrentObcsubTab = (value) => {
     switch (value) {
-      case 'linkstasticks':
+      case 'linkstatistics':
         return <TranscoderDashboard />
         break;
-      case 'camstasticks':
+      case 'camstatistics':
          return <CamstatsSubview />
         break;
       default:
@@ -47,8 +47,8 @@ const TcMonitoringTab = () => {
                    <article className="row">
                   <article className="col-md-12" style={{display:'flex',justifyContent:'center'}}>
                     <ul className="obcsublist">
-                      <li  onClick={() => handleRowClick('linkstasticks')} className={`${currentObcsubTab === 'linkstasticks' ? 'active' : ''}`}><a>Linkstasticks</a></li>
-                      <li  onClick={() => handleRowClick('camstasticks')} className={`${currentObcsubTab === 'camstasticks' ? 'active' : ''}`}><a>Camstasticks</a></li>
+                      <li  onClick={() => handleRowClick('linkstatistics')} className={`${currentObcsubTab === 'linkstatistics' ? 'active' : ''}`}><a>Link Statistics</a></li>
+                      <li  onClick={() => handleRowClick('camstatistics')} className={`${currentObcsubTab === 'camstatistics' ? 'active' : ''}`}><a>Cam Statistics</a></li>
                     </ul>
                   </article>
                  

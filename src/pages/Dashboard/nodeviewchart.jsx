@@ -28,6 +28,10 @@ const NetworkMonitoringDashboard = () => {
  const stationDataCode = useSelector((state) => state.node.node.productCode) || localStorage.getItem('stationCode');
 
   const handleGraphopt = (value, numb) => {
+     if(value === 'live'){
+      setStartDate('');
+      setEndDate('');
+    }
     setGraphOption(value);
     setGraphOptionValue(numb);
   }
@@ -37,8 +41,8 @@ if(startDate && endDate !== null){
   const edDate = Date.parse(endDate);
   setGraphOption('custom');
   setGraphOptionValue(`1c&start=${stDate}&end=${edDate}`);
-  setStartDate('');
-  setEndDate('');
+  // setStartDate('');
+  // setEndDate('');
 }  
 }
 

@@ -61,7 +61,7 @@ const Navbar = () => {
         useEffect(() => {
             const intervalId = setInterval(() => {
                 getData();
-            }, 5000); 
+            }, 30000); 
     
             return () => clearInterval(intervalId);
         }, [])

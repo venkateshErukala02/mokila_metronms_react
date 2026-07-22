@@ -36,7 +36,7 @@ const ProvisionTb = ({ getProviContData }) => {
 
              const PRODUCT_CODES = [
             { key: 'SN', label: 'SN' },
-            { key: 'TR', label: 'TR' },
+            { key: 'sta', label: 'TR' },
             { key: 'obc', label: 'OBC' },
             { key: 'transcoder', label: 'Transcoder' },
             { key: 'encoder', label: 'Encoder' },
