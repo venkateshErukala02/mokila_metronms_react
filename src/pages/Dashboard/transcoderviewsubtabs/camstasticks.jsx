@@ -9,7 +9,6 @@ import TxRxDiffchart from "../txandrxchart";
 import TxErrorChart from "../txerrorchart";
 import CpuChart from "../cpuchart";
 import '../../ornms.css';
-import TransEncoderChart from "../obctranscoderandencoder";
 import CamLatencyChart from "./camlatency";
 
 
@@ -32,6 +31,10 @@ const CamstatsSubview = () => {
 
 
   const handleGraphopt = (value, numb) => {
+     if(value === 'live'){
+      setStartDate('');
+      setEndDate('');
+    }
     setGraphOption(value);
     setGraphOptionValue(numb);
   }
@@ -41,8 +44,8 @@ if(startDate && endDate !== null){
   const edDate = Date.parse(endDate);
   setGraphOption('custom');
   setGraphOptionValue(`1c&start=${stDate}&end=${edDate}`);
-  setStartDate('');
-  setEndDate('');
+  // setStartDate('');
+  // setEndDate('');
 }  
 }
 

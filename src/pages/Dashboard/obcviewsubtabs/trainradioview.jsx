@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
-import LatencyChart from "../latencychart";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import LocalSnr from "../localsnr";
-import TxChart from "../localtxr";
 import { useSelector } from "react-redux";
-import TxRxDiffchart from "../txandrxchart";
-import TxErrorChart from "../txerrorchart";
-import CpuChart from "../cpuchart";
 import '../../ornms.css';
+import LocalSnrObc from "../obclocalsnr";
+import ObcTxRxDiffchart from "../obctxandrxchart";
+import ObcLatencyChart from "../obclatencychart";
 
 
 const TrainradioObcSubview = () => {
@@ -30,6 +27,10 @@ const TrainradioObcSubview = () => {
 
 
   const handleGraphopt = (value, numb) => {
+    if(value === 'live'){
+      setStartDate('');
+      setEndDate('');
+    }
     setGraphOption(value);
     setGraphOptionValue(numb);
   }
@@ -38,15 +39,31 @@ if(startDate && endDate !== null){
   const stDate = Date.parse(startDate);
   const edDate = Date.parse(endDate);
   setGraphOption('custom');
-  setGraphOptionValue(`1c&start=${stDate}&end=${edDate}`);
-  setStartDate('');
-  setEndDate('');
+  setGraphOptionValue(`from=${stDate}&to=${edDate}`);
+  // setStartDate('');
+  // setEndDate('');
 }  
 }
 
 const handleCpuchart=()=>{
   setCpuChartStatus(prevStatus => !prevStatus)
 }
+
+    const handleStartChange = (date) =>{
+      setStartDate(date);
+
+      if(date){
+        const end = endDate ? new Date(endDate) : new Date(date);
+
+        end.setFullYear(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate()
+        );
+
+        setEndDate(end);
+      }
+    }
 
 
   return (
@@ -60,14 +77,14 @@ const handleCpuchart=()=>{
 
                   Live
                 </label>
-                <label className={`btngrphopt ${graphOption === 'onehour' ? 'active' : ''}`} onClick={() => handleGraphopt('onehour', '1h')} role="button" tabindex="0">
+                {/* <label className={`btngrphopt ${graphOption === 'onehour' ? 'active' : ''}`} onClick={() => handleGraphopt('onehour', '1h')} role="button" tabindex="0">
                   1 Hour </label>
                 <label className={`btngrphopt ${graphOption === 'oneday' ? 'active' : ''}`} onClick={() => handleGraphopt('oneday', '1d')} role="button" tabindex="0">
                   1 Day </label>
                 <label className={`btngrphopt ${graphOption === 'oneweek' ? 'active' : ''}`} onClick={() => handleGraphopt('oneweek', '1w')} role="button" tabindex="0">
                   1 Week </label>
                 <label className={`btngrphopt ${graphOption === 'onemonth' ? 'active' : ''}`} onClick={() => handleGraphopt('onemonth', '1m')} role="button" tabindex="0">
-                  1 Month </label>
+                  1 Month </label> */}
               </div>
             </article>
             <article className="col-md-3">
@@ -80,7 +97,9 @@ const handleCpuchart=()=>{
                         selected={startDate}
                         showTimeSelect
                         dateFormat="yyyy-MM-dd HH:mm"
-                        onChange={(date) => setStartDate(date)} />
+                        // onChange={(date) => setStartDate(date)} 
+                        onChange={handleStartChange}
+                        />
                     </article>
                   </article>
                 </article>
@@ -96,7 +115,10 @@ const handleCpuchart=()=>{
                         selected={endDate}
                         showTimeSelect
                         dateFormat="yyyy-MM-dd HH:mm"
-                        onChange={(date) => setEndDate(date)} />
+                        onChange={(date) => setEndDate(date)} 
+                        minDate={startDate}
+                        maxDate={startDate}
+                        />
                     </article>
                   </article>
                 </article>
@@ -115,19 +137,19 @@ const handleCpuchart=()=>{
           <article className="row">
             <article className="col-md-6 graphbord1">
               <article className="obcsubtabwidthcl">
-                <LatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue}/>
+                <ObcLatencyChart currentTab='trainradio' graphOption={graphOption} graphOptionValue={graphOptionValue}/>
               </article>
             </article>
                 <article className="col-md-6 graphbord1">
               <article className="obcsubtabwidthcl">
-               <LocalSnr graphOption={graphOption} graphOptionValue={graphOptionValue} />
+               <LocalSnrObc currentTab='trainradio' graphOption={graphOption} graphOptionValue={graphOptionValue} />
               </article>
             </article>
             </article>
             <article className="row">
             <article className="col-md-6 graphbord1">
               <article className="obcsubtabwidthcl">
-                <TxRxDiffchart currentTab='obc' graphOption={graphOption} graphOptionValue={graphOptionValue}/>
+                <ObcTxRxDiffchart currentTab='trainradio' graphOption={graphOption} graphOptionValue={graphOptionValue}/>
               </article>
             </article>
             </article>

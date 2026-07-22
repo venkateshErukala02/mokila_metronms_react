@@ -13,7 +13,7 @@ import {
 import { useSelector } from "react-redux";
 
 
-const TransEncoderChart = ({ graphOption, graphOptionValue ,labelName }) => {
+const ObcLatencyChart = ({ graphOption, graphOptionValue ,currentTab }) => {
   const [gpItemDt, setGpItemDt] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState({ status: false, msg: "" });
@@ -61,12 +61,20 @@ const TransEncoderChart = ({ graphOption, graphOptionValue ,labelName }) => {
     setIsLoading(true);
     setIsError({ status: false, msg: "" });
     try {
+
+       let requestBody = "";
+        if(currentTab === 'transcoder'){
+            requestBody = `http://${nodeIpaddress}:8084/obc/api/v1/connectivity/encoderip`;
+        }else if(currentTab === 'trainradio'){
+            requestBody = `http://${nodeIpaddress}:8084/obc/api/v1/connectivity/trainradioip`;
+        }
+
       const options =  graphOption === "live" ?  {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: `http://${nodeIpaddress}:8084/obc/api/v1/connectivity/encoderip`,
+                body: requestBody,
             }  : {
                   method: "GET",
                   headers: {
@@ -81,9 +89,17 @@ const TransEncoderChart = ({ graphOption, graphOptionValue ,labelName }) => {
         
 
         if (graphOption === 'live') {
+          let latency = 0;
           let dt = new Date();
+
+          if(currentTab === 'transcoder'){
+            latency = data.encoderip || 0;
+          }else if(currentTab === 'trainradio'){
+            latency = data.trainradioip || 0;
+          }
+
           const dataNew = {
-            Latency: data.encoderip || 0,
+            Latency: latency || 0,
             timestamp: dt.getTime(),
             index: counterRef.current
           }
@@ -127,7 +143,7 @@ const TransEncoderChart = ({ graphOption, graphOptionValue ,labelName }) => {
     }
     if (graphOption === 'live') {
       const setTime = setInterval(() => {
-        const url = 'api/v2/troubleshoot/obc/transencoderLatency';
+        const url = 'api/v2/troubleshoot/obc/trainlatency';
         getServerStatusDt(url);
       }, 30000);
 
@@ -141,10 +157,14 @@ const TransEncoderChart = ({ graphOption, graphOptionValue ,labelName }) => {
   useEffect(() => {
     let url = '';
     if (graphOption === 'live') {
-      url = 'api/v2/troubleshoot/obc/transencoderLatency'
+      url = 'api/v2/troubleshoot/obc/trainlatency';
     }
     else {
-    //   url = `rest/measurements/icmp/node%5B${nodeDataId}%5D.responseTime%5B${nodeIpaddress}%5D?aggregation=AVERAGE&relaxed=true&duration=${graphOptionValue}`;
+         if(currentTab === 'transcoder'){
+            url =`api/v2/nodes/transcoder/${nodeDataId}?${graphOptionValue}&att=rtt`;
+         }else if(currentTab === 'trainradio'){
+            url =`api/v2/nodes/suradio/${nodeDataId}?${graphOptionValue}&att=rtt`;
+        }
     }
     getServerStatusDt(url);
   }, [graphOption, graphOptionValue]);
@@ -214,7 +234,7 @@ const TransEncoderChart = ({ graphOption, graphOptionValue ,labelName }) => {
             onMouseLeave={() => console.log('')}
             style={{ color: 'black', cursor: 'pointer' }}
           >
-            <span style={{ marginRight: 10, color: '#4fc9e7' }}>●</span> {labelName} {entry.value} (in ms)
+            <span style={{ marginRight: 10, color: '#4fc9e7' }}>●</span> {entry.value} (in ms)
           </li>
         ))}
       </ul>
@@ -256,4 +276,4 @@ const TransEncoderChart = ({ graphOption, graphOptionValue ,labelName }) => {
   );
 };
 
-export default TransEncoderChart;
+export default ObcLatencyChart;
