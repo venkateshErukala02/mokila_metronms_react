@@ -30,7 +30,7 @@ const TranscoderDashboard = ({currentTab}) => {
 
 
   const handleGraphopt = (value, numb) => {
-     if(value === 'live'){
+     if(value === 'live' || value === 'onehour' ||  value === 'oneday' || value === 'oneweek' || value === 'onemonth'){
       setStartDate('');
       setEndDate('');
     }
@@ -80,6 +80,7 @@ const handleCpuchart=()=>{
                     <label htmlFor="" className="col-md-4">Start Date:</label>
                     <article className="col-md-7" style={{ position: 'relative' }}>
                       <DatePicker
+                        autoComplete="off"
                         selected={startDate}
                         showTimeSelect
                         dateFormat="yyyy-MM-dd HH:mm"
@@ -96,6 +97,7 @@ const handleCpuchart=()=>{
                     <label htmlFor="" className="col-md-4">End Date:</label>
                     <article className="col-md-7">
                       <DatePicker
+                        autoComplete="off"
                         selected={endDate}
                         showTimeSelect
                         dateFormat="yyyy-MM-dd HH:mm"

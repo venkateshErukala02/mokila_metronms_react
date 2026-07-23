@@ -4657,6 +4657,16 @@ svg *:focus {
 .noticloseicon>i{
     font-size: 17px !important;
 }
+
+.versiontitle{
+    color: #666666;
+    padding-left: 6px;
+    font-family: Arial;
+    font-size: 13px;
+    font-weight: bold;
+    transform: translateY(8px);
+    display: inline-block;
+}
  /* width={700} height={240} */
 
 /*  */

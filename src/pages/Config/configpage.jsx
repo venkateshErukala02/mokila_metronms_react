@@ -53,7 +53,7 @@ const ConfigPage = () => {
             case 'HardwareReplacement':
                 return <HardwareReplacementContainer />;
             default:
-                return <FirmwareMng />;
+                return <FirmwareMng />; 
         }
     };
 

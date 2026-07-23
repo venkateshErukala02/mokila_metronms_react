@@ -1286,6 +1286,7 @@ useEffect(() => {
                     Start:
                     </label>
                     <DatePicker
+                    autoComplete="off"
                     id="startDate"
                     selected={customStartDate}
                     onChange={(date) => setCustomStartDate(date)}
@@ -1303,6 +1304,7 @@ useEffect(() => {
                     End:
                     </label>
                     <DatePicker
+                    autoComplete="off"
                     id="endDate"
                     selected={customEndDate}
                     onChange={(date) => setCustomEndDate(date)}

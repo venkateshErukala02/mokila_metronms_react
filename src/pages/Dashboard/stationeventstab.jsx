@@ -827,6 +827,7 @@ useEffect(() => {
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
                             <article className="trans-datepickerbg" style={{display:'inline-block'}}>
                             <DatePicker
+                            autoComplete="off"
                             selected={date}
                             showTimeSelect
                             dateFormat="yyyy-MM-dd HH:mm"
@@ -1003,6 +1004,7 @@ useEffect(() => {
                                     Start:
                                     </label>
                                     <DatePicker
+                                    autoComplete="off"
                                     id="startDate"
                                     selected={customStartDate}
                                     onChange={(date) => setCustomStartDate(date)}
@@ -1020,6 +1022,7 @@ useEffect(() => {
                                     End:
                                     </label>
                                     <DatePicker
+                                    autoComplete="off"
                                     id="endDate"
                                     selected={customEndDate}
                                     onChange={(date) => setCustomEndDate(date)}

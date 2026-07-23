@@ -434,6 +434,7 @@ useEffect(() => {
                          <label className="settinglabelsub">Select Duration</label>
                           <article className="labelaligncl">
                             <DatePicker
+                            autoComplete="off"
                             selected={selectedFromDate}
                             showTimeSelect
                             dateFormat="yyyy-MM-dd HH:mm"
@@ -443,6 +444,7 @@ useEffect(() => {
                             </article>
                             <article className="labelaligncl">
                            <DatePicker
+                            autoComplete="off"
                             selected={selectedToDate}
                             showTimeSelect
                             dateFormat="yyyy-MM-dd HH:mm"
@@ -542,6 +544,7 @@ useEffect(() => {
                                 <label className="settinglabelsub">Select Duration</label>
                                   <article className="labelaligncl">
                             <DatePicker
+                            autoComplete="off"
                             selected={selectedStartDate}
                             showTimeSelect
                             dateFormat="yyyy-MM-dd HH:mm"
@@ -552,6 +555,7 @@ useEffect(() => {
                             </article>
                             <article className="labelaligncl">
                            <DatePicker
+                            autoComplete="off"
                             selected={selectedEndDate}
                             showTimeSelect
                             dateFormat="yyyy-MM-dd HH:mm"

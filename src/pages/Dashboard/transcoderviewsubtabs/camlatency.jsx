@@ -144,7 +144,7 @@ const CamLatencyChart = ({ graphOption, graphOptionValue ,labelName }) => {
       url = `api/v2/troubleshoot/transcoder/${nodeIpaddress}/cameraping/${labelName}`;
     }
     else {
-    //   url = `rest/measurements/icmp/node%5B${nodeDataId}%5D.responseTime%5B${nodeIpaddress}%5D?aggregation=AVERAGE&relaxed=true&duration=${graphOptionValue}`;
+      url = `rest/measurements/node%5B${nodeDataId}%5D.nodeSnmp%5B%5D?aggregation=AVERAGE&att=${labelName}&duration=${graphOptionValue}`;
     }
     getServerStatusDt(url);
   }, [graphOption, graphOptionValue]);

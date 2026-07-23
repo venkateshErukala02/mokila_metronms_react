@@ -426,6 +426,7 @@ const ObcEventTab=({nodeItemDt})=>{
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
                             <article className="trans-datepickerbg" style={{display:'inline-block'}}>
                             <DatePicker
+                            autoComplete="off"
                             selected={date}
                             showTimeSelect
                             dateFormat="yyyy-MM-dd HH:mm"

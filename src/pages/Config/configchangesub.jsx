@@ -462,6 +462,7 @@ useEffect(() => {
                                 <article className="checkbok">
                                     <article className="trans-datepickerbg" style={{ display: 'inline-block' }}>
                                         <DatePicker
+                                            autoComplete="off"
                                             selected={selectedDate}
                                             showTimeSelect
                                             dateFormat="yyyy-MM-dd HH:mm"

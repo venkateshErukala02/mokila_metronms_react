@@ -83,7 +83,7 @@ const LocalSnrObc = ({ graphOption, graphOptionValue, currentTab }) => {
         if (graphOption === 'live') {
               
              let dataNew = {};
-             if (data && data.links.length > 0) {
+             if (data) {
               const vallcl = data.links[0]?.traincab;
                const hasDecimal = typeof vallcl === 'number' && !isNaN(vallcl) && vallcl % 1 !== 0;
                if(hasDecimal){

@@ -1,7 +1,7 @@
 import { useState } from "react"
 import TranscoderDashboard from "./transcoderdashboard"
-import CamstatsSubview from "./transcoderviewsubtabs/camstasticks";
 import '../../pages/ornms.css'
+import CamstatsSubview from "./transcoderviewsubtabs/camstatistics";
 
 const TcMonitoringTab = () => {
 

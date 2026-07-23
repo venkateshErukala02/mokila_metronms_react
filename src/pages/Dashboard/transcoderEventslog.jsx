@@ -333,6 +333,7 @@ const handleRowClick = (value) => {
 
                     <article className="trans-datepickerbg" style={{ display: 'inline-block', marginTop: '5px' }}>
                         <DatePicker
+                            autoComplete="off"
                             selected={selectedDate}
                             showTimeSelect
                             dateFormat="yyyy-MM-dd"

@@ -464,6 +464,7 @@ const InventRpt = () => {
 
 
     const handleSort = (field) => {
+        if (field === "region") return;
         if (sortField === field) {
             setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
         } else {
@@ -987,6 +988,7 @@ const columnPadding = {
                     Start:
                     </label>
                     <DatePicker
+                    autoComplete="off"
                     id="startDate"
                     selected={customStartDate}
                     onChange={(date) => setCustomStartDate(date)}
@@ -1004,6 +1006,7 @@ const columnPadding = {
                     End:
                     </label>
                     <DatePicker
+                    autoComplete="off"
                     id="endDate"
                     selected={customEndDate}
                     onChange={(date) => setCustomEndDate(date)}
