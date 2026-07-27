@@ -397,13 +397,13 @@ const CamConfigurationTab = ({ }) => {
         }
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            let url = `api/v2/nodelinks/getRadio/Config?nodeId=${nodeDataId}&deviceType=SN`;
-            await getConfigDt(url);
-        };
-        fetchData();
-    }, [triggerConfig]);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         let url = `api/v2/nodelinks/getRadio/Config?nodeId=${nodeDataId}&deviceType=SN`;
+    //         await getConfigDt(url);
+    //     };
+    //     fetchData();
+    // }, [triggerConfig]);
 
 
 
@@ -439,18 +439,18 @@ const CamConfigurationTab = ({ }) => {
         }
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            let url = `api/v2/nodelinks/linkstats?nodeId=${nodeDataId}`;
-            await getServiceCheckDt(url);
-        };
-        fetchData();
-        const intervalId = setInterval(() => {
-            fetchData();
-        }, 30000);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         let url = `api/v2/nodelinks/linkstats?nodeId=${nodeDataId}`;
+    //         await getServiceCheckDt(url);
+    //     };
+    //     fetchData();
+    //     const intervalId = setInterval(() => {
+    //         fetchData();
+    //     }, 30000);
 
-        return () => clearInterval(intervalId);
-    }, [nodeDataId]);
+    //     return () => clearInterval(intervalId);
+    // }, [nodeDataId]);
 
 
     const linkDetailsList = [
@@ -468,124 +468,124 @@ const CamConfigurationTab = ({ }) => {
 
 
 
-    const handleApplyConfiguration = async () => {
-        try {
-            setIsApplying(true);
+    // const handleApplyConfiguration = async () => {
+    //     try {
+    //         setIsApplying(true);
 
-            const commitResponse = await handleCommit();
+    //         const commitResponse = await handleCommit();
 
-            if (!commitResponse?.ok) {
-                throw new Error("Commit failed. Cannot apply configuration.");
-            }
+    //         if (!commitResponse?.ok) {
+    //             throw new Error("Commit failed. Cannot apply configuration.");
+    //         }
 
-            const options = {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            };
+    //         const options = {
+    //             method: "GET",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //         };
 
-            const response = await fetch(
-                `api/v2/nodelinks/radio/reboot?nodeId=${nodeDataId}`,
-                options
-            );
+    //         const response = await fetch(
+    //             `api/v2/nodelinks/radio/reboot?nodeId=${nodeDataId}`,
+    //             options
+    //         );
 
-            let data = null;
-            const text = await response.text();
+    //         let data = null;
+    //         const text = await response.text();
 
-            if (text) {
-                data = JSON.parse(text);
-            }
+    //         if (text) {
+    //             data = JSON.parse(text);
+    //         }
 
-            if (response.ok) {
-                setShowApplySuccessPopup(true);
-                setIsError({ status: false, msg: "" });
-                //   alert("Configuration applied successfully");
-                setCanApply(false);
-                setTriggerConfig((prev) => prev + 1);
-                setTimeout(() => {
-                    getConfigDt(
-                        `api/v2/nodelinks/getRadio/Config?nodeId=${nodeDataId}&deviceType=SN`
-                    );
-                }, 120000);
+    //         if (response.ok) {
+    //             setShowApplySuccessPopup(true);
+    //             setIsError({ status: false, msg: "" });
+    //             //   alert("Configuration applied successfully");
+    //             setCanApply(false);
+    //             setTriggerConfig((prev) => prev + 1);
+    //             setTimeout(() => {
+    //                 getConfigDt(
+    //                     `api/v2/nodelinks/getRadio/Config?nodeId=${nodeDataId}&deviceType=SN`
+    //                 );
+    //             }, 120000);
 
-            } else {
-                throw new Error("Data not found");
-            }
+    //         } else {
+    //             throw new Error("Data not found");
+    //         }
 
-        } catch (error) {
-            setIsError({ status: true, msg: error.message });
-        } finally {
-            setIsApplying(false);
-        }
-    };
+    //     } catch (error) {
+    //         setIsError({ status: true, msg: error.message });
+    //     } finally {
+    //         setIsApplying(false);
+    //     }
+    // };
 
-    const handleCommit = async () => {
+    // const handleCommit = async () => {
 
-        try {
-            const options = {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            };
-            const response = await fetch(`api/v2/nodelinks/radio/commit?nodeId=${nodeDataId}`, options);
-            const text = await response.text();
-
-
-            if (response?.ok === true || response.status === 200) {
-                setIsLoading(false);
-                setIsError({ status: false, msg: "" });
-                return response;
-            } else {
-                throw new Error("Data not found");
-            }
-        } catch (error) {
-            setIsLoading(false);
-            // setIsSaving(false);
-            setIsError({ status: true, msg: error.message });
-            return null;
-        }
-    }
+    //     try {
+    //         const options = {
+    //             method: "GET",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //         };
+    //         const response = await fetch(`api/v2/nodelinks/radio/commit?nodeId=${nodeDataId}`, options);
+    //         const text = await response.text();
 
 
+    //         if (response?.ok === true || response.status === 200) {
+    //             setIsLoading(false);
+    //             setIsError({ status: false, msg: "" });
+    //             return response;
+    //         } else {
+    //             throw new Error("Data not found");
+    //         }
+    //     } catch (error) {
+    //         setIsLoading(false);
+    //         // setIsSaving(false);
+    //         setIsError({ status: true, msg: error.message });
+    //         return null;
+    //     }
+    // }
 
-    const handleSaveConfiguration = async () => {
-        try {
-            setIsSaving(true);
-            const options = {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(changedConfig)
-            };
-            const response = await fetch(`api/v2/nodelinks/setRadio/Config?nodeId=${nodeDataId}&deviceType=SN`, options);
-            // const data = await response.json();
 
-            let data = null;
 
-            const text = await response.text(); // read response safely
-            if (text) {
-                data = JSON.parse(text); // only parse if not empty
-            }
+    // const handleSaveConfiguration = async () => {
+    //     try {
+    //         setIsSaving(true);
+    //         const options = {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify(changedConfig)
+    //         };
+    //         const response = await fetch(`api/v2/nodelinks/setRadio/Config?nodeId=${nodeDataId}&deviceType=SN`, options);
+    //         // const data = await response.json();
 
-            if (response?.ok === true || response?.status === 200) {
-                setShowSaveSuccessPopup(true);
-                setIsLoading(false);
-                setCanApply(true);
-                setIsSaving(false);
-                setIsChanged(false);
-                // setConfigData(data);
-                setIsError({ status: false, msg: "" });
-            } else {
-                throw new Error("Data not found");
-            }
-        } catch (error) {
-            setIsLoading(false);
-            setIsError({ status: true, msg: error.message });
-        }
-    };
+    //         let data = null;
+
+    //         const text = await response.text(); // read response safely
+    //         if (text) {
+    //             data = JSON.parse(text); // only parse if not empty
+    //         }
+
+    //         if (response?.ok === true || response?.status === 200) {
+    //             setShowSaveSuccessPopup(true);
+    //             setIsLoading(false);
+    //             setCanApply(true);
+    //             setIsSaving(false);
+    //             setIsChanged(false);
+    //             // setConfigData(data);
+    //             setIsError({ status: false, msg: "" });
+    //         } else {
+    //             throw new Error("Data not found");
+    //         }
+    //     } catch (error) {
+    //         setIsLoading(false);
+    //         setIsError({ status: true, msg: error.message });
+    //     }
+    // };
 
 
      const handleAddSysname = async (e) => {
@@ -593,7 +593,7 @@ const CamConfigurationTab = ({ }) => {
           if (!sysName?.trim() ) return;
 
         const method = "POST";
-        const url = `http://localhost:8980/metronms/api/v2/nodelinks/setCam/sysName?nodeId=${nodeDataId}&sysName=${encodeURIComponent(sysName)}`
+        const url = `api/v2/nodelinks/setCam/sysName?nodeId=${nodeDataId}&sysName=${encodeURIComponent(sysName)}`
         try {
             const response = await fetch(url, {
                 method,
@@ -620,6 +620,8 @@ const CamConfigurationTab = ({ }) => {
 
     }
 
+
+    
 
 
 

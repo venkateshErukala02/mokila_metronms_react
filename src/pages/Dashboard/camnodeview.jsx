@@ -26,45 +26,45 @@ const CamNodeDetails = () => {
 
   const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress || state.node?.node?.label);
 
-  const getServerStatusDt = async (url) => {
-    setIsLoading(true);
-    setIsError({ status: false, msg: "" });
-    try {
-      const username = "admin";
-      const password = "admin";
-      const token = btoa(`${username}:${password}`);
-      const options = {
-        method: "GET",
-        headers: {
-          "Authorization": `Basic ${token}`,
-          "Content-Type": "application/json",
-        },
-      };
-      const response = await fetch(url, options);
-      const data = await response.json();
+  // const getServerStatusDt = async (url) => {
+  //   setIsLoading(true);
+  //   setIsError({ status: false, msg: "" });
+  //   try {
+  //     const username = "admin";
+  //     const password = "admin";
+  //     const token = btoa(`${username}:${password}`);
+  //     const options = {
+  //       method: "GET",
+  //       headers: {
+  //         "Authorization": `Basic ${token}`,
+  //         "Content-Type": "application/json",
+  //       },
+  //     };
+  //     const response = await fetch(url, options);
+  //     const data = await response.json();
 
-      if (response.ok) {
-        setIsLoading(false);
+  //     if (response.ok) {
+  //       setIsLoading(false);
 
 
-        setNodeItemDt(data);
-        setIsError({ status: false, msg: "" });
-      } else {
-        throw new Error("Data not found");
-      }
-    } catch (error) {
-      setIsLoading(false);
-      setIsError({ status: true, msg: error.message });
-    }
-  };
+  //       // setNodeItemDt(data);
+  //       setIsError({ status: false, msg: "" });
+  //     } else {
+  //       throw new Error("Data not found");
+  //     }
+  //   } catch (error) {
+  //     setIsLoading(false);
+  //     setIsError({ status: true, msg: error.message });
+  //   }
+  // };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      let url = `api/v2/nodemanageview/summarydb?nodeId=${nodeDataId}`;
-      await getServerStatusDt(url);
-    };
-    fetchData();
-  }, [nodeDataId]);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     let url = `api/v2/nodemanageview/summarydb?nodeId=${nodeDataId}`;
+  //     await getServerStatusDt(url);
+  //   };
+  //   fetchData();
+  // }, [nodeDataId]);
 
   useEffect(() => {
     if (stationDataCode) {
@@ -112,6 +112,7 @@ const CamNodeDetails = () => {
   }
 
 
+    const ipValue = localStorage.getItem('nodeIpaddress')
 
 
   return (
@@ -128,7 +129,7 @@ const CamNodeDetails = () => {
 
               <ul className="nodelist">
                 <li><a>Node View</a></li>
-                <li><a href={`http://${nodeItemDt.ipAddress}`} target="_blank">{nodeItemDt.ipAddress}</a></li>
+                <li><a href={`http://${nodeItemDt.ipAddress}` || ipValue || nodeIpaddress} target="_blank">{nodeItemDt.ipAddress || ipValue || nodeIpaddress}</a></li>
                 <li onClick={() => handleRowClick('summary')} className={`${currentTab === 'summary' ? 'active' : ''}`}> <a> <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Summary</a></li>
                 {/* <li onClick={() => handleRowClick('monitoring')} className={`${currentTab === 'monitoring' ? 'active' : ''}`}> <a> <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Monitoring</a></li>
                 <li onClick={() => handleRowClick('events')} className={`${currentTab === 'events' ? 'active' : ''}`}> <a> <i

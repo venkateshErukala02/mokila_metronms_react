@@ -16,7 +16,7 @@ const Tableone = () => {
     const [eventtimeSel, setEventtimeSel] = useState(Date.now() - 86400000);
     const [eventLimitValueSel, setEventLimitValueSel] = useState('1');
     const [eventLimitLabelSel, setEventLimitLabelSel] = useState('50');
-    const [eventSeverityValueSel, setEventSeverityValueSel] = useState('-1');
+    const [eventSeverityValueSel, setEventSeverityValueSel] = useState('');
     const [eventSeverityLabelSel, setEventSeverityLabelSel] = useState('All');
 
     const [isError, setIsError] = useState({ status: false, msg: "" });
