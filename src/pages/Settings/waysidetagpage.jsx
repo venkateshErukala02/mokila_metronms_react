@@ -32,6 +32,30 @@ const WaysideTagContainer=()=>{
         const [showDeleteSuccessPopup,setShowDeleteSuccessPopup] = useState(false);
         const value = priorityChecked ? "highpriority" : "none";
         const [showWarningPopup,setShowWarningPopup] = useState(false);
+        const [tagTypeValue, setTagTypeValue] = useState('');
+        const [stationList, setStationList] = useState([]);
+        const [location, setLocation] = useState("");
+        const [direction,setDirection] = useState("");
+        const [role,setRole] = useState("");
+        const [position,setPosition] = useState("");
+
+        useEffect(() => {
+            const getStationList = async () => {
+                try {
+                const response = await fetch(
+                    "api/v2/wayside/station/list"
+                );
+
+                const data = await response.json();
+                setStationList(data);
+                } catch (error) {
+                console.error("Error fetching station list:", error);
+                }
+            };
+
+            getStationList();
+        }, []);
+
 
          useEffect(() => {
            if (!tagIdText.trim()) return;
@@ -78,26 +102,29 @@ const WaysideTagContainer=()=>{
             }
         };
 
+        useEffect(() => {
+            if (searchBtn) return;
 
-     useEffect(() => {
-         if (searchBtn) return;
-            const url=`api/v2/wayside/waySideTags?page=${pageCount}`;
-             getTagData(url,true);
+            const params = new URLSearchParams({
+                page: pageCount,
+            });
 
-             const intervalId = setInterval(() => {
-            getTagData(url, false);
+            if (location) params.append("location", location);
+            if (direction) params.append("direction", direction);
+            if (position) params.append("position", position);
+            if (tagTypeValue) params.append("tagtype", tagTypeValue);
+            if (role) params.append("role", role);
+
+            const url = `api/v2/wayside/waySideTags?${params.toString()}`;
+
+            getTagData(url, true);
+
+            const intervalId = setInterval(() => {
+                getTagData(url, false);
             }, 30000);
 
-            return ()=> clearInterval(intervalId);
-    
-        }, [pageCount,searchBtn]);
-
-        //  useEffect(() => {
-
-        //     const url='api/v2/wayside/waySideTags?page=1'
-        //     getTagData(url);
-    
-        // }, []);
+            return () => clearInterval(intervalId);
+        }, [pageCount, searchBtn, location, direction, position, tagTypeValue, role]);    
 
         const handleUserLimitValue = (event) => {
             setUserLimitValueSel(event.target.value);
@@ -196,11 +223,11 @@ const WaysideTagContainer=()=>{
         try {
             const username = 'admin';
             const password = 'admin';
-            const token = btoa(`${username}:${password}`)
+            // const token = btoa(`${username}:${password}`)
             const response = await fetch('api/v2/wayside/uploadtags', {
                 method: "POST",
                 headers: {
-                    'Authorization': `Basic ${token}`
+                    // 'Authorization': `Basic ${token}`
                 },
                 body: formData,
             });
@@ -450,11 +477,66 @@ const WaysideTagContainer=()=>{
                                             }
                                         /></th>
                                             <th>Tag Id</th>
-                                            <th>Location</th>
-                                            <th>Direction </th>
-                                            <th>Position</th>
-                                            <th>Tag Type</th>
-                                            <th>Role</th>
+                                            <th className="wayside-table-header">
+                                                <select
+                                                    name="location" id="location" value={location}
+                                                    onChange={(e) => setLocation(e.target.value)}
+                                                    className="form-controll1"
+                                                    style={{ maxWidth: "94px", minWidth: "94px" }}
+                                                    >
+                                                    <option value="">Location</option>
+
+                                                    {stationList.map((station, index) => (
+                                                        <option key={index} value={station}>
+                                                        {station}
+                                                        </option>
+                                                    ))}
+                                                    </select>
+
+                                            </th>
+                                            <th> 
+                                                <select name="direction" id="direction" value={direction} onChange={(e) => setDirection(e.target.value)} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
+                                                    <option value="">Direction</option>
+                                                    <option value="NB">NB</option>
+                                                    <option value="SB">SB</option>
+                                                    <option value="EB">EB</option>
+                                                    <option value="WB">WB</option>
+                                                    </select> 
+                                            </th>
+                                            <th className="wayside-table-header">
+                                                <select name="position" id="position" value={position} onChange={(e) => setPosition(e.target.value)} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
+                                                    <option value="">Position</option>
+                                                    <option value="SBSE">SBSE</option>
+                                                    <option value="NBSE">NBSE</option>
+                                                    <option value="SBNE">SBNE</option>
+                                                    <option value="NBNE">NBNE</option>
+                                                    <option value="EBSE">EBSE</option>
+                                                    <option value="WBSE">WBSE</option>
+                                                    <option value="EBNE">EBNE</option>
+                                                    <option value="WBNE">WBNE</option>
+                                                    </select>
+                                            </th>
+                                            <th>
+                                                 <select name="tagTypeValue" id="tagTypeValue" value={tagTypeValue} onChange={(e) => setTagTypeValue(e.target.value)} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
+                                                    <option value="">Tag Type</option>
+                                                    <option value="TDM">Tdm</option>
+                                                    <option value="NTDM">Ntdm</option>
+                                                    </select>
+                                            </th>
+                                            <th className="wayside-table-header">
+                                                 <select name="role" id="role" value={role} onChange={(e) => setRole(e.target.value)} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
+                                                    <option value="">Role</option>
+                                                    <option value="VON">VON</option>
+                                                    <option value="VOFF">VOFF</option>
+                                                    <option value="GENERIC VON">GENERIC VON</option>
+                                                    <option value="GENERIC VOFF">GENERIC VOFF</option>
+                                                    <option value="YARD ENTER">YARD ENTER</option>
+                                                    <option value="YARD EXIT">YARD EXIT</option>
+                                                    <option value="SNL">SNL</option>
+                                                    <option value="DIR LEARN">DIR LEARN</option>
+                                                    <option value="RAD REBOOT">RAD REBOOT</option>
+                                                    </select>
+                                            </th>
                                             <th>Priority</th>
                                             <th>Send Mail</th>
                                             <th>Report Alarm </th>

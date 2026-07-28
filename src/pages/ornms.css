@@ -4667,6 +4667,10 @@ svg *:focus {
     transform: translateY(8px);
     display: inline-block;
 }
+
+thead.settingthtb>tr>th.wayside-table-header{
+    padding-left: 0;
+}
  /* width={700} height={240} */
 
 /*  */

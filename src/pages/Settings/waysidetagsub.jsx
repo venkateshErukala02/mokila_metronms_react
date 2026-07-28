@@ -92,11 +92,11 @@ const WaysideTagSubCont = ({ handleSubContainer, refreshTagData, mode, user }) =
     };
 
 
-    useEffect(() => {
-        let url = '';
-        url = 'api/v2/wayside/codes';
-        if (url) fetchStationData(url);
-    }, []);
+    // useEffect(() => {
+    //     let url = '';
+    //     url = 'api/v2/wayside/codes';
+    //     if (url) fetchStationData(url);
+    // }, []);
 
      const handleAddUser = async (e) => {
           if (e) e.preventDefault();
