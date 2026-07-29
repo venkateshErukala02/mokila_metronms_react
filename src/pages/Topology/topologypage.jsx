@@ -803,11 +803,13 @@ useEffect(() => {
         url = `api/v2/wayside/tagdetails?station=${textName.data.display}&sortBy=${sortField}&order=${sortOrder}`;
     } else if (circleId) {
         url = `api/v2/wayside/tagdetails?station=${circleId}&sortBy=${sortField}&order=${sortOrder}`;
-    }else if (circleIdMaptable) {
-        url = `api/v2/wayside/tagdetails?station=${circleIdMaptable}&sortBy=${sortField}&order=${sortOrder}`;
-    }else if (lineId) {
+    }
+    else if (lineId) {
         url = `api/v2/wayside/tagdetails?station=${lineId}&sortBy=${sortField}&order=${sortOrder}`;
     }
+    //  else if (circleIdMaptable) {
+    //     url = `api/v2/wayside/tagdetails?station=${circleIdMaptable}&sortBy=${sortField}&order=${sortOrder}`;
+    // }
     // else if(textName?.data?.type === 'facility'){
     //     url = `api/v2/wayside/tagdetails?station=${textName.data.display}&sortBy=${sortField}&order=${sortOrder}`;
     // }

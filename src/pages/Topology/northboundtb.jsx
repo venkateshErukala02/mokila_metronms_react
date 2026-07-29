@@ -13,11 +13,11 @@ const NorthBoundTb=({textName})=>{
         try {
             const username = 'admin';
             const password = 'admin';
-            const token = btoa(`${username}:${password}`)
+            // const token = btoa(`${username}:${password}`)
             const options = {
                 method: "GET",
                 headers: {
-                    'Authorization': `Basic ${token}`
+                    // 'Authorization': `Basic ${token}`
                 }
 
             };
@@ -49,8 +49,10 @@ const NorthBoundTb=({textName})=>{
         useEffect(() => {
             const fetchData = async () => {
             const facId = textName?.data?.id ?? 1;
+            const now = Date.now();
 
-            const url = `api/v2/events/nb/station?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D1748520284118&fac=${facId}&limit=5&offset=0&order=desc&orderBy=id`;
+            const oneHourAgo = now - (60 * 60 * 1000);
+            const url = `api/v2/events/nb/station?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D${oneHourAgo}&fac=${facId}&limit=100&offset=0&order=desc&orderBy=id`;
 
             await getNorthBoundTbData(url);
         };

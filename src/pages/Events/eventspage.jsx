@@ -595,6 +595,11 @@ useEffect(() => {
                                             <option value="SBNE">SBNE</option>
                                             <option value="NBSE">NBSE</option>
                                             <option value="NBNE">NBNE</option>
+                                            <option value="EBSE">EBSE</option>
+                                            <option value="WBSE">WBSE</option>
+                                            <option value="EBNE">EBNE</option>
+                                            <option value="WBNE">WBNE</option>
+
                                         </select>
                                         </article>
                             </article>
