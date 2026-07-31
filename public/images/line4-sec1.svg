@@ -67,7 +67,7 @@
    inkscape:pagecheckerboard="0"
    showgrid="false"
    inkscape:zoom="2.6831748"
-   inkscape:cx="216.16184"
+   inkscape:cx="201.25413"
    inkscape:cy="249.14515"
    inkscape:window-width="1850"
    inkscape:window-height="1016"
@@ -135,7 +135,7 @@
      y1="136.32001"
      x2="453.66299"
      y2="136.32001"
-     id="SHY1"
+     id="SHY"
      style="display:inline;stroke:#cccccc;stroke-opacity:1"
      clip-path="url(#clipPath7064)"
      inkscape:label="SHY" /><line
@@ -178,7 +178,8 @@
      id="LES"
      style="display:inline;stroke:#cccccc;stroke-opacity:1"
      clip-path="url(#clipPath7195)"
-     inkscape:label="LES" /><line
+     inkscape:label="LES"
+     transform="translate(0.46487427,-0.34877014)" /><line
      fill="none"
      stroke="#a8518a"
      stroke-width="18"
@@ -268,7 +269,7 @@
    cy="211.03259"
    rx="4.7054029"
    ry="5.4913397" /><ellipse
-   style="fill:#00eb00;fill-opacity:1;stroke:#cccccc;stroke-width:0.486757"
+   style="fill:#005300;fill-opacity:1;stroke:#cccccc;stroke-width:0.486757"
    id="path1817-3"
    cx="58.945137"
    cy="233.09242"

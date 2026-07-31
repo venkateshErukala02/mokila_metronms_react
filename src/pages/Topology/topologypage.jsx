@@ -805,7 +805,8 @@ useEffect(() => {
         url = `api/v2/wayside/tagdetails?station=${circleId}&sortBy=${sortField}&order=${sortOrder}`;
     }
     else if (lineId) {
-        url = `api/v2/wayside/tagdetails?station=${lineId}&sortBy=${sortField}&order=${sortOrder}`;
+         const station = lineId === "path1564" ? "SPA" : lineId;
+        url = `api/v2/wayside/tagdetails?station=${station}&sortBy=${sortField}&order=${sortOrder}`;
     }
     //  else if (circleIdMaptable) {
     //     url = `api/v2/wayside/tagdetails?station=${circleIdMaptable}&sortBy=${sortField}&order=${sortOrder}`;

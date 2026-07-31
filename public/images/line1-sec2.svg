@@ -187,8 +187,8 @@
    inkscape:pagecheckerboard="0"
    showgrid="false"
    inkscape:zoom="1.4808886"
-   inkscape:cx="185.69931"
-   inkscape:cy="358.90612"
+   inkscape:cx="163.4154"
+   inkscape:cy="196.84127"
    inkscape:window-width="1850"
    inkscape:window-height="1016"
    inkscape:window-x="70"
@@ -384,10 +384,10 @@
      stroke-linecap="round"
      stroke-miterlimit="10"
      d="m 281.857,366.648 c 0,0 26.665,2.68 28.88,-26.633 2.162,-28.634 0,-307.074 0,-307.074"
-     id="SMH"
+     id="SUM"
      style="display:inline"
      clip-path="url(#clipPath865)"
-     inkscape:label="SMH" /><path
+     inkscape:label="SUM" /><path
      fill="none"
      stroke="#cccccc"
      stroke-width="14"
@@ -464,10 +464,10 @@
      stroke-linecap="round"
      stroke-miterlimit="10"
      d="m 281.857,366.648 c 0,0 26.665,2.68 28.88,-26.633 2.162,-28.634 0,-307.074 0,-307.074"
-     id="FNC"
+     id="FIN"
      style="display:inline"
      clip-path="url(#clipPath931)"
-     inkscape:label="FNC" /><rect
+     inkscape:label="FIN" /><rect
      style="fill:none;stroke:#cccccc;stroke-width:0.817936"
      id="rect1118"
      width="199.03313"
@@ -516,7 +516,7 @@
      cy="231.9839"
      rx="7.172781"
      ry="7.0638027" /><ellipse
-     style="fill:#00eb00;fill-opacity:1;stroke:#cccccc;stroke-width:0.681614"
+     style="fill:#005300;fill-opacity:1;stroke:#cccccc;stroke-width:0.681614"
      id="path1817-3"
      cx="43.562439"
      cy="260.36063"
