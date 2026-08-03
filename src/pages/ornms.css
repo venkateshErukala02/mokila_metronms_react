@@ -1725,6 +1725,9 @@ letter-spacing: 0.7px;
                 padding: 10px 74px;
             
                 }
+                .btn-align{
+                    padding: 10px 57px !important;
+                }
                 .schedulehead{
                     font-size: 15px;
                     font-family: "Lato-Regular";
@@ -4670,6 +4673,9 @@ svg *:focus {
 
 thead.settingthtb>tr>th.wayside-table-header{
     padding-left: 0;
+}
+thead.settingthtb>tr>th.wayside-table-header.align{
+    padding-left: 5px;
 }
  /* width={700} height={240} */
 

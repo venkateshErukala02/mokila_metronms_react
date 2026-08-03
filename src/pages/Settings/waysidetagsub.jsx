@@ -29,7 +29,8 @@ const WaysideTagSubCont = ({ handleSubContainer, refreshTagData, mode, user }) =
     const [roleNameSele,setRoleNameSele] = useState('');
 
 
-    const handleProfileContclose = () => {
+    const handleProfileContclose = (e) => {
+          e.preventDefault(); 
         handleSubContainer(lineName)
     }
 
@@ -250,9 +251,9 @@ const tagRoles = [
                             <article className="uploadcont">
 
                                 <center className="d-f">
-                                    <button className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
+                                    <button type="button" className="cancelbtn btn-align" onClick={handleProfileContclose}>Cancel</button>
                                     <button type="button" onClick={handleAddUser}
-                                    className={`creatsetingbtn ${
+                                    className={`creatsetingbtn btn-align ${
                                         currentUser === "Read-only" ? "btndisable" : ""
                                     }`} title={currentUser === "Read-only" ? "Permission required" : ""}
                                     disabled={currentUser === "Read-only"}

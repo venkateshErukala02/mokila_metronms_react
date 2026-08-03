@@ -639,7 +639,7 @@ useEffect(() => {
         // setStationTagview(false);
         setLineTagview(prev.lineTagview);
         setTrainView(prev.trainView);
-        setSelectedTreeNodeId(prev.textName.data.id);
+        setSelectedTreeNodeId(prev.textName?.data.id ?? null);
         setPrevIdActive(true);
         previousViewRef.current = null;
         return;
@@ -657,7 +657,7 @@ useEffect(() => {
     // setStationTagview(false);
     setLineTagview(prev.lineTagview);
     setTrainView(prev.trainView);
-    setSelectedTreeNodeId(prev.textName.data.id);
+    setSelectedTreeNodeId(prev.textName?.data.id ?? null);
     setPrevIdActive(true);
     previousViewRef.current = null;
     return;
@@ -805,7 +805,7 @@ useEffect(() => {
         url = `api/v2/wayside/tagdetails?station=${circleId}&sortBy=${sortField}&order=${sortOrder}`;
     }
     else if (lineId) {
-         const station = lineId === "path1564" ? "SPA" : lineId;
+         const station = lineId === "STG1" ? "STG" : lineId;
         url = `api/v2/wayside/tagdetails?station=${station}&sortBy=${sortField}&order=${sortOrder}`;
     }
     //  else if (circleIdMaptable) {

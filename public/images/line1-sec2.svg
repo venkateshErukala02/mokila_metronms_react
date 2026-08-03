@@ -221,7 +221,7 @@
    stroke-miterlimit="10"
    d="m 281.857,366.648 c 0,0 26.665,2.68 28.88,-26.633 2.162,-28.634 0,-307.074 0,-307.074"
    id="path2"
-   style="display:inline" /><text
+   style="display:none" /><text
    id="king_txt"
    transform="matrix(1 0 0 1 332.8887 342.0967)"
    font-family="'MyriadPro-Regular'"

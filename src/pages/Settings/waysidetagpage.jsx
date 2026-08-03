@@ -401,7 +401,7 @@ const WaysideTagContainer=()=>{
     return(
         <>
           <article className="row">
-          <article className={profileStatusCont ? 'col-8' : 'col-12'}>
+          <article className={profileStatusCont ? 'col-9' : 'col-12'}>
                         <article className="" style={{ height: '90vh' }}>
                                <article style={{display:'flex',justifyContent:'left',padding:'4px 0px 4px 12px'}} className="border-allsd col-12">
                                     <div className="filename-display-wayside-setting">
@@ -482,7 +482,7 @@ const WaysideTagContainer=()=>{
                                                     name="location" id="location" value={location}
                                                     onChange={(e) => setLocation(e.target.value)}
                                                     className="form-controll1"
-                                                    style={{ maxWidth: "94px", minWidth: "94px" }}
+                                                    style={{ maxWidth: "78px", minWidth: "78px" }}
                                                     >
                                                     <option value="">Location</option>
 
@@ -495,7 +495,7 @@ const WaysideTagContainer=()=>{
 
                                             </th>
                                             <th> 
-                                                <select name="direction" id="direction" value={direction} onChange={(e) => setDirection(e.target.value)} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
+                                                <select name="direction" id="direction" value={direction} onChange={(e) => setDirection(e.target.value)} className="form-controll1" style={{ maxWidth: '79px', minWidth: '79px' }}>
                                                     <option value="">Direction</option>
                                                     <option value="NB">NB</option>
                                                     <option value="SB">SB</option>
@@ -503,8 +503,8 @@ const WaysideTagContainer=()=>{
                                                     <option value="WB">WB</option>
                                                     </select> 
                                             </th>
-                                            <th className="wayside-table-header">
-                                                <select name="position" id="position" value={position} onChange={(e) => setPosition(e.target.value)} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
+                                            <th className="wayside-table-header align">
+                                                <select name="position" id="position" value={position} onChange={(e) => setPosition(e.target.value)} className="form-controll1" style={{ maxWidth: '74px', minWidth: '74px' }}>
                                                     <option value="">Position</option>
                                                     <option value="SBSE">SBSE</option>
                                                     <option value="NBSE">NBSE</option>
@@ -514,17 +514,22 @@ const WaysideTagContainer=()=>{
                                                     <option value="WBSE">WBSE</option>
                                                     <option value="EBNE">EBNE</option>
                                                     <option value="WBNE">WBNE</option>
+                                                    {/* <option value="NB">NB</option>
+                                                    <option value="SB">SB</option>
+                                                    <option value="EB">EB</option>
+                                                    <option value="WB">WB</option> */}
                                                     </select>
                                             </th>
                                             <th>
-                                                 <select name="tagTypeValue" id="tagTypeValue" value={tagTypeValue} onChange={(e) => setTagTypeValue(e.target.value)} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
+                                                 <select name="tagTypeValue" id="tagTypeValue" value={tagTypeValue} onChange={(e) => setTagTypeValue(e.target.value)} className="form-controll1" style={{ maxWidth: '77px', minWidth: '77px' }}>
                                                     <option value="">Tag Type</option>
                                                     <option value="TDM">Tdm</option>
                                                     <option value="NTDM">Ntdm</option>
+                                                    <option value="ATC">ATC</option>
                                                     </select>
                                             </th>
                                             <th className="wayside-table-header">
-                                                 <select name="role" id="role" value={role} onChange={(e) => setRole(e.target.value)} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
+                                                 <select name="role" id="role" value={role} onChange={(e) => setRole(e.target.value)} className="form-controll1" style={{ maxWidth: '74px', minWidth: '74px' }}>
                                                     <option value="">Role</option>
                                                     <option value="VON">VON</option>
                                                     <option value="VOFF">VOFF</option>
@@ -535,6 +540,7 @@ const WaysideTagContainer=()=>{
                                                     <option value="SNL">SNL</option>
                                                     <option value="DIR LEARN">DIR LEARN</option>
                                                     <option value="RAD REBOOT">RAD REBOOT</option>
+                                                    <option value="UNKNOWN">UNKNOWN</option>
                                                     </select>
                                             </th>
                                             <th>Priority</th>
@@ -630,7 +636,7 @@ const WaysideTagContainer=()=>{
                         </article>
                     </article>
 
-                    <article className={profileStatusCont ? 'col-4' : 'collapsed'} >
+                    <article className={profileStatusCont ? 'col-3' : 'collapsed'} >
                         <WaysideTagSubCont handleSubContainer={handleSubContainer}
                         mode={mode}  
                         user={editUser} 
