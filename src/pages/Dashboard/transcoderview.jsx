@@ -17,7 +17,7 @@ const TranscoderView = () => {
     const isVisible = useSelector((state) => state.visibility.isVisible);
     const [currentTab, setCurrentTab] = useState('summary')
     const [transcoderData, setTranscoderData] = useState([]);
-
+    const [triggerCount, setTriggerCount] = useState(0);
     const nodeDataId = useSelector((state) => state.node?.node?.nodeId ?? state.node?.node?.id);
     const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress ?? state.node?.node?.primaryIP);
     const nodeLocation = useSelector((state) => state.node?.node?.location);
@@ -116,7 +116,7 @@ const TranscoderView = () => {
     const renderCurrentTab = (value) => {
         switch (value) {
             case 'summary':
-                return <TcSummaryTab transcoderData={transcoderData} />
+                return <TcSummaryTab transcoderData={transcoderData}  triggerCount={triggerCount}/>
                 break;
             case 'events':
                 return <TcEventTab />
@@ -133,6 +133,9 @@ const TranscoderView = () => {
     const ipValue = localStorage.getItem('nodeIpaddress')
     const nodeIdValue = localStorage.getItem('nodeId')
 
+    const handleRefresh = () => {
+        setTriggerCount(prev => prev + 1);
+      };
 
 
     return (
@@ -145,7 +148,7 @@ const TranscoderView = () => {
                 </article>
                 <article className="container-fluid">
                     <article className="row boxsizeng">
-                        <article className="col-md-12" style={{ paddingRight: 0 }}>
+                        <article className="col-md-10" style={{ paddingRight: 0 }}>
 
                             <ul className="nodelist">
                                 <li><a>Node View</a></li>
@@ -160,6 +163,9 @@ const TranscoderView = () => {
 
                             </ul>
                         </article>
+                       {currentTab === 'summary' && (<article className="col-md-2" style={{paddingTop:'8px'}}>
+                            <button type="button" className="createbtn" onClick={handleRefresh}>Refresh</button>
+                        </article>)}
                     </article>
 
                     {renderCurrentTab(currentTab)}

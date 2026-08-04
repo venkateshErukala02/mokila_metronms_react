@@ -17,7 +17,7 @@ const WaysideTable = ({ westSideView, circleId, setShowPopup, showPopup,lineId,h
     const [tagTypeValue, setTagTypeValue] = useState('all');
     const [tagTypeLabel,setTagTypeLabel] = useState('All');
     const [stationCodeData,setStationCodeData] = useState('');
-    const circleIdtoMapTable = selectedNodeId.id;
+    const circleIdtoMapTable = selectedNodeId?.id ?? null;
     
     const fetchDataRadial = async (url,isInterval = false) => {
           if (!isInterval) {

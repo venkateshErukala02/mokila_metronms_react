@@ -22,7 +22,7 @@ const ObcNodeView = () => {
   const [currentTab, setCurrentTab] = useState('summary')
   const [nodeItemDt, setNodeItemDt] = useState([]);
     const [diskData, setDiskData] = useState("");
-
+  const [triggerCount, setTriggerCount] = useState(0);
   // const nodeDataId = useSelector((state) => state.node.node.nodeId);
   const nodeDataId = useSelector((state) => state.node?.node?.nodeId || state.node?.node?.id)
 
@@ -60,18 +60,18 @@ const ipValue = localStorage.getItem('nodeIpaddress')
     };
 
 
-    useEffect(() => {
-      if(currentTab === 'monitoring' || currentTab === 'events') return;
-        const fetchData = async () => {
-            let url = 'api/v2/troubleshoot/obc/disk';
-            await getDiskData(url);
-        };
-        fetchData();
+    // useEffect(() => {
+    //   if(currentTab === 'monitoring' || currentTab === 'events') return;
+    //     const fetchData = async () => {
+    //         let url = 'api/v2/troubleshoot/obc/disk';
+    //         await getDiskData(url);
+    //     };
+    //     fetchData();
 
-        const intervalId = setInterval(fetchData, 30000);
+    //     const intervalId = setInterval(fetchData, 30000);
 
-        return () => clearInterval(intervalId);
-    }, [nodeIpaddress, currentTab]);
+    //     return () => clearInterval(intervalId);
+    // }, [nodeIpaddress, currentTab]);
 
   const getServerStatusDt = async (url) => {
     setIsLoading(true);
@@ -102,14 +102,14 @@ const ipValue = localStorage.getItem('nodeIpaddress')
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-     let url = 'api/v2/troubleshoot/obc/config';
-      // let url = `api/v2/nodemanageview/summarydb?nodeId=${nodeDataId}`;
-      await getServerStatusDt(url);
-    };
-    fetchData();
-  }, [nodeIpaddress]);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //    let url = 'api/v2/troubleshoot/obc/config';
+  //     // let url = `api/v2/nodemanageview/summarydb?nodeId=${nodeDataId}`;
+  //     await getServerStatusDt(url);
+  //   };
+  //   fetchData();
+  // }, [nodeIpaddress]);
 
   useEffect(() => {
     if (nodeDataId) {
@@ -136,7 +136,7 @@ const ipValue = localStorage.getItem('nodeIpaddress')
   const renderCurrentTab = (value) => {
     switch (value) {
       case 'summary':
-        return <ObcMonitoringTab nodeItemDt={nodeItemDt} currentTab='obc'/>
+        return <ObcMonitoringTab nodeItemDt={nodeItemDt} currentTab='obc' triggerCount={triggerCount}/>
         break;
       case 'events':
         return <ObcEventTab nodeItemDt={nodeItemDt}/>
@@ -149,6 +149,9 @@ const ipValue = localStorage.getItem('nodeIpaddress')
     }
   }
 
+      const handleRefresh = () => {
+        setTriggerCount(prev => prev + 1);
+      };
 
 
 
@@ -162,11 +165,11 @@ const ipValue = localStorage.getItem('nodeIpaddress')
         </article>
         <article className="container-fluid">
           <article className="row boxsizeng">
-            <article className="col-md-12" style={{ paddingRight: 0 }}>
+            <article className="col-md-10" style={{ paddingRight: 0 }}>
 
               <ul className="nodelist">
                 <li><a>Node View</a></li>
-                <li><a href={`http://${ipValue}`} target="_blank">{ipValue}</a></li>
+                <li><a href={`http://${nodeIpaddress || ipValue}`} target="_blank">{nodeIpaddress || ipValue}</a></li>
                 <li onClick={() => handleRowClick('summary')} className={`${currentTab === 'summary' ? 'active' : ''}`}> <a> <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Summary</a></li>
                 <li onClick={() => handleRowClick('monitoring')} className={`${currentTab === 'monitoring' ? 'active' : ''}`}> <a> <i className="fas fa-lg fa-grip-vertical Summary-icon"></i>Monitoring</a></li>
                 <li onClick={() => handleRowClick('events')} className={`${currentTab === 'events' ? 'active' : ''}`}> <a> <i
@@ -175,6 +178,9 @@ const ipValue = localStorage.getItem('nodeIpaddress')
                 ></i> Events </a></li>
               </ul>
             </article>
+            {currentTab === 'summary' && (<article className="col-md-2" style={{paddingTop:'8px'}}>
+              <button type="button" className="createbtn" onClick={handleRefresh}>Refresh</button>
+            </article>)}
           </article>
 
           {renderCurrentTab(currentTab)}

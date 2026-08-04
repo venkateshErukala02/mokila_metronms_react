@@ -842,7 +842,7 @@ useEffect(() => {
       const clickElementId = clickElement.getAttribute('id');
       if (clickElementId){
       getCurrentElementId(clickElementId);
-        setLineTagview(true)
+        // setLineTagview(true);
         }
       }else if (event.type === 'contextmenu' && event.button === 2) { 
         event.preventDefault(); 

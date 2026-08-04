@@ -13,7 +13,7 @@ import '../ornms.css'
 
 
 
-const TcSummaryTab = ({  }) => {
+const TcSummaryTab = ({ triggerCount }) => {
   
     const checkServicesList = [
     { name: "vtranscoder", displayName: "Transcoder Service" },
@@ -455,7 +455,7 @@ const TcSummaryTab = ({  }) => {
             await getServerStatusDt(url);
         };
         fetchData();
-    }, [nodeIpaddress]);
+    }, [nodeIpaddress,triggerCount]);
 
 
     // useEffect(()=> {
@@ -1363,7 +1363,7 @@ const TcSummaryTab = ({  }) => {
                     <article className="confirmsuccesspopupboxstyle">
                         <article className="success-cont">
                             <h1 className="confirmtitlesucess">Warning</h1>
-                            <p className="confirmtextsucess">Transcoder agent is not installed.</p>
+                            <p className="confirmtextsucess">Transcoder agent is not started/installed.</p>
                         </article>
                         <article style={{ textAlign: 'end' }}>
                             <button

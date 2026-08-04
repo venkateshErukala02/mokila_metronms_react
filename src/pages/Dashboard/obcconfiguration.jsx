@@ -12,7 +12,7 @@ import obcimage from '../../assets/img/obcimg1.png'
 
 
 
-const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
+const ObcMonitoringTab = ({ nodeItemDt, currentTab ,triggerCount}) => {
 
     const checkServicesList = [
         { name: "TDM Service", displayName: "TDM Service" },
@@ -80,6 +80,8 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
     const [showApplyPopup, setShowApplyPopup] = useState(false);
     const [showApplySuccessPopup, setShowApplySuccessPopup] = useState(false);
     const [showUploadSuccessPopup,setShowUploadSuccessPopup] = useState(false);
+    const [uptimeIsLoading,setUptimeIsLoading] = useState(false);
+    const [showWarningPopup, setShowWarningPopup] = useState(false);
 
     const handleUpload = async (e) => {
         e.preventDefault();
@@ -174,17 +176,17 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
         }
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            let url = 'api/v2/troubleshoot/obc/disk';
-            await getDiskData(url);
-        };
-        fetchData();
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         let url = 'api/v2/troubleshoot/obc/disk';
+    //         await getDiskData(url);
+    //     };
+    //     fetchData();
 
-        const intervalId = setInterval(fetchData, 30000);
+    //     // const intervalId = setInterval(fetchData, 30000);
 
-        return () => clearInterval(intervalId);
-    }, [nodeIpaddress, currentTab]);
+    //     // return () => clearInterval(intervalId);
+    // }, [nodeIpaddress, currentTab]);
 
 
     const getServiceCheckStatus = async (url) => {
@@ -216,13 +218,13 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
         }
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            let url = `api/v2/troubleshoot/obc/${nodeIpaddress}/servicecheck`;
-            await getServiceCheckStatus(url);
-        };
-        fetchData();
-    }, []);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         let url = `api/v2/troubleshoot/obc/${nodeIpaddress}/servicecheck`;
+    //         await getServiceCheckStatus(url);
+    //     };
+    //     fetchData();
+    // }, []);
 
 
 
@@ -288,30 +290,61 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
 
 
     const getServerStatusDt = async (url) => {
+        setUptimeIsLoading(true);
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
+
+        const controller = new AbortController();
+        const timeout = setTimeout(() => {
+            controller.abort();
+        }, 10000);
+
         try {
             const options = {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
+                    // "Content-Type": "application/json",
                 },
                 body: `http://${nodeIpaddress}:8084/obc/api/v1/uptime`,
+                signal: controller.signal,
             };
             const response = await fetch(url,options);
-            const data = await response.json();
+            clearTimeout(timeout);
 
-            if (response.ok) {
+             if (response.status === 204) {
+                setIsLoading(false);
+                setShowWarningPopup(true);
+                setIsError({ status: false, msg: "" });
+                return;
+            }
+
+             const data = await response.json();
+
+            if (response.ok && response.status === 200) {
+                setUptimeIsLoading(false);
                 setIsLoading(false);
 
 
                 setUpTimeData(data.data);
+                const urlService = `api/v2/troubleshoot/obc/${nodeIpaddress}/servicecheck`;
+                const urlConfig = 'api/v2/troubleshoot/obc/config';
+                const urlDisk = 'api/v2/troubleshoot/obc/disk';
+                await Promise.all([
+                    getServiceCheckStatus(urlService),
+                    getConfigDt(urlConfig),
+                    getDiskData(urlDisk),
+                ])
                 setIsError({ status: false, msg: "" });
             } else {
+                setUptimeIsLoading(false);
+                setShowWarningPopup(true);
                 throw new Error("Data not found");
             }
         } catch (error) {
+            clearTimeout(timeout);
             setIsLoading(false);
+            setUptimeIsLoading(false);
+            setShowWarningPopup(true);
             setIsError({ status: true, msg: error.message });
         }
     };
@@ -354,7 +387,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
             await getServerStatusDt(url);
         };
         fetchData();
-    }, []);
+    }, [triggerCount]);
 
 
     // useEffect(() => {
@@ -427,13 +460,13 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
         }
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            let url = 'api/v2/troubleshoot/obc/config';
-            await getConfigDt(url);
-        };
-        fetchData();
-    }, [triggerConfig]);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         let url = 'api/v2/troubleshoot/obc/config';
+    //         await getConfigDt(url);
+    //     };
+    //     fetchData();
+    // }, [triggerConfig]);
 
 
   const handleObcConfigChange = (name, value) => {
@@ -866,10 +899,14 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                 {parsedServices?.slice(0, 3).map((item, index) => (
                                                     <li key={index}>
                                                         <h6>{item.displayName}</h6>
-                                                        {item.status === "success" ? (
+                                                        {uptimeIsLoading ? (
+                                                            <div className="loader"></div>
+                                                        ) : item.status === "success" ? (
                                                             <span>✔ {item.status === "success" ? "Running" : "Failed"} </span>
                                                         ) : item.status === "failure" ? (
                                                             <span className="failure-color">✖ Failed</span>
+                                                        ): (!upTimeData || upTimeData.length === 0) ? (
+                                                            <span className="pulse"></span>
                                                         ) : (
                                                             <span className="pulse">Checking...</span>
                                                         )}
@@ -897,12 +934,16 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
                                                             className=""
                                                         >
                                                             <h6>{item.displayName}</h6>
-                                                            {item.status === "success" ? (
+                                                             {uptimeIsLoading ? (
+                                                                <div className="loader"></div>
+                                                            ) : item.status === "success" ? (
                                                                 <span>✔ {item.status === "success" ? "Pinging" : "Failed"} ({item.value ? `${formatValue(item.value)}` : "0"})
                                                                 </span>
                                                             ) : item.status === "failure" ? (
                                                                 <span className="failure-color" style={{paddingRight:'39px'}}>✖ Not Pinging
                                                                 </span>
+                                                            ) : (!upTimeData || upTimeData.length === 0) ? (
+                                                                <span className="pulse"></span>
                                                             ) : (
                                                                 <span className="pulse">Checking...</span>
                                                             )}
@@ -920,6 +961,27 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab }) => {
 
                 </article>
             </article>
+
+              {showWarningPopup && (
+                <article className="confirmsuccesspopup">
+                    <article className="confirmsuccesspopupboxstyle">
+                        <article className="success-cont">
+                            <h1 className="confirmtitlesucess">Warning</h1>
+                            <p className="confirmtextsucess">OBC agent is not started/installed.</p>
+                        </article>
+                        <article style={{ textAlign: 'end' }}>
+                            <button
+                                className="confirmdeletebtn confirmdeletebtnyes"
+                                onClick={() => {
+                                    setShowWarningPopup(false);
+                                }}
+                            >
+                                OK
+                            </button>
+                        </article>
+                    </article>
+                </article>
+            )}
         </>
     )
 }
