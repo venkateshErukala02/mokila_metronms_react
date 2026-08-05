@@ -93,7 +93,7 @@
    style="display:inline">
 </g>
 <circle
-   id="SB-R2"
+   id="WBEE"
    fill="#ffffff"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -102,10 +102,10 @@
    r="11.75"
    style="display:inline">
 <title
-   id="SB-R2" />
+   id="WBEE" />
 </circle>
 <circle
-   id="NB-R2"
+   id="EBEE"
    fill="#FFFFFF"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -113,7 +113,7 @@
    cy="128.533"
    r="11.75">
 <title
-   id="NB-R2" />
+   id="EBEE" />
 </circle>
 <circle
    id="C1"
@@ -205,7 +205,7 @@
    id="C8" />
 </circle>
 <circle
-   id="SB-R1"
+   id="WBWE"
    fill="#FFFFFF"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -213,10 +213,10 @@
    cy="93.637"
    r="11.75">
 <title
-   id="SB-R1" />
+   id="WBWE" />
 </circle>
 <circle
-   id="NB-R1"
+   id="EBWE"
    fill="#ffffff"
    stroke="#373836"
    stroke-miterlimit="10"
@@ -225,7 +225,7 @@
    r="11.75"
    style="display:inline">
 <title
-   id="NB-R1" />
+   id="EBWE" />
 </circle>
 <circle
    id="TC1"
@@ -496,7 +496,7 @@
    id="text45"
    style="display:inline"
    sodipodi:insensitive="true">SN<title
-   id="ts-SB-R2" /></text>
+   id="ts-WBEE" /></text>
 <text
    transform="translate(844.2773,133.6436)"
    enable-background="new    "
@@ -504,7 +504,7 @@
    font-size="13px"
    style="display:inline"
    sodipodi:insensitive="true">SN<title
-   id="ts-NB-R2" /></text>
+   id="ts-EBEE" /></text>
 <g
    id="g46"
    style="display:inline"
@@ -617,7 +617,7 @@
    id="text54"
    style="display:inline"
    sodipodi:insensitive="true">SN<title
-   id="ts-SB-R1" /></text>
+   id="ts-WBWE" /></text>
 <text
    transform="translate(488.7764,133.7314)"
    enable-background="new    "
@@ -625,7 +625,7 @@
    font-size="13px"
    id="text55"
    sodipodi:insensitive="true">SN<title
-   id="ts-NB-R1" /></text>
+   id="ts-EBWE" /></text>
 <g
    id="g55"
    sodipodi:insensitive="true">
@@ -668,7 +668,7 @@
    style="display:inline"
    x="261.68161"
    y="20.837898"
-   sodipodi:insensitive="true">Eastbound Track</text>
+   sodipodi:insensitive="true">Westbound Track</text>
 <text
    font-family="MyriadPro-Regular"
    font-size="16px"
@@ -676,7 +676,7 @@
    style="display:inline"
    x="954.32233"
    y="208.1055"
-   sodipodi:insensitive="true">Westbound Track</text>
+   sodipodi:insensitive="true">Eastbound Track</text>
 <text
    font-family="MyriadPro-Regular"
    font-size="16px"
@@ -684,7 +684,7 @@
    style="display:inline"
    x="410.74509"
    y="44.184601"
-   sodipodi:insensitive="true">EBSE</text>
+   sodipodi:insensitive="true">WBWE</text>
 <text
    font-family="MyriadPro-Regular"
    font-size="16px"
@@ -692,21 +692,21 @@
    style="display:inline"
    x="412.1947"
    y="189.18158"
-   sodipodi:insensitive="true">WBSE</text>
+   sodipodi:insensitive="true">EBWE</text>
 <text
    font-family="MyriadPro-Regular"
    font-size="16px"
    id="text60"
    style="display:inline"
    x="878.27728"
-   y="42.184601">EBNE</text>
+   y="42.184601">WBEE</text>
 <text
    font-family="MyriadPro-Regular"
    font-size="16px"
    id="text61"
    style="display:inline"
    x="878.27539"
-   y="193.18159">WBNE</text>
+   y="193.18159">EBEE</text>
 <path
    fill="#333333"
    d="m 252.311,23.607 -6.992,6.968 c 0,0 -1.438,1.121 -0.293,2.875 l 7.285,7.26 c 0,0 1.461,1.072 2.898,-0.341 0,0 0.975,-0.999 0.171,-2.534 l -3.411,-3.557 13.863,0.049 c 0,0 2.338,-0.097 2.387,-2.168 0,0 -0.195,-2.071 -1.998,-2.169 l -14.275,0.049 3.191,-3.313 c 0,0 1.51,-1.583 -0.463,-3.239 0,-10e-4 -1.17,-0.757 -2.363,0.12 z"

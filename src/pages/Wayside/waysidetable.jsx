@@ -4,7 +4,7 @@ import '../Dashboard/dashboard.css';
 
 
 
-const WaysideTable = ({ westSideView, circleId, setShowPopup, showPopup,lineId,handleTagsPopup,stationCount,lineCount ,allTagfailCount,textName,stationTagview,selectedNodeId }) => {
+const WaysideTable = ({ westSideView, circleId, setShowPopup, showPopup,lineId,handleTagsPopup,stationCount,lineCount ,allTagfailCount,textName,stationTagview,selectedNodeId ,selectedTreeNodeLineId}) => {
     const [rdData, setRdData] = useState('');
     const [searchBtn, setSearchBtn] = useState(false);
     const [radialipText, setRadialipText] = useState('');
@@ -91,29 +91,29 @@ useEffect(() => {
     if (url) fetchStationCode(url);
 }, []);
 
-useEffect(() => {
-    let url = '';
-    if (westLine === 'Line1') {
-        if (lineId) {
-            url = `api/v2/wayside/linebytime?line=${lineId}&time=600`;
-        } 
-    } 
+// useEffect(() => {
+//     let url = '';
+//     if (westLine === 'Line1') {
+//         if (lineId) {
+//             url = `api/v2/wayside/linebytime?line=${lineId}&time=600`;
+//         } 
+//     } 
 
-    if (url) fetchDataRadial(url);
-}, [westLine, lineId,lineCount, pageSize, limitValueSelLabel]);
+//     if (url) fetchDataRadial(url);
+// }, [westLine, lineId,lineCount, pageSize, limitValueSelLabel]);
 
 
 
-useEffect(() => {
-    let url = '';
-    if (westLine === 'Line1') {
-        if (circleId) {
-            url = `api/v2/wayside/failedbytime?station=${circleId}&time=600`;
-        }
-    } 
+// useEffect(() => {
+//     let url = '';
+//     if (westLine === 'Line1') {
+//         if (circleId) {
+//             url = `api/v2/wayside/failedbytime?station=${circleId}&time=600`;
+//         }
+//     } 
 
-    if (url) fetchDataRadial(url);
-}, [westLine, circleId,stationCount, pageSize, limitValueSelLabel]);
+//     if (url) fetchDataRadial(url);
+// }, [westLine, circleId,stationCount, pageSize, limitValueSelLabel]);
 
 
 
@@ -138,14 +138,20 @@ useEffect(() => {
       url += `&station=${textName.data.display}`;
     }else if(circleIdtoMapTable){
       url += `&station=${circleIdtoMapTable}`;
+    } else if(selectedTreeNodeLineId){
+      url += `&station=${selectedTreeNodeLineId}`;
     } else {
       url += '&station=all';
     }
 
     if (textName?.data?.type === 'facility' || textName?.text ==='Global' ) {
         url += '&time=3600&region=all';     
-    } else {
-      url += `&time=3600&region=all`;
+    } else if (textName?.data?.mode === 'region') {
+      url += `&time=3600&region=${textName.data.display}`;
+    }else if (textName?.data?.mode === 'location') {
+      url += `&time=3600&region=${textName.data.display}`;
+    }else {
+        url += '&time=3600&region=all';
     }
 
     fetchDataRadial(url, true);
@@ -156,7 +162,8 @@ useEffect(() => {
   const intervalId = setInterval(fetchIntervalData, 30000);
 
   return () => clearInterval(intervalId);
-}, [tagTypeValue, textName,allTagfailCount,circleIdtoMapTable]); 
+}, [tagTypeValue, textName,allTagfailCount,circleIdtoMapTable,selectedTreeNodeLineId]); 
+
 
 // useEffect(() => {
 

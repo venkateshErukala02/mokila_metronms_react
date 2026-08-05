@@ -25,7 +25,7 @@ const StationNodeTableView=({textName , rdDataRef,yardfacilitieData,stationView,
         <>
         <article className="piechtcont">
                 <article className="row border-lrr">
-                    <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6" style={{padding:'5px'}}>
+                    <article className="col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xxl-7" style={{padding:'5px'}}>
                        <StationNodesvgTable yardfacilitieData={yardfacilitieData} textName={textName} 
                        stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} 
                        expandedTreeDt={expandedTreeDt}/>
@@ -33,7 +33,7 @@ const StationNodeTableView=({textName , rdDataRef,yardfacilitieData,stationView,
                        </article>
                         <StationTagsTable rdDataRef={rdDataRef} onSortChange={onSortChange}/>
                     </article>
-                    <article className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6" style={{padding:'5px'}}>
+                    <article className="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xxl-5" style={{padding:'5px'}}>
                           <article className="border-tlr custom-row" style={{textAlign:'center'}}>
 
       <label className="radiolabel" style={boundsMode === 'SouthBound' ? {fontWeight:700,color:'#495057',marginRight:'10px'}:{marginRight:'10px'}}>

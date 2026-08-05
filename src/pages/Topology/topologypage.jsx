@@ -53,6 +53,7 @@ const TopoPg = () => {
     const [timeLeft, setTimeLeft] = useState(30);
     const [yardfacilitieData, setYardfacilitieData] = useState(null);
     const [selectedTreeNodeId, setSelectedTreeNodeId] = useState({});
+    const [selectedTreeNodeLineId,setSelectedTreeNodeLineId] = useState("");
     const [uniquefacilitieData,setUniquefacilitieData] = useState([]);
     const [stationNode, setStationNode] = useState(null);
     const [selectedPrevNodeId,setSelectedPrevNodeId] = useState({});
@@ -79,6 +80,10 @@ const TopoPg = () => {
     const onLocationNameChange = (value) => {
         setLineName(value);
     };
+
+    useEffect(()=>{
+        setLineName('');
+    },[textName]);
 
     const handleNodeClick = (value,parent) => {
         setTextNameChanged(true); 
@@ -165,6 +170,7 @@ useEffect(() => {
  
 
   const getYardfacilitieData = async (urlStation) => {
+    // if(selectedTab === 'tagtable') return;
     setIsLoading(true);
     setIsError({ status: false, msg: "" });
     try {
@@ -190,6 +196,7 @@ useEffect(() => {
 };
 
   const getTrainData = async (urlTrains) => {
+        // if (selectedTab === 'tagtable') return;
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
         try {
@@ -750,6 +757,7 @@ useEffect(() => {
     };
   }
         setLineId(id);
+        setSelectedTreeNodeLineId(id);
         setLineTagview(true);
         setLineCount(prev => !prev)
         setStationView(false);
@@ -808,9 +816,9 @@ useEffect(() => {
          const station = lineId === "STG1" ? "STG" : lineId;
         url = `api/v2/wayside/tagdetails?station=${station}&sortBy=${sortField}&order=${sortOrder}`;
     }
-    //  else if (circleIdMaptable) {
-    //     url = `api/v2/wayside/tagdetails?station=${circleIdMaptable}&sortBy=${sortField}&order=${sortOrder}`;
-    // }
+     else if (circleIdMaptable) {
+        url = `api/v2/wayside/tagdetails?station=${circleIdMaptable}&sortBy=${sortField}&order=${sortOrder}`;
+    }
     // else if(textName?.data?.type === 'facility'){
     //     url = `api/v2/wayside/tagdetails?station=${textName.data.display}&sortBy=${sortField}&order=${sortOrder}`;
     // }
@@ -825,6 +833,29 @@ useEffect(() => {
         return()=> clearInterval(intervalId);
     }
 }, [circleId, lineId,textName,selectedTab,sortField,sortOrder,selectedTreeNodeId]);
+
+    useEffect(() => {
+        // if(selectedTab === 'tagtable') return;
+      let url = '';
+     if (selectedTreeNodeLineId) {
+         if(lineId) {
+            url = ''
+         }else {
+         const station = selectedTreeNodeLineId === "STG1" ? "STG" : selectedTreeNodeLineId;
+        url = `api/v2/wayside/tagdetails?station=${station}&sortBy=${sortField}&order=${sortOrder}`;
+         }
+    }
+
+    if (url) {
+        fetchDataRadial(url);
+
+        const intervalId = setInterval(()=>{
+            fetchDataRadial(url);
+        },30000)
+
+        return()=> clearInterval(intervalId);
+    }
+}, [lineId,selectedTab,sortField,sortOrder,selectedTreeNodeLineId]);
 
     const handleTagsPopup = (value, id) => {
         setShowPopup(value);
@@ -977,7 +1008,7 @@ const onSortChange = (field) => {
                 {tagTableView === true ? (
                     <>
                     <article style={{margin:'5px'}}>
-                    <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} textName={textName} stationTagview={stationTagview} selectedNodeId={selectedTreeNodeId} />
+                    <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} textName={textName} stationTagview={stationTagview} selectedNodeId={selectedTreeNodeId} selectedTreeNodeLineId={selectedTreeNodeLineId} />
                     </article>
                     {((textName && textName?.data?.type === 'facility') ||  selectedTreeNodeId?.id )   ? (<article style={{margin:'5px',marginTop:'15px'}}>
                     <StationTagsTable textName={textName} circleId={circleId} lineId={lineId}  rdDataRef={rdDataRef} onSortChange={onSortChange}/>

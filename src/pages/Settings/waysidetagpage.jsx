@@ -514,10 +514,10 @@ const WaysideTagContainer=()=>{
                                                     <option value="WBSE">WBSE</option>
                                                     <option value="EBNE">EBNE</option>
                                                     <option value="WBNE">WBNE</option>
-                                                    {/* <option value="NB">NB</option>
+                                                    <option value="NB">NB</option>
                                                     <option value="SB">SB</option>
                                                     <option value="EB">EB</option>
-                                                    <option value="WB">WB</option> */}
+                                                    <option value="WB">WB</option>
                                                     </select>
                                             </th>
                                             <th>
@@ -545,8 +545,8 @@ const WaysideTagContainer=()=>{
                                             </th>
                                             <th>Priority</th>
                                             <th>Send Mail</th>
-                                            <th>Report Alarm </th>
-                                            <th>Edit </th>
+                                            <th>Report Alarm</th>
+                                            <th style={{paddingLeft:"41px"}}>Edit</th>
                                             <th>Delete </th>
                                         </tr>
 
@@ -609,7 +609,7 @@ const WaysideTagContainer=()=>{
                                                     setReportChecked(!reportChecked)}
                                                 }
                                             /></td>
-                                            <td ><i className="fas fa-edit"
+                                            <td style={{paddingLeft:"36px"}}><i className="fas fa-edit"
                                              style={{
                                                 cursor: isReadOnly ? "not-allowed" : "pointer" ,
                                                 color: isReadOnly ? "black" : "",

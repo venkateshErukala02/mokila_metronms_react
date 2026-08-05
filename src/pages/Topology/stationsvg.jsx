@@ -296,7 +296,7 @@ const resetTrainLayers = (svgRoot) => {
         if (lineNa === "line1-sec1" || lineNa === "line1-sec2" || parentTextName?.data?.display == 'line1' || parentTextName?.data?.display == 'line2' || childrenTextName?.data?.display == 'line1-sec1' || childrenTextName?.data?.display == 'line1-sec2') {
             svg = "Station_Line1.svg";
         } else if (lineNa === "line4-sec1"  || parentTextName?.data?.display == 'line4' || childrenTextName?.data?.display == 'line4-sec1') {
-            svg = "Station_Line2.svg";
+            svg = "Station_Line4.svg";
         } else {
             return;
         }
@@ -329,7 +329,7 @@ useEffect(() => {
         if (lineNa === "line1-sec1" || lineNa === "line1-sec2") {
             svg = "Station_Line1.svg";
         } else if (lineNa === "line4-sec1") {
-            svg = "Station_Line2.svg";
+            svg = "Station_Line4.svg";
         } else {
             return;
         }
