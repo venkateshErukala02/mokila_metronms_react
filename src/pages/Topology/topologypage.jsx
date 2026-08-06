@@ -532,7 +532,7 @@ useEffect(() => {
             </>
         } else if (lineTagview) {
             return <>
-               <LineTagSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef}  setLineTagview={setLineTagview} stationNode={stationNode}/>
+               <LineTagSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef}  setLineTagview={setLineTagview} stationNode={stationNode} lineId={lineId}/>
               <LineNodeTableView yardfacilitieData={yardfacilitieData}  textName={textName} rdDataRef={rdDataRef} stationNode={stationNode} />
             </>;
         } else {

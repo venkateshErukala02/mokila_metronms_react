@@ -4,19 +4,28 @@ import { useLayoutEffect } from 'react';
 import '../ornms.css'
 
 
-const LineTagSvg = ({rdDataRef}) => {
+const LineTagSvg = ({rdDataRef,lineId}) => {
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [isLoading, setIsLoading] = useState(false);
     const [stationStatus, setStationStatus] = useState([]);
     const [svgContent, setSvgContent] = useState("");
     const svgContainerRef = useRef(null);
-    const rdData = rdDataRef.current === null ? [] : [rdDataRef.current[0]?.tags] ;
-
+    const rdData = rdDataRef.current === null ? [] : [rdDataRef.current[0]?.tags];
+    // const stName = rdDataRef.current === null ? [] : rdDataRef.current[0]?.station;
+    const stName = lineId;
 
  useEffect(() => {
         const controller = new AbortController();
+            // const list = ["Yonge", "Bayview", "Bessarion", "Leslie", "Don Mills"];
 
-              let  svg = 'line_section.svg';
+       const svg =
+            stName.includes("Yonge") ||
+            stName.includes("Bayview") ||
+            stName.includes("Bessarion") ||
+            stName.includes("Leslie") ||
+            stName.includes("Don Mills")
+                ? "tag_line4.svg"
+                : "tag_line1.svg";
 
         let url = 'images/' + svg;
         setSvgContent('');
@@ -36,10 +45,15 @@ const LineTagSvg = ({rdDataRef}) => {
     
         if (!svgRoot) return;
 
-         const sbElements = svgRoot.querySelectorAll('[id^="SB"],[id^="NB"]');
+         const sbElements = svgRoot.querySelectorAll('[id^="SB"],[id^="NB"], [id^="WB"], [id^="EB"]');
                 sbElements.forEach((el) => {
                 const id = el.getAttribute('id');
-                const validTags = ["SB1", "SB2", "SB3", "SB4", "SB5", "SB6", "SB7", "SB8","NB1", "NB2", "NB3", "NB4", "NB5", "NB6", "NB7", "NB8"];
+                const validTags = [
+                    "SB1", "SB2", "SB3", "SB4", "SB5", "SB6", "SB7", "SB8",
+                    "NB1", "NB2", "NB3", "NB4", "NB5", "NB6", "NB7", "NB8",
+                    "WB1", "WB2", "WB3", "WB4", "WB5", "WB6", "WB7", "WB8",
+                    "EB1", "EB2", "EB3", "EB4", "EB5", "EB6", "EB7", "EB8"
+                ];
                 if (validTags.includes(id)) {
                 el.style.fill = '#cccccc';
 
@@ -57,9 +71,13 @@ const LineTagSvg = ({rdDataRef}) => {
         const resetSVGElements = () => {
             const sbElements = svgRoot.querySelectorAll('[id^="SB"]');
             const nbElements = svgRoot.querySelectorAll('[id^="NB"]');
+            const wbElements = svgRoot.querySelectorAll('[id^="WB"]');
+            const ebElements = svgRoot.querySelectorAll('[id^="EB"]');
     
             sbElements.forEach((el) => (el.style.fill = '#cccccc'));
             nbElements.forEach((el) => (el.style.fill = '#cccccc'));
+            wbElements.forEach((el) => (el.style.fill = '#cccccc'));
+            ebElements.forEach((el) => (el.style.fill = '#cccccc'));
             const titleElement = svgRoot.querySelector('#section_station_name');
             if(titleElement){
                 titleElement.textContent = 'N/A';
@@ -81,6 +99,8 @@ const LineTagSvg = ({rdDataRef}) => {
         const dataList = rdData?.[0] || [];
         const sbList = dataList.filter(x => x.position?.trim().toUpperCase() === "SB");
         const nbList = dataList.filter(x => x.position?.trim().toUpperCase() === "NB");
+        const wbList = dataList.filter(x => x.position?.trim().toUpperCase() === "WB");
+        const ebList = dataList.filter(x => x.position?.trim().toUpperCase() === "EB");
 
         const sortByStatus = (a, b) => {
             const aStatus = a.status?.trim().toUpperCase();
@@ -116,6 +136,8 @@ const LineTagSvg = ({rdDataRef}) => {
             };
             applyTags(sbList, "SB");
             applyTags(nbList, "NB");
+            applyTags(wbList, "WB");
+            applyTags(ebList, "EB");
     }, [rdData, svgContent]);
     
 
