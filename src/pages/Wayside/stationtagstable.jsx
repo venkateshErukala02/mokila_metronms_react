@@ -305,7 +305,7 @@ const handleSort = (field) => {
                                     </td>
                                 </tr>
                             )}
-                            {displayData.length === 0 && (
+                            {displayData?.length === 0 && (
                                  <tr>
                                     <td colSpan="8" style={{ textAlign: "center" }}>
                                         No Data Available
@@ -315,14 +315,14 @@ const handleSort = (field) => {
 
                             {!isLoading &&
                                 !isError.status &&
-                                 (displayData.length > 0 && Object.keys(displayData[0] || {}).length === 0) ? (
+                                 (displayData?.length > 0 && Object.keys(displayData[0] || {}).length === 0) ? (
                                     <tr>
                                     <td colSpan="8" style={{ textAlign: "center" }}>
                                         No Data Available
                                     </td>
                                 </tr>
                                 ) :(
-                                    displayData.length !== 0 && displayData.map((value, index) => (
+                                    displayData?.length !== 0 && displayData?.map((value, index) => (
                                      <tr key={index}>
                                         <td style={{padding:"4px 6px"}}>{value?.tag}</td>
                                         <td style={{padding:"4px 12px"}}>{value.line}</td>

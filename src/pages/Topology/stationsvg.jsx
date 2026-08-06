@@ -12,8 +12,8 @@ const StationSvg = ({ textName, setTrainView, setStationView,setStationTagview, 
     const svgContainerRef = useRef(null);
     const stationStatusRef = useRef(null);
     const [manualTitle, setManualTitle] = useState(null);
-    const rdData = rdDataRef.current === null ? [] : [rdDataRef.current[0].tags] ;
-    const rdDataTitle = rdDataRef.current === null ? [] : [rdDataRef.current[0].station] ;
+    const rdData = rdDataRef.current === null ? [] : [rdDataRef.current[0]?.tags] ;
+    const rdDataTitle = rdDataRef.current === null ? [] : [rdDataRef.current[0]?.station] ;
 
    const effectiveTextName = textName && Object.keys(textName).length > 0
                         ? textName
@@ -450,9 +450,13 @@ useEffect(() => {
         const resetSVGTagElements = () => {
             const sbElements = svgRoot.querySelectorAll('[id^="SBSE"],[id^="SBNE"]');
             const nbElements = svgRoot.querySelectorAll('[id^="NBSE"],[id^="NBNE"]');
+            const wbElements = svgRoot.querySelectorAll('[id^="WBWE"], [id^="WBEE"]');
+            const ebElements = svgRoot.querySelectorAll('[id^="EBWE"], [id^="EBEE"]');
         
             sbElements.forEach((el) => (el.style.fill = '#cccccc'));
             nbElements.forEach((el) => (el.style.fill = '#cccccc'));
+            wbElements.forEach((el) => (el.style.fill = '#cccccc'));
+            ebElements.forEach((el) => (el.style.fill = '#cccccc'));
             const titleElement = svgRoot.querySelector('#section_station_name');
                 if(titleElement){
                     titleElement.textContent = rdDataTitle
@@ -461,7 +465,7 @@ useEffect(() => {
         };
 
          const resetSVGNodeElements = () => {
-             const allElements = svgRoot.querySelectorAll('[id^="SB-R"], [id^="NB-R"]');
+             const allElements = svgRoot.querySelectorAll('[id^="SB-R"], [id^="NB-R"], [id^="WBWE"], [id^="WBEE"], [id^="EBWE"], [id^="EBEE"]');
     
              allElements.forEach(el => {
                 // el.style.fill = yardfacilitieData?.length === 0 ? '#ffffff' : '';

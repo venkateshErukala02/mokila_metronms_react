@@ -17,75 +17,74 @@ const SvgViewer = ({scopeValueSel,getCircleId}) => {
       });
   }, [scopeValueSel]);
 
-           
+   useEffect(() => {
+    if (!svgContent || !svgContainerRef.current) return;
 
-  useEffect(() => {
-    if (!svgContent) return;
+    const svgRoot = svgContainerRef.current;
+    svgRoot.classList.add("special-svg");
+
+    const circles = svgRoot.querySelectorAll("circle");
+
+    const handleCircleClick = (e) => {
+        const circleId = e.target.getAttribute("id");
+        getCurrentId(scopeValueSel, circleId);
+    };
+
+    circles.forEach(circle => {
+        circle.addEventListener("click", handleCircleClick);
+    });
+
     const fetchData = () => {
-    const username = 'admin';
-          const password = 'admin';
-          const token = btoa(`${username}:${password}`)
-          const options = {
-              method: "GET",
-              headers: {
-                  'Authorization': `Basic ${token}`
-              }
+        const username = "admin";
+        const password = "admin";
+        const token = btoa(`${username}:${password}`);
 
-          };
-
-    fetch(`api/v2//dashboard/linestatus/${scopeValueSel}?time=3600`,options) 
-      .then((res) => res.json())
-        .then((response) => {
-          const linesData = response.lines;
-          const stationsData = response.stations;
-          const svgRoot = svgContainerRef.current;
-           const circles = svgContainerRef.current.querySelectorAll("circle");
-        svgRoot.classList.add("special-svg");
-            circles.forEach((circle, index) => {
-        circle.addEventListener("click", () => {
-                      const circleId  = circle.getAttribute('id');
-                      if(scopeValueSel ==='line1-sec1'){
-                        getCurrentId(scopeValueSel,circleId);
-          
-                      }else if(scopeValueSel ==='line1-sec2'){
-                        getCurrentId(scopeValueSel,circleId);
-          
-                      }else{
-                        getCurrentId(scopeValueSel,circleId);
-          
-                      }
-                    });
-        });
-
-          if (!svgRoot) return;
-
-          stationsData.forEach(( stationObj ) => {
-             const stationId = Object.keys(stationObj)[0];   
-            const stationStatus = stationObj[stationId];
-            const el = svgRoot.querySelector(`#${stationId}`);
-            if (el) {
-              el.setAttribute("fill", stationStatus);
-            }
-          });
-
-          linesData.forEach(( lineObj ) => {
-            const lineId = Object.keys(lineObj)[0];     
-            const lineStatus = lineObj[lineId];
-            const el = svgRoot.querySelector(`[id='${lineId}']`);
-            if (el) {
-              el.setAttribute("stroke",lineStatus);
-            }
-          });
+        fetch(`api/v2//dashboard/linestatus/${scopeValueSel}?time=3600`, {
+            method: "GET",
+            headers: {
+                Authorization: `Basic ${token}`,
+            },
         })
-         .catch((err) => console.error(err));
-      }
+            .then((res) => res.json())
+            .then((response) => {
+                const { lines, stations } = response;
 
-      fetchData();
+                stations.forEach((stationObj) => {
+                    const stationId = Object.keys(stationObj)[0];
+                    const stationStatus = stationObj[stationId];
 
-  const intervalId = setInterval(fetchData, 30000);
+                    const el = svgRoot.querySelector(`#${stationId}`);
+                    if (el) {
+                        el.setAttribute("fill", stationStatus);
+                    }
+                });
 
-  return () => clearInterval(intervalId);
-  }, [svgContent,scopeValueSel]);
+                lines.forEach((lineObj) => {
+                    const lineId = Object.keys(lineObj)[0];
+                    const lineStatus = lineObj[lineId];
+
+                    const el = svgRoot.querySelector(`#${lineId}`);
+                    if (el) {
+                        el.setAttribute("stroke", lineStatus);
+                    }
+                });
+            })
+            .catch(console.error);
+    };
+
+    fetchData();
+
+    const intervalId = setInterval(fetchData, 30000);
+
+    return () => {
+        clearInterval(intervalId);
+
+        circles.forEach(circle => {
+            circle.removeEventListener("click", handleCircleClick);
+        });
+    };
+}, [svgContent, scopeValueSel]);        
+
 
 
   const getCurrentId=(value,id)=>{

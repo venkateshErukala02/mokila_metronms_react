@@ -4,7 +4,7 @@ import '../Dashboard/dashboard.css';
 
 
 
-const WaysideTable = ({ westSideView, circleId, setShowPopup, showPopup,lineId,handleTagsPopup,stationCount,lineCount ,allTagfailCount,textName,stationTagview,selectedNodeId ,selectedTreeNodeLineId}) => {
+const WaysideTable = ({ westSideView, circleId, setShowPopup, showPopup,lineId,handleTagsPopup,stationCount,lineCount ,allTagfailCount,textName,stationTagview,selectedNodeId ,selectedTreeNodeLineId ,rdDataRef,lineTagview,selectedTreeNodeId}) => {
     const [rdData, setRdData] = useState('');
     const [searchBtn, setSearchBtn] = useState(false);
     const [radialipText, setRadialipText] = useState('');
@@ -18,6 +18,8 @@ const WaysideTable = ({ westSideView, circleId, setShowPopup, showPopup,lineId,h
     const [tagTypeLabel,setTagTypeLabel] = useState('All');
     const [stationCodeData,setStationCodeData] = useState('');
     const circleIdtoMapTable = selectedNodeId?.id ?? null;
+    const stName = rdDataRef.current === null ? [] : [rdDataRef.current[0]?.station] ;
+    
     
     const fetchDataRadial = async (url,isInterval = false) => {
           if (!isInterval) {
@@ -227,13 +229,43 @@ useEffect(() => {
                 !textName && (
                     <article className="row">
                         <article className="col-8">
-                            <h1 className="mapheading">Global (Failed Tags)</h1>
+                            <h1 className="mapheading">
+                              {((selectedTreeNodeLineId || selectedTreeNodeId) && stName)
+                                ? `${stName} (Failed Tags)`
+                                : "Global (Failed Tags)"}    
+                                {/* Global (Failed Tags) */}
+                            </h1>
                         </article>
                         <article className="col-4">
                         </article>
                     </article>
                 )
             }
+             {((['facility', 'location', 'region','yard'].includes(textName?.data?.type)) && stationTagview === true) && (
+                        <article className="row">
+                        <article className="col-8">
+                            {trainView === true ? (
+                            // <h1 className="mapheading">Train View : {trainId}</h1>
+                            ''
+                            ) : (
+                                <>
+                            {!stationTagview && lineTagview && (
+                                <h1 className="mapheading">
+                                    {`${stName}  (Failed Tags)`}
+                                </h1>
+                            )}
+                            {stationTagview && !lineTagview && (
+                                <h1 className="mapheading">
+                                    {`${stName}  (Failed Tags)`}
+                                </h1>
+                            )}
+                            </>
+                            )}
+                        </article>
+                        <article className="col-8" style={{justifyContent:'end',display:'flex',paddingTop:'6px',paddingRight:'8px'}}>
+                        </article>
+                        </article>
+                    )}
           {((['facility', 'location', 'region','yard'].includes(textName?.data?.type)) && stationTagview === false) && (
                         <article className="row">
                         <article className="col-8">
@@ -242,7 +274,17 @@ useEffect(() => {
                             ''
                             ) : (
                                 <>
-                            {!stationTagview && <h1 className="mapheading">{getNodeLabel(textName)} (Failed Tags) </h1>}
+                            {!stationTagview && !lineTagview && <h1 className="mapheading">{getNodeLabel(textName)} (Failed Tags) </h1>}
+                            {!stationTagview && lineTagview && (
+                                <h1 className="mapheading">
+                                    {`${stName}  (Failed Tags)`}
+                                </h1>
+                            )}
+                            {stationTagview && !lineTagview && (
+                                <h1 className="mapheading">
+                                    {`${stName}  (Failed Tags)`}
+                                </h1>
+                            )}
                             </>
                             )}
                         </article>

@@ -73,7 +73,7 @@ const TopoPg = () => {
     const [expandedTreeDt,setExpandedTreeDt] = useState(null);
     const [prevTreeDt,setPrevTreeDt] = useState([]);
     const [sortField, setSortField] = useState('status');
-    const [sortOrder, setSortOrder] = useState('desc');
+    const [sortOrder, setSortOrder] = useState('asc');
     const childrenTextNameRef = useRef([]);
     const [lineName,setLineName] = useState('')
 
@@ -635,6 +635,7 @@ useEffect(() => {
 
     const handleLineVwdisable=()=>{
         setLineTagview(false);
+        setSelectedTreeNodeLineId('');
         if (!previousViewRef.current) return;
 
     const prev = previousViewRef.current;
@@ -784,14 +785,26 @@ useEffect(() => {
 
             };
             const response = await fetch(url, options);
+             if (!response.ok) {
+            // Clear old SVG data when API fails
+            setRdData([]);
+            rdDataRef.current = [];
+            setCircleId('');
+            setLineId('');
+
+            throw new Error(`Request failed with status ${response.status}`);
+        }
             const data = await response.json();
             if (response.ok) {
                 setIsLoading(false);
-                if(Object.keys(data).length === 0){
-                   setRdData([]) 
+                if( !data || Object.keys(data).length === 0){
+                   setRdData([]); 
+                   rdDataRef.current = [];
+                }else {
+                    const updatedData = Array.isArray(data) ? data : [data]
+                    setRdData(updatedData);
+                    rdDataRef.current = updatedData;
                 }
-                setRdData(Array.isArray(data) ? data : [data]);
-                rdDataRef.current = Array.isArray(data) ? data : [data]
                 setCircleId('');
                 setLineId('');
                 setIsError({ status: false, msg: "" });
@@ -800,6 +813,11 @@ useEffect(() => {
             }
         } catch (error) {
             setIsLoading(false);
+            setRdData([]);
+            rdDataRef.current = [];
+
+            setCircleId('');
+            setLineId('');
             setIsError({ status: true, msg: error.message });
         }
     };
@@ -1008,7 +1026,7 @@ const onSortChange = (field) => {
                 {tagTableView === true ? (
                     <>
                     <article style={{margin:'5px'}}>
-                    <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} textName={textName} stationTagview={stationTagview} selectedNodeId={selectedTreeNodeId} selectedTreeNodeLineId={selectedTreeNodeLineId} />
+                    <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} textName={textName} stationTagview={stationTagview} selectedNodeId={selectedTreeNodeId} selectedTreeNodeLineId={selectedTreeNodeLineId} rdDataRef={rdDataRef} lineTagview={lineTagview} selectedTreeNodeId={selectedTreeNodeId}/>
                     </article>
                     {((textName && textName?.data?.type === 'facility') ||  selectedTreeNodeId?.id )   ? (<article style={{margin:'5px',marginTop:'15px'}}>
                     <StationTagsTable textName={textName} circleId={circleId} lineId={lineId}  rdDataRef={rdDataRef} onSortChange={onSortChange}/>

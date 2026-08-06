@@ -510,10 +510,10 @@ const WaysideTagContainer=()=>{
                                                     <option value="NBSE">NBSE</option>
                                                     <option value="SBNE">SBNE</option>
                                                     <option value="NBNE">NBNE</option>
-                                                    <option value="EBSE">EBSE</option>
-                                                    <option value="WBSE">WBSE</option>
-                                                    <option value="EBNE">EBNE</option>
-                                                    <option value="WBNE">WBNE</option>
+                                                    <option value="EBWE">EBWE</option>
+                                                    <option value="WBEE">WBEE</option>
+                                                    <option value="EBEE">EBEE</option>
+                                                    <option value="WBWE">WBWE</option>
                                                     <option value="NB">NB</option>
                                                     <option value="SB">SB</option>
                                                     <option value="EB">EB</option>

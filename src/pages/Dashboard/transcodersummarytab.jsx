@@ -257,6 +257,12 @@ const TcSummaryTab = ({ triggerCount }) => {
     const getServiceCheckStatus = async (url) => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
+
+        const controller = new AbortController();
+        const timeout = setTimeout(() => {
+            controller.abort();
+        }, 20000);
+
         try {
             const options = {
                 method: "POST",
@@ -264,8 +270,11 @@ const TcSummaryTab = ({ triggerCount }) => {
                     "Content-Type": "application/json",
                 },
                 body: `http://${nodeIpaddress}:8084/transcoder/api/v1/`,
+                signal: controller.signal,
             };
             const response = await fetch(url,options);
+            clearTimeout(timeout);
+            
             const data = await response.json();
 
             if (response.ok) {
@@ -278,9 +287,21 @@ const TcSummaryTab = ({ triggerCount }) => {
                 throw new Error("Data not found");
             }
         } catch (error) {
-            setIsLoading(false);
-            setIsError({ status: true, msg: error.message });
-        }
+             clearTimeout(timeout);
+            if (error.name === "AbortError") {
+                    setIsError({
+                    status: true,
+                    msg: "Request timed out after 20 seconds",
+                });
+            } else {
+                setIsError({
+                    status: true,
+                    msg: error.message,
+                });
+            }
+            } finally {
+                setIsLoading(false);
+            }
     };
 
     // useEffect(() => {

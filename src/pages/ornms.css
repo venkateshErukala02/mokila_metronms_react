@@ -3543,7 +3543,8 @@ svg *:focus {
     cursor: pointer;
 }
 
-.special-svg polyline:hover {
+.special-svg polyline:hover,
+.special-svg line:hover {
     cursor: pointer;
 }
 

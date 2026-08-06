@@ -62,7 +62,14 @@ const LineNodeTableView=({textName , rdDataRef,yardfacilitieData,stationView, st
                                 </tr>
                             )}
 
-                            {!isLoading && !isError.status && (displayData.length > 0 && Object.keys(displayData[0] || {}).length === 0) && (
+                            {!isLoading && !isError.status && (displayData?.length > 0 && Object.keys(displayData[0] || {}).length === 0) && (
+                                <tr>
+                                    <td colSpan="8" style={{ textAlign: "center" }}>
+                                        No Data Available
+                                    </td>
+                                </tr>
+                            )}
+                             {(displayData?.length === 0) && (
                                 <tr>
                                     <td colSpan="8" style={{ textAlign: "center" }}>
                                         No Data Available
@@ -72,7 +79,7 @@ const LineNodeTableView=({textName , rdDataRef,yardfacilitieData,stationView, st
 
                             {!isLoading &&
                                 !isError.status &&
-                               displayData.length !== 0 && displayData.map((node, index) => (
+                               displayData?.length !== 0 && displayData?.map((node, index) => (
                                     <tr key={index}>
                                         <td>{node.tag}</td>
                                         <td>{node.location}</td>

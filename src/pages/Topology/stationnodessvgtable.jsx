@@ -99,6 +99,7 @@ const StationNodesvgTable=({textName,yardfacilitieData,stationView, stationTagvi
                                 <th>System Name</th>
                                 <th>Primary IP</th>
                                 <th>Device Type</th>
+                                <th>Up Time</th>
                                 <th>Status</th>
                                 <th>Position</th>
                             </tr>
@@ -139,6 +140,7 @@ const StationNodesvgTable=({textName,yardfacilitieData,stationView, stationTagvi
                                         <td> <a href={`http://${node.ipAddress}`} target="_blank" rel="noreferrer">{node.systemName}</a></td>
                                         <td  className="highlightText"  onClick={() => handleRowClick(node)}>{node.ipAddress}</td>
                                         <td>{node.type}</td>
+                                        <td>{node.sysUpTime}</td>
                                         <td>{node.status}</td>
                                         <td>{node.position}</td>
                                     </tr>

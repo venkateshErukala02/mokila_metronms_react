@@ -10,7 +10,7 @@ const LineTagSvg = ({rdDataRef}) => {
     const [stationStatus, setStationStatus] = useState([]);
     const [svgContent, setSvgContent] = useState("");
     const svgContainerRef = useRef(null);
-    const rdData = rdDataRef.current === null ? [] : [rdDataRef.current[0].tags] ;
+    const rdData = rdDataRef.current === null ? [] : [rdDataRef.current[0]?.tags] ;
 
 
  useEffect(() => {
@@ -73,7 +73,7 @@ const LineTagSvg = ({rdDataRef}) => {
 
         const titleElement = svgRoot.querySelector('#section_station_name');
             if(titleElement){
-              titleElement.textContent =  `${rdDataRef.current[0].station}`;    
+              titleElement.textContent =  `${rdDataRef.current[0]?.station}`;    
             }else{
                   titleElement.textContent = 'N/A'
             }

@@ -833,7 +833,7 @@ useEffect(() => {
     const svgRoot = svgContainerRef.current;
     if (!svgRoot) return;
   
-    const clickElements = svgRoot.querySelectorAll("polyline[id], path[id]");
+    const clickElements = svgRoot.querySelectorAll("polyline[id], path[id], line[id]");
     svgRoot.classList.add("special-svg");
     
     const handleClick = (event) => {
