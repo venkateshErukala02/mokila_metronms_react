@@ -63,7 +63,8 @@ const SvgViewer = ({scopeValueSel,getCircleId}) => {
                     const lineId = Object.keys(lineObj)[0];
                     const lineStatus = lineObj[lineId];
 
-                    const el = svgRoot.querySelector(`#${lineId}`);
+                    // const el = svgRoot.querySelector(`#${lineId}`);
+                    const el = svgRoot.querySelector(`[id="${lineId}"]`);
                     if (el) {
                         el.setAttribute("stroke", lineStatus);
                     }

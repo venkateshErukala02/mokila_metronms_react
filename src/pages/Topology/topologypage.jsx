@@ -76,6 +76,7 @@ const TopoPg = () => {
     const [sortOrder, setSortOrder] = useState('asc');
     const childrenTextNameRef = useRef([]);
     const [lineName,setLineName] = useState('')
+    const [count,setCount] = useState(0);
 
     const onLocationNameChange = (value) => {
         setLineName(value);
@@ -291,6 +292,16 @@ useEffect(()=>{
         };
 
     },[textName,selectedTab,childrenTextName]); 
+
+   useEffect(() => {
+    if (!stationIdFromSvg) return;
+    const stationId = stationIdFromSvg;
+
+    const urlTrains = `api/v2/treeview/trains/${stationId}`;
+
+    getTrainData(urlTrains);
+
+}, [count]);
 
 // const prevStationIdRef = useRef(null);
 // const stationIdRef = useRef(null);
@@ -631,6 +642,7 @@ useEffect(() => {
         setTrainLabelDiply(false);
         setStationTagview(true);
         setStationView(true);
+         setCount(prev => prev + 1);
     }
 
     const handleLineVwdisable=()=>{

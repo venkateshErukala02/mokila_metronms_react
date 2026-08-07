@@ -1018,6 +1018,9 @@ useEffect(() => {
         )} */}
         {typevalueSel === 'syslogd' && (
         <article className="eventmaintable">
+              {isLoading && (
+                 <p className="nologpara">Loading...</p>
+                    ) }
             {typeof eventmainData === "string" &&
             eventmainData.trim() !== "" &&
             eventmainData.split('\n').filter(line => line.trim() !== '').length > 0 ? (
@@ -1050,14 +1053,21 @@ useEffect(() => {
                             </thead>
 
                             <tbody className="eventstbdtb">
-                                {!isLoading && !isError.status && (!eventmainData || eventmainData?.length === 0) && (
+                                {/* {!isLoading && !isError.status && (!eventmainData || eventmainData?.length === 0) && (
                                     <tr>
                                         <td colSpan="8" style={{ textAlign: "center" }}>
                                             No Data Available
                                         </td>
                                     </tr>
-                                )}
-                                {Array.isArray(eventmainData) && eventmainData?.length > 0 ? (
+                                )} */}
+                                {isAuditLoading ? (
+                                <tr>
+                                    <td colSpan="4" className="centered-text">
+                                        Loading...
+                                    </td>
+                                </tr>
+                            ) :
+                                Array.isArray(eventmainData) && eventmainData?.length > 0 ? (
                                     eventmainData.map((event) => (
                                         <tr key={event.id} onClick={()=>handleEventPopup(event)}>
                                             <td><i className={getCategoryClass(event.severity)}></i>{event.nodeLabel ? event.nodeLabel : event.host}</td>
@@ -1068,7 +1078,7 @@ useEffect(() => {
                                     ))
                                 ) : (
                                     <tr>
-                                        {/* <td colSpan="4" className="datacl centered-text">No Data</td> */}
+                                        <td colSpan="4" className="datacl centered-text">No Data Available</td>
                                     </tr>
                                 )}
                             </tbody>

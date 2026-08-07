@@ -123,7 +123,7 @@ const Navbar = () => {
             <article className="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xxl-5">
             <a  onClick={handleToggle}><i className="fas fa-2x fa-bars accentColor" style={{paddingTop:'10px',paddingLeft:'17px'}}></i></a>
            <img src={logo} alt="logo" style={{paddingLeft:"17px"}}/>
-                    <span className="versiontitle">ver 1.3.1</span>
+                    <span className="versiontitle">ver 1.3.2</span>
             </article>
             <article className="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xxl-5 navalign">
             <ul className="navlistone">

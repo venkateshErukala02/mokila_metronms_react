@@ -171,77 +171,78 @@ const resetTrainLayers = (svgRoot) => {
 
 
 
-    useLayoutEffect(() => {
-        if (!svgContent) return;
+    // useLayoutEffect(() => {
+    //     if (!svgContent) return;
 
-        const svgRoot = svgContainerRef.current;
+    //     const svgRoot = svgContainerRef.current;
 
-        const allElements = svgRoot.querySelectorAll('[id^="SB-R"], [id^="NB-R"],[id^="TC"],[id^="C"]');
+    //     const allElements = svgRoot.querySelectorAll('[id^="SB-R"], [id^="NB-R"],[id^="TC"],[id^="C"]');
 
-            allElements.forEach(el => {
-                el.style.fill = "#FFFFFF";
-            });
+    //         allElements.forEach(el => {
+    //             el.style.fill = "#FFFFFF";
+    //         });
 
-           const resetSVGNodeElements = () => {
-            const allElements = svgRoot.querySelectorAll('[id^="SB-R"], [id^="NB-R"]');
+    //        const resetSVGNodeElements = () => {
+    //         const allElements = svgRoot.querySelectorAll('[id^="SB-R"], [id^="NB-R"]');
 
-             allElements.forEach(el => {
-                    el.style.fill = '#ffffff';
-                });
+    //          allElements.forEach(el => {
+    //                 el.style.fill = '#ffffff';
+    //             });
 
-            //  allElements.forEach(el => {
-            //     el.style.fill = yardfacilitieData?.length === 0 ? '#ffffff' : '';
-            // });
-            const titleElement = svgRoot.querySelector('#section_station_name');
-                if(titleElement){
-                    titleElement.textContent = rdDataTitle;
-                }
-        };
+    //         //  allElements.forEach(el => {
+    //         //     el.style.fill = yardfacilitieData?.length === 0 ? '#ffffff' : '';
+    //         // });
+    //         const titleElement = svgRoot.querySelector('#section_station_name');
+    //             if(titleElement){
+    //                 titleElement.textContent = rdDataTitle;
+    //             }
+    //     };
 
-        resetSVGNodeElements();
+    //     resetSVGNodeElements();
 
 
-       if(yardfacilitieData?.length > 0){
+    //    if(yardfacilitieData?.length > 0){
 
-        //     resetSVGNodeElements();
-        // }else{
-            // ref
-         yardfacilitieDataRef?.current?.forEach((item) => { 
-            let tt = item.position?.toLowerCase() + 'text'; 
-            let posttext = svgRoot.querySelector(`#${tt}`);
-            if (item.type === 'sta' || item.type === 'obc' || item.type === 'ioc' ){
-                return;
-            }
-         const el = svgRoot.querySelector(`#${item.position}`);
-            const title = svgRoot.querySelector(`#ts-${item.position}`);
-                if (item.type !== 'sta' ) {
-                     if (posttext) {
-                        if (item.type=='transcoder') {
-                            posttext.firstChild.nodeValue = 'T';
-                        } else if (item.type=='encoder') {
-                            posttext.firstChild.nodeValue = 'E';
-                        }
-                    }
-                    if (title) {
-                            title.textContent = item.ipAddress;
-                        } else {
-                            console.log(`Element with id ts-${item.position} not found`);
-                        }
-                    // title.textContent = item.ipAddress;
-                if (el) {
-                   if (item.status === "down") {
-                    el.style.fill = "red";
-                 } else if (item.status === "up") {
-                    el.style.fill = "rgb(102, 204, 51)";
-                    }else{
-                        el.style.fill = "#FFFFFF";
-                    }
-                    }
-                }
+    //     //     resetSVGNodeElements();
+    //     // }else{
+    //         // ref
+    //      yardfacilitieDataRef?.current?.forEach((item) => { 
+    //         let tt = item.position?.toLowerCase() + 'text'; 
+    //         let posttext = svgRoot.querySelector(`#${tt}`);
+    //         if (item.type === 'sta' || item.type === 'obc' || item.type === 'ioc' ){
+    //             return;
+    //         }
+    //      const el = svgRoot.querySelector(`#${item.position}`);
+    //         const title = svgRoot.querySelector(`#ts-${item.position}`);
+    //             if (item.type !== 'sta' ) {
+    //                  if (posttext) {
+    //                     if (item.type=='transcoder') {
+    //                         posttext.firstChild.nodeValue = 'T';
+    //                     } else if (item.type=='encoder') {
+    //                         posttext.firstChild.nodeValue = 'E';
+    //                     }
+    //                 }
+    //                 if (title) {
+    //                         title.textContent = item.ipAddress;
+    //                     } else {
+    //                         console.log(`Element with id ts-${item.position} not found`);
+    //                     }
+    //                 // title.textContent = item.ipAddress;
+    //             if (el) {
+    //                if (item.status === "down") {
+    //                     el.style.fill = "red";
+    //                 } else if (item.status === "up") {
+    //                     el.style.fill = "rgb(102, 204, 51)";
+    //                 }
+    //                 // else{
+    //                 //     el.style.fill = "";
+    //                 // }
+    //                 }
+    //             }
                 
-        });
-    }
-    }, [yardfacilitieData, svgContent,yardfacilitieDataRef]);
+    //     });
+    // }
+    // }, [yardfacilitieData, svgContent,yardfacilitieDataRef]);
 
 
 
@@ -486,13 +487,49 @@ useEffect(() => {
                 if(titleElement){
                   titleElement.textContent = rdDataTitle;    
                 }
-        if (rdData[0]?.length === 0) {
-          if(yardfacilitieData?.length === 0){
-            resetSVGNodeElements();
-              }
+                if(yardfacilitieData?.length === 0){
+                    resetSVGNodeElements();
+                }
+        if (rdData[0]?.length === 0 ) {
             resetSVGTagElements();
 
         }else {
+              yardfacilitieDataRef?.current?.forEach((item) => { 
+            let tt = item.position?.toLowerCase() + 'text'; 
+            let posttext = svgRoot.querySelector(`#${tt}`);
+            if (item.type === 'sta' || item.type === 'obc' || item.type === 'ioc' ){
+                return;
+            }
+         const el = svgRoot.querySelector(`#${item.position}`);
+            const title = svgRoot.querySelector(`#ts-${item.position}`);
+                if (item.type !== 'sta' ) {
+                     if (posttext) {
+                        if (item.type=='transcoder') {
+                            posttext.firstChild.nodeValue = 'T';
+                        } else if (item.type=='encoder') {
+                            posttext.firstChild.nodeValue = 'E';
+                        }
+                    }
+                    if (title) {
+                            title.textContent = item.ipAddress;
+                        } else {
+                            console.log(`Element with id ts-${item.position} not found`);
+                        }
+                    // title.textContent = item.ipAddress;
+                if (el) {
+                   if (item.status === "down") {
+                        el.style.fill = "red";
+                    } else if (item.status === "up") {
+                        el.style.fill = "rgb(102, 204, 51)";
+                    }
+                    // else{
+                    //     el.style.fill = "";
+                    // }
+                    }
+                }
+                
+        });
+
         rdData[0]?.forEach((sb) => {
             const position = sb.position?.trim().toUpperCase();
             const index = String(sb.index);
@@ -510,7 +547,7 @@ useEffect(() => {
             } 
         });
       }
-    }, [rdData, svgContent,yardfacilitieData]);
+    }, [rdData, svgContent,yardfacilitieData ,yardfacilitieDataRef]);
 
         const getNodeLabel = (node) => {
         const mode = node.data?.mode;

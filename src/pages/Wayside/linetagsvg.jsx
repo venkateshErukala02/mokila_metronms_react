@@ -11,19 +11,21 @@ const LineTagSvg = ({rdDataRef,lineId}) => {
     const [svgContent, setSvgContent] = useState("");
     const svgContainerRef = useRef(null);
     const rdData = rdDataRef.current === null ? [] : [rdDataRef.current[0]?.tags];
-    // const stName = rdDataRef.current === null ? [] : rdDataRef.current[0]?.station;
-    const stName = lineId;
+    const stNameDt = rdDataRef.current === null ? [] : rdDataRef.current[0]?.station;
+    const stName = lineId?.trim() ||  stNameDt;
+    // const stName = (lineId?.trim() || stNameDt || "").toLowerCase();
 
  useEffect(() => {
         const controller = new AbortController();
             // const list = ["Yonge", "Bayview", "Bessarion", "Leslie", "Don Mills"];
 
        const svg =
-            stName.includes("Yonge") ||
+            stName ==="Yonge" ||
             stName.includes("Bayview") ||
             stName.includes("Bessarion") ||
             stName.includes("Leslie") ||
-            stName.includes("Don Mills")
+            stName.includes("Don Mills") ||
+            stName.includes("DonMills")
                 ? "tag_line4.svg"
                 : "tag_line1.svg";
 

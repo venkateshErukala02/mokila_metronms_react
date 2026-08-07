@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import '../ornms.css';
 import '../Dashboard/dashboard.css';
 
@@ -22,9 +22,12 @@ const Tableone = () => {
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [pageSize, setPageSize] = useState(1);
     const [fromValue,setFromValue] =useState('0');
+    const firstLoad = useRef(true);
 
     const getDataEvents = async (url) => {
-        setIsLoading(true);
+        if (firstLoad.current) {
+            setIsLoading(true);
+        }
         setIsError({ status: false, msg: "" });
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 45000); 
@@ -60,14 +63,20 @@ const Tableone = () => {
                 throw new Error("Data not found");
             }
         } catch (error) {
-            clearTimeout(timeoutId);
             if (error.name === "AbortError") {
                 setIsError({ status: true, msg: "API request timed out after 45 seconds" });
             } else {
                 setIsError({ status: true, msg: error.message });
             }
-            setIsLoading(false);
+        }finally {
+            clearTimeout(timeoutId);
+
+            if (firstLoad.current) {
+                setIsLoading(false);
+                firstLoad.current = false;
+            }
         }
+
     };
 
     useEffect(() => {
@@ -217,6 +226,11 @@ const Tableone = () => {
                                 </td>
                             </tr>
                         )}
+                        {isLoading && (
+                                <tr className="col-12 dashbdnodata" style={{ textAlign: "center" }}>
+                                        Loading...
+                                </tr>
+                            )}
 
                         {!isLoading && !isError.status && (!eventData || eventData.length === 0) && (
                             <tr className="col-12 dashbdnodata">
