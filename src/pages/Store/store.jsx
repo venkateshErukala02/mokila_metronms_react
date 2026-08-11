@@ -2,7 +2,7 @@
 
 // import { createStore } from 'redux';
 import { configureStore } from '@reduxjs/toolkit';
-import {visibilityReducer,currentpieReducer,currentstationidReducer,nodeReducer,loginReducer,selectedPrevNodeReducer} from '../Reducer/reducer';
+import {visibilityReducer,currentpieReducer,currentstationidReducer,nodeReducer,loginReducer,selectedPrevNodeReducer, selectedTreeviewReducer,treeviewReducer} from '../Reducer/reducer';
 // import visibilityReducer from '../Reducer/reducer';
 
 
@@ -14,7 +14,9 @@ const store = configureStore({
     stationid : currentstationidReducer,
     node: nodeReducer,
     loginuser: loginReducer,
-    selectedPrevNode : selectedPrevNodeReducer
+    selectedPrevNode : selectedPrevNodeReducer,
+    treeViewSelected : selectedTreeviewReducer,
+    treeView : treeviewReducer
   },
 });
 

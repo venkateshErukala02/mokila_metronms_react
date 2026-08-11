@@ -5,8 +5,8 @@ import TopoSectionTable from "./toposectiontable";
 import { text } from "d3";
 import StationNodeTable from "./stationNodetableview";
 import { useLayoutEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import {handleStationCircleId} from '../Action/action'
+import { useDispatch, useSelector } from 'react-redux';
+import {clearStationId, handleStationCircleId} from '../Action/action'
 import YardTbone from "./yardonetb";
 
 
@@ -27,6 +27,7 @@ const TopoSvgViewer = ({textName,yardfacilitieData,setTrainView,setStationView,s
     const [success, setSuccess] = useState('');
     const [svgVersion, setSvgVersion] = useState(0);
     const [yardData,setYardData] = useState('');
+    const stationNameId =  useSelector((state) => state?.stationid?.stationid); 
 
     const fetchSvg = async (url, signal) => {
         try {
@@ -1129,10 +1130,12 @@ useEffect(() => {
   
          const getCurrentId=(id)=>{
           // setCircleId(id)
+          // dispatch(clearStationId());
           getCircleId(id)
         }
   
         const getCurrentElementId=(id)=>{
+          dispatch(handleStationCircleId());
           getLineId(id)
         }
   

@@ -7,12 +7,12 @@ import StationNodesvgTable from "./stationnodessvgtable";
 import StationTagsTable from "../Wayside/stationtagstable";
 
 
-const StationNodeTableView=({textName , rdDataRef,yardfacilitieData,stationView, stationTagview,lineTagview,trainView, selectedTreeNodeId,expandedTreeDt,onSortChange})=>{
+const StationNodeTableView=({textName , rdDataRef,yardfacilitieData,stationView, stationTagview,lineTagview,trainView, selectedTreeNodeId,expandedTreeDt,onSortChange,lineName,isLoading})=>{
     const [sectionTbData,setSectionTbData] = useState('');
     const [limitValueSel, setLimitValueSel] = useState('');
     const [limitValueSelLabel, setLimitValueSelLabel] = useState('50');
     const [lineipText, setLineipText] = useState('')
-    const [isLoading, setIsLoading] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [searchBtn, setSearchBtn] = useState("");
     const [boundsMode,setBoundsMode]=useState('SouthBound');
@@ -28,7 +28,7 @@ const StationNodeTableView=({textName , rdDataRef,yardfacilitieData,stationView,
                     <article className="col-sm-7 col-md-7 col-lg-7 col-xl-7 col-xxl-7" style={{padding:'5px'}}>
                        <StationNodesvgTable yardfacilitieData={yardfacilitieData} textName={textName} 
                        stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} 
-                       expandedTreeDt={expandedTreeDt}/>
+                       expandedTreeDt={expandedTreeDt} lineName={lineName} isLoading={isLoading}/>
                        <article>
                        </article>
                         <StationTagsTable rdDataRef={rdDataRef} onSortChange={onSortChange}/>

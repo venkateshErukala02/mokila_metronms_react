@@ -5,7 +5,9 @@ export const NODE_DATA = 'NODE_DATA';
 export const CLEAR_PIE = 'CLEAR_PIE';
 export const LOGIN_DATA = 'LOGIN_DATA';
 export const SELECTED_NODE_DATA= 'SELECTED_NODE_DATA';
-
+export const CLEAR_STATIONID = 'CLEAR_STATIONID';
+export const CURRENT_TREEVIEW = 'CURRENT_TREEVIEW';
+export const CURRENT_TREEVIEW_SELECTED = 'CURRENT_TREEVIEW_SELECTED';
 
 export const toggleVisibility = () => {
   return {
@@ -23,6 +25,19 @@ export const handleStationCircleId =(payload)=>({
   payload,
 });
 
+export const clearStationId = () => ({
+  type: CLEAR_STATIONID,
+});
+
+export const handleCurrentTreeviewSelected =(payload)=>({
+  type: CURRENT_TREEVIEW_SELECTED,
+  payload,
+});
+
+export const handleCurrentTreeview =(payload)=>({
+  type: CURRENT_TREEVIEW,
+  payload,
+});
 
 export const handleNodeData = (payload) => ({
   type: NODE_DATA,

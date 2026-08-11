@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Tree from '../Topology/tree';
 import './../Topology/topology.css'; 
+import { useSelector } from "react-redux";
 
 
 
@@ -41,8 +42,21 @@ const [treeData, setTreeData] = useState(() => structuredClone(defaultTree));
   const [regionName,setRegionName] = useState(null);
   const [locationName,setLocationName] = useState(null);
   const [stationName,setStationName] = useState(null);
+  const stationNameId =  useSelector((state) => state?.stationid?.stationid); 
+  const dataName = useSelector((state) => state?.treeView?.node);
+  const dataNameDTT = useSelector((state) => state);
+  // console.log('kokkoo',dataNameDTT);
 
 
+   useEffect(() => {
+  if (!stationNameId) return;
+
+  // Find the node in treeData by ID
+  const node = findNodeById(treeData, stationNameId);
+  if (node) {
+    setSelectedNode(node); // update internal state
+  }
+}, [selectedTreeNodeId, treeData]);
 
   useEffect(() => {
   if (!selectedTreeNodeId?.id) return;
@@ -93,6 +107,13 @@ useEffect(() => {
         getUniquefacilitieData(url);
 
     },[circleId,stationRefreshKey]);
+
+      useEffect(()=>{
+        if (!stationNameId) return;
+        let url= `api/v2/facilities?_s=uniqueName==${stationNameId}`;
+        getUniquefacilitieData(url);
+
+    },[stationNameId]);
 
 //   useEffect(() => {
 //   if (!uniquefacilitieData || !selectedNodeId) return;
@@ -667,6 +688,12 @@ useEffect(() => {
     onTreeDataChange(treeData);
   }
 }, [treeData]);
+
+useEffect(() => {
+  // if (onTreeDataChange) {
+    getDatanodesLine('',stationNameId);
+  // }
+}, []);
 
 
   return (

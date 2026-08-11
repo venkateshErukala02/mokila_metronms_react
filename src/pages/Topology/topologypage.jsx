@@ -2,7 +2,7 @@ import { useState,useEffect, useRef } from "react";
 import TreeList from "../Topology/treelist";
 import '../ornms.css'
 import LeftNavList from "../Navbar/leftnavpage";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import './../Topology/topology.css';
 import TopoSvgViewer from "./toposvg";
 import { text } from "d3";
@@ -25,6 +25,7 @@ import YardSvgViewer from "./yardsvg";
 import MainlineView from "./mainlinetrainview";
 import { useLocation } from "react-router-dom";
 import LineNodeTableView from "./linetagNodetableview";
+import { handleCurrentTreeview, handleCurrentTreeviewSelected, handleStationCircleId } from "../Action/action";
 
 
 const TopoPg = () => {
@@ -77,14 +78,27 @@ const TopoPg = () => {
     const childrenTextNameRef = useRef([]);
     const [lineName,setLineName] = useState('')
     const [count,setCount] = useState(0);
+    const previousLineName = useRef('');
+    const stationNameId =  useSelector((state) => state?.stationid?.stationid); 
+    const textData  =  useSelector((state) => state?.treeview?.treeview); 
 
     const onLocationNameChange = (value) => {
         setLineName(value);
+        previousLineName.current = value;
     };
 
     useEffect(()=>{
         setLineName('');
     },[textName]);
+
+//     useEffect(() => {
+//     if (previousLineName.current !== lineName) {
+//         setLineName('');
+//     }
+
+//     previousLineName.current = lineName;
+// }, [textName]);
+const dispatch = useDispatch();
 
     const handleNodeClick = (value,parent) => {
         setTextNameChanged(true); 
@@ -97,7 +111,21 @@ const TopoPg = () => {
         setTrainView(false);
 
         setTextName({...value});
+        dispatch(handleCurrentTreeviewSelected(value.data?.display));
         setParentTextName(parent);
+        dispatch(handleCurrentTreeview(parent));
+        const validData = ['global','line1-sec1', 'line1-sec2', 'line4-sec1','line1','line4'];
+
+            if (validData.includes(value?.data?.display)) {
+                dispatch(handleStationCircleId(''));
+            }
+
+         const validParents = ['line1-sec1', 'line1-sec2', 'line4-sec1'];
+
+            if (validParents.includes(parent?.data?.display)) {
+                dispatch(handleStationCircleId(value.data?.display));
+            }
+
         setTimeLeft(30);
         // nodeData
          setSelectedPrevNodeId({
@@ -108,6 +136,10 @@ const TopoPg = () => {
 
     previousViewRef.current = null;  
     }
+
+    // useEffect(()=>{
+    //     setTextName(textData);
+    // },[])
 
 
 const [isLoading, setIsLoading] = useState(false);
@@ -311,6 +343,7 @@ useEffect(()=>{
 //     stationIdRef.current = stationIdFromSvg;
 //   }
 // }, [stationIdFromSvg]);
+// console.log('adadadada',stationIdFromSvg);
 
 useEffect(() => {
   if (!enableStationPolling) return;
@@ -464,7 +497,20 @@ useEffect(() => {
             case 'line1-sec1':
             case 'line1-sec2':
             case 'line4-sec1':
-              return   <>   
+                if (stationNameId && stationTagview) {
+                        return (
+                       <>
+                        <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg} parentTextName={parentTextName} childrenTextName={childrenTextName}lineName={lineName}/>
+            <StationNodeTableView yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange} lineName={lineName} isLoading={isLoading}/>
+                       </>
+                        );
+                    }else if (lineTagview) {
+                        return <>
+                        <LineTagSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef}  setLineTagview={setLineTagview} stationNode={stationNode} lineId={lineId}/>
+                        <LineNodeTableView yardfacilitieData={yardfacilitieData}  textName={textName} rdDataRef={rdDataRef} stationNode={stationNode} />
+                        </>;
+                    }  else{
+              return   <>  
               <article className="row">
                 <article className="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xxl-5">
                     <article style={{padding:"200px 0px"}}>
@@ -477,9 +523,26 @@ useEffect(() => {
                     </article>
               </article>
                 </>
+                    }
                 break;
             default:
-                return <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId} getTextId={getTextId}/>
+                 if (stationNameId && stationTagview) {
+                        return (
+                       <>
+                        <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg} parentTextName={parentTextName} childrenTextName={childrenTextName}lineName={lineName}/>
+            <StationNodeTableView yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange} lineName={lineName} isLoading={isLoading}/>
+                       </>
+                        );
+                    }else if (lineTagview) {
+                        return <>
+                        <LineTagSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef}  setLineTagview={setLineTagview} stationNode={stationNode} lineId={lineId}/>
+                        <LineNodeTableView yardfacilitieData={yardfacilitieData}  textName={textName} rdDataRef={rdDataRef} stationNode={stationNode} />
+                        </>;
+                    }  
+                    
+                    else {
+                        return <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId} getTextId={getTextId}/>
+                    }
                 break;
         }
     }
@@ -490,7 +553,7 @@ useEffect(() => {
         switch (textName?.data?.type) {
             case 'facility':
                return ( <> <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg} parentTextName={parentTextName} childrenTextName={childrenTextName} lineName={lineName}/>
-              <StationNodeTableView  yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange}/>
+              <StationNodeTableView  yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange} lineName={lineName} isLoading={isLoading}/>
                       </> );
             /*{
                 if(textName.data.display === 'davisville_track' || textName.data.display ==='wilson_track' || textName.text === 'Finch trail track' || textName.text ==='VMC trail track' ){
@@ -530,6 +593,26 @@ useEffect(() => {
             {/* <YardTbtwo textName={textName}/> */}
                 </>
                     break;
+                     case 'region': 
+              
+               if (stationNameId && stationTagview) {
+                        return (
+                       <>
+                        <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg} parentTextName={parentTextName} childrenTextName={childrenTextName}lineName={lineName}/>
+            <StationNodeTableView yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange} lineName={lineName} isLoading={isLoading}/>
+                       </>
+                        );
+                    }else if (lineTagview) {
+                        return <>
+                        <LineTagSvg textName={textName} setTrainLabelDiply={setTrainLabelDiply} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef}  setLineTagview={setLineTagview} stationNode={stationNode} lineId={lineId}/>
+                        <LineNodeTableView yardfacilitieData={yardfacilitieData}  textName={textName} rdDataRef={rdDataRef} stationNode={stationNode} />
+                        </>;
+                    }  
+                    
+                    else {
+                        return <TopoSvgViewer textName={textName} getCircleId={getCircleId} getLineId={getLineId} getTextId={getTextId}/>
+                    }
+                break;
             default:
                 return null;
                 break;
@@ -539,7 +622,7 @@ useEffect(() => {
         if (stationTagview) {
             return <>
                 <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg} parentTextName={parentTextName} childrenTextName={childrenTextName}lineName={lineName}/>
-              <StationNodeTableView yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange} />
+              <StationNodeTableView yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange} lineName={lineName} isLoading={isLoading}/>
             </>
         } else if (lineTagview) {
             return <>
@@ -550,6 +633,12 @@ useEffect(() => {
             return null;
         }
     }
+
+    useEffect(()=>{
+        if(stationNameId){
+        setStationTagview(true);
+        }
+    },[stationNameId])
 
 
     const getNodeLabel = (node) => {
@@ -577,7 +666,14 @@ useEffect(() => {
         Link View - {textName.data.display}
       </span>
     );
-    }else if(mode === "location"){
+    }
+    else if(stationTagview){
+      return "Link View - Station View"; 
+    }
+     else if(lineTagview){
+      return "Link View - Line Tag"; 
+    }
+    else if(mode === "location"){
         return (
       <span>
             Link View - {textName.data.display}
@@ -713,13 +809,13 @@ const previousView = useSelector(state => state.selectedPrevNode.node);
 
 useEffect(() => {
   if (previousView) {
-    setTextName(previousView.textName);
-    setStationView(previousView.stationView);
-    setStationTagview(previousView.stationTagview);
-    setLineTagview(previousView.lineTagview);
-    setTrainView(previousView.trainView);
-    setPrevTreeDt(previousView.expandedTreeDt || []);
-    setSelectedTreeNodeId({ id: previousView.textName.data.id,
+    setTextName(previousView?.textName);
+    setStationView(previousView?.stationView);
+    setStationTagview(previousView?.stationTagview);
+    setLineTagview(previousView?.lineTagview);
+    setTrainView(previousView?.trainView);
+    setPrevTreeDt(previousView?.expandedTreeDt || []);
+    setSelectedTreeNodeId({ id: previousView.textName?.data.id,
             path: ["global", "region", "location"]});
     
   }
@@ -849,9 +945,9 @@ useEffect(() => {
      else if (circleIdMaptable) {
         url = `api/v2/wayside/tagdetails?station=${circleIdMaptable}&sortBy=${sortField}&order=${sortOrder}`;
     }
-    // else if(textName?.data?.type === 'facility'){
-    //     url = `api/v2/wayside/tagdetails?station=${textName.data.display}&sortBy=${sortField}&order=${sortOrder}`;
-    // }
+    else if(stationNameId && !lineId){
+        url = `api/v2/wayside/tagdetails?station=${stationNameId}&sortBy=${sortField}&order=${sortOrder}`;
+    }
 
     if (url) {
         fetchDataRadial(url);
@@ -940,7 +1036,7 @@ useEffect(() => {
 
     const hasMode =
   textName?.data &&
-  ['facility', 'Trains', 'mainline', 'yard'].includes(textName.data.type);
+  ['region','facility', 'Trains', 'mainline', 'yard'].includes(textName.data.type);
 
 
 const onSortChange = (field) => {
@@ -1040,7 +1136,10 @@ const onSortChange = (field) => {
                     <article style={{margin:'5px'}}>
                     <WaysideTable allTagfailCount={allTagfailCount} westSideView={westSideView} circleId={circleId} setShowPopup={setShowPopup} showPopup={showPopup} lineId={lineId} handleTagsPopup={handleTagsPopup} stationCount={stationCount} lineCount={lineCount} textName={textName} stationTagview={stationTagview} selectedNodeId={selectedTreeNodeId} selectedTreeNodeLineId={selectedTreeNodeLineId} rdDataRef={rdDataRef} lineTagview={lineTagview} selectedTreeNodeId={selectedTreeNodeId}/>
                     </article>
-                    {((textName && textName?.data?.type === 'facility') ||  selectedTreeNodeId?.id )   ? (<article style={{margin:'5px',marginTop:'15px'}}>
+                    {(((textName && textName?.data?.type === 'facility') ||  selectedTreeNodeId?.id || stationNameId ) &&
+  textName?.data?.type !== 'region' &&
+  textName?.data?.type !== 'location'
+)   ? (<article style={{margin:'5px',marginTop:'15px'}}>
                     <StationTagsTable textName={textName} circleId={circleId} lineId={lineId}  rdDataRef={rdDataRef} onSortChange={onSortChange}/>
                     </article>) : ('')}
                     {showPopup && (
@@ -1191,7 +1290,16 @@ const onSortChange = (field) => {
                     ) : (
                         (stationTagview || lineTagview) && renderTagView(stationTagview, lineTagview)
                     )} */}
-                    {hasTagView
+                    {
+                        stationView
+                            ? hasMode
+                            ? renderSectFacility(textName)
+                            : renderSectComponent(textName)
+                            : hasTagView || stationNameId
+                            ? renderTagView(stationTagview, lineTagview)
+                            : null
+                        }
+                    {/* {hasTagView || stationNameId
                         ? renderTagView(stationTagview, lineTagview)
                         : stationView
                            ? hasMode
@@ -1199,7 +1307,8 @@ const onSortChange = (field) => {
                                 : renderSectComponent(textName)
                                 : null
                             
-                        }
+                        } */}
+
 
 
                     {trainView === true && renderSectTrainView(trainView)}

@@ -4,12 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { handleNodeData, handlePreviousNodeselTree } from "../Action/action";
 
 
-const StationNodesvgTable=({textName,yardfacilitieData,stationView, stationTagview,lineTagview,trainView, selectedTreeNodeId,expandedTreeDt})=>{
+const StationNodesvgTable=({textName,yardfacilitieData,stationView, stationTagview,lineTagview,trainView, selectedTreeNodeId,expandedTreeDt,lineName,isLoading})=>{
     const [sectionTbData,setSectionTbData] = useState('');
     const [limitValueSel, setLimitValueSel] = useState('');
     const [limitValueSelLabel, setLimitValueSelLabel] = useState('50');
     const [lineipText, setLineipText] = useState('')
-    const [isLoading, setIsLoading] = useState(false);
+    // const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
     const [searchBtn, setSearchBtn] = useState("");
     const navigate = useNavigate();
@@ -34,7 +34,8 @@ const StationNodesvgTable=({textName,yardfacilitieData,stationView, stationTagvi
     lineTagview,
     trainView,
     selectedTreeNodeId,
-    expandedTreeDt
+    expandedTreeDt,
+    lineName
   };
 
   dispatch(handlePreviousNodeselTree(previousState));

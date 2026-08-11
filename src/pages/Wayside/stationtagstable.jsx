@@ -230,7 +230,7 @@ const handleSort = (field) => {
                     <article className="col-sm-10 col-md-10 col-lg-10 col-xl-10 col-xxl-10">
                         <ul className="searchdashlist">
                             <li>
-                                <input name="" value={tagIdText} onChange={(e) => setTagIdText(e.target.value)} placeholder="TadId Number" id="" className="form-control1 searchbar1" />
+                                <input name="" value={tagIdText} onChange={(e) => setTagIdText(e.target.value)} placeholder="TagId Number" id="" className="form-control1 searchbar1" />
                                 <button type="button" className="createbtn" 
                                     style={{ marginLeft: '7px' }} onClick={handleSearchClick}>Search</button>
                                 <button type="button" className="createbtn" style={{ marginLeft: '7px', display: searchBtn ? 'inline-block' : 'none' }} onClick={handleClearSearch}> Clear Search</button>
