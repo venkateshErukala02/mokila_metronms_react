@@ -932,20 +932,106 @@ useEffect(() => {
 
         useEffect(() => {
     let url = '';
-    const circleIdMaptable = selectedTreeNodeId?.id;
+    // const circleIdMaptable = selectedTreeNodeId?.id;
     if(textName?.data?.type === 'facility'){
         url = `api/v2/wayside/tagdetails?station=${textName.data.display}&sortBy=${sortField}&order=${sortOrder}`;
-    } else if (circleId) {
-        url = `api/v2/wayside/tagdetails?station=${circleId}&sortBy=${sortField}&order=${sortOrder}`;
+    } 
+    else{
+
     }
-    else if (lineId) {
+
+    if (url) {
+        fetchDataRadial(url);
+
+        const intervalId = setInterval(()=>{
+            fetchDataRadial(url);
+        },30000)
+
+        return()=> clearInterval(intervalId);
+    }
+}, [textName,selectedTab,sortField,sortOrder]);
+
+  useEffect(() => {
+    let url = '';
+    // const circleIdMaptable = selectedTreeNodeId?.id;
+     if (lineId) {
          const station = lineId === "STG1" ? "STG" : lineId;
         url = `api/v2/wayside/tagdetails?station=${station}&sortBy=${sortField}&order=${sortOrder}`;
     }
-     else if (circleIdMaptable) {
+    else{
+
+    }
+
+    if (url) {
+        fetchDataRadial(url);
+
+        const intervalId = setInterval(()=>{
+            fetchDataRadial(url);
+        },30000)
+
+        return()=> clearInterval(intervalId);
+    }
+}, [lineId,selectedTab,sortField,sortOrder]);
+
+useEffect(() => {
+    // if (!circleId) return;
+     const circleIdMaptable = selectedTreeNodeId?.id;
+    console.log("EFFECT START", new Date().toLocaleTimeString());
+    // if (!circleId) {
+    //     console.log("No circleId");
+    //     return;
+    // }
+    let url = '';
+    if (circleId) {
+        url = `api/v2/wayside/tagdetails?station=${circleId}&sortBy=${sortField}&order=${sortOrder}`;
+    }else if(circleIdMaptable){
         url = `api/v2/wayside/tagdetails?station=${circleIdMaptable}&sortBy=${sortField}&order=${sortOrder}`;
     }
-    else if(stationNameId && !lineId){
+
+    if (url) {
+        fetchDataRadial(url);
+
+        const intervalId = setInterval(()=>{
+            fetchDataRadial(url);
+        },30000)
+
+        return()=> clearInterval(intervalId);
+    }
+}, [circleId,selectedTab,sortField,sortOrder,selectedTreeNodeId]);
+
+useEffect(() => {
+    if(!circleId?.trim() || circleId?.trim()) return;
+    let url = '';
+    const circleIdMaptable = selectedTreeNodeId?.id;
+    //   if (circleIdMaptable && circleId === '') {
+        if (circleIdMaptable === circleId) {
+        // if(circleIdMaptable === circleId || circleId === ''){ 
+        //     return; 
+        // }
+        url = `api/v2/wayside/tagdetails?station=${circleIdMaptable}&sortBy=${sortField}&order=${sortOrder}`;
+    }
+
+    if (url) {
+        fetchDataRadial(url);
+
+        const intervalId = setInterval(()=>{
+            fetchDataRadial(url);
+        },30000)
+
+        return()=> clearInterval(intervalId);
+    }
+}, [circleId,selectedTab,sortField,sortOrder,selectedTreeNodeId]);
+
+useEffect(() => {
+    let url = '';
+    const circleIdMaptable = selectedTreeNodeId?.id;
+   if(stationNameId && !lineId && !circleId && !textName){
+       if (
+                stationNameId === circleIdMaptable ||
+                circleIdMaptable === circleId
+            ) {
+                return;
+            }
         url = `api/v2/wayside/tagdetails?station=${stationNameId}&sortBy=${sortField}&order=${sortOrder}`;
     }
 
@@ -958,30 +1044,30 @@ useEffect(() => {
 
         return()=> clearInterval(intervalId);
     }
-}, [circleId, lineId,textName,selectedTab,sortField,sortOrder,selectedTreeNodeId]);
+}, [selectedTab,sortField,sortOrder,stationNameId,lineId]);
 
-    useEffect(() => {
-        // if(selectedTab === 'tagtable') return;
-      let url = '';
-     if (selectedTreeNodeLineId) {
-         if(lineId) {
-            url = ''
-         }else {
-         const station = selectedTreeNodeLineId === "STG1" ? "STG" : selectedTreeNodeLineId;
-        url = `api/v2/wayside/tagdetails?station=${station}&sortBy=${sortField}&order=${sortOrder}`;
-         }
-    }
+//     useEffect(() => {
+//         // if(selectedTab === 'tagtable') return;
+//       let url = '';
+//      if (selectedTreeNodeLineId) {
+//          if(lineId) {
+//             url = ''
+//          }else {
+//          const station = selectedTreeNodeLineId === "STG1" ? "STG" : selectedTreeNodeLineId;
+//         url = `api/v2/wayside/tagdetails?station=${station}&sortBy=${sortField}&order=${sortOrder}`;
+//          }
+//     }
 
-    if (url) {
-        fetchDataRadial(url);
+//     if (url) {
+//         fetchDataRadial(url);
 
-        const intervalId = setInterval(()=>{
-            fetchDataRadial(url);
-        },30000)
+//         const intervalId = setInterval(()=>{
+//             fetchDataRadial(url);
+//         },30000)
 
-        return()=> clearInterval(intervalId);
-    }
-}, [lineId,selectedTab,sortField,sortOrder,selectedTreeNodeLineId]);
+//         return()=> clearInterval(intervalId);
+//     }
+// }, [lineId,selectedTab,sortField,sortOrder,selectedTreeNodeLineId]);
 
     const handleTagsPopup = (value, id) => {
         setShowPopup(value);
@@ -1140,6 +1226,9 @@ const onSortChange = (field) => {
   textName?.data?.type !== 'region' &&
   textName?.data?.type !== 'location'
 )   ? (<article style={{margin:'5px',marginTop:'15px'}}>
+                    <StationTagsTable textName={textName} circleId={circleId} lineId={lineId}  rdDataRef={rdDataRef} onSortChange={onSortChange}/>
+                    </article>) : ('')}
+                    {((textName?.data?.type === 'region' || textName?.data?.type == 'location') && stationNameId )   ? (<article style={{margin:'5px',marginTop:'15px'}}>
                     <StationTagsTable textName={textName} circleId={circleId} lineId={lineId}  rdDataRef={rdDataRef} onSortChange={onSortChange}/>
                     </article>) : ('')}
                     {showPopup && (
