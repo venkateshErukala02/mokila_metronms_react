@@ -38,6 +38,11 @@ const WaysideTagContainer=()=>{
         const [direction,setDirection] = useState("");
         const [role,setRole] = useState("");
         const [position,setPosition] = useState("");
+        const [showConfigPopup,setShowConfigPopup] =  useState(false);
+        const [tagTypeTdm, setTagTypeTdm] = useState(false);
+        const [tagTypeNtdm, setTagTypeNtdm] = useState(false);  
+        const [reportAlarm,setReportAlarm] = useState(false);
+        const [sendMail,setSendMail] = useState(false);
 
         useEffect(() => {
             const getStationList = async () => {
@@ -397,6 +402,114 @@ const WaysideTagContainer=()=>{
       }
 
 
+        const handleOpenConfigpopup  = ()=>{
+            setShowConfigPopup(true);
+        
+        }
+        const handleCloseConfigpopup=()=>{
+            setTagTypeTdm(false);
+            setTagTypeNtdm(false);
+            setSendMail(false);
+            setReportAlarm(false);
+            setShowConfigPopup(false);
+        
+        }
+
+       const handleSendMailChange = (e) => {
+            setSendMail(e.target.checked);
+        };
+
+
+           const handleSetConfigure = async (e) => {
+            e.preventDefault();
+
+            let typeValue = '';
+
+            if (tagTypeNtdm && tagTypeTdm) {
+                typeValue = 'all';
+            } else if (tagTypeNtdm) {
+                typeValue = 'NTDM';
+            } else if (tagTypeTdm) {
+                typeValue = 'TDM';
+            }
+
+            const url = `api/v2/wayside/configure?sendMail=${sendMail}&reportAlarm=${reportAlarm}&type=${typeValue}`;
+
+            try {
+                setIsLoading(true);
+
+                const response = await fetch(url, {
+                    method: 'GET',
+                    // headers: {
+                    //     'Content-Type': 'application/json',
+                    // },
+                });
+
+                if (response.ok) {
+                    console.log('Configuration successful');
+                    // setShowAddedSuccessPopup(true);
+                } else {
+                    setIsError('Error starting configuration');
+                }
+            } catch (error) {
+                console.error('Configure error:', error);
+                setIsError('An error occurred while contacting the server.');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+
+      const handleResetConfigure = () => {
+            setTagTypeTdm(false);
+            setTagTypeNtdm(false);
+            setSendMail(false);
+            setReportAlarm(false);
+
+            handleResetConfiguration(false, false, false, false);
+        };
+
+        const handleResetConfiguration = async (
+            tdm = tagTypeTdm,
+            ntdm = tagTypeNtdm,
+            mail = sendMail,
+            alarm = reportAlarm
+        ) => {
+
+            let typeValue = '';
+
+            if (ntdm && tdm) {
+                typeValue = 'all';
+            } else if (ntdm) {
+                typeValue = 'NTDM';
+            } else if (tdm) {
+                typeValue = 'TDM';
+            }
+
+            const url =
+                `api/v2/wayside/configure?sendMail=${mail}` +
+                `&reportAlarm=${alarm}&type=${typeValue}`;
+
+            try {
+                setIsLoading(true);
+
+                const response = await fetch(url, {
+                    method: 'GET',
+                });
+
+                if (response.ok) {
+                    console.log('Configuration reset successfully');
+                } else {
+                    setIsError('Error resetting configuration');
+                }
+            } catch (error) {
+                console.error('Configure error:', error);
+                setIsError('An error occurred while contacting the server.');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
  
     return(
         <>
@@ -441,6 +554,16 @@ const WaysideTagContainer=()=>{
                                     title={currentUser === "Read-only" ? "Permission required" : ""}
                                     onClick={currentUser !== 'Read-only' ? handleBulkDelete : undefined}>Delete
                                                 <i className="fa fa-trash" style={{paddingLeft:'5px'}} aria-hidden="true"></i>
+                                            </button>
+
+                                        </li>
+                                         <li>
+                                            <button type="button"
+                                            className={`createbtn ${
+                                        currentUser === "Read-only" ? "btndisable" : ""
+                                    }`}
+                                    title={currentUser === "Read-only" ? "Permission required" : ""}
+                                    onClick={currentUser !== 'Read-only' ? handleOpenConfigpopup : undefined}>Configure
                                             </button>
 
                                         </li>
@@ -543,9 +666,9 @@ const WaysideTagContainer=()=>{
                                                     <option value="UNKNOWN">UNKNOWN</option>
                                                     </select>
                                             </th>
-                                            <th>Priority</th>
+                                            {/* <th>Priority</th>
                                             <th>Send Mail</th>
-                                            <th>Report Alarm</th>
+                                            <th>Report Alarm</th> */}
                                             <th style={{paddingLeft:"41px"}}>Edit</th>
                                             <th>Delete </th>
                                         </tr>
@@ -588,7 +711,7 @@ const WaysideTagContainer=()=>{
                                                 {item.position || item.postion}</td>
                                             <td style={{paddingLeft:'23px'}}>{item.type}</td>
                                             <td style={{paddingLeft:'17px'}}>{item.role}</td>
-                                            <td style={{paddingLeft:'28px'}}><input type="checkbox" className="incl"
+                                            {/* <td style={{paddingLeft:'28px'}}><input type="checkbox" className="incl"
                                                      checked={item.priority === 1} // checkbox reflects priority
                                                 onChange={() => {
                                                 handlePriority(item.priority === 1 ? 0 : 1); 
@@ -608,7 +731,7 @@ const WaysideTagContainer=()=>{
                                                 onChange={()=>{ handleReport(item.reportAlarm === true ? 1 :0);
                                                     setReportChecked(!reportChecked)}
                                                 }
-                                            /></td>
+                                            /></td> */}
                                             <td style={{paddingLeft:"36px"}}><i className="fas fa-edit"
                                              style={{
                                                 cursor: isReadOnly ? "not-allowed" : "pointer" ,
@@ -695,6 +818,93 @@ const WaysideTagContainer=()=>{
                                     </article>
                                 </article>
                                 )}
+
+                                {showConfigPopup && (
+                                                        <article className="confirmdeletepopup">
+                                                            <article className="">
+                                                <article className="custom-popup popupStyledate" style={{maxWidth:'500px',minWidth:'433px'}}>
+                                                    <article className="row">
+                                                        <article className="col-11">
+                                                <h4 className="customheadtitle">Wayside Configuration </h4>
+                                                        </article>
+                                
+                                                        <article className="col-1">
+                                                               <span className="noticloseicon"><i className="fa fa-close noticlose" onClick={handleCloseConfigpopup} role="button"></i></span>
+                                                        </article>
+                                                        
+                                                </article>
+                                                   <div className="row">
+                                                <div className="col-12" style={{ marginBottom: '8px' }}>
+                                                    <h1 className="settinglabelsub">Action</h1>
+                                                  <label className="radiolabel" style={reportAlarm ? {fontWeight:700,color:'#495057',marginRight:'10px'}:{marginRight:'10px'}}>
+                                                        <input
+                                                        type="checkbox"
+                                                        checked={reportAlarm}
+                                                        onChange={(e) => setReportAlarm(e.target.checked)}
+                                                        className="radiobtn"
+                                                        />
+                                                        Report Alarm
+                                                    </label>
+                                
+                                                    <label className="radiolabel" style={sendMail ? {fontWeight:700,color:'#495057'}:{}}>
+                                                        <input
+                                                        type="checkbox"
+                                                        checked={sendMail}
+                                                        onChange={(e) => setSendMail(e.target.checked)}
+                                                        className="radiobtn"
+                                                        />
+                                                        Send Mail
+                                                    </label>                   
+                                                </div>
+                                                </div>
+                                                 <div className="row">
+                                                <div className="col-12" style={{ marginBottom: '8px' }}>
+                                                     <h1 className="settinglabelsub">Tag Type</h1>
+                                                   <label
+                                                    className="radiolabel"
+                                                    style={{
+                                                        fontWeight: tagTypeTdm ? 700 : 400,
+                                                        color: tagTypeTdm ? '#495057' : undefined,
+                                                        marginRight: '10px'
+                                                    }}
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={tagTypeTdm}
+                                                        onChange={(e) => setTagTypeTdm(e.target.checked)}
+                                                        className="radiobtn"
+                                                    />
+                                                    TDM
+                                                </label>
+
+                                                <label
+                                                    className="radiolabel"
+                                                    style={{
+                                                        fontWeight: tagTypeNtdm ? 700 : 400,
+                                                        color: tagTypeNtdm ? '#495057' : undefined
+                                                    }}
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={tagTypeNtdm}
+                                                        onChange={(e) => setTagTypeNtdm(e.target.checked)}
+                                                        className="radiobtn"
+                                                    />
+                                                    NTDM
+                                                </label> 
+
+                                                </div>
+                                                </div>
+                                                 <article className="">
+                                                <button className="createbtn" onClick={handleResetConfigure}>Reset</button>
+                                                </article>
+                                                <article className="f-r">
+                                                <button className="createbtn" onClick={handleSetConfigure}>Save Configure</button>
+                                                </article>
+                                                </article>
+                                                </article>
+                                                </article>
+                                            )}
         </>
     )
 }

@@ -1,6 +1,7 @@
 import  { useState, useEffect } from "react";
 import '../ornms.css'
 import '../Dashboard/dashboard.css';
+import { useSelector } from "react-redux";
 
 
 
@@ -19,7 +20,7 @@ const WaysideTable = ({ westSideView, circleId, setShowPopup, showPopup,lineId,h
     const [stationCodeData,setStationCodeData] = useState('');
     const circleIdtoMapTable = selectedNodeId?.id ?? null;
     const stName = rdDataRef.current === null ? [] : [rdDataRef.current[0]?.station] ;
-    
+    const stationNameId =  useSelector((state) => state?.stationid?.stationid); 
     
     const fetchDataRadial = async (url,isInterval = false) => {
           if (!isInterval) {
@@ -142,6 +143,8 @@ useEffect(() => {
       url += `&station=${circleIdtoMapTable}`;
     } else if(selectedTreeNodeLineId){
       url += `&station=${selectedTreeNodeLineId}`;
+    } else if(stationNameId){
+      url += `&station=${stationNameId}`;
     } else {
       url += '&station=all';
     }

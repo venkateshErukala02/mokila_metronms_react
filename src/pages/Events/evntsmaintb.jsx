@@ -294,7 +294,7 @@ useEffect(() => {
 
                 break;
             case 'auditlog':
-                url= `api/v2/audit/list?_s=&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
+                url= `api/v2/audit/list?_s=&datentime%3Dgt%3D${timeParam}&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
                 break;
 
             default:
@@ -450,9 +450,19 @@ useEffect(() => {
 
 
     const handleClearSerch = () => {
-          setExecutedSearch('');
+        setExecutedSearch('');
         setSearchBtn(false);
         setEventipText('');
+        setEventmainLimitValueSel('50');
+        setEventmainLimitLabelSel('50');
+        setEventtimeSel(Date.now() - 86400000);
+        setEventmainSeverityValueSel('');
+        setEventmainSeverityLabelSel('All');
+        setPageSize(1);
+        setFromValue('0');
+        setSelectedDuration("86400000");
+        setCustomStartDate(null);
+        setCustomEndDate(null);
     }
 
 
@@ -502,6 +512,12 @@ useEffect(() => {
         //     }
         // }, [fromValue,eventmainLimitLabelSel,eventmainSeverityValueSel]);
 
+         useEffect(() => {
+            if (executedSearch) {
+                handleRadialIP(executedSearch);
+            }
+        }, [fromValue,eventmainLimitLabelSel,eventmainSeverityValueSel,selectedDuration]);
+
 
      const handleRadialIP = async (eventipText) => {
         setExecutedSearch(eventipText);
@@ -519,7 +535,7 @@ useEffect(() => {
             // let filter = "eventSource!%3Dsyslogd" + ';';
             if (typevalueSel ==='auditlog') {
                 // start  = `api/v2/audit/list?_s=`
-                url = `api/v2/audit/list?_s=&logDesc==*${eventipText}*;datentime%3Dgt%3D${timeParam}&limit=${eventmainLimitLabelSel}&offset=0&order=desc&orderBy=id`
+                url = `api/v2/audit/list?_s=&logDesc==*${eventipText}*;datentime%3Dgt%3D${timeParam}&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
                  handleRadialIPa(url);
             } else {
                 start = `api/v2/events/list?_s=`
@@ -536,20 +552,20 @@ useEffect(() => {
                         //  }
                 }  else {
                     if(typevalueSel === 'events'){
-                         filter  =  filter +  `eventDisplay%3D%3DY%3BeventSource!%3Dsyslogd;`+ `eventLogMsg%3D%3D` +`*${eventipText}*;`;
+                         filter  =  filter +  `eventDisplay%3D%3DY%3BeventSource!%3Dsyslogd;`+ `eventLogMsg%3D%3D` +`*${eventipText}*`;
                             if (eventmainSeverityValueSel) {
                         filter  =  filter + '&eventSeverity==' + `${eventmainSeverityValueSel}`;
                         }
-                         if (timeParam && selectedDuration !== 'Custom') {
-                    filter  =  filter +  'eventCreateTime%3Dgt%3D' + `${timeParam}`;
-                    }
+                    //      if (timeParam && selectedDuration !== 'Custom') {
+                    // filter  =  filter +  ';eventCreateTime%3Dgt%3D' + `${timeParam}`;
+                    // }
                     if(selectedDuration === 'Custom' && startTimestamp && endTimestamp){
-                        filter = filter + `eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}`;
+                        filter = filter + `;eventCreateTime%3Dgt%3D${startTimestamp};eventCreateTime%3Dlt%3D${endTimestamp}`;
                     }
                      if (eventmainLimitLabelSel != 'all') {
                     filter  =  filter +'&limit=' + `${eventmainLimitLabelSel}`;
                     }
-                    url = start + filter + '&offset=0&order=desc&orderBy=id';
+                    url = start + filter + `&offset=${fromValue}&order=desc&orderBy=id`;
                     // reportUrlRef.current = url;
                     //  setReportUrl(url);
                      handleRadialIPa(url);
@@ -587,7 +603,7 @@ useEffect(() => {
         }
 
         setSearchBtn(true);
-        setIsLoading(true);
+        setIsAuitLoading(true);
         setIsError({ status: false, msg: "" });
         
         try {
@@ -609,7 +625,7 @@ useEffect(() => {
             const data = await response.json();
 
             if (response.ok) {
-                setIsLoading(false);
+                setIsAuitLoading(false);
 
                 let normalized = [];
 
@@ -621,14 +637,14 @@ useEffect(() => {
                 setEventmainData(normalized || []);
 
             }
-            setIsLoading(false);
+            setIsAuitLoading(false);
 
                 setIsError({ status: false, msg: '' });
             } else {
                 throw new Error("Data not found");
             }
         } catch (error) {
-            setIsLoading(false);
+            setIsAuitLoading(false);
             setIsError({ status: true, msg: error.message || "Something went wrong" });
         }
     };
@@ -662,7 +678,9 @@ useEffect(() => {
 
                if (typevalueSel === 'syslogd') {
             const textData = await response.text();
+            setIsLoading(false);
             setEventmainData(textData || "");
+            
             return;
         }
 
@@ -672,6 +690,7 @@ useEffect(() => {
         if (response.ok) {
             setEventmainData(data.event || []);
             setIsError({ status: false, msg: '' });
+            setIsLoading(false);
         } else {
                 throw new Error("Data not found");
             }
@@ -924,10 +943,10 @@ useEffect(() => {
                             <label for="name" className="selectlbl" style={{ display: 'inline-block' }}>Time:</label>
                             <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px',
                                  minWidth: '94px' }} onClick={handleCustomPopup}>
-                                <option value="3600000" label="Last hour">Last hour</option>
-                                <option value="28800000" label="8 hours">8 hours</option>
-                                <option value="86400000" label="24 hours">24 hours</option>
-                                <option value="172800000" label="48 hours">48 hours</option>
+                                <option value="3600000" label="Last hour" disabled={executedSearch}>Last hour</option>
+                                <option value="28800000" label="8 hours" disabled={executedSearch}>8 hours</option>
+                                <option value="86400000" label="24 hours" disabled={executedSearch}>24 hours</option>
+                                <option value="172800000" label="48 hours" disabled={executedSearch}>48 hours</option>
                                 <option value="Custom" label="Custom">Custom</option>
                             </select>
 

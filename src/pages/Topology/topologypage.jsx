@@ -952,10 +952,12 @@ useEffect(() => {
 }, [textName,selectedTab,sortField,sortOrder]);
 
   useEffect(() => {
+    if(selectedTab === 'tagtable') return;
     let url = '';
     // const circleIdMaptable = selectedTreeNodeId?.id;
-     if (lineId) {
-         const station = lineId === "STG1" ? "STG" : lineId;
+    const stationId = lineId || selectedTreeNodeLineId;
+     if (stationId) {
+         const station = stationId === "STG1" ? "STG" : stationId;
         url = `api/v2/wayside/tagdetails?station=${station}&sortBy=${sortField}&order=${sortOrder}`;
     }
     else{
@@ -971,10 +973,13 @@ useEffect(() => {
 
         return()=> clearInterval(intervalId);
     }
-}, [lineId,selectedTab,sortField,sortOrder]);
+}, [lineId,selectedTab,sortField,sortOrder,selectedTreeNodeLineId]);
 
 useEffect(() => {
     // if (!circleId) return;
+     if (textName?.data && textName.data.type === 'facility') {
+    return;
+    }
      const circleIdMaptable = selectedTreeNodeId?.id;
     console.log("EFFECT START", new Date().toLocaleTimeString());
     // if (!circleId) {
@@ -997,7 +1002,7 @@ useEffect(() => {
 
         return()=> clearInterval(intervalId);
     }
-}, [circleId,selectedTab,sortField,sortOrder,selectedTreeNodeId]);
+}, [circleId,selectedTab,sortField,sortOrder,selectedTreeNodeId,textName]);
 
 useEffect(() => {
     if(!circleId?.trim() || circleId?.trim()) return;

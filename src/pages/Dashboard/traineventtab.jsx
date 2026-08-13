@@ -448,6 +448,17 @@ useEffect(() => {
         setExecutedSearch('');
         setSearchBtn(false);
         setEventipText('');
+        setEventmainLimitValueSel('50');
+        setEventmainLimitLabelSel('50');
+        setEventtimeSel(Date.now() - 86400000);
+        setEventmainSeverityValueSel('');
+        setEventmainSeverityLabelSel('All');
+        setPageSize(1);
+        setFromValue('0');
+        setSelectedDuration("86400000");
+        setCustomEndDate(null);
+        setCustomStartDate(null);
+        setTrainlogSelectedDate(formatDate(new Date()));
     }
 
     const handleChange = (event) => {

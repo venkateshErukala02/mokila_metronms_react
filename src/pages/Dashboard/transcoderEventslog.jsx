@@ -132,10 +132,11 @@ const TranscoderEventLog = ({ currentTab, nodeItemDt }) => {
     const handleClearSearch = () => {
         setSearchText('');
         setSearch('');
+        setSelectedDate(new Date());
         // setExecutedSearch('');
         // setSelectedDate(new Date());
         // const targetDate = new Date();
-         const targetDate = executedDate || selectedDate;
+         const targetDate = new Date();
         if (!targetDate) return;
 
         const y = targetDate.getFullYear();

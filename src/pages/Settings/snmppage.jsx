@@ -75,6 +75,7 @@ const SnmpContainer=()=>{
     const handleSubDefaultContainer=()=>{
         setProfileStatusNewconfigCont(false);
         setProfileStatusTableCont(false);
+        setProfileStatusDefCont(false);
     }
 
     const handleSubNewconfigContainer=()=>{
@@ -98,7 +99,7 @@ const SnmpContainer=()=>{
     return(
         <>
           <article className="row">
-          <article className={profileStatusTableCont ? 'col-8' : 'col-12'}>
+          <article className={profileStatusTableCont || profileStatusNewconfigCont || profileStatusDefCont ? 'col-8' : 'col-12'}>
                         <article className="" style={{ height: '90vh' }}>
                             <article className="row custom-row border-tlr">
                                 <article className="col-8 ">
@@ -168,7 +169,7 @@ const SnmpContainer=()=>{
                         </article>
                     </article>
 
-                    <article className={profileStatusDefCont ? 'col-4' : 'collapsed'} >
+                  <article className={profileStatusDefCont ? 'col-4' : 'collapsed'} style={{ display: profileStatusDefCont ? 'block' : 'none' }} >
                         <SnmpSubDefaultCont handleSubDefaultContainer={handleSubDefaultContainer}/>
                     </article> 
                     <article className={profileStatusNewconfigCont ? 'col-4' :  'collapsed' } >

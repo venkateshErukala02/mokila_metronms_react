@@ -223,7 +223,7 @@ const tagRoles = [
                                           </select>  
                                     </article>
                                 </article>
-                            <label className="settinglabelsub">Priority</label>
+                            {/* <label className="settinglabelsub">Priority</label>
                             <input type="checkbox" className="incl"
                                 checked={priorityChecked === 1}
                                 onChange={(e) =>
@@ -237,7 +237,7 @@ const tagRoles = [
                             <label className="settinglabelsub">Report Alarm</label>
                             <input type="checkbox" className="incl"
                                 checked={reportChecked} onChange={(e) => setReportChecked(e.target.checked)}
-                            />
+                            /> */}
                             {/* <select name="name" id="name" value={westSideView} onChange={handleWestside} className="vlaninput">
                                     {stationNamesData.length !== 0 && stationNamesData[0].map((station,index) => {
                                         const dataNw = Object.keys(station);

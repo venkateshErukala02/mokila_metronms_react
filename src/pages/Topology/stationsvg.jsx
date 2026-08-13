@@ -260,31 +260,31 @@ useEffect(() => {
 
     }
 
-    useEffect(() => {
-        if (!svgContent || textName?.data?.mode === 'facility' || !!lineName) {
+    // useEffect(() => {
+    //     if (!svgContent || textName?.data?.mode === 'facility' || !!lineName) {
 
-            const svgRoot = svgContainerRef.current;
-            if (!svgRoot) return;
+    //         const svgRoot = svgContainerRef.current;
+    //         if (!svgRoot) return;
 
-            let svgArray = ['#toptrainclick', '#toptrainclick2', '#toptrainclicktext', '#toptrainclick3',
-                '#bottomtrainclick', '#bottomtrainclick1', '#bottomtrainclick2', '#bottomtrainclick3', '#bottomtrainclicktext'
-            ]
+    //         let svgArray = ['#toptrainclick', '#toptrainclick2', '#toptrainclicktext', '#toptrainclick3',
+    //             '#bottomtrainclick', '#bottomtrainclick1', '#bottomtrainclick2', '#bottomtrainclick3', '#bottomtrainclicktext'
+    //         ]
 
-            svgArray.map((item) => {
-                let bottomClick0 = svgRoot.querySelector(item);
-                if (bottomClick0 != null)
-                    Callfun(bottomClick0, 'none');
-            })
+    //         svgArray.map((item) => {
+    //             let bottomClick0 = svgRoot.querySelector(item);
+    //             if (bottomClick0 != null)
+    //                 Callfun(bottomClick0, 'none');
+    //         })
 
 
 
-            const el = svgRoot.querySelector(`#section_station_name`);
-            if (el) {
-                el.textContent = rdDataTitle;
-                el.classList.add("svgstationname");
-            }
-        }
-    }, [textName?.text, svgContent,lineName]);
+    //         const el = svgRoot.querySelector(`#section_station_name`);
+    //         if (el) {
+    //             el.textContent = rdDataTitle;
+    //             el.classList.add("svgstationname");
+    //         }
+    //     }
+    // }, [textName?.text, svgContent,lineName]);
 
 //     useEffect(() => {
 //         if(lineName) return
@@ -719,12 +719,24 @@ const handleTrainClick = (event) => {
     '[id^="NBSE"], [id^="NBNE"]'
   );
 
+   const nbrElements = svgRoot.querySelectorAll(
+    '[id^="SB-R"], [id^="NB-R"]'
+  );
+
   const wbElements = svgRoot.querySelectorAll(
     '[id^="WBWE"], [id^="WBEE"]'
   );
 
   const ebElements = svgRoot.querySelectorAll(
     '[id^="EBWE"], [id^="EBEE"]'
+  );
+
+  const titleElements = svgRoot.querySelectorAll(
+    '[id^="ts-SB-R"], [id^="ts-NB-R"]'
+  );
+
+  const elementsTc = svgRoot.querySelectorAll(
+    '[id^="TC"], [id^="C"]'
   );
 
   sbElements.forEach((el) => {
@@ -735,6 +747,10 @@ const handleTrainClick = (event) => {
     el.style.fill = '#cccccc';
   });
 
+  nbrElements.forEach((el) => {
+    el.style.fill = '#FFFFFF';
+  });
+
   wbElements.forEach((el) => {
     el.style.fill = '#cccccc';
   });
@@ -743,6 +759,13 @@ const handleTrainClick = (event) => {
     el.style.fill = '#cccccc';
   });
 
+  titleElements.forEach((title) => {
+    title.textContent = '';
+  });
+
+  elementsTc.forEach((el) => {
+    el.style.fill = '#FFFFFF';
+  });
 
   
   // RESET TRAIN ELEMENTS
