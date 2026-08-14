@@ -105,6 +105,7 @@ const dispatch = useDispatch();
         
         setCircleId('');
         setLineId('');
+        setSelectedTreeNodeLineId('');
         setStationTagview(false);
         setLineTagview(false);
         setStationView(true);
@@ -114,7 +115,7 @@ const dispatch = useDispatch();
         dispatch(handleCurrentTreeviewSelected(value.data?.display));
         setParentTextName(parent);
         dispatch(handleCurrentTreeview(parent));
-        const validData = ['global','line1-sec1', 'line1-sec2', 'line4-sec1','line1','line4'];
+        const validData = ['Global','line1-sec1', 'line1-sec2', 'line4-sec1','Line1','Line4'];
 
             if (validData.includes(value?.data?.display)) {
                 dispatch(handleStationCircleId(''));
@@ -955,9 +956,9 @@ useEffect(() => {
     if(selectedTab === 'tagtable') return;
     let url = '';
     // const circleIdMaptable = selectedTreeNodeId?.id;
-    const stationId = lineId || selectedTreeNodeLineId;
-     if (stationId) {
-         const station = stationId === "STG1" ? "STG" : stationId;
+    const stationIdData = lineId || selectedTreeNodeLineId;
+     if (stationIdData) {
+         const station = stationIdData === "STG1" ? "STG" : stationIdData;
         url = `api/v2/wayside/tagdetails?station=${station}&sortBy=${sortField}&order=${sortOrder}`;
     }
     else{
@@ -977,11 +978,11 @@ useEffect(() => {
 
 useEffect(() => {
     // if (!circleId) return;
-     if (textName?.data && textName.data.type === 'facility') {
+     if (textName?.data && textName.data.type === 'facility' || lineId || selectedTreeNodeLineId) {
     return;
     }
      const circleIdMaptable = selectedTreeNodeId?.id;
-    console.log("EFFECT START", new Date().toLocaleTimeString());
+    // console.log("EFFECT START", new Date().toLocaleTimeString());
     // if (!circleId) {
     //     console.log("No circleId");
     //     return;
@@ -989,9 +990,12 @@ useEffect(() => {
     let url = '';
     if (circleId) {
         url = `api/v2/wayside/tagdetails?station=${circleId}&sortBy=${sortField}&order=${sortOrder}`;
-    }else if(circleIdMaptable){
-        url = `api/v2/wayside/tagdetails?station=${circleIdMaptable}&sortBy=${sortField}&order=${sortOrder}`;
+    }else if(stationNameId){
+        url = `api/v2/wayside/tagdetails?station=${stationNameId}&sortBy=${sortField}&order=${sortOrder}`;
     }
+    // else if(circleIdMaptable){
+    //     url = `api/v2/wayside/tagdetails?station=${circleIdMaptable}&sortBy=${sortField}&order=${sortOrder}`;
+    // }
 
     if (url) {
         fetchDataRadial(url);
@@ -1002,7 +1006,7 @@ useEffect(() => {
 
         return()=> clearInterval(intervalId);
     }
-}, [circleId,selectedTab,sortField,sortOrder,selectedTreeNodeId,textName]);
+}, [circleId,selectedTab,sortField,sortOrder,selectedTreeNodeId,textName,selectedTreeNodeLineId,lineId]);
 
 useEffect(() => {
     if(!circleId?.trim() || circleId?.trim()) return;

@@ -139,13 +139,16 @@ useEffect(() => {
 
     if (textName?.data?.type === 'facility') {
       url += `&station=${textName.data.display}`;
-    }else if(circleIdtoMapTable){
-      url += `&station=${circleIdtoMapTable}`;
-    } else if(selectedTreeNodeLineId){
-      url += `&station=${selectedTreeNodeLineId}`;
-    } else if(stationNameId){
+    }else if(stationNameId){
       url += `&station=${stationNameId}`;
-    } else {
+    }
+     else if(selectedTreeNodeLineId){
+      url += `&station=${selectedTreeNodeLineId}`;
+    } 
+    // else if(stationNameId){
+    //   url += `&station=${stationNameId}`;
+    // }
+     else {
       url += '&station=all';
     }
 
@@ -167,7 +170,7 @@ useEffect(() => {
   const intervalId = setInterval(fetchIntervalData, 30000);
 
   return () => clearInterval(intervalId);
-}, [tagTypeValue, textName,allTagfailCount,circleIdtoMapTable,selectedTreeNodeLineId]); 
+}, [tagTypeValue, textName,allTagfailCount,circleIdtoMapTable,selectedTreeNodeLineId,lineId]); 
 
 
 // useEffect(() => {
@@ -323,7 +326,7 @@ useEffect(() => {
             <article className="row">
             <article
                 style={{
-                height: (textName?.data?.type === 'facility' || circleIdtoMapTable)  ? '40.5vh' : '80vh',
+                height: (textName?.data?.type === 'facility' || stationNameId)  ? '40.5vh' : '80vh',
                 overflowY: "auto",
                 border: "1px solid rgb(33 35 39 / 7%)",
                 position: "relative"
