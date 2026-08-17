@@ -16,11 +16,10 @@ const EncoderNodeView = () => {
   const isVisible = useSelector((state) => state.visibility.isVisible);
   const [currentTab, setCurrentTab] = useState('summary')
 //   const [nodeItemDt, setNodeItemDt] = useState([]);
+  
+  const nodeDataId = useSelector((state) => state.node?.node?.nodeId || state.node?.node?.id) || localStorage.getItem('nodeId');
 
-  // const nodeDataId = useSelector((state) => state.node.node.nodeId);
-  const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
-
-  const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress)|| localStorage.getItem('nodeIpaddress');
+  const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress || state.node?.node?.label)?? localStorage.getItem('nodeIpaddress');
 
 
 //   useEffect(() => {

@@ -18,6 +18,7 @@ const ThresholdContainer=()=>{
         const[reloadConfig,setReloadConfig] =  useState();
         const currentUser = useSelector((state) => state?.loginuser?.node?.role);
         const isReadOnly = currentUser === 'Read-only';
+        const [showAddedSuccessPopup, setShowAddedSuccessPopup] = useState(false);
 
         const getThresholdData = async (url) => {
             setIsLoading(true);
@@ -188,9 +189,31 @@ const ThresholdContainer=()=>{
                         refreshThresholdData={()=> 
                         getThresholdData('api/v2/threshold/list')
                         }
+                        setShowAddedSuccessPopup={setShowAddedSuccessPopup}
                         />
                     </article> 
                     </article>
+
+                      {showAddedSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">The threshold has been updated successfully.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() =>{ setShowAddedSuccessPopup(false);
+                                            // handleSubContainer();
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
         </>
     )
 }

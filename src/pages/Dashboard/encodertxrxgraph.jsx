@@ -19,9 +19,9 @@ const EncoderTxChart = ({graphOption, graphOptionValue }) => {
     const [isLoading, setIsLoading] = useState("");
     const [isError, setIsError] = useState("");
 
-  const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress) || localStorage.getItem('nodeIpaddress');
+  const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress ||  state.node?.node?.label) ?? localStorage.getItem('nodeIpaddress');
   
-      const nodeDataId = useSelector((state) => state.node?.node?.nodeId) || localStorage.getItem('nodeId');
+      const nodeDataId = useSelector((state) => state.node?.node?.nodeId || state.node?.node?.id) ?? localStorage.getItem('nodeId');
   
   
        const repalceItem = (newItem) => {

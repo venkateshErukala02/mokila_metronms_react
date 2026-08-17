@@ -357,7 +357,7 @@ useEffect(() => {
     })
     .catch((error) => {
         if (error.name !== "AbortError") {
-            console.error("SVG fetch error:", error);
+            // console.error("SVG fetch error:", error);
         }
     });
 
@@ -920,7 +920,7 @@ const handleTrainClick = (event) => {
     trainData.length > 0
   ) {
 
-    console.log('Applying TRAIN DATA:', trainData);
+    // console.log('Applying TRAIN DATA:', trainData);
 
     trainData.forEach((item) => {
 
@@ -969,11 +969,28 @@ const handleTrainClick = (event) => {
           layer.onclick = handleTrainClick;
         }
 
+        const layerNbne =
+          svgRoot.querySelector(
+            '#bottomtrainclick2'
+          );
+
+          if(layerNbne && (item.direction === 'NBNE' || item.direction === 'EBEE')){
+            layerNbne.style.display = 'block';
+          }
+
+           const layerNbse =
+          svgRoot.querySelector(
+            '#bottomtrainclick3'
+          );
+          if(layerNbse && (item.direction === 'NBSE' || item.direction === 'EBWE')){
+            layerNbse.style.display = 'block';
+          }
+
         [
           '#bottomtrainclick',
           '#bottomtrainclick1',
-          '#bottomtrainclick2',
-          '#bottomtrainclick3',
+          // '#bottomtrainclick2',
+          // '#bottomtrainclick3',
           '#bottomtrainclicktext'
         ].forEach((id) => {
 
@@ -1018,10 +1035,27 @@ const handleTrainClick = (event) => {
           layer.onclick = handleTrainClick;
         }
 
+         const layerSbse =
+          svgRoot.querySelector(
+            '#toptrainclick2'
+          );
+
+          if(layerSbse && (item.direction === 'SBSE' || item.direction === 'WBWE')){
+            layerSbse.style.display = 'block';
+          }
+
+           const layerSbne =
+          svgRoot.querySelector(
+            '#toptrainclick3'
+          );
+          if(layerSbne && (item.direction === 'SBNE' || item.direction === 'WBEE')){
+            layerSbne.style.display = 'block';
+          }
+
         [
           '#toptrainclick',
-          '#toptrainclick2',
-          '#toptrainclick3',
+          // '#toptrainclick2',
+          // '#toptrainclick3',
           '#toptrainclicktext'
         ].forEach((id) => {
 

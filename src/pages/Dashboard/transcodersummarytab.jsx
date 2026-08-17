@@ -77,9 +77,9 @@ const TcSummaryTab = ({ triggerCount }) => {
 
 
 
-    const nodeDataId = useSelector((state) => state.node?.node?.nodeId);
-    const nodeLocation = useSelector((state) => state.node.node.location) || localStorage.getItem('nodeLocation');
-    const nodeIpaddress = useSelector((state) => state.node.node.ipAddress) || localStorage.getItem('nodeIpaddress');
+    const nodeDataId = useSelector((state) => state.node?.node?.nodeId || state.node?.node?.id) ?? localStorage.getItem('nodeId');
+    const nodeLocation = useSelector((state) => state.node?.node?.location || state.node?.node?.facility) ?? localStorage.getItem('nodeLocation');
+    const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress ||  state.node?.node?.label) ?? localStorage.getItem('nodeIpaddress');
 
     useEffect(() => {
         if (nodeDataId) {

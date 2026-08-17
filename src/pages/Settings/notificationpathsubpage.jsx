@@ -4,7 +4,7 @@ import './../Settings/settings.css';
 import { useSelector } from "react-redux";
  
 
-const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddTarget,handleAddEscalationTarget,selectedAddUsers,escalations,handleEditDestination,editMode,name,initialDelayProp,targetInitialDelayAddEss,targetInitialDelay})=>{
+const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddTarget,handleAddEscalationTarget,selectedAddUsers,escalations,handleEditDestination,editMode,name,initialDelayProp,targetInitialDelayAddEss,targetInitialDelay,refreshPath})=>{
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -17,8 +17,8 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
     const [showDeletePopup, setShowDeletePopup] = useState(false);
     const [showDeleteSuccessPopup, setShowDeleteSuccessPopup] = useState(false);
 
-    const handleProfileContclose=(e)=>{
-          e.preventDefault(); 
+    const handleProfileContclose=()=>{
+        //   e.preventDefault(); 
         handleSubContainer();
         setLocalName("");
         setInitialDelay("");
@@ -45,17 +45,18 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
                 const options = {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json",
+                        // "Content-Type": "application/json",
                     },
     
                 };
                 const response = await fetch(`api/v2/eventnotice/path/delete/${path}`, options);
     
-                const data = await response.json();
+                // const data = await response.json();
     
-                if (response.ok) {
+                if (response.ok || response.status === 200) {
                     setShowDeleteSuccessPopup(true);
                     // handleProfileContclose();
+                    if(refreshPath) refreshPath();
                     setLoading(false);
                     setError({ status: false, msg: "" });
                 } else {
@@ -71,12 +72,12 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
 
     const handleCreateDestinPath = async (e) => {
               e.preventDefault(); 
-              if(!escalationTargets || !initialDelayTarget || !localName?.trim()) return;
+              if(!selectedAddUsers?.length  || !localName?.trim()) return;
     
         const escalationTargets = escalations.map(esc => {
         const targets = [];
 
-        if (esc.users && esc.users.length) {
+        if (esc?.users && esc?.users?.length) {
             esc.users.forEach(user => {
                 targets.push({
                     autoNotify: "on",
@@ -87,7 +88,7 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
             });
         }
 
-        if (esc.groups && esc.groups.length) {
+        if (esc?.groups && esc?.groups?.length) {
             esc.groups.forEach(group => {
                 targets.push({
                     autoNotify: "on",
@@ -142,7 +143,7 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
                 )
                   setShowAddedSuccessPopup(true);
                 // handleProfileContclose();
-                // if(refreshStationData) refreshStationData();
+                if(refreshPath) refreshPath();
                 setLocalName("");
             } else {
                 setError('Error starting discovery');
@@ -362,8 +363,9 @@ const NotificationPathSubCont=({handleSubContainer,notificationPathDt,handleAddT
                                     <article style={{ textAlign: 'end' }}>
                                         <button
                                         className="confirmdeletebtn confirmdeletebtnyes"
-                                        onClick={() => {setShowDeleteSuccessPopup(false);
+                                        onClick={() => {
                                             handleProfileContclose();
+                                            setShowDeleteSuccessPopup(false);
                                         }}
                                         >
                                         OK

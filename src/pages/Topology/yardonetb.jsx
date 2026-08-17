@@ -142,23 +142,10 @@ const YardTbone=({textName,yardfacilitieData,yardData})=>{
                         <thead className="yardtb"> 
                             <tr>
                                 <th>Location</th>
-                                <th onClick={() => handleSort("systemName")}>System Name <FontAwesomeIcon 
-                                        icon={sortField === 'systemName' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                                       style={{ color: sortField === 'systemName' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-                                    /></th>
-                                <th onClick={() => handleSort("ipAddress")}>Primary IP<FontAwesomeIcon 
-                                        icon={sortField === 'ipAddress' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                                       style={{ color: sortField === 'ipAddress' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-                                    /></th>
-                                <th onClick={() => handleSort("status")} >Status <FontAwesomeIcon 
-                                        icon={sortField === 'status' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                                       style={{ color: sortField === 'status' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-                                    /></th>
-                            
-                                <th onClick={() => handleSort("connectedTo")}>	Connected cabs <FontAwesomeIcon 
-                                        icon={sortField === 'connectedTo' ? (sortOrder === 'asc' ?  faSortDown : faSortUp) : faSort} 
-                                       style={{ color: sortField === 'connectedTo' && (sortOrder === 'asc' || sortOrder === 'desc') ? 'black' : '#D7D7D7' }} 
-                                    /></th>
+                                <th>System Name</th>
+                                <th>Primary IP</th>
+                                <th>Status</th>
+                                <th>Connected cabs</th>
                                 <th style={{paddingLeft:'25px'}}>Cab Info</th>
                             </tr>
                         </thead>

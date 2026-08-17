@@ -502,7 +502,7 @@ useEffect(() => {
                         return (
                        <>
                         <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg} parentTextName={parentTextName} childrenTextName={childrenTextName}lineName={lineName}/>
-            <StationNodeTableView yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange} lineName={lineName} isLoading={isLoading}/>
+            <StationNodeTableView yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange} lineName={lineName} isLoading={isLoading} stationIdFromSvg={stationIdFromSvg}/>
                        </>
                         );
                     }else if (lineTagview) {
@@ -531,7 +531,7 @@ useEffect(() => {
                         return (
                        <>
                         <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg} parentTextName={parentTextName} childrenTextName={childrenTextName}lineName={lineName}/>
-            <StationNodeTableView yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange} lineName={lineName} isLoading={isLoading}/>
+            <StationNodeTableView yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange} lineName={lineName} isLoading={isLoading} stationIdFromSvg={stationIdFromSvg}/>
                        </>
                         );
                     }else if (lineTagview) {
@@ -554,7 +554,7 @@ useEffect(() => {
         switch (textName?.data?.type) {
             case 'facility':
                return ( <> <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg} parentTextName={parentTextName} childrenTextName={childrenTextName} lineName={lineName}/>
-              <StationNodeTableView  yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange} lineName={lineName} isLoading={isLoading}/>
+              <StationNodeTableView  yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange} lineName={lineName} isLoading={isLoading} stationIdFromSvg={stationIdFromSvg}/>
                       </> );
             /*{
                 if(textName.data.display === 'davisville_track' || textName.data.display ==='wilson_track' || textName.text === 'Finch trail track' || textName.text ==='VMC trail track' ){
@@ -600,7 +600,7 @@ useEffect(() => {
                         return (
                        <>
                         <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg} parentTextName={parentTextName} childrenTextName={childrenTextName}lineName={lineName}/>
-            <StationNodeTableView yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange} lineName={lineName} isLoading={isLoading}/>
+            <StationNodeTableView yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange} lineName={lineName} isLoading={isLoading} stationIdFromSvg={stationIdFromSvg}/>
                        </>
                         );
                     }else if (lineTagview) {
@@ -623,7 +623,7 @@ useEffect(() => {
         if (stationTagview) {
             return <>
                 <StationSvg trainId={trainId} textName={textName} setTrainLabelDiply={setTrainLabelDiply} trainView={trainView} setTrainView={setTrainView} setStationView={setStationView} setTrainId={setTrainId} rdDataRef={rdDataRef} setStationTagview={setStationTagview} setLineTagview={setLineTagview}  goToStationView={goToStationView} yardfacilitieData={yardfacilitieData} yardfacilitieDataRef={yardfacilitieDataRef} trainData={trainData} trainDataRef={trainDataRef} stationIdFromSvg={stationIdFromSvg} parentTextName={parentTextName} childrenTextName={childrenTextName}lineName={lineName}/>
-              <StationNodeTableView yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange} lineName={lineName} isLoading={isLoading}/>
+              <StationNodeTableView yardfacilitieData={yardfacilitieData} textName={textName} rdDataRef={rdDataRef} stationView={stationView}  stationTagview={stationTagview} lineTagview={lineTagview} trainView={trainView} selectedTreeNodeId={selectedTreeNodeId} expandedTreeDt={expandedTreeDt} onSortChange={onSortChange} lineName={lineName} isLoading={isLoading} stationIdFromSvg={stationIdFromSvg}/>
             </>
         } else if (lineTagview) {
             return <>
@@ -728,7 +728,7 @@ useEffect(() => {
     const renderSectTrainView=(trainView)=>{
         if(trainView){
             return <>
-                <TrainLineView trainId={trainId}/>
+                <TrainLineView trainId={trainId} parentTextName={parentTextName} childrenTextName={childrenTextName}lineName={lineName} textName={textName}/>
                 <TrainLogs trainId={trainId}/>
             </>
         }

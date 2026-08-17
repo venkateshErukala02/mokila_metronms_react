@@ -1,12 +1,15 @@
 import { useState,useEffect,useRef } from "react";
 import '../ornms.css';
+import { useSelector } from "react-redux";
 
-const TrainLineView=({trainId})=>{
+const TrainLineView=({trainId,parentTextName, childrenTextName, lineName,textName})=>{
         const [svgContent,setSvgContent] = useState('');
           const svgContainerRef = useRef(null);
            const [isError, setIsError] = useState({ status: false, msg: "" });
             const [isLoading, setIsLoading] = useState(false);
             const [trainPosition,setTrainPosition] = useState('');
+
+            const stationName =  useSelector((state) => state?.selectedPrevNode?.node?.lineName);
         
            const getTrainStatusDt = async () => {
     setIsLoading(true);
@@ -131,23 +134,58 @@ useEffect(() => {
 
 
     useEffect(() => {
-        const controller = new AbortController();        
-    
-        let url = 'images/trainview_Line1.svg';
-        setSvgContent('');
-        fetch(url,controller.signal)
-          .then((res) => res.text())
-          .then((data) => {
+    const controller = new AbortController();
+
+    let svg = "";
+
+    // if (textName !== "" || textName =='') {
+        const lineNa = lineName || stationName || parentTextName?.data?.display || textName?.data?.display;
+
+        if (!lineNa) return;
+
+        if (lineNa === "line1-sec1" || lineNa === "line1-sec2") {
+            svg = "trainview_Line1.svg";
+        } else if (lineNa === "line4-sec1") {
+            svg = "trainview_Line4.svg";
+        } else {
+            return;
+        }
+    // } else {
+       
+    // }
+
+    setSvgContent("");
+
+    fetch(`images/${svg}`, {
+        signal: controller.signal,
+    })
+        .then((res) => res.text())
+    .then((data) => {
+        if (!controller.signal.aborted) {
             setSvgContent(data);
-          });
-      
-      
-        return () => controller.abort();
-      }, []);
+        }
+    })
+    .catch((error) => {
+        if (error.name !== "AbortError") {
+            console.error("SVG fetch error:", error);
+        }
+    });
+
+    return () => { controller.abort();
+    }
+}, [textName, lineName,stationName,parentTextName]);
+
+        const lineNa =
+            lineName ||
+            stationName ||
+            parentTextName?.data?.display ||
+            textName?.data?.display;
+
+        const isLine1 = lineNa === "line1-sec1" || lineNa === "line1-sec2";
 
     return(
         <>
-        <article className="border-allsd" style={{padding:"36px 0"}}>
+        <article className="border-allsd" style={{padding: isLine1 ? "36px 0" : "94px 120px"}}>
             <div ref={svgContainerRef} dangerouslySetInnerHTML={{ __html: svgContent }} />
 </article>
         </>

@@ -619,6 +619,7 @@ useEffect(() => {
             if (response.status === 204) {
                 setIsLoading(false);
                 setEventmainData([]);
+                setIsAuitLoading(false);
                 return;
             }
 

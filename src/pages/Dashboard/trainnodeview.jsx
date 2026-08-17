@@ -23,9 +23,9 @@ const TrainNodeView = () => {
   // const nodeDataId = useSelector((state) => state.node.node.nodeId);
 
       const nodeDataId = useSelector((state) => state.node?.node?.nodeId || state.node?.node?.id) ?? localStorage.getItem('nodeId');
-      const stationDataCode =  useSelector((state) => state?.node?.node?.productCode) ?? localStorage.getItem('stationCode');
-      const nodeLocation = useSelector((state) => state.node.node.location) || localStorage.getItem('nodeLocation');
-      const nodeIpaddress = useSelector((state) => state.node.node.ipAddress) || localStorage.getItem('nodeIpaddress');
+      const stationDataCode =  useSelector((state) => state?.node?.node?.productCode || state?.node?.node?.productcode) ?? localStorage.getItem('stationCode');
+      const nodeLocation = useSelector((state) => state.node.node.location) ?? localStorage.getItem('nodeLocation');
+      const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress || state.node?.node?.label) ?? localStorage.getItem('nodeIpaddress');
 
        useEffect(() => {
         if (stationDataCode) {

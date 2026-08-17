@@ -237,22 +237,22 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
         let url = '';
         switch (lineInfo) {
             case 'line1-sec1':
-                url = `api/v2//dashboard/filternodes?ar=line1-sec1&facilities=${circleId}&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortOrder}&by=${sortOrder}`
+                url = `api/v2//dashboard/filternodes?ar=line1-sec1&facilities=${circleId}&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortField}&by=${sortOrder}`
                 fetchDataRadial(url);
                 break;
             case 'line1-sec2':
-                url = `api/v2//dashboard/filternodes?ar=line1-sec2&facilities=${circleId}&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortOrder}&by=${sortOrder}`
+                url = `api/v2//dashboard/filternodes?ar=line1-sec2&facilities=${circleId}&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortField}&by=${sortOrder}`
                 fetchDataRadial(url);
                 break;
             case 'line4-sec1':
-                url = `api/v2//dashboard/filternodes?ar=line4-sec1&facilities=${circleId}&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortOrder}&by=${sortOrder}`
+                url = `api/v2//dashboard/filternodes?ar=line4-sec1&facilities=${circleId}&offset=${pageSize}&limit=${limitValueSelLabel}&status=up&sort=${sortField}&by=${sortOrder}`
                 fetchDataRadial(url);
                 break;
             default:
                 break;
         }
 
-    }, [circleId, lineInfo, pageSize, limitValueSelLabel,searchBtn])
+    }, [circleId, lineInfo, pageSize, limitValueSelLabel,searchBtn,sortOrder,sortField])
 
 
     const handleRadialIP = async (url) => {

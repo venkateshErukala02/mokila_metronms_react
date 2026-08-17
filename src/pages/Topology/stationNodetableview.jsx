@@ -7,7 +7,7 @@ import StationNodesvgTable from "./stationnodessvgtable";
 import StationTagsTable from "../Wayside/stationtagstable";
 
 
-const StationNodeTableView=({textName , rdDataRef,yardfacilitieData,stationView, stationTagview,lineTagview,trainView, selectedTreeNodeId,expandedTreeDt,onSortChange,lineName,isLoading})=>{
+const StationNodeTableView=({textName , rdDataRef,yardfacilitieData,stationView, stationTagview,lineTagview,trainView, selectedTreeNodeId,expandedTreeDt,onSortChange,lineName,isLoading,stationIdFromSvg})=>{
     const [sectionTbData,setSectionTbData] = useState('');
     const [limitValueSel, setLimitValueSel] = useState('');
     const [limitValueSelLabel, setLimitValueSelLabel] = useState('50');
@@ -59,8 +59,8 @@ const StationNodeTableView=({textName , rdDataRef,yardfacilitieData,stationView,
       </label>
          
             </article>
-                        {boundsMode !== 'NorthBound' ? ( <SouthBoundTb textName={textName}/>) : (  <article>
-                             <NorthBoundTb textName={textName}/>
+                        {boundsMode !== 'NorthBound' ? ( <SouthBoundTb textName={textName} stationIdFromSvg={stationIdFromSvg}/>) : (  <article>
+                             <NorthBoundTb textName={textName} stationIdFromSvg={stationIdFromSvg}/>
                         </article>) }
                 </article>  
             </article>

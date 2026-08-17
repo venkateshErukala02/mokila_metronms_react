@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="455.165px" height="151.5px" viewBox="0 0 455.165 151.5" enable-background="new 0 0 455.165 151.5" xml:space="preserve">
+<g id="voughan_metropolitan" visibility="hidden">
+	
+		<line id="tram" fill="none" stroke="#1FE8B8" stroke-width="20" stroke-linecap="round" stroke-miterlimit="10" x1="59.116" y1="85.984" x2="111.664" y2="85.984"/>
+	<rect id="rectchange" x="73.305" y="72.694" fill="#FFFFFF" width="21.333" height="26.58"/>
+	<polygon id="left" fill="#191919" points="57.743,80.318 57.743,91.651 48.597,85.985 	"/>
+	<polygon id="right" fill="#191919" points="112.66,80.318 112.66,91.651 121.806,85.985 	"/>
+</g>
+<line fill="none" stroke="#000000" stroke-miterlimit="10" x1="14.499" y1="86.324" x2="441.165" y2="86.324"/>
+<g>
+	<circle id="sbayview" fill="#663399" stroke="#231F20" stroke-miterlimit="10" cx="159.214" cy="85.984" r="9.055"/>
+	<circle id="sbessarion" fill="#663399" stroke="#231F20" stroke-miterlimit="10" cx="235.982" cy="85.984" r="9.055"/>
+	
+		<ellipse id="sdon_mills" fill="#663399" stroke="#231F20" stroke-miterlimit="10" cx="387.594" cy="85.984" rx="9.055" ry="9.358"/>
+	<circle id="sleslie" fill="#663399" stroke="#231F20" stroke-miterlimit="10" cx="311.715" cy="85.984" r="9.055"/>
+	
+		<circle id="ssheppard_yonge" fill="#663399" stroke="#231F20" stroke-miterlimit="10" cx="84.006" cy="85.984" r="9.055"/>
+</g>
+<g>
+	<text transform="matrix(1 0 0 1 53.6699 43.147)"><tspan x="0" y="0" font-family="'ArialMT'" font-size="14">Sheppard </tspan><tspan x="12.705" y="16.8" font-family="'ArialMT'" font-size="14" letter-spacing="-1">Yonge</tspan><tspan x="20.757" y="16.8" font-family="'ArialMT'" font-size="14"></tspan></text>
+	<text transform="matrix(1 0 0 1 137.2612 59.5942)" font-family="'ArialMT'" font-size="14">Bayview</text>
+	<text transform="matrix(1 0 0 1 204.8545 59.5942)" font-family="'ArialMT'" font-size="14">Bessarion</text>
+	<text transform="matrix(1 0 0 1 295.6924 59.5942)" font-family="'ArialMT'" font-size="14">Leslie</text>
+	<text transform="matrix(1 0 0 1 358.811 59.5942)" font-family="'ArialMT'" font-size="14">Don Mills</text>
+</g>
+</svg>

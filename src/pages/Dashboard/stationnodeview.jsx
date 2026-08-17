@@ -23,7 +23,7 @@ const StationNodeDetails = () => {
    const stationDataCode =  useSelector((state) => state?.node?.node?.productCode) ?? localStorage.getItem('stationCode');
   const nodeDataId = useSelector((state) => state.node?.node?.nodeId || state.node?.node?.id) ?? localStorage.getItem('nodeId');
 
-  const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress || state.node?.node?.label);
+  const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress || state.node?.node?.label) ?? localStorage.getItem('nodeIpaddress');
 
   const getServerStatusDt = async (url) => {
     setIsLoading(true);

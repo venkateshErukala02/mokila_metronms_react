@@ -1,13 +1,14 @@
 import {useState,useEffect} from "react";
 import '../ornms.css';
 import '../Topology/topology.css';
+import { useSelector } from "react-redux";
 
 
-const SouthBoundTb=({textName})=>{
+const SouthBoundTb=({textName,stationIdFromSvg})=>{
 
     const [southData,setSouthData] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [isError, setIsError] = useState({ status: false, msg: "" });
+    const [isError, setIsError] = useState({ status: false, msg: "" }); 
 
     const getSouthBoundTbData = async (url) => {
         setIsLoading(true);
@@ -47,7 +48,11 @@ const SouthBoundTb=({textName})=>{
 
     useEffect(()=>{
         const fetchData= async()=>{
-            const facId = textName?.data?.id ?? 1;
+            const stationNameId = stationIdFromSvg
+            const facId = stationNameId ?? textName?.data?.id;
+            if (!facId) {
+                return;
+            }
             const now = Date.now();
 
             const oneHourAgo = now - (60 * 60 * 1000);
@@ -60,7 +65,7 @@ const SouthBoundTb=({textName})=>{
         const intervalId = setInterval(fetchData,30000);
 
         return()=> clearInterval(intervalId);
-    },[textName])
+    },[textName,stationIdFromSvg])
 
      const formatTime = (timestamp) => {
         const date = new Date(timestamp);
@@ -111,7 +116,7 @@ const SouthBoundTb=({textName})=>{
                                             <td>{event.nodeLabel ? event.nodeLabel : event.host}</td>
                                             <td>{formatTime(event.createTime)}</td>
                                             <td>{event.severity}</td>
-                                            <td>{event.logMessage}</td>
+                                            <td title={event.logMessage}>{event.logMessage}</td>
                                         </tr>
                                     ))
                                 ) : (

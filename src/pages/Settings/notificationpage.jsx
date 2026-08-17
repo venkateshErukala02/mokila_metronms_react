@@ -319,6 +319,8 @@ const NotificationContainer=()=>{
                  initialDelayProp={initialDelayProp}
                  targetInitialDelay={targetInitialDelay}
                  targetInitialDelayAddEss={targetInitialDelayAddEss}
+                 refreshPath={()=>getNotificationPathDt('api/v2/eventnotice/pathd?_s=&limit=10&offset=0&order=asc&orderBy=name')
+                                    }
                  />
             break;
             default:

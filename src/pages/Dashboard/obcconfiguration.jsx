@@ -23,8 +23,8 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab ,triggerCount}) => {
         { name: "Encoder Connectivity", displayName: "Encoder" },
         { name: "FTP Server Connectivity", displayName: "FTP Server" },
     ];
-    const nodeDataId = useSelector((state) => state.node?.node?.nodeId);
-    const nodeIpaddress = useSelector((state) => state.node.node.ipAddress) || localStorage.getItem('nodeIpaddress');
+    const nodeDataId = useSelector((state) => state.node?.node?.nodeId ||  state.node?.node?.id) ?? localStorage.getItem('nodeId');
+    const nodeIpaddress = useSelector((state) => state.node.node.ipAddress || state.node?.node?.label) ?? localStorage.getItem('nodeIpaddress');
 
        const currentUser = useSelector((state) => state?.loginuser?.node?.role);
           const isReadOnly = currentUser === 'Read-only';

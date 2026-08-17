@@ -18,9 +18,9 @@ const TranscoderView = () => {
     const [currentTab, setCurrentTab] = useState('summary')
     const [transcoderData, setTranscoderData] = useState([]);
     const [triggerCount, setTriggerCount] = useState(0);
-    const nodeDataId = useSelector((state) => state.node?.node?.nodeId ?? state.node?.node?.id);
-    const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress ?? state.node?.node?.primaryIP);
-    const nodeLocation = useSelector((state) => state.node?.node?.location);
+    const nodeDataId = useSelector((state) => state.node?.node?.nodeId ?? state.node?.node?.id) ?? localStorage.getItem('nodeId');
+    const nodeIpaddress = useSelector((state) => state.node?.node?.ipAddress ?? state.node?.node?.primaryIP) ?? localStorage.getItem('nodeIpaddress');
+    const nodeLocation = useSelector((state) => state.node?.node?.location || state.node?.node?.facility) ?? localStorage.getItem('nodeLocation');
 
 
     // useEffect(()=>{

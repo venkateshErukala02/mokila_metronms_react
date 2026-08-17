@@ -5,7 +5,7 @@ import { type } from "@testing-library/user-event/dist/type";
 import { useSelector } from "react-redux";
 
 
-const ThresholdSubCont = ({ handleSubContainer, refreshThresholdData,threshold,mode }) => {
+const ThresholdSubCont = ({ handleSubContainer, refreshThresholdData,threshold,mode ,setShowAddedSuccessPopup}) => {
 
     const isEditMode = mode === 'edit';
     const currentUser = useSelector((state) => state?.loginuser?.node?.role);
@@ -17,7 +17,7 @@ const ThresholdSubCont = ({ handleSubContainer, refreshThresholdData,threshold,m
     const [threshdTrigger,setThreshdTrigger] =  useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState({ status: false, msg: "" });
-    const [showAddedSuccessPopup, setShowAddedSuccessPopup] = useState(false);
+    // const [showAddedSuccessPopup, setShowAddedSuccessPopup] = useState(false);
     const [showSuccessMessage,setShowScuccessMessage] = useState('');
    
 
@@ -25,7 +25,7 @@ const ThresholdSubCont = ({ handleSubContainer, refreshThresholdData,threshold,m
 
    const handleAddThreshold = async (e) => {
       e.preventDefault(); 
-    if(!threshdRearm?.trim()  || !threshdValue?.trim()  || !threshdTrigger?.trim() ) return;
+    if(!threshdRearm || !threshdValue  || !threshdTrigger ) return;
     
     const requestBody = {
             description : threshdDescription,
@@ -63,9 +63,10 @@ const ThresholdSubCont = ({ handleSubContainer, refreshThresholdData,threshold,m
                     isEditMode ? 'The threshold has been updated successfully.':
                     ''
                 )
-                  setShowAddedSuccessPopup(true);
+                  handleSubContainer();
             // handleProfileContclose();/
             if(refreshThresholdData) refreshThresholdData();
+            setShowAddedSuccessPopup(true);
             // setSectionName('');
         } else {
             setIsError('Error starting discovery');
@@ -178,26 +179,6 @@ const ThresholdSubCont = ({ handleSubContainer, refreshThresholdData,threshold,m
 
                 </article>
             </article>
-              {showAddedSuccessPopup && (
-                                <article className="confirmsuccesspopup">
-                                    <article className="confirmsuccesspopupboxstyle">
-                                        <article className="success-cont">
-                                    <h1 className="confirmtitlesucess">Success</h1>
-                                    <p className="confirmtextsucess">{showSuccessMessage}</p>
-                                    </article>
-                                    <article style={{ textAlign: 'end' }}>
-                                        <button
-                                        className="confirmdeletebtn confirmdeletebtnyes"
-                                        onClick={() =>{ setShowAddedSuccessPopup(false);
-                                            handleProfileContclose();
-                                        }}
-                                        >
-                                        OK
-                                        </button>
-                                    </article>
-                                    </article>
-                                </article>
-                                )}
 
         </>
     )
