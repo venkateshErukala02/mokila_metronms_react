@@ -30,6 +30,8 @@ const WaysideTagContainer=()=>{
         const [selectedIds, setSelectedIds] = useState([]);
         const [showConfirmDeletePopupStatus,setShowConfirmDeletePopupStatus] = useState(false);
         const [showDeleteSuccessPopup,setShowDeleteSuccessPopup] = useState(false);
+        const [showResetSuccessPopup,setShowResetSuccessPopup] = useState(false);
+        const [showConfigSuccessPopup,setShowConfigSuccessPopup] = useState(false);
         const value = priorityChecked ? "highpriority" : "none";
         const [showWarningPopup,setShowWarningPopup] = useState(false);
         const [tagTypeValue, setTagTypeValue] = useState('');
@@ -495,7 +497,9 @@ const WaysideTagContainer=()=>{
                 });
 
                 if (response.ok) {
-                    console.log('Configuration successful');
+                    setShowConfigPopup(false);
+                    setShowConfigSuccessPopup(true);
+                    // console.log('Configuration successful');
                     // setShowAddedSuccessPopup(true);
                 } else {
                     setIsError('Error starting configuration');
@@ -547,7 +551,9 @@ const WaysideTagContainer=()=>{
                 });
 
                 if (response.ok) {
-                    console.log('Configuration reset successfully');
+                    setShowConfigPopup(false);
+                    setShowResetSuccessPopup(true);
+                    // console.log('Configuration reset successfully');
                 } else {
                     setIsError('Error resetting configuration');
                 }
@@ -967,6 +973,45 @@ const WaysideTagContainer=()=>{
                                                 </article>
                                                 </article>
                                             )}
+
+                                             {showResetSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">Configuration reset successfully.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => {setShowResetSuccessPopup(false);
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
+                                 {showConfigSuccessPopup && (
+                                <article className="confirmsuccesspopup">
+                                    <article className="confirmsuccesspopupboxstyle">
+                                        <article className="success-cont">
+                                    <h1 className="confirmtitlesucess">Success</h1>
+                                    <p className="confirmtextsucess">Configuration saved successfully.</p>
+                                    </article>
+                                    <article style={{ textAlign: 'end' }}>
+                                        <button
+                                        className="confirmdeletebtn confirmdeletebtnyes"
+                                        onClick={() => {setShowConfigSuccessPopup(false);
+                                        }}
+                                        >
+                                        OK
+                                        </button>
+                                    </article>
+                                    </article>
+                                </article>
+                                )}
         </>
     )
 }
