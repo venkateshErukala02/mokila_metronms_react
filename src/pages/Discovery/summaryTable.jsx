@@ -81,6 +81,8 @@ const SummaryTable=()=>{
     }
 
     const handleSumaryLimitValue = (event) => {
+          setPageSize(1);
+          setFromValue('0');
             setSummaryLimitValueSel(event.target.value);
         }
 

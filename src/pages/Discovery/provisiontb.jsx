@@ -154,8 +154,14 @@ const ProvisionTb = ({ getProviContData }) => {
         }
     };
 
-  const handleFirmIP = async () => {
+  const handleFirmIP = async (firmipText,resetPage = false) => {
 
+    const offset = resetPage ? '0' : fromValue;
+
+    if (resetPage) {
+        setPageSize(1);
+        setFromValue('0');
+    }
 
     if (!firmipText) {
       alert("Please enter a search term");
@@ -166,7 +172,7 @@ const ProvisionTb = ({ getProviContData }) => {
       let limit = limitValueSelLabel || '100';
 
       try {
-        const response = await fetch(`api/v2/nodes/search?_s=sysName==${firmipText}*,label==${firmipText},assetRecord.serialNumber==${firmipText}&limit=${limit}&offset=${fromValue}&order=asc`, {
+        const response = await fetch(`api/v2/nodes/search?_s=sysName==${firmipText}*,label==${firmipText},assetRecord.serialNumber==${firmipText}&limit=${limit}&offset=${offset}&order=asc`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -198,7 +204,7 @@ const ProvisionTb = ({ getProviContData }) => {
 
   useEffect(() => {
   if (searchBtn) {
-    handleFirmIP();
+    handleFirmIP(firmipText, false);
   }
 }, [limitValueSelLabel,fromValue]);
 
@@ -245,6 +251,8 @@ const ProvisionTb = ({ getProviContData }) => {
   }
 
   const handleLimitValue=(event)=>{
+    setPageSize(1);
+    setFromValue('0');
     setLimitValueSel(event.target.value);
     const label = event.target.options[event.target.selectedIndex].label;
     setLimitValueSelLabel(label)
@@ -462,7 +470,7 @@ const ProvisionTb = ({ getProviContData }) => {
                 maxWidth: '254px',
                 display: 'inline-block'
               }} />
-              <button type="button" className="createbtn" onClick={handleFirmIP} style={{ marginLeft: '7px' }}>Search</button>
+              <button type="button" className="createbtn" onClick={() => handleFirmIP(firmipText,true)} style={{ marginLeft: '7px' }}>Search</button>
               <button type="button" className="createbtn" onClick={handleClearSerch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
               <article  style={{display:'inline-block',position:'relative'}} ref={columnWrapperRef} >
               <span className="addcloum" style={{ marginLeft: '5px' }}>Select Columns   </span><span className="glyphicon glyphicon-tasks" onClick={(e) => { e.stopPropagation(); handleAddColumn()}}></span>

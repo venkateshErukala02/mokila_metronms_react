@@ -106,18 +106,24 @@ const Tableone = () => {
 
 
     const handleTimestamp = (event) => {
+        setPageSize(1);
+        setFromValue('0');
         const value = parseInt(event.target.value);
         setSelectedDuration(value);
     };
 
     const handleEventLimitValue = (event) => {
+        setPageSize(1);
+        setFromValue('0');
         let selectedIndex = event.target.selectedIndex;
         setEventLimitValueSel(selectedIndex)
         let label = event.target.options[selectedIndex].label;
-        setEventLimitLabelSel(label)
+        setEventLimitLabelSel(label);
     }
 
     const handleSeverityMode = (event) => {
+        setPageSize(1);
+        setFromValue('0');
         const value = event.target.value;
         const selectedIndex = event.target.selectedIndex;
         const label = event.target.options[selectedIndex].label;

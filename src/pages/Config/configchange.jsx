@@ -125,6 +125,8 @@ const ConfigChange = () => {
     }, [selected,userLimitValueSel,fromValue]);
 
     const handleUserLimitValue = (event) => {
+        setPageSize(1);
+        setFromValue('0');
         setUserLimitValueSel(event.target.value);
 
     }

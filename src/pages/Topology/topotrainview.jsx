@@ -283,6 +283,8 @@ useEffect(() => {
       };
 
     const handleLimitValue=(event)=>{
+        setOffsetValueDisplay(1);
+        setOffsetValue(0);
         let selectedIndex = event.target.selectedIndex;
         setLimitValueSel(selectedIndex)
         let label = event.target.options[selectedIndex].label;
@@ -290,6 +292,10 @@ useEffect(() => {
     }
 
       const handleTrains=(event)=>{
+        setOffsetValueDisplay(1);
+        setOffsetValue(0);
+        setLimitValueSel('2');
+        setLimitLabelSel('45');
         let selectedIndex = event.target.selectedIndex;
         let value = event.target.options[selectedIndex].value;
         setTrainValueSel(value);

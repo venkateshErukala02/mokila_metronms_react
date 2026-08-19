@@ -116,6 +116,7 @@ const FirmwareMng = () => {
 
 
     const handleRegionLimitValue = (event) => {
+        setPageSize(1);
         setRegionLimitValueSel(event.target.value);
 
     }
@@ -190,7 +191,7 @@ const FirmwareMng = () => {
             if (response.ok) {
                 setShowConfirmDeleteSuccessPopupStatus(true);
                 setFirmwareToDelete(null);
-                getVersionData(`api/v2/firmware/firmwares?&page=${pageSize}&limit=${regionLimitValueSel}&sort=${sortOrder}`)
+                getVersionData(`api/v2/firmware/firmwares?&page=${pageSize}&limit=${regionLimitValueSel}&sort=${sortOrder}`);
                 // alert("Are you sure you want to delete this firmware?")
                 // if(refreshUserData) refreshUserData();
             //    setUserName('');

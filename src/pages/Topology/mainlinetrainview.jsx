@@ -333,6 +333,8 @@ useEffect(() => {
       };
 
     const handleLimitValue=(event)=>{
+        setOffsetValueDisplay(1);
+        setOffsetValue(0);
         let selectedIndex = event.target.selectedIndex;
         setLimitValueSel(selectedIndex)
         let label = event.target.options[selectedIndex].label;

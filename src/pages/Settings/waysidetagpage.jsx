@@ -43,6 +43,7 @@ const WaysideTagContainer=()=>{
         const [tagTypeNtdm, setTagTypeNtdm] = useState(false);  
         const [reportAlarm,setReportAlarm] = useState(false);
         const [sendMail,setSendMail] = useState(false);
+        const [configureStatus,setConfigureStatus] = useState({});
 
         useEffect(() => {
             const getStationList = async () => {
@@ -325,6 +326,7 @@ const WaysideTagContainer=()=>{
             alert("Please enter a search term");
 
         } else {
+            setPageCount(1);
             setSearchBtn(true);
             setSearchTrigger(prev => prev + 1);
         }
@@ -401,10 +403,57 @@ const WaysideTagContainer=()=>{
         setShowConfirmDeletePopupStatus(false);
       }
 
+       const handleCurrentConfigureStatus = async () => {
+
+            const url = 'api/v2/wayside/configure/current';
+
+            try {
+                // setIsLoading(true);
+
+                const response = await fetch(url, {
+                    method: 'GET',
+                    // headers: {
+                    //     'Content-Type': 'application/json',
+                    // },
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    setConfigureStatus(data);
+                    // setShowAddedSuccessPopup(true);
+                } else {
+                    setIsError('Error starting configuration');
+                }
+            } catch (error) {
+                setIsError('An error occurred while contacting the server.');
+            } finally {
+                // setIsLoading(false);
+            }
+        };
+
+        useEffect(() => {
+            if (!configureStatus) return;
+
+            setReportAlarm(configureStatus.action?.reportAlarm ?? false);
+            setSendMail(configureStatus.action?.sendMail ?? false);
+
+            const tagType = configureStatus.tagtype?.toUpperCase();
+
+            setTagTypeTdm(
+                tagType === "ALL" || tagType === "TDM"
+            );
+
+            setTagTypeNtdm(
+                tagType === "ALL" || tagType === "NTDM"
+            );
+        }, [configureStatus]);
+
+
 
         const handleOpenConfigpopup  = ()=>{
             setShowConfigPopup(true);
-        
+            handleCurrentConfigureStatus();
         }
         const handleCloseConfigpopup=()=>{
             setTagTypeTdm(false);
@@ -603,7 +652,7 @@ const WaysideTagContainer=()=>{
                                             <th className="wayside-table-header">
                                                 <select
                                                     name="location" id="location" value={location}
-                                                    onChange={(e) => setLocation(e.target.value)}
+                                                    onChange={(e) =>{ setLocation(e.target.value);setPageCount(1);}}
                                                     className="form-controll1"
                                                     style={{ maxWidth: "78px", minWidth: "78px" }}
                                                     >
@@ -618,7 +667,7 @@ const WaysideTagContainer=()=>{
 
                                             </th>
                                             <th> 
-                                                <select name="direction" id="direction" value={direction} onChange={(e) => setDirection(e.target.value)} className="form-controll1" style={{ maxWidth: '79px', minWidth: '79px' }}>
+                                                <select name="direction" id="direction" value={direction} onChange={(e) =>{ setDirection(e.target.value);setPageCount(1);}} className="form-controll1" style={{ maxWidth: '79px', minWidth: '79px' }}>
                                                     <option value="">Direction</option>
                                                     <option value="NB">NB</option>
                                                     <option value="SB">SB</option>
@@ -627,7 +676,7 @@ const WaysideTagContainer=()=>{
                                                     </select> 
                                             </th>
                                             <th className="wayside-table-header align">
-                                                <select name="position" id="position" value={position} onChange={(e) => setPosition(e.target.value)} className="form-controll1" style={{ maxWidth: '74px', minWidth: '74px' }}>
+                                                <select name="position" id="position" value={position} onChange={(e) =>{ setPosition(e.target.value);setPageCount(1);}} className="form-controll1" style={{ maxWidth: '74px', minWidth: '74px' }}>
                                                     <option value="">Position</option>
                                                     <option value="SBSE">SBSE</option>
                                                     <option value="NBSE">NBSE</option>
@@ -644,7 +693,7 @@ const WaysideTagContainer=()=>{
                                                     </select>
                                             </th>
                                             <th>
-                                                 <select name="tagTypeValue" id="tagTypeValue" value={tagTypeValue} onChange={(e) => setTagTypeValue(e.target.value)} className="form-controll1" style={{ maxWidth: '77px', minWidth: '77px' }}>
+                                                 <select name="tagTypeValue" id="tagTypeValue" value={tagTypeValue} onChange={(e) =>{ setTagTypeValue(e.target.value);setPageCount(1);}} className="form-controll1" style={{ maxWidth: '77px', minWidth: '77px' }}>
                                                     <option value="">Tag Type</option>
                                                     <option value="TDM">Tdm</option>
                                                     <option value="NTDM">Ntdm</option>
@@ -652,7 +701,7 @@ const WaysideTagContainer=()=>{
                                                     </select>
                                             </th>
                                             <th className="wayside-table-header">
-                                                 <select name="role" id="role" value={role} onChange={(e) => setRole(e.target.value)} className="form-controll1" style={{ maxWidth: '74px', minWidth: '74px' }}>
+                                                 <select name="role" id="role" value={role} onChange={(e) =>{ setRole(e.target.value);setPageCount(1);}} className="form-controll1" style={{ maxWidth: '74px', minWidth: '74px' }}>
                                                     <option value="">Role</option>
                                                     <option value="VON">VON</option>
                                                     <option value="VOFF">VOFF</option>
@@ -896,10 +945,23 @@ const WaysideTagContainer=()=>{
                                                 </div>
                                                 </div>
                                                  <article className="">
-                                                <button className="createbtn" onClick={handleResetConfigure}>Reset</button>
-                                                </article>
-                                                <article className="f-r">
-                                                <button className="createbtn" onClick={handleSetConfigure}>Save Configure</button>
+                                                     <center className="d-f">
+                                                <button  type="button" onClick={currentUser !== "Read-only" ? handleResetConfigure : undefined} style={{marginRight:"11px"}}
+                                                 className={`resetconfigbtn ${
+                                                    currentUser === "Read-only" ? "btndisable" : ""
+                                                }`}
+                                                title={currentUser === "Read-only" ? "Permission required" : ""}
+                                                    disabled={currentUser === "Read-only"}
+                                                >Reset</button>
+                                               
+                                                <button  type="button" onClick={currentUser !== "Read-only" ? handleSetConfigure : undefined}
+                                                 className={`resetconfigbtn ${
+                                                    currentUser === "Read-only" ? "btndisable" : ""
+                                                }`}
+                                                title={currentUser === "Read-only" ? "Permission required" : ""}
+                                                    disabled={currentUser === "Read-only"}
+                                                >Save Configure</button>
+                                                </center>
                                                 </article>
                                                 </article>
                                                 </article>

@@ -197,6 +197,8 @@ const EncoderEventTab=()=>{
     };
 
     const handleSeverityMode = (event) => {
+        setPageSize(1);
+        setFromValue('0');
         const value = event.target.value;
         const selectedIndex = event.target.selectedIndex;
         const label = event.target.options[selectedIndex].label;
@@ -215,6 +217,8 @@ const EncoderEventTab=()=>{
     }
 
     const handleMainEventLimitValue = (event) => {
+        setPageSize(1);
+        setFromValue('0');
         let selectedIndex = event.target.value;
         setEventmainLimitValueSel(selectedIndex)
     }
@@ -235,6 +239,8 @@ const EncoderEventTab=()=>{
         };
 
           const handleMainEventTimestamp = (event) => {
+            setPageSize(1);
+            setFromValue('0');
             const value = event.target.value;
             setSelectedDuration(value);
     };

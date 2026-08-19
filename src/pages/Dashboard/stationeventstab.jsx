@@ -380,6 +380,8 @@ useEffect(() => {
     };
 
     const handleSeverityMode = (event) => {
+        setPageSize(1);
+        setFromValue('0');
         const value = event.target.value;
         const selectedIndex = event.target.selectedIndex;
         const label = event.target.options[selectedIndex].label;
@@ -402,6 +404,8 @@ useEffect(() => {
     }
 
     const handleMainEventLimitValue = (event) => {
+        setPageSize(1);
+        setFromValue('0');
          const value = event.target.value;  
         const label = event.target.options[event.target.selectedIndex].label;
 
@@ -448,8 +452,12 @@ useEffect(() => {
                 setSelectedDuration("Custom");   
                 setShowCustomPopup(true);   
                 setSearchBtn(false);
+                setPageSize(1);
+                setFromValue('0');
                 // setEventipText('');     
             } else {
+                setPageSize(1);
+                setFromValue('0');
                 const value = parseInt(customvalue); 
                 setSelectedDuration(value);
                 setShowCustomPopup(false);
@@ -574,13 +582,19 @@ useEffect(() => {
 
     useEffect(() => {
     if (executedSearch) {
-        handleRadialIP(executedSearch);
+        handleRadialIP(executedSearch, false);
     }
 }, [fromValue,eventmainLimitLabelSel,eventmainSeverityValueSel]);
 
 
-     const handleRadialIP = async (eventipText) => {
+     const handleRadialIP = async (eventipText, resetPage = false) => {
          setExecutedSearch(eventipText);
+         const offset = resetPage ? '0' : fromValue;
+
+        if (resetPage) {
+            setPageSize(1);
+            setFromValue('0');
+        }
     if (!eventipText) {
         alert("Please enter a search term");
         return;
@@ -617,7 +631,7 @@ useEffect(() => {
     if (eventmainLimitLabelSel !== 'all') {
         query += `&limit=${eventmainLimitLabelSel}`;
     }
-    let url = `${start};${query}&offset=${fromValue}&order=desc&orderBy=id`;
+    let url = `${start};${query}&offset=${offset}&order=desc&orderBy=id`;
 
     handleRadialIPa(url);
 };
@@ -700,6 +714,8 @@ useEffect(() => {
 
 
       const handleSearch = (eventipText) => {
+        setPageSize(1);
+        setFromValue('0');
         setExecutedSearch(eventipText);
         // setExecutedDate(sysSelectedDate);
         setSearchTrigger(prev => prev + 1); 
@@ -718,7 +734,7 @@ useEffect(() => {
                         <button type="button" className="numcl"><span>{pageSize}</span></button>
                         <button type="button" className="arrowlf" onClick={handleIncreamentOffset}><i className="fa-solid fa-arrow-right"></i></button>   
                          <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
-                         <button type="button" className="createbtn" onClick={() => { handleRadialIP(eventipText);}} >Search</button>
+                         <button type="button" className="createbtn" onClick={() => { handleRadialIP(eventipText,true);}} >Search</button>
                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{ marginLeft: '7px', display: executedSearch?.trim() ? 'inline-block' : 'none' }}> Clear Search</button>
                         {/* <button type="button" className="createbtn"  onClick={() => getReportData(reportUrl)} style={{ marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}>  <i class="fa-solid fa-download"></i></button>      */}
                     </article>

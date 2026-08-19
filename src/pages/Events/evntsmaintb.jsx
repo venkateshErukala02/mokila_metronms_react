@@ -392,7 +392,8 @@ useEffect(() => {
         const value = event.target.value;
         const selectedIndex = event.target.selectedIndex;
         const label = event.target.options[selectedIndex].label;
-
+        setPageSize(1);
+        setFromValue('0');
         setEventmainSeverityValueSel(value);
         setEventmainSeverityLabelSel(label);
         setSearchBtn(false);
@@ -416,7 +417,9 @@ useEffect(() => {
             setSelectedDuration("Custom");  
             setSearchBtn(false);
             // setEventipText('');
-            setShowCustomPopup(true);       
+            setShowCustomPopup(true);  
+            setPageSize(1);
+            setFromValue('0');     
         } else {
             const value = parseInt(customvalue); 
             setSearchBtn(false);
@@ -424,7 +427,9 @@ useEffect(() => {
             setSelectedDuration(value);
             setShowCustomPopup(false); 
             setCustomStartDate(null);
-            setCustomEndDate(null);     
+            setCustomEndDate(null);   
+            setPageSize(1);
+            setFromValue('0');  
         }
     };
 
@@ -435,6 +440,8 @@ useEffect(() => {
         setSearchBtn(false);
         setEventmainLimitValueSel(value);
         setEventmainLimitLabelSel(label);
+        setPageSize(1);
+        setFromValue('0');
         // setExecutedSearch('');
         // setEventipText('');
     }
@@ -514,13 +521,21 @@ useEffect(() => {
 
          useEffect(() => {
             if (executedSearch) {
-                handleRadialIP(executedSearch);
+                handleRadialIP(executedSearch, false);
             }
         }, [fromValue,eventmainLimitLabelSel,eventmainSeverityValueSel,selectedDuration]);
 
 
-     const handleRadialIP = async (eventipText) => {
+     const handleRadialIP = async (eventipText, resetPage = false) => {
         setExecutedSearch(eventipText);
+
+        const offset = resetPage ? '0' : fromValue;
+
+        if (resetPage) {
+            setPageSize(1);
+            setFromValue('0');
+        }
+
         const startTimestamp = customStartDate?.getTime();
         const endTimestamp = customEndDate?.getTime();  
         const durationMs = parseInt(selectedDuration);
@@ -535,7 +550,7 @@ useEffect(() => {
             // let filter = "eventSource!%3Dsyslogd" + ';';
             if (typevalueSel ==='auditlog') {
                 // start  = `api/v2/audit/list?_s=`
-                url = `api/v2/audit/list?_s=&logDesc==*${eventipText}*;datentime%3Dgt%3D${timeParam}&limit=${eventmainLimitLabelSel}&offset=${fromValue}&order=desc&orderBy=id`
+                url = `api/v2/audit/list?_s=&logDesc==*${eventipText}*;datentime%3Dgt%3D${timeParam}&limit=${eventmainLimitLabelSel}&offset=${offset}&order=desc&orderBy=id`
                  handleRadialIPa(url);
             } else {
                 start = `api/v2/events/list?_s=`
@@ -565,7 +580,7 @@ useEffect(() => {
                      if (eventmainLimitLabelSel != 'all') {
                     filter  =  filter +'&limit=' + `${eventmainLimitLabelSel}`;
                     }
-                    url = start + filter + `&offset=${fromValue}&order=desc&orderBy=id`;
+                    url = start + filter + `&offset=${offset}&order=desc&orderBy=id`;
                     // reportUrlRef.current = url;
                     //  setReportUrl(url);
                      handleRadialIPa(url);
@@ -854,6 +869,8 @@ useEffect(() => {
       const handleSearch = (eventipText, sysSelectedDate) => {
         setExecutedSearch(eventipText);
         setExecutedDate(sysSelectedDate);
+        setPageSize(1);
+        setFromValue('0');
         setSearchTrigger(prev => prev + 1); 
     };
 
@@ -881,7 +898,7 @@ useEffect(() => {
                         <button type="button" className="arrowlf" onClick={handleIncreamentOffset} disabled={selectedDuration === 'Custom'}><i className="fa-solid fa-arrow-right"></i></button>
 
                         <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="Enter Message " id="" className="form-controlevents" />
-                        <button type="button" className="createbtn" onClick={() => { handleRadialIP(eventipText);}} >Search</button>
+                        <button type="button" className="createbtn" onClick={() => { handleRadialIP(eventipText, true);}} >Search</button>
                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{  marginLeft: '7px', display: executedSearch?.trim() ? 'inline-block' : 'none' }}> Clear Search</button>
                     </article>
                     <article style={{ display: typevalueSel === 'syslogd' ? 'block' : 'none' }}>
@@ -910,7 +927,7 @@ useEffect(() => {
                         <button type="button" className="arrowlf" onClick={handleIncreamentOffsetAudit} disabled={selectedDuration === 'Custom'}><i className="fa-solid fa-arrow-right"></i></button>
 
                          <input type="text" value={eventipText} onChange={(e) => setEventipText(e.target.value)} style={{ marginLeft: '10px', marginRight: '10px' }} name="" placeholder="IP Address " id="" className="form-controlevents" />
-                        <button type="button" className="createbtn" onClick={() => { handleRadialIP(eventipText);}} >Search</button>
+                        <button type="button" className="createbtn" onClick={() => { handleRadialIP(eventipText, true);}} >Search</button>
                         <button type="button" className="createbtn" onClick={handleClearSerch} style={{  marginLeft: '7px', display: executedSearch?.trim() ? 'inline-block' : 'none' }}> Clear Search</button>
                     </article>
 

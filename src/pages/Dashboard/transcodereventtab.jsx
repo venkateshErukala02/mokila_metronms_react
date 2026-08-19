@@ -173,6 +173,8 @@ const TcEventTab=()=>{
     };
 
     const handleSeverityMode = (event) => {
+        setPageSize(1);
+        setFromValue('0');
         const value = event.target.value;
         const selectedIndex = event.target.selectedIndex;
         const label = event.target.options[selectedIndex].label;
@@ -192,12 +194,16 @@ const TcEventTab=()=>{
 
 
     const handleMainEventTimestamp = (event) => {
+        setPageSize(1);
+        setFromValue('0');
         const value = parseInt(event.target.value);
         setSelectedDuration(value);
     };
 
 
     const handleMainEventLimitValue = (event) => {
+        setPageSize(1);
+        setFromValue('0');
         let selectedValue = event.target.value;
         setEventmainLimitValueSel(selectedValue)
     }

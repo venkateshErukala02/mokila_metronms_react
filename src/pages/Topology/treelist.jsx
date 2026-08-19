@@ -427,7 +427,7 @@ const attachChildren = (nodes, targetNode, children) => {
   return nodes.map(node => {
     // If this is the node we want to attach children to
     if (node.data.id === targetNode.data.id && node.data.mode === targetNode.data.mode) {
-      console.log("Attaching children to node:", node.data.display, "children:", children.length);
+      // console.log("Attaching children to node:", node.data.display, "children:", children.length);
       return { ...node, children: children || [] }; // create new object
     }
 
@@ -491,14 +491,14 @@ const attachChildren = (nodes, targetNode, children) => {
 
 const getDatanodesLine = async (url, targetNode) => {
   if (!targetNode) {
-    console.warn("targetNode is undefined. Aborting getDatanodesLine.");
+    // console.warn("targetNode is undefined. Aborting getDatanodesLine.");
     return [];
   }
 
 
    const existingNode = findNodeById(treeData, targetNode.data.id);
   if (existingNode && existingNode.children && existingNode.children.length > 0) {
-    console.log("Data already fetched for this node.");
+    // console.log("Data already fetched for this node.");
     return existingNode.children;
   }
 

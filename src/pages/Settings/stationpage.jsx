@@ -79,6 +79,8 @@ const StationContainer=()=>{
         }, [locationLimitValueSel,sortOrder,fromValue]);
 
         const handleLocationLimitValue = (event) => {
+            setPageSize(1);
+            setFromValue('0');
             setLocationLimitValueSel(event.target.value);
     
         }

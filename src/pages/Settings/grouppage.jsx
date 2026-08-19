@@ -86,6 +86,8 @@ const GroupContainer=()=>{
         }, [groupLimitValueSel,fromValue,sortOrder]);
 
         const handleGroupLimitValue = (event) => {
+            setPageSize(1);
+            setFromValue('0');
             setGroupLimitValueSel(event.target.value);
     
         }

@@ -86,6 +86,8 @@ const LineContainer=()=>{
 
       
         const handleRegionLimitValue = (event) => {
+            setPageSize(1);
+            setFromValue('0');
             setRegionLimitValueSel(event.target.value);
     
         }

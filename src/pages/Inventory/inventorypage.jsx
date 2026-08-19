@@ -188,7 +188,7 @@ const InventRpt = () => {
         useEffect(() => {
             if (!searchText.trim()) return;
             handleSearchData(searchText);
-        }, [searchTrigger]);
+        }, [searchTrigger,limitValueSelLabel,fromValue]);
 
         const allSelected = ALL_COLUMNS.every(col =>
                 visibleColumns.includes(col.key)
@@ -457,6 +457,8 @@ const InventRpt = () => {
         }
 
         const handleLimitValue = (event) => {
+            setPageSize(1);
+            setFromValue('0');
         setLimitValueSel(event.target.value);
         const label = event.target.options[event.target.selectedIndex].label;
         setLimitValueSelLabel(label)
@@ -480,13 +482,18 @@ const InventRpt = () => {
 
         } else {
             setSearchBtn(true);
+            setPageSize(1);
+            setFromValue('0');
             setSearchTrigger(prev => prev + 1);
+
         }
     }
 
 
     const handleClearSearch = () => {
         setSearchBtn(false);
+        setPageSize(1);
+        setFromValue('0');
         setSearchText('');
         setInvenData([]);
         getDataInvety();

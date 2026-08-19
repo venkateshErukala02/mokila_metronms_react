@@ -84,6 +84,8 @@ const SectionContainer=()=>{
         }, [cityLimitValueSel,sortOrder,fromValue]);
 
         const handleCityLimitValue = (event) => {
+            setPageSize(1);
+            setFromValue('0');
             setCityLimitValueSel(event.target.value);
     
         }

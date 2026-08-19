@@ -300,23 +300,26 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
 
     useEffect(() => {
         if (!radialipText.trim()) return;
-        const url = `api/v2/nodes/search?_s=assetRecord.serialNumber==${radialipText},sysName==${radialipText},label==${radialipText}&limit=${limitValueSelLabel}&offset=0&order=asc`;
+        const url = `api/v2/nodes/search?_s=assetRecord.serialNumber==${radialipText},sysName==${radialipText},label==${radialipText}&limit=${limitValueSelLabel}&offset=${pageSize}&order=asc`;
         handleRadialIP(url);
 
 
-    }, [limitValueSelLabel]);
+    }, [limitValueSelLabel,pageSize]);
 
     const handleClearSearch = () => {
         setSearchBtn(false);
         setRadialipText('');
         setPageSize(1); 
+        setFromValue('0');
     }
 
 
     const handleLimitValue = (event) => {
+        setPageSize(1);
+        setFromValue('0');
         setLimitValueSel(event.target.value);
         const label = event.target.options[event.target.selectedIndex].label;
-        setLimitValueSelLabel(label)
+        setLimitValueSelLabel(label);
     }
 
 
@@ -426,7 +429,9 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
                             <li>
                                 <input name="" value={radialipText} onChange={(e) => setRadialipText(e.target.value)} placeholder="IP Address / System Name / Serial Number" id="" className="form-control1 searchbar1" />
                                 <button type="button" className="createbtn" onClick={() => {
-                                    const url = `api/v2/nodes/search?_s=assetRecord.serialNumber==${radialipText},sysName==${radialipText},label==${radialipText}&limit=${limitValueSelLabel}&offset=0&order=asc`;
+                                    setPageSize(1);
+                                    setFromValue('0');
+                                    const url = `api/v2/nodes/search?_s=assetRecord.serialNumber==${radialipText},sysName==${radialipText},label==${radialipText}&limit=${limitValueSelLabel}&offset=${pageSize}&order=asc`;
                                     handleRadialIP(url);
                                 }}
 

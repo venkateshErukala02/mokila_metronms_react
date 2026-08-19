@@ -1010,7 +1010,7 @@ tbody.statustagtbbd>tr>td>a{
 .nodevieweventmaintable{height: 83vh;overflow-y: auto;border: 1px solid rgb(33 35 39 / 7%);margin-bottom: 12px;}
 
 
-.bouneventtable{height: 19vh;overflow-y: auto;border: 1px solid rgb(33 35 39 / 7%);margin-bottom: 12px;}
+.bouneventtable{height: 55vh;overflow-y: auto;border: 1px solid rgb(33 35 39 / 7%);margin-bottom: 12px;}
 
 
 .discovlist{list-style-type: none;max-width: 400px;margin: auto;padding-bottom: 82px;}
@@ -1723,6 +1723,14 @@ letter-spacing: 0.7px;
                 padding-bottom: 8.5px;border: none;border-radius: 5px;letter-spacing: 0.6px;
                 font-size: 15px;display: inline-block;
                 padding: 10px 74px;
+            
+                }
+                 .resetconfigbtn{background-color: #006fff;
+                border-color:#006fff; 
+                padding-top: 11px;color: white;
+                padding-bottom: 8.5px;border: none;border-radius: 5px;letter-spacing: 0.6px;
+                font-size: 15px;display: inline-block;
+                padding: 7px 45px;
             
                 }
                 .btn-align{
