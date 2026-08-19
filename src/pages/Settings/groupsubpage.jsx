@@ -179,7 +179,7 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
                             <article >
                                 <form action="" style={{margin: '7px 10px 0 10px'}}>
                                 <label className="settinglabelsub">Group Name</label>
-                                <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" value={groupName}  onChange={(e)=> setGroupName(e.target.value)}/>
+                                <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" value={groupName}  onChange={(e)=> setGroupName(e.target.value)} disabled={isEditMode}/>
                                 <article>
                                 <label className="settinglabelsub">Comments</label>
                                 <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" value={comment} onChange={(e)=> setComment(e.target.value)}/>

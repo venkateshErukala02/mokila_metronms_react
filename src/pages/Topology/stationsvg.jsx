@@ -913,162 +913,210 @@ const handleTrainClick = (event) => {
 
   
   //  APPLY TRAIN DATA LAST
-  
 
-  if (
-    Array.isArray(trainData) &&
-    trainData.length > 0
-  ) {
+  if (Array.isArray(trainData) && trainData.length > 0) {
 
-    // console.log('Applying TRAIN DATA:', trainData);
+    // Only use trains that have OBC
+    const trainsWithObc = trainData.filter(
+        (item) => item.obc !== null &&
+                  item.obc !== undefined &&
+                  String(item.obc).trim() !== ""
+    );
 
-    trainData.forEach((item) => {
+    // BOTTOM TRAIN
+    // Priority: NBNE > NBSE > EB
 
-      const trainName =
-        `Train: ${item.trainId}${item.obc}`;
+    const bottomPriority = ['NBNE', 'NBSE', 'EB'];
 
-      const direction =
-        item.direction?.trim().toUpperCase();
+    const bottomTrain = bottomPriority
+        .map((dir) =>
+            trainsWithObc.find(
+                (item) =>
+                    item.direction?.trim().toUpperCase() === dir
+            )
+        )
+        .find(Boolean);
 
-      const isBottom =
-        ['NBNE', 'NBSE', 'EB'].includes(direction);
 
-      const isTop =
-        ['SBNE', 'SBSE', 'WB'].includes(direction);
+    // TOP TRAIN
+    // Priority: SBNE > SBSE > WB
+
+    const topPriority = ['SBNE', 'SBSE', 'WB'];
+
+    const topTrain = topPriority
+        .map((dir) =>
+            trainsWithObc.find(
+                (item) =>
+                    item.direction?.trim().toUpperCase() === dir
+            )
+        )
+        .find(Boolean);
 
 
-      
-      // BOTTOM TRAIN
-      
+    // BOTTOM TRAIN
 
-      if (isBottom) {
+    if (bottomTrain) {
+
+        const direction =
+            bottomTrain.direction?.trim().toUpperCase();
+
+        const trainName =
+            `Train: ${bottomTrain.trainId}${bottomTrain.obc}`;
 
         const textEl =
-          svgRoot.querySelector(
-            '#bottomtrainclicktext'
-          );
+            svgRoot.querySelector('#bottomtrainclicktext');
 
         const layer =
-          svgRoot.querySelector(
-            '#bottom_train_layer'
-          );
+            svgRoot.querySelector('#bottom_train_layer');
 
         if (textEl) {
-          textEl.textContent = trainName;
-          textEl.style.display = 'block';
+            textEl.textContent = trainName;
+            textEl.style.display = 'block';
         }
 
         if (layer) {
-          layer.style.display = 'block';
+            layer.style.display = 'block';
 
-          layer.setAttribute(
-            'train-id',
-            `${item.trainId}${item.obc}`
-          );
+            layer.setAttribute(
+                'train-id',
+                `${bottomTrain.trainId}${bottomTrain.obc}`
+            );
 
-          layer.onclick = handleTrainClick;
+            layer.onclick = handleTrainClick;
         }
+
 
         const layerNbne =
-          svgRoot.querySelector(
-            '#bottomtrainclick2'
-          );
+            svgRoot.querySelector('#bottomtrainclick2');
 
-          if(layerNbne && (item.direction === 'NBNE' || item.direction === 'EBEE')){
+        const layerNbse =
+            svgRoot.querySelector('#bottomtrainclick3');
+
+
+        // Hide both first
+        if (layerNbne) {
+            layerNbne.style.display = 'none';
+        }
+
+        if (layerNbse) {
+            layerNbse.style.display = 'none';
+        }
+
+
+        // NBNE / EB
+        if (
+            layerNbne &&
+            (direction === 'NBNE' || direction === 'EB')
+        ) {
             layerNbne.style.display = 'block';
-          }
+        }
 
-           const layerNbse =
-          svgRoot.querySelector(
-            '#bottomtrainclick3'
-          );
-          if(layerNbse && (item.direction === 'NBSE' || item.direction === 'EBWE')){
+
+        // NBSE
+        if (
+            layerNbse &&
+            (direction === 'NBSE' || direction === 'WB')
+        ) {
             layerNbse.style.display = 'block';
-          }
+        }
+
 
         [
-          '#bottomtrainclick',
-          '#bottomtrainclick1',
-          // '#bottomtrainclick2',
-          // '#bottomtrainclick3',
-          '#bottomtrainclicktext'
+            '#bottomtrainclick',
+            '#bottomtrainclick1',
+            '#bottomtrainclicktext'
         ].forEach((id) => {
 
-          const el = svgRoot.querySelector(id);
+            const el = svgRoot.querySelector(id);
 
-          if (el) {
-            el.style.display = 'block';
-          }
+            if (el) {
+                el.style.display = 'block';
+            }
         });
-      }
+    }
 
 
+    // TOP TRAIN
 
-      // TOP TRAIN
-      
+    if (topTrain) {
 
-      if (isTop) {
+        const direction =
+            topTrain.direction?.trim().toUpperCase();
+
+        const trainName =
+            `Train: ${topTrain.trainId}${topTrain.obc}`;
 
         const textEl =
-          svgRoot.querySelector(
-            '#toptrainclicktext'
-          );
+            svgRoot.querySelector('#toptrainclicktext');
 
         const layer =
-          svgRoot.querySelector(
-            '#top_train_layer'
-          );
+            svgRoot.querySelector('#top_train_layer');
 
         if (textEl) {
-          textEl.textContent = trainName;
-          textEl.style.display = 'block';
+            textEl.textContent = trainName;
+            textEl.style.display = 'block';
         }
 
         if (layer) {
-          layer.style.display = 'block';
+            layer.style.display = 'block';
 
-          layer.setAttribute(
-            'train-id',
-            `${item.trainId}${item.obc}`
-          );
+            layer.setAttribute(
+                'train-id',
+                `${topTrain.trainId}${topTrain.obc}`
+            );
 
-          layer.onclick = handleTrainClick;
+            layer.onclick = handleTrainClick;
         }
 
-         const layerSbse =
-          svgRoot.querySelector(
-            '#toptrainclick2'
-          );
 
-          if(layerSbse && (item.direction === 'SBSE' || item.direction === 'WBWE')){
+        const layerSbse =
+            svgRoot.querySelector('#toptrainclick2');
+
+        const layerSbne =
+            svgRoot.querySelector('#toptrainclick3');
+
+
+        // Hide both first
+        if (layerSbse) {
+            layerSbse.style.display = 'none';
+        }
+
+        if (layerSbne) {
+            layerSbne.style.display = 'none';
+        }
+
+
+        // SBSE / WB
+        if (
+            layerSbse &&
+            (direction === 'SBSE' || direction === 'WB')
+        ) {
             layerSbse.style.display = 'block';
-          }
+        }
 
-           const layerSbne =
-          svgRoot.querySelector(
-            '#toptrainclick3'
-          );
-          if(layerSbne && (item.direction === 'SBNE' || item.direction === 'WBEE')){
+
+        // SBNE / EB
+        if (
+            layerSbne &&
+            (direction === 'SBNE' || direction === 'EB')
+        ) {
             layerSbne.style.display = 'block';
-          }
+        }
+
 
         [
-          '#toptrainclick',
-          // '#toptrainclick2',
-          // '#toptrainclick3',
-          '#toptrainclicktext'
+            '#toptrainclick',
+            '#toptrainclicktext'
         ].forEach((id) => {
 
-          const el = svgRoot.querySelector(id);
+            const el = svgRoot.querySelector(id);
 
-          if (el) {
-            el.style.display = 'block';
-          }
+            if (el) {
+                el.style.display = 'block';
+            }
         });
-      }
-
-    });
-  }
+    }
+}
 
 }, [
   svgContent,
