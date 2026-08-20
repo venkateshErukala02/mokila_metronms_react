@@ -452,7 +452,7 @@ const InventRpt = () => {
             });
         } else {
             setPageSize(1);
-            //   setFromValue('0');
+            setFromValue('0');
         }
         }
 

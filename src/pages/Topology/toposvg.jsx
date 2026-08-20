@@ -841,7 +841,7 @@ useEffect(() => {
       if(event.type === 'click' && event.button === 0){
       const clickElement = event.currentTarget;
       const clickElementId = clickElement.getAttribute('id');
-      if (clickElementId){
+      if (clickElementId && clickElementId !== 'polyline4' && clickElementId !== 'line10' && clickElementId !== 'path2'){
       getCurrentElementId(clickElementId);
         // setLineTagview(true);
         }

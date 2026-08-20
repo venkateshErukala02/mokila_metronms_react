@@ -5,6 +5,7 @@ import {  useDispatch } from 'react-redux';
 import { handleLoginUserData, toggleVisibility } from '../Action/action';
 import '../Navbar/navbarpage.css';
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
         const [userData, setUserData] = useState({});
@@ -122,7 +123,9 @@ const Navbar = () => {
         <article className="row navheader" id='landpage' style={{position:"relative"}}> 
             <article className="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xxl-5">
             <a  onClick={handleToggle}><i className="fas fa-2x fa-bars accentColor" style={{paddingTop:'10px',paddingLeft:'17px'}}></i></a>
+         <Link to="/">
            <img src={logo} alt="logo" style={{paddingLeft:"17px"}}/>
+          </Link>
                     <span className="versiontitle">ver 1.3.2</span>
             </article>
             <article className="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xxl-5 navalign">

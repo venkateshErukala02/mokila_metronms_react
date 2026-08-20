@@ -183,6 +183,7 @@ const columns = [
   { key: "line", label: "Direction" },
   { key: "position", label: "Position" },
   { key: "role", label: "Role" },
+  { key: "type", label: "Type" },
   {
     key: "status",
     label: (
@@ -328,6 +329,7 @@ const handleSort = (field) => {
                                         <td style={{padding:"4px 12px"}}>{value.line}</td>
                                         <td style={{padding:"4px 6px"}} className="">{value.position}</td>
                                         <td style={{padding:"4px 6px"}} className="">{value.role}</td>
+                                        <td style={{padding:"4px 6px"}} className="">{value.type}</td>
                                         <td style={{padding:"4px 48px"}}>{value.status === 'down' ? (<i className="fa-solid fa-arrow-down" style={{color:"red"}}></i> ): (<i className="fa-solid fa-arrow-up" style={{color:"green"}}></i>)}</td>
                                     </tr>
                                 ))                                     

@@ -142,7 +142,7 @@ const TopoSectionTable=({textName,textId,stationView, stationTagview,lineTagview
 
 
     useEffect(() => {
-
+    if(searchBtn) return;
     if (!apiUrl) return;
 
     fetchSectionTbData(apiUrl, isInitialLoad);
@@ -153,21 +153,24 @@ const TopoSectionTable=({textName,textId,stationView, stationTagview,lineTagview
 
     return () => clearInterval(intervalId);
 
-}, [apiUrl]);
+}, [apiUrl,searchBtn]);
 
     const handleClearSerch = () => {
         setSearchBtn(false);
         setLineipText('');
+        setPageSize(1); 
+        setFromValue('0');
+        setSectionLimitValueSel('50');
         // setRdData([])
     }
 
       const handleIncreamentOffset = () => {
-        if(searchBtn) return;
+        // if(searchBtn) return;
          setPageSize(prev => {
         if (!sectionTbData || sectionTbData.length === 0) return prev;
 
         const newPage = prev + 1;
-        // setFromValue(parseInt(newPage-1) * parseInt(sectionLimitValueSel));
+        setFromValue(parseInt(newPage-1) * parseInt(sectionLimitValueSel));
         return newPage;
         });
     }
@@ -178,17 +181,19 @@ const TopoSectionTable=({textName,textId,stationView, stationTagview,lineTagview
         if (pageSize > 1) {
             setPageSize(prevPageSize => {
                 const newPageSize = prevPageSize - 1;
-                // const fromCal = (parseInt(newPageSize)-1) * parseInt(sectionLimitValueSel);
-                //  setFromValue(fromCal);
+                const fromCal = (parseInt(newPageSize)-1) * parseInt(sectionLimitValueSel);
+                setFromValue(fromCal);
                 return newPageSize;
             });
         } else {
             setPageSize(1);
-            //   setFromValue('0');
+            setFromValue('0');
         }
     }
 
      const handleSectionLimitValue = (event) => {
+        setPageSize(1); 
+        setFromValue('0');
          const value = event.target.value;  
         setSectionLimitValueSel(value);
     }
@@ -237,10 +242,10 @@ const TopoSectionTable=({textName,textId,stationView, stationTagview,lineTagview
 
     useEffect(()=>{
           if (!lineipText.trim()) return;
-          const url = `api/v2/nodes/search?_s=assetRecord.serialNumber==${lineipText},sysName==${lineipText},label==${lineipText}&limit=${sectionLimitValueSel}&offset=0&order=asc`;
+          const url = `api/v2/nodes/search?_s=assetRecord.serialNumber==${lineipText},sysName==${lineipText},label==${lineipText}&limit=${sectionLimitValueSel}&offset=${fromValue}&order=asc`;
         handleRadialIP(url);
 
-    },[sectionLimitValueSel]);
+    },[sectionLimitValueSel,fromValue]);
 
 
             const navigate = useNavigate();
@@ -322,7 +327,9 @@ const TopoSectionTable=({textName,textId,stationView, stationTagview,lineTagview
                             <li style={{marginRight:"0px"}}>
                                 <input name="" value={lineipText} onChange={(e) => setLineipText(e.target.value)} placeholder="IP Address / System Name / Serial Number" id="" className="form-control1 searchbar1" />
                                 <button type="button" className="createbtn" onClick={() => {
-                                   const url = `api/v2/nodes/search?_s=assetRecord.serialNumber==${lineipText},sysName==${lineipText},label==${lineipText}&limit=${sectionLimitValueSel}&offset=0&order=asc`;
+                                    setPageSize(1);
+                                    setFromValue('0');
+                                   const url = `api/v2/nodes/search?_s=assetRecord.serialNumber==${lineipText},sysName==${lineipText},label==${lineipText}&limit=${sectionLimitValueSel}&offset=${fromValue}&order=asc`;
                                     handleRadialIP(url);
                                 }}
 

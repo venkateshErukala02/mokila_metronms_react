@@ -300,17 +300,19 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
 
     useEffect(() => {
         if (!radialipText.trim()) return;
-        const url = `api/v2/nodes/search?_s=assetRecord.serialNumber==${radialipText},sysName==${radialipText},label==${radialipText}&limit=${limitValueSelLabel}&offset=${pageSize}&order=asc`;
+        const url = `api/v2/nodes/search?_s=assetRecord.serialNumber==${radialipText},sysName==${radialipText},label==${radialipText}&limit=${limitValueSelLabel}&offset=${fromValue}&order=asc`;
         handleRadialIP(url);
 
 
-    }, [limitValueSelLabel,pageSize]);
+    }, [limitValueSelLabel,fromValue]);
 
     const handleClearSearch = () => {
         setSearchBtn(false);
         setRadialipText('');
         setPageSize(1); 
         setFromValue('0');
+        setLimitValueSel('1');
+        setLimitValueSelLabel('50');
     }
 
 
@@ -346,34 +348,39 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
 
     };
 
+      const handleIncreamentOffset=()=>{
 
-    const handleIncreamentOffset = () => {
-        // setFromValue(parseInt(pageSize)* parseInt(limitValueSelLabel));
-        if (rdData?.length === 0 || undefined) {            
-            setPageSize(prevstate => prevstate);
-        } else if (rdData?.length > 0) {
-            setPageSize(prevstate => prevstate + 1);
+          setPageSize(prev => {
+        if (!rdData || rdData?.length === 0) return prev;
+
+        const newPage = prev + 1;
+        setFromValue(parseInt(newPage-1) * parseInt(limitValueSelLabel));
+        return newPage;
+        });
         }
-    }
+
     useEffect(() => {
         setPageSize(1);
+        setFromValue('0');
         setLimitValueSelLabel('50')
         setLimitValueSel('1')
     }, [lineInfo, apiStatus])
 
 
-    const handleDecrementOffset = () => {
-        if (pageSize > 1) {
+     const handleDecrementOffset=()=>{
+
+             if (pageSize > 1) {
             setPageSize(prevPageSize => {
                 const newPageSize = prevPageSize - 1;
-                // setFromValue(parseInt(newPageSize) * parseInt(limitValueSelLabel));
+                const fromCal = (parseInt(newPageSize)-1) * parseInt(limitValueSelLabel);
+                 setFromValue(fromCal);
                 return newPageSize;
             });
         } else {
             setPageSize(1);
-            // setFromValue('0');
+            setFromValue('0');
         }
-    }
+        }
 
     const handleSort = (field) => {
         const mappedField = field === 'productCode' ? 'productcode' : field;
@@ -431,7 +438,7 @@ const RadialDataTb = ({ radialData, dname, circleId, lineInfo }) => {
                                 <button type="button" className="createbtn" onClick={() => {
                                     setPageSize(1);
                                     setFromValue('0');
-                                    const url = `api/v2/nodes/search?_s=assetRecord.serialNumber==${radialipText},sysName==${radialipText},label==${radialipText}&limit=${limitValueSelLabel}&offset=${pageSize}&order=asc`;
+                                    const url = `api/v2/nodes/search?_s=assetRecord.serialNumber==${radialipText},sysName==${radialipText},label==${radialipText}&limit=${limitValueSelLabel}&offset=${fromValue}&order=asc`;
                                     handleRadialIP(url);
                                 }}
 

@@ -57,7 +57,7 @@ const NorthBoundTb=({textName,stationIdFromSvg})=>{
             const now = Date.now();
 
             const oneDayAgo = now - (24 * 60 * 60 * 1000);
-            const url = `api/v2/events/nb/station?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D${oneDayAgo}&fac=${facId}&limit=100&offset=0&order=desc&orderBy=id`;
+            const url = `api/v2/events/nb/station?_s=eventDisplay%3D%3DY;eventSource!%3Dsyslogd;eventCreateTime%3Dgt%3D${oneDayAgo}&fac=${facId}&limit=200&offset=0&order=desc&orderBy=id`;
 
             await getNorthBoundTbData(url);
         };
