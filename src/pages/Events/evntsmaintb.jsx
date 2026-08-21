@@ -567,10 +567,14 @@ useEffect(() => {
                         //  }
                 }  else {
                     if(typevalueSel === 'events'){
-                         filter  =  filter +  `eventDisplay%3D%3DY%3BeventSource!%3Dsyslogd;`+ `eventLogMsg%3D%3D` +`*${eventipText}*`;
-                            if (eventmainSeverityValueSel) {
-                        filter  =  filter + '&eventSeverity==' + `${eventmainSeverityValueSel}`;
+                         filter  =  filter +  `eventDisplay%3D%3DY%3BeventSource!%3Dsyslogd;`;
+                           if (eventmainSeverityValueSel) {
+                        filter  =  filter + 'eventSeverity==' + `${eventmainSeverityValueSel};`;
                         }
+                         if (eventipText) {
+                        filter  =  filter + `eventLogMsg%3D%3D` +`*${eventipText}*`;
+                        }
+                          
                     //      if (timeParam && selectedDuration !== 'Custom') {
                     // filter  =  filter +  ';eventCreateTime%3Dgt%3D' + `${timeParam}`;
                     // }

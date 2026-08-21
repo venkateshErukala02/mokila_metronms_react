@@ -494,6 +494,7 @@ const InventRpt = () => {
         setSearchBtn(false);
         setPageSize(1);
         setFromValue('0');
+        setLimitValueSelLabel('50');
         setSearchText('');
         setInvenData([]);
         getDataInvety();
@@ -754,7 +755,7 @@ const columnPadding = {
 
                                         </li>
                                         <li>
-                                            <select className="form-controll1" style={{ maxWidth: '58px', minWidth: '58px', marginTop: '2px', fontSize: '12px' }} aria-invalid="false" value={limitValueSel} onChange={handleLimitValue}>
+                                            <select className="form-controll1" style={{ maxWidth: '58px', minWidth: '58px', marginTop: '2px', fontSize: '12px' }} aria-invalid="false" value={limitValueSelLabel} onChange={handleLimitValue}>
                                                     <option value="25" label="25">25</option>
                                                     <option value="50" label="50">50</option>
                                                     <option value="100" label="100">100</option>

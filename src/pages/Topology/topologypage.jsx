@@ -1214,11 +1214,23 @@ const onSortChange = (field) => {
                            {trainLabelDiply ?  <li><a onClick={handleTrainVwTab}>{trainId}</a>
                            <button onClick={handleTrainStatusHide}>x</button>
                            </li> : '' }
-                           <li>
-                            <button onClick={handleTagTableView}  className={selectedTab === 'tagtable' ? 'active' : ''}>
+                        {![
+                            textName?.data?.mode,
+                            parentTextName?.data?.mode
+                        ].some(mode =>
+                            ['trains', 'yard', 'mainline', 'yard_1'].includes(
+                                mode?.trim().toLowerCase()
+                            )
+                        ) && (
+                            <li>
+                                <button
+                                    onClick={handleTagTableView}
+                                    className={selectedTab === 'tagtable' ? 'active' : ''}
+                                >
                                     Tag Table
                                 </button>
-                           </li>
+                            </li>
+                        )}
                         </ul>
                         </article>
                         <article className="col-6">

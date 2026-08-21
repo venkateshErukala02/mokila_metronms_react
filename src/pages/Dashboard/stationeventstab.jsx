@@ -612,10 +612,11 @@ useEffect(() => {
         filters.push("eventSource!%3Dsyslogd");
     } 
 
-    filters.push(`eventLogMsg%3D%3D*${eventipText}*`);
-
     if (eventmainSeverityValueSel) {
         filters.push(`eventSeverity==${eventmainSeverityValueSel}`);
+    }
+    if (eventipText) {
+        filters.push(`eventLogMsg%3D%3D*${eventipText}*`);
     }
 
     // if (eventtimeSel && selectedDuration !== 'Custom') {
@@ -788,10 +789,10 @@ useEffect(() => {
 
 
                             <select name="name" id="name" value={selectedDuration} onChange={handleMainEventTimestamp} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }} onClick={handleCustomPopup}>
-                                 <option value="3600000" label="Last hour">Last hour</option>
-                                <option value="28800000" label="8 hours">8 hours</option>
-                                <option value="86400000" label="24 hours">24 hours</option>
-                                <option value="172800000" label="48 hours">48 hours</option>
+                                 <option value="3600000" label="Last hour" disabled={executedSearch}>Last hour</option>
+                                <option value="28800000" label="8 hours" disabled={executedSearch}>8 hours</option>
+                                <option value="86400000" label="24 hours" disabled={executedSearch}>24 hours</option>
+                                <option value="172800000" label="48 hours" disabled={executedSearch}>48 hours</option>
                                 <option value="Custom" label="Custom">Custom</option>
                             </select>
                             <select className="form-controll1" value={eventmainLimitValueSel} onChange={handleMainEventLimitValue} style={{ width: 'auto' }} aria-invalid="false">
