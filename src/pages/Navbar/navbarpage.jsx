@@ -126,7 +126,7 @@ const Navbar = () => {
          <Link to="/">
            <img src={logo} alt="logo" style={{paddingLeft:"17px"}}/>
           </Link>
-                    <span className="versiontitle">ver 1.3.2</span>
+                    <span className="versiontitle">ver 1.3.3</span>
             </article>
             <article className="col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xxl-5 navalign">
             <ul className="navlistone">

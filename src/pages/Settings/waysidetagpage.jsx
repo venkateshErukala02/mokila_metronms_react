@@ -669,6 +669,10 @@ const WaysideTagContainer=()=>{
                                                         {station}
                                                         </option>
                                                     ))}
+                                                    {/* <option value='Finch TrailTrack'>Finch TrailTrack</option>
+                                                    <option value='VMC Yard'>VMC Yard</option>
+                                                    <option value='Generic Voff'>Generic Voff</option>
+                                                    <option value='Reboot Radio'>Reboot Radio</option> */}
                                                     </select>
 
                                             </th>
@@ -760,7 +764,9 @@ const WaysideTagContainer=()=>{
                                                     onChange={() => handleSelect(item.tagId)}
                                                 /></td>
                                             <td style={{paddingLeft:'18px'}}>{item.tag}</td>
-                                            <td>{item.location}</td>
+                                             <td>
+                                                {item.location || item.tagId?.split('-')[1]?.trim() || ''}
+                                            </td>
                                             <td style={{paddingLeft:'33px'}}>{item.line}</td>
                                             <td>
                                                 {item.position || item.postion}</td>
