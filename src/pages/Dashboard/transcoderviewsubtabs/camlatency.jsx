@@ -66,7 +66,9 @@ const CamLatencyChart = ({ graphOption, graphOptionValue ,labelName }) => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: `http://${nodeIpaddress}:8084/transcoder/api/v1/cam/${labelName}`,
+                body: JSON.stringify({url:`http://${nodeIpaddress}:8084/transcoder/api/v1/cam/${labelName}`,
+                  timeout : 5
+                })
             } : {
                 method: "GET",
                 headers: {

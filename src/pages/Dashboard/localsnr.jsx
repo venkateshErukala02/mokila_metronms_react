@@ -90,9 +90,9 @@ const LocalSnr = ({ graphOption, graphOptionValue }) => {
                 }
                }else{
                 dataNew = {
-                  rsnr: data.links[0].localsnr,
-                  lsnr: data.links[0].remotesnr,
-                  traincab: data.links[0].traincab,
+                  rsnr: data.links[0]?.remotesnr,
+                  lsnr: data.links[0]?.localsnr,
+                  traincab: data.links[0]?.traincab,
                   timestamp: dt.getTime(),
                   index: counterRef.current
                 }

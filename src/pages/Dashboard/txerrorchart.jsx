@@ -65,7 +65,9 @@ const TxErrorChart = ({ graphOption,graphOptionValue,currentTab}) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: `http://${nodeIpaddress}:8084/${currentTab}/api/v1/netstats`,
+        body: JSON.stringify({url:`http://${nodeIpaddress}:8084/${currentTab}/api/v1/netstats`,
+              timeout : 5
+             })
       }  : {
           method: "GET",
           headers: {

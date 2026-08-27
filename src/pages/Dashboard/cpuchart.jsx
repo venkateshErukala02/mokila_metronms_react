@@ -67,7 +67,9 @@ const CpuChart = ({ graphOption,graphOptionValue,currentTab}) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: `http://${nodeIpaddress}:8084/${currentTab}/api/v1/cpu`,
+        body: JSON.stringify({url:`http://${nodeIpaddress}:8084/${currentTab}/api/v1/cpu`,
+              timeout : 5
+            })
       }  : {
           method: "GET",
           headers: {

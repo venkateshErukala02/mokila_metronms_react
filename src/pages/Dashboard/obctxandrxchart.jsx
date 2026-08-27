@@ -63,9 +63,13 @@ const ObcTxRxDiffchart = ({ graphOption, graphOptionValue,currentTab }) => {
 
             let requestBody = "";
             if(currentTab === 'transcoder'){
-                requestBody = `http://${nodeIpaddress}:8084/obc/api/v1/tranthpt`;
+                requestBody = JSON.stringify({url:`http://${nodeIpaddress}:8084/obc/api/v1/tranthpt`,
+                    timeout : 5  
+                });
             }else if(currentTab === 'trainradio'){
-                requestBody = `http://${nodeIpaddress}:8084/obc/api/v1/radstat/txrx`;
+                requestBody = JSON.stringify({url:`http://${nodeIpaddress}:8084/obc/api/v1/radstat/txrx`,
+                  timeout : 5  
+                });
             }
             const options =  graphOption === "live" ? {
                 method: "POST",

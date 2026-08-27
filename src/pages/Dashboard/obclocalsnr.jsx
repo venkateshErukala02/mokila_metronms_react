@@ -68,7 +68,9 @@ const LocalSnrObc = ({ graphOption, graphOptionValue, currentTab }) => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: `http://${nodeIpaddress}:8084/obc/api/v1/radstat/snr`,
+                body: JSON.stringify({url:`http://${nodeIpaddress}:8084/obc/api/v1/radstat/snr`,
+                    timeout : 5,
+                })
                 } : {
             method: "GET",
             headers: {
@@ -84,24 +86,24 @@ const LocalSnrObc = ({ graphOption, graphOptionValue, currentTab }) => {
               
              let dataNew = {};
              if (data) {
-              const vallcl = data.links[0]?.traincab;
-               const hasDecimal = typeof vallcl === 'number' && !isNaN(vallcl) && vallcl % 1 !== 0;
-               if(hasDecimal){
+              // const vallcl = data.links[0]?.traincab;
+              //  const hasDecimal = typeof vallcl === 'number' && !isNaN(vallcl) && vallcl % 1 !== 0;
+              //  if(hasDecimal){
+              //   dataNew = {
+              //     rsnr: 0,
+              //     lsnr: 0,
+              //     traincab: 0,
+              //     timestamp: dt.getTime(),
+              //     index: counterRef.current
+              //   }
+              //  }else{
                 dataNew = {
-                  rsnr: 0,
-                  lsnr: 0,
-                  traincab: 0,
+                  rsnr: data?.data?.rsnr,
+                  lsnr: data?.data?.lsnr,
+                  // traincab: data.links[0]?.traincab,
                   timestamp: dt.getTime(),
                   index: counterRef.current
-                }
-               }else{
-                dataNew = {
-                  rsnr: data.lsnr,
-                  lsnr: data.rsnr,
-                  traincab: data.links[0]?.traincab,
-                  timestamp: dt.getTime(),
-                  index: counterRef.current
-                }
+                // }
               }
              } else {
                 dataNew = {

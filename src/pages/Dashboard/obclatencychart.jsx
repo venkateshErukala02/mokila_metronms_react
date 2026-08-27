@@ -64,9 +64,13 @@ const ObcLatencyChart = ({ graphOption, graphOptionValue ,currentTab }) => {
 
        let requestBody = "";
         if(currentTab === 'transcoder'){
-            requestBody = `http://${nodeIpaddress}:8084/obc/api/v1/connectivity/encoderip`;
+            requestBody = JSON.stringify({url:`http://${nodeIpaddress}:8084/obc/api/v1/connectivity/encoderip`, 
+                timeout : 5,
+            });
         }else if(currentTab === 'trainradio'){
-            requestBody = `http://${nodeIpaddress}:8084/obc/api/v1/connectivity/trainradioip`;
+            requestBody = JSON.stringify({url: `http://${nodeIpaddress}:8084/obc/api/v1/connectivity/trainradioip`,
+                timeout : 5,
+            });
         }
 
       const options =  graphOption === "live" ?  {

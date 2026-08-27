@@ -139,7 +139,9 @@ const TcSummaryTab = ({ triggerCount }) => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: `http://${nodeIpaddress}:8084/transcoder/api/v1/config`,
+                body: JSON.stringify({url:`http://${nodeIpaddress}:8084/transcoder/api/v1/config`,
+                    timeout : 5
+                })
             };
             const response = await fetch(url,options);
             const data = await response.json();
@@ -258,10 +260,10 @@ const TcSummaryTab = ({ triggerCount }) => {
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
 
-        const controller = new AbortController();
-        const timeout = setTimeout(() => {
-            controller.abort();
-        }, 20000);
+        // const controller = new AbortController();
+        // const timeout = setTimeout(() => {
+        //     controller.abort();
+        // }, 20000);
 
         try {
             const options = {
@@ -269,11 +271,13 @@ const TcSummaryTab = ({ triggerCount }) => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: `http://${nodeIpaddress}:8084/transcoder/api/v1/`,
-                signal: controller.signal,
+                body: JSON.stringify({url:`http://${nodeIpaddress}:8084/transcoder/api/v1/`,
+                    timeout : 5
+                })
+                // signal: controller.signal,
             };
             const response = await fetch(url,options);
-            clearTimeout(timeout);
+            // clearTimeout(timeout);
             
             const data = await response.json();
 
@@ -287,7 +291,7 @@ const TcSummaryTab = ({ triggerCount }) => {
                 throw new Error("Data not found");
             }
         } catch (error) {
-             clearTimeout(timeout);
+            //  clearTimeout(timeout);
             if (error.name === "AbortError") {
                     setIsError({
                     status: true,
@@ -378,23 +382,32 @@ const TcSummaryTab = ({ triggerCount }) => {
         setUptimeIsLoading(true);
         setIsError({ status: false, msg: "" });
 
-        const controller = new AbortController();
-        const timeout = setTimeout(() => {
-            controller.abort();
-        }, 10000);
+        // const controller = new AbortController();
+        // const timeout = setTimeout(() => {
+        //     controller.abort();
+        // }, 10000);
         try {
             const options = {
                 method: "POST",
                 headers: {
-                    // "Content-Type": "application/json",
+                    "Content-Type": "application/json",
                 },
-                body: `http://${nodeIpaddress}:8084/transcoder/api/v1/uptime`,
-                signal: controller.signal,
+                body: JSON.stringify({url:`http://${nodeIpaddress}:8084/transcoder/api/v1/uptime`,
+                    timeout : 10
+                })
+                // signal: controller.signal,
             };
             const response = await fetch(url, options);
-            clearTimeout(timeout);
+            // clearTimeout(timeout);
 
             if (response.status === 204) {
+                setIsLoading(false);
+                setShowWarningPopup(true);
+                setIsError({ status: false, msg: "" });
+                return;
+            }
+
+             if (response.status === 500) {
                 setIsLoading(false);
                 setShowWarningPopup(true);
                 setIsError({ status: false, msg: "" });
@@ -422,7 +435,7 @@ const TcSummaryTab = ({ triggerCount }) => {
                 throw new Error("Data not found");
             }
         } catch (error) {
-            clearTimeout(timeout);
+            // clearTimeout(timeout);
             setUptimeIsLoading(false);
             setShowWarningPopup(true);
             // setIsError({ status: true, msg: error.message });
@@ -449,7 +462,9 @@ const TcSummaryTab = ({ triggerCount }) => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: `http://${nodeIpaddress}:8084/transcoder/api/v1/temp`,
+                body: JSON.stringify({url:`http://${nodeIpaddress}:8084/transcoder/api/v1/temp`,
+                    timeout : 5
+                })
             };
             const response = await fetch(url,options);
             const data = await response.json();

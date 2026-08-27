@@ -54,12 +54,14 @@ const TranscoderEventLog = ({ currentTab, nodeItemDt }) => {
 
             const options = {
                 method: "POST",
-                // headers: {
+                headers: {
                 //     'Authorization': `Basic ${token}`,
                 //     'Accept': 'application/json',
-                //     'Content-Type': 'application/json'
-                // }
-                body: url
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({url: url,
+                  timeout : 5
+                })
 
             }
             const response = await fetch(`api/v2/troubleshoot/${currentTab}/logs`, options)
