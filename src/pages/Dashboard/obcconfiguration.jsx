@@ -159,7 +159,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab ,triggerCount}) => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({url:`http://${nodeIpaddress}:8084/obc/api/v1/disk`,
-                        timeout: 10
+                        timeout: 3
                     })
             };
             const response = await fetch(url,options);
@@ -207,7 +207,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab ,triggerCount}) => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({url: `http://${nodeIpaddress}:8084/obc/api/v1/`,
-                timeout: 10 })
+                timeout: 3 })
                 // signal: controller.signal,
             };
             const response = await fetch(url,options);
@@ -330,7 +330,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab ,triggerCount}) => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({url: `http://${nodeIpaddress}:8084/obc/api/v1/uptime`,
-                      timeout: 10
+                      timeout: 3
                 })
                 // signal: controller.signal,
             };
@@ -471,7 +471,7 @@ const ObcMonitoringTab = ({ nodeItemDt, currentTab ,triggerCount}) => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({url:`http://${nodeIpaddress}:8084/obc/api/v1/config`,
-                    timeout: 10
+                    timeout: 3
                 })
             };
             const response = await fetch(url,options);

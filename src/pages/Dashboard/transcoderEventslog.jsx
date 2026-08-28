@@ -60,7 +60,7 @@ const TranscoderEventLog = ({ currentTab, nodeItemDt }) => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({url: url,
-                  timeout : 5
+                  timeout : 3
                 })
 
             }
@@ -263,7 +263,12 @@ const handleRowClick = (value) => {
   try {
   const response = await fetch("api/v2/troubleshoot/transcoder/logs", {
     method: "POST",
-    body: reportUrl
+    headers: {
+              "Content-Type": "application/json",
+            },
+    body: JSON.stringify({url:reportUrl, 
+          timeout : 0
+    })  
   });
 
   if (!response.ok) {

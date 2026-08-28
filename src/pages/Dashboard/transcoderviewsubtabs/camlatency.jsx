@@ -55,6 +55,22 @@ const CamLatencyChart = ({ graphOption, graphOptionValue ,labelName }) => {
     });
   };
 
+const convertToMs = (value) => {
+  const str = String(value ?? '').trim();
+  const num = parseFloat(str);
+
+  if (Number.isNaN(num)) return 0;
+
+  if (str.includes('ms')) {
+    return num;
+  }
+
+  if (str.includes('µs') || str.includes('Âµs')) {
+    return num / 1000;
+  }
+
+  return 0;
+};
 
 
   const getServerStatusDt = async (url) => {
@@ -67,7 +83,7 @@ const CamLatencyChart = ({ graphOption, graphOptionValue ,labelName }) => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({url:`http://${nodeIpaddress}:8084/transcoder/api/v1/cam/${labelName}`,
-                  timeout : 5
+                  timeout : 3
                 })
             } : {
                 method: "GET",

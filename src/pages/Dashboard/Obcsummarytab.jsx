@@ -45,7 +45,9 @@ const ObcSummaryTab = ({ nodeItemDt, currentTab }) => {
           // "Authorization": `Basic ${token}`,
           "Content-Type": "application/json",
         },
-        body: `http://${ipValue}:8084/${currentTab}/api/v1/uptime`,
+        body: JSON.stringify({url:`http://${ipValue}:8084/${currentTab}/api/v1/uptime`,
+              timeout : 3
+        })
       };
       const response = await fetch(url,options);
       const data = await response.json();

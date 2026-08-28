@@ -65,11 +65,11 @@ const ObcLatencyChart = ({ graphOption, graphOptionValue ,currentTab }) => {
        let requestBody = "";
         if(currentTab === 'transcoder'){
             requestBody = JSON.stringify({url:`http://${nodeIpaddress}:8084/obc/api/v1/connectivity/encoderip`, 
-                timeout : 5,
+                timeout : 3
             });
         }else if(currentTab === 'trainradio'){
             requestBody = JSON.stringify({url: `http://${nodeIpaddress}:8084/obc/api/v1/connectivity/trainradioip`,
-                timeout : 5,
+                timeout : 3
             });
         }
 
@@ -97,9 +97,25 @@ const ObcLatencyChart = ({ graphOption, graphOptionValue ,currentTab }) => {
           let dt = new Date();
 
           if(currentTab === 'transcoder'){
-            latency = data.encoderip || 0;
+            // latency = parseFloat(data?.data?.encoderip) || 0;
+            const latencyValueDt = data?.data?.encoderip || 0;
+            if (latencyValueDt.includes('ms')) {
+              latency = parseFloat(latencyValueDt) || 0;
+            } else if (latencyValueDt.includes('µs') || latencyValueDt.includes('Âµs')) {
+              latency = (parseFloat(latencyValueDt) || 0) / 1000;
+            } else {
+              latency = 0;
+            }
           }else if(currentTab === 'trainradio'){
-            latency = data.trainradioip || 0;
+            // latency = parseFloat(data?.data?.trainradioip)/1000 || 0;
+            const latencyValue = data?.data?.trainradioip || 0;
+            if (latencyValue.includes('ms')) {
+              latency = parseFloat(latencyValue) || 0;
+            } else if (latencyValue.includes('µs') || latencyValue.includes('Âµs')) {
+              latency = (parseFloat(latencyValue) || 0) / 1000;
+            } else {
+              latency = 0;
+            }
           }
 
           const dataNew = {

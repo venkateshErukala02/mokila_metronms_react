@@ -69,7 +69,7 @@ const LocalSnrObc = ({ graphOption, graphOptionValue, currentTab }) => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({url:`http://${nodeIpaddress}:8084/obc/api/v1/radstat/snr`,
-                    timeout : 5,
+                    timeout : 3
                 })
                 } : {
             method: "GET",

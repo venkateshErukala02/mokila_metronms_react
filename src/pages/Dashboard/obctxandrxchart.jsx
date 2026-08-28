@@ -64,11 +64,11 @@ const ObcTxRxDiffchart = ({ graphOption, graphOptionValue,currentTab }) => {
             let requestBody = "";
             if(currentTab === 'transcoder'){
                 requestBody = JSON.stringify({url:`http://${nodeIpaddress}:8084/obc/api/v1/tranthpt`,
-                    timeout : 5  
+                    timeout : 3  
                 });
             }else if(currentTab === 'trainradio'){
                 requestBody = JSON.stringify({url:`http://${nodeIpaddress}:8084/obc/api/v1/radstat/txrx`,
-                  timeout : 5  
+                  timeout : 3  
                 });
             }
             const options =  graphOption === "live" ? {

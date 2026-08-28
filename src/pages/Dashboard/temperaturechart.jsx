@@ -50,7 +50,7 @@ const TemperatureChart = ({ graphOption, graphOptionValue }) => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({url:`http://${nodeIpaddress}:8084/transcoder/api/v1/temp`,
-                    timeout : 5
+                    timeout : 3
                 })
             }  : {
                   method: "GET",

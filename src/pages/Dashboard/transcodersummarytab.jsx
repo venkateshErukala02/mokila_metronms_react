@@ -140,7 +140,7 @@ const TcSummaryTab = ({ triggerCount }) => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({url:`http://${nodeIpaddress}:8084/transcoder/api/v1/config`,
-                    timeout : 5
+                    timeout : 3
                 })
             };
             const response = await fetch(url,options);
@@ -272,7 +272,7 @@ const TcSummaryTab = ({ triggerCount }) => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({url:`http://${nodeIpaddress}:8084/transcoder/api/v1/`,
-                    timeout : 5
+                    timeout : 3
                 })
                 // signal: controller.signal,
             };
@@ -393,7 +393,7 @@ const TcSummaryTab = ({ triggerCount }) => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({url:`http://${nodeIpaddress}:8084/transcoder/api/v1/uptime`,
-                    timeout : 10
+                    timeout : 3
                 })
                 // signal: controller.signal,
             };
@@ -463,7 +463,7 @@ const TcSummaryTab = ({ triggerCount }) => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({url:`http://${nodeIpaddress}:8084/transcoder/api/v1/temp`,
-                    timeout : 5
+                    timeout : 3
                 })
             };
             const response = await fetch(url,options);
@@ -558,7 +558,9 @@ const TcSummaryTab = ({ triggerCount }) => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: `http://${nodeIpaddress}:8084/transcoder/api/v1/cam/${camName}`,
+                body:  JSON.stringify({url:`http://${nodeIpaddress}:8084/transcoder/api/v1/cam/${camName}`,
+                        timeout : 3
+                })
             });
 
             const data = await response.json();
@@ -573,9 +575,14 @@ const TcSummaryTab = ({ triggerCount }) => {
             let ms, bytes;
             const pingValue = data?.data?.[camName];
             if (pingValue) {
-                const microseconds = parseFloat(pingValue.replace("µs", ""));
-                ms = microseconds / 1000;   // convert to milliseconds
-                bytes = microseconds / 600; // your custom formula
+                 if (pingValue.includes("ms")) {
+                    ms = parseFloat(pingValue.replace("ms", ""));
+                    bytes = ms; 
+                } else if (pingValue.includes("µs") || pingValue.includes("Âµs")) {
+                    const microseconds = parseFloat(pingValue.replace("µs", ""));
+                    ms = microseconds / 1000;
+                    bytes = microseconds / 600;
+                }
             } else {
                 ms = "N/A";
                 bytes = 0;
@@ -635,7 +642,14 @@ const TcSummaryTab = ({ triggerCount }) => {
             // const startUrl = `http://${nodeIpaddress}:8084/transcoder/api/v1/service/start`;
 
             // Stop service
-            const stopResponse = await fetch('api/v2/troubleshoot/transcoder/stop', { method: "POST",body: `http://${nodeIpaddress}:8084/transcoder/api/v1/service/stop`});
+            const stopResponse = await fetch('api/v2/troubleshoot/transcoder/stop', { method: "POST",
+                 headers: {
+                    "Content-Type": "application/json",
+                    },
+                body: JSON.stringify({url:`http://${nodeIpaddress}:8084/transcoder/api/v1/service/stop`,
+                        timeout : 0
+                    })
+                });
             if (!stopResponse.ok) {
                 throw new Error(`Failed to stop transcoder. Status: ${stopResponse.status}`);
             }
@@ -645,7 +659,14 @@ const TcSummaryTab = ({ triggerCount }) => {
             await new Promise((resolve) => setTimeout(resolve, 10000));
 
             // Start service
-            const startResponse = await fetch('api/v2/troubleshoot/transcoder/start', { method: "POST",body: `http://${nodeIpaddress}:8084/transcoder/api/v1/service/start` });
+            const startResponse = await fetch('api/v2/troubleshoot/transcoder/start', { method: "POST",
+                 headers: {
+                    "Content-Type": "application/json",
+                    },
+                body: JSON.stringify({url:`http://${nodeIpaddress}:8084/transcoder/api/v1/service/start`,
+                    timeout : 0  
+                    })
+                });
             if (!startResponse.ok) {
                 throw new Error(`Failed to start transcoder. Status: ${startResponse.status}`);
             }
@@ -672,7 +693,14 @@ const TcSummaryTab = ({ triggerCount }) => {
             // const startUrl = `http://${nodeIpaddress}:8084/transcoder/api/v1/service/start`;
 
             // Stop service
-            const stopResponse = await fetch('api/v2/troubleshoot/transcoder/stop', { method: "POST",body: `http://${nodeIpaddress}:8084/transcoder/api/v1/service/stop`, });
+            const stopResponse = await fetch('api/v2/troubleshoot/transcoder/stop', { method: "POST", 
+                headers: {
+                "Content-Type": "application/json",
+                },
+                body: JSON.stringify({url:`http://${nodeIpaddress}:8084/transcoder/api/v1/service/stop`,
+                    timeout : 0
+                })
+            });
             if (!stopResponse.ok) {
                 throw new Error(`Failed to stop transcoder. Status: ${stopResponse.status}`);
             }
@@ -682,7 +710,14 @@ const TcSummaryTab = ({ triggerCount }) => {
             await new Promise((resolve) => setTimeout(resolve, 10000));
 
             // Start service
-            const startResponse = await fetch('api/v2/troubleshoot/transcoder/start', { method: "POST",body: `http://${nodeIpaddress}:8084/transcoder/api/v1/service/start` });
+            const startResponse = await fetch('api/v2/troubleshoot/transcoder/start', { method: "POST", 
+                headers: {
+                "Content-Type": "application/json",
+                 },
+                 body: JSON.stringify({url:`http://${nodeIpaddress}:8084/transcoder/api/v1/service/start`,
+                timeout : 0
+                 })
+            });
             if (!startResponse.ok) {
                 throw new Error(`Failed to start transcoder. Status: ${startResponse.status}`);
             }
