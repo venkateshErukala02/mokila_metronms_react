@@ -73,7 +73,7 @@ const TranscoderEventLog = ({ currentTab, nodeItemDt }) => {
                 setIsLoading(false);
                 setIsError({ status: false, msg: "" });
 
-            }else if(response.status === '404'){
+            }else if(response.status === 404){
                 setEventLogDt([]);
 
             } 
@@ -114,7 +114,7 @@ const TranscoderEventLog = ({ currentTab, nodeItemDt }) => {
                 setIsLoading(false);
                 setIsError({ status: false, msg: "" });
 
-            }else if(response.status === '404'){
+            }else if(response.status === 404){
                 setEventLogDt([]);
 
             } 

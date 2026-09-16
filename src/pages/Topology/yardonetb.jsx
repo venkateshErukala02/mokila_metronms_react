@@ -2,6 +2,9 @@ import { faL } from "@fortawesome/free-solid-svg-icons";
 import React,{useState,useEffect, useMemo} from "react";
 import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { handleNodeData } from "../Action/action";
 
 const YardTbone=({textName,yardfacilitieData,yardData})=>{
     const [isLoading, setIsLoading] = useState(false);
@@ -10,6 +13,8 @@ const YardTbone=({textName,yardfacilitieData,yardData})=>{
     const [sortedData, setSortedData] = useState([]); 
     const [sortOrder, setSortOrder] = useState('asc'); 
     const [sortField, setSortField] = useState('');
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
    const dataToUse = (yardfacilitieData && yardfacilitieData.length > 0) 
     ? yardfacilitieData 
@@ -52,8 +57,10 @@ const YardTbone=({textName,yardfacilitieData,yardData})=>{
     const fetchData = async () => {
 
         if (!dataToUse || dataToUse.length === 0)  return;
-        setSortedData([...dataToUse]);
-        for (const node of dataToUse) {
+        const filteredData = dataToUse.filter(node => node.type === 'AP');
+        if (filteredData.length === 0) return;
+        setSortedData([...filteredData]);
+        for (const node of filteredData) {
              if (signal.aborted) return;
             // const url = `api/v2/nodelinks/linkstatstest?nodeId=0`; // test API
             const url = `api/v2/nodelinks/linkstats?nodeId=${node.nodeId}`; // working API
@@ -132,6 +139,24 @@ const YardTbone=({textName,yardfacilitieData,yardData})=>{
 
     setSortedData(sortedArray); 
   };
+
+   const handleRowClick = (node) => {
+          if (!node?.type) {
+                  return;
+              }
+                if (`${node.type}` === 'AP') {
+                    navigate('/SN-view')
+                    dispatch(handleNodeData(node))
+                } 
+              //   else if(`${node.deviceType}` === 'CAM'){
+              //         alert('Node-View Not Supported')
+              //     } 
+                  else {
+                          navigate(`/${node.type}-view`, { state: { node }});
+                          dispatch(handleNodeData(node))
+                }
+        
+            };
   
 
     return(
@@ -182,8 +207,11 @@ const YardTbone=({textName,yardfacilitieData,yardData})=>{
                                 .map((node, index) => (
                             <tr key={index}>
                                 <td style={{paddingLeft:"12px"}}>{node.connectedTo}</td>
-                                <td>{node.systemName}</td>
-                                <td>{node.ipAddress}</td>
+                                <td><a href={`http://${node.ipAddress}`} target="_blank" rel="noreferrer">{node.systemName}</a></td>
+                                <td><span
+                                        className="highlightText"
+                                        onClick={() => handleRowClick(node)}
+                                        >{node.ipAddress}</span></td>
                                 <td style={{paddingLeft:"16px"}}>{node.status}</td>
                                 <td style={{paddingLeft:"52px"}}>{(linkData[node.nodeId] || []).length}</td>
                                      <td>

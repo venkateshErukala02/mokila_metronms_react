@@ -293,7 +293,9 @@ useEffect(()=>{
             else{
             //  urlStation= `api/v2/treeview/station/${stationId}`;
                 }
-            }else{
+            }else if(textName?.data?.mode === 'yard_1'){
+                urlStation= `api/v2/treeview/station/${stationId}`;
+            }else if(textName?.data?.type === 'facility'){
                 urlStation= `api/v2/treeview/station/${stationId}`;
             }
         const urlTrains = `api/v2/treeview/trains/${stationId}`;
@@ -350,6 +352,9 @@ useEffect(() => {
   if (!enableStationPolling) return;
   if (stationRefreshKey < 0) return;
   if (!stationIdFromSvg) return;
+  if (textName?.data?.mode === 'yard_1') return;
+  if (textName?.data?.mode === 'yard') return;
+  if (textName?.data?.mode === 'Trains') return;
   setTrainData('');
 
   const stationId = stationIdFromSvg;
@@ -379,7 +384,7 @@ useEffect(() => {
     }
   };
 
-}, [stationRefreshKey, selectedTab, stationIdFromSvg, enableStationPolling]);
+}, [stationRefreshKey, selectedTab, stationIdFromSvg, enableStationPolling,textName]);
 
 
 // useEffect(() => {

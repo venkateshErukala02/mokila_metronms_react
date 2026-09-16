@@ -90,6 +90,18 @@ const WaysideTagContainer=()=>{
     
                 };
                 const response = await fetch(url, options);
+
+                if (response.status === 204) {
+                    setIsLoading(false);
+                    setTagData([]);
+                    return;
+                }
+                if (response.status === 500) {
+                    console.log('No data is available on the server side.');
+                    setIsLoading(false);
+                    setTagData([]);
+                    return;
+                }
     
                 const data = await response.json();
     
