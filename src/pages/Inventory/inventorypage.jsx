@@ -663,6 +663,51 @@ const columnPadding = {
         setTagType(event.target.value);
         };
 
+
+         const getReportDataTdm = async (tagtype) => {
+    
+        try {
+
+            if (!tagtype) {
+            console.error("tagtype is missing");
+            return;
+        }   
+            let updatedUrl = `api/v2/wayside/reportjob/${tagtype}`;
+          
+            const response = await fetch(updatedUrl, {
+                method: "GET",
+                headers: {
+                    // 'Authorization': `Basic ${token}`
+                },
+                // body: formData, 
+            });
+    
+             if (!response.ok) {
+            const errText = await response.text();
+            setIsError(`Error starting download: ${errText}`);
+            return;
+        }
+
+        const blob = await response.blob();
+
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+
+        const filename = response.headers.get('Content-Disposition')?.split('filename=')[1] || 'report.csv';
+        a.href = downloadUrl;
+        a.download = filename.replace(/"/g, '');
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        window.URL.revokeObjectURL(downloadUrl);
+        } catch (error) {
+            setIsError('An error occurred while contacting the server.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <>
             <article className="display-f">
@@ -675,7 +720,7 @@ const columnPadding = {
                         <h1 className="inventtitle">Inventory Reports</h1>
 
                         <article className="row custom-row border-allsd">
-                            <article className="col-md-7">
+                            <article className="col-md-5">
                                 <button type="button" className="arrowlf" onClick={handleDecrementOffset}>
                                     <i className="fa-solid fa-arrow-left"></i>
                                 </button>
@@ -692,7 +737,7 @@ const columnPadding = {
                                 <button className="createbtn" type="button" onClick={handleClearSearch} style={{ display: 'inline-block', marginLeft: '7px', display: searchBtn === true ? 'inline-block' : 'none' }}> Clear Search</button>
 
                             </article>
-                            <article className="col-md-5">
+                            <article className="col-md-7">
                                 <article style={{ float: 'right' }}>
                                     <ul className="inventorylist">
 
@@ -744,6 +789,18 @@ const columnPadding = {
                                         </li>
                                         <li>
                                             <button type="button" className="createbtn" onClick={handleOpenTagpopup}>RF TAG Report
+                                                <i className="fa fa-file-text" aria-hidden="true"></i>
+                                            </button>
+
+                                        </li>
+                                         <li>
+                                            <button type="button" className="createbtn" onClick={()=> getReportDataTdm('tdm')}>TDM Tag Report
+                                                <i className="fa fa-file-text" aria-hidden="true"></i>
+                                            </button>
+
+                                        </li>
+                                         <li>
+                                            <button type="button" className="createbtn" onClick={()=> getReportDataTdm('ntdm')}>NTDM Tag Report
                                                 <i className="fa fa-file-text" aria-hidden="true"></i>
                                             </button>
 
