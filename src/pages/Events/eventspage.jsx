@@ -89,41 +89,61 @@ const EventPg = () => {
 
     const handleFromDateChange = (date) => {
             setSelectedFromDate(date);
-            const timestamp = date.getTime();  
-            setTimestampFrom(timestamp);        
+             if (date) {
+                setTimestampFrom(date.getTime());
+            } else {
+                setTimestampFrom(null);
+            }
+            // const timestamp = date.getTime();  
+            // setTimestampFrom(timestamp);        
         };
 
     const handleToDateChange = (date) => {
         setSelectedToDate(date);
-        const timestamp = date.getTime();  
-        setTimestampTo(timestamp);        
+         if (date) {
+            setTimestampTo(date.getTime());
+        } else {
+            setTimestampTo(null);
+        }
+        // const timestamp = date.getTime();  
+        // setTimestampTo(timestamp);        
     };
 
 
     const handleStartDateChange = (date) => {
             setSelectedStartDate(date);
-            const timestamp = date.getTime();  
-            setTimestampStart(timestamp);        
+             if (date) {
+                setTimestampStart(date.getTime());
+            } else {
+                setTimestampStart(null);
+            }
+            // const timestamp = date.getTime();  
+            // setTimestampStart(timestamp);        
         };
 
     const handleEndDateChange = (date) => {
         setSelectedEndDate(date);
-        const timestamp = date.getTime();  
-        setTimestampEnd(timestamp);        
+         if (date) {
+            setTimestampEnd(date.getTime());
+        } else {
+            setTimestampEnd(null);
+        }
+        // const timestamp = date.getTime();  
+        // setTimestampEnd(timestamp);        
     };
 
 
 
     const ExportCabData =  async(e) => {
         if (e) e.preventDefault(); 
-        if(cabNumber.length !== 4){
-            setShowWarningPopup(true)
-            return;
-        }
-        const tId = cabNumber.substring(0, 3); 
-        const cId = cabNumber.substring(3);
+        // if(cabNumber.length !== 4){
+        //     setShowWarningPopup(true)
+        //     return;
+        // }
+        // const tId = cabNumber.substring(0, 3); 
+        // const cId = cabNumber.substring(3);
 
-        if (!timestampFrom || !timestampTo) {
+          if (!timestampFrom || !timestampTo) {
            setShowCustomDateAlertPopup(true);
             return;
         }
@@ -132,11 +152,30 @@ const EventPg = () => {
            setShowCustomDateLimitAlertPopup(true)
             return;
         }
+
+        if (!cabNumber || !cabNumber.trim()) {
+            setShowWarningPopup(true);
+            return;
+        }
+
+        const cabNumbers = cabNumber
+        .split(",")
+        .map((cab) => cab.trim())
+        .filter((cab) => cab !== "");
+
+        const invalidCabNumber = cabNumbers.find(
+            (cab) => !/^\d{4}$/.test(cab) || !/[16]$/.test(cab)
+            );
+
+        if (invalidCabNumber) {
+            setShowWarningPopup(true);
+            return;
+        }
         
-            let url =`api/v2/nodes/cabreport/${tId}/${cId}/${timestampFrom}/${timestampTo}`;
+            let url =`api/v2/nodes/cabreport?cabIds=${cabNumber}&start=${timestampFrom}&end=${timestampTo}`;
 
             if (searchTextInTrain?.trim()) {
-                url += `?search=${encodeURIComponent(searchTextInTrain.trim())}`;
+                url += `&search=${encodeURIComponent(searchTextInTrain.trim())}`;
             }
 
              try {
@@ -173,13 +212,13 @@ const EventPg = () => {
     document.body.removeChild(a);  // Clean up the element
 
     // Optionally reset your state here
-    setCabNumber('');
-    setSelectedFromDate(null);
-    setSelectedToDate(null);
-    setTimestampFrom(null);
-    setTimestampTo(null);
-    setCabNumberIpsData([]);
-    setSearchTextInTrain('');
+    // setCabNumber('');
+    // setSelectedFromDate(null);
+    // setSelectedToDate(null);
+    // setTimestampFrom(null);
+    // setTimestampTo(null);
+    // setCabNumberIpsData([]);
+    // setSearchTextInTrain('');
         } else {
             console.error('Error fetching data:', response.statusText);
         }
@@ -243,14 +282,14 @@ const EventPg = () => {
 
         a.remove();
         window.URL.revokeObjectURL(downloadUrl);
-        setLineNameSel('-1');
-        setStationNameSel('-1');
-        setSelectedPosition("select");
-        setStationIpsData([]);
-        setSelectedStartDate(null);
-        setSelectedEndDate(null);
-        setTimestampStart(null);
-        setTimestampEnd(null);
+        // setLineNameSel('-1');
+        // setStationNameSel('-1');
+        // setSelectedPosition("select");
+        // setStationIpsData([]);
+        // setSelectedStartDate(null);
+        // setSelectedEndDate(null);
+        // setTimestampStart(null);
+        // setTimestampEnd(null);
 
         } catch (error) {
             setIsError('An error occurred while contacting the server.');
@@ -276,6 +315,8 @@ const EventPg = () => {
         setSelectedEndDate(null);
         setSelectedFromDate(null);
         setSelectedStartDate(null);
+        setSearchTextInTrain("");
+        setTimestampStart(null);
         
     },[selectedLogVal])
 
@@ -345,16 +386,31 @@ const EventPg = () => {
         }
     };
 
-     const handleCabNumberIp = async () => {
-        if (!cabNumber) {
+     const handleCabNumberIp = async (cabNumber) => {
+        if (!cabNumber || !cabNumber.trim()) {
             setShowWarningPopup(true);
             return;
         }
+
+        const cabNumbers = cabNumber
+        .split(",")
+        .map((cab) => cab.trim())
+        .filter((cab) => cab !== "");
+
+        const invalidCabNumber = cabNumbers.find(
+            (cab) => !/^\d{4}$/.test(cab) || !/[16]$/.test(cab)
+            );
+
+        if (invalidCabNumber) {
+            setShowWarningPopup(true);
+            return;
+        }
+
         setIsLoading(true);
         setIsError({ status: false, msg: "" });
 
         try {
-            const response = await fetch(`api/v2/treeview/train?trainId=${cabNumber}`,
+            const response = await fetch(`api/v2/treeview/train?trainId=${encodeURIComponent(cabNumber)}`,
                 {
                     method: "GET",
                     headers: {
@@ -369,7 +425,7 @@ const EventPg = () => {
                 return;
             }
             if (response.status === 400) {
-                alert("Please enter a valid cab number.")
+                // alert("Please enter a valid cab number.")
                 setIsLoading(false);
                 return;
             }
@@ -393,19 +449,36 @@ const EventPg = () => {
 const handleCabNumberChange = (e) => {
     const value = e.target.value;
 
-    if (!/^\d*$/.test(value)) return;
+    // if (!/^\d*$/.test(value)) return;
 
     setCabNumber(value);
 };
 
 
-useEffect(() => {
-    if (/^\d{4}$/.test(cabNumber)) {
-        handleCabNumberIp(cabNumber);
-    }
-}, [cabNumber]);
+// useEffect(() => {
+//     // if (/^\d{4}$/.test(cabNumber)) {
+//         handleCabNumberIp(cabNumber);
+//     // }
+// }, [cabNumber]);
 
-
+    const handleResetExportlogInput = () => {
+        setSelectedFromDate(null);
+        setTimestampFrom(null); 
+        setSelectedToDate(null);
+        setTimestampTo(null);
+        setCabNumber("");
+        setSearchTextInTrain("");
+        setCabNumberIpsData([]);
+        setLineNameSel('-1');
+        setStationNameSel('-1');
+        setSelectedPosition("select");
+        setStationIpsData([]);
+        setSelectedStartDate(null);
+        setSelectedEndDate(null);
+        setTimestampStart(null);
+        setTimestampEnd(null);
+        setStationData([]);
+    };
 
     return (
         <>
@@ -422,17 +495,22 @@ useEffect(() => {
                      <article className="col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2" style={{padding:'8px 13px 0 13px'}}>
                         <article className="border-allsd exportcabcolheight">
                         <h1 className="evntsheadcl border-allsd">Export Logs</h1>
-
-                            <article style={{padding:'7px'}}>
+                            <article className="row">
+                             <article className="col-sm-9 col-md-9 col-lg-9 col-xl-9 col-xxl-9"  style={{padding:'7px'}}>
                                     <label htmlFor="name"  className="selectlbl" style={{ display: 'inline-block' }}>Select:</label>
                             <select name="name" id="name" value={selectedLogVal} onChange={handleSelectedLog} className="form-controll1" style={{ maxWidth: '94px', minWidth: '94px' }}>
                                     <option value="train">Train</option>
                                     <option value="station">Station</option>
                             </select>
                             </article>
+                             <article className="col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3" style={{padding:'10px 8px'}}>
+                            <button type="button" className="createbtn" onClick={handleResetExportlogInput}>Reset</button> 
+                            </article>
+                            </article>
                       {selectedLogVal === 'train' && <article style={{padding:"12px"}}>
                          <label className="settinglabelsub">Select Duration</label>
                           <article className="labelaligncl">
+                            <div style={{ position: "relative", display: "inline-block" }}>
                             <DatePicker
                             autoComplete="off"
                             selected={selectedFromDate}
@@ -441,8 +519,21 @@ useEffect(() => {
                             placeholderText="Start Date"
                             onChange={handleFromDateChange}
                             className="myDatepickercl" />
+                            {selectedFromDate && (
+                                    <button
+                                        type="button"
+                                        className="clear-btn"
+                                        onClick={() => {setSelectedFromDate(null);
+                                            setTimestampFrom(null);      
+                                        }}
+                                    >
+                                        ✖
+                                    </button>
+                                )}
+                            </div>
                             </article>
                             <article className="labelaligncl">
+                                <div style={{ position: "relative", display: "inline-block" }}>
                            <DatePicker
                             autoComplete="off"
                             selected={selectedToDate}
@@ -451,6 +542,18 @@ useEffect(() => {
                             placeholderText="End Date"
                             onChange={handleToDateChange}
                             className="myDatepickercl" />
+                            {selectedToDate && (
+                                <button
+                                    type="button"
+                                    className="clear-btn"
+                                    onClick={() =>{ setSelectedToDate(null);
+                                            setTimestampTo(null);
+                                    }}
+                                >
+                                    ✖
+                                </button>
+                                )}
+                            </div>
                             </article>
                             <label className="settinglabelsub labelaligncl">Cab Number</label>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px',marginBottom:'12px' }}>
@@ -460,7 +563,7 @@ useEffect(() => {
                              value={cabNumber}
                                 required
                                 onChange={handleCabNumberChange}
-                                maxLength={4}
+                                // maxLength={4}
                                 // onChange={(e) => setCabNumber(e.target.value)}
                                 name="" placeholder="Enter Cab Number" id="" className="settinglabelsubinp" />
                                 {cabNumber && (
@@ -477,6 +580,7 @@ useEffect(() => {
                                     </button>
                                 )}
                                 </div>
+                                <button type="button" className="createbtn"  onClick={() => handleCabNumberIp(cabNumber)}>Set</button>
                               
                                 </div>
                                  {/* <label className="settinglabelsub labelaligncl">Cab Number</label> */}
@@ -514,20 +618,53 @@ useEffect(() => {
                                 </table>
 
                                 <div style={{ height: 'calc(16vh - 40px)', overflowY: 'auto',width: '100%' }}>
-                                    <table className="col-md-12 col-sm-12 col-lg-12 col-xl-12" style={{ tableLayout: 'fixed', width: '100%' }}>
-                                        <tbody className="configbdtb" style={{ textAlign: 'center' }}>
-                                             {cabNumberIpsData && Object.keys(cabNumberIpsData).length > 0 ? (
-                                                Object.entries(cabNumberIpsData).map(([key, value], index) => (
-                                                <tr key={index}>
-                                                    <td style={{ width: '114px',paddingLeft:'19px' }}>{key}</td>
-                                                    <td style={{ width: '91px' }}>{value}</td>
-                                                </tr>
-                                                ))  
+                                    <table
+                                        className="col-md-12 col-sm-12 col-lg-12 col-xl-12"
+                                        style={{
+                                            tableLayout: 'fixed',
+                                            width: '100%'
+                                        }}
+                                    >
+                                        <tbody
+                                            className="configbdtb"
+                                            style={{ textAlign: 'center' }}
+                                        >
+                                            {cabNumberIpsData &&
+                                            Object.keys(cabNumberIpsData).length > 0 ? (
+                                                Object.entries(cabNumberIpsData).map(
+                                                    ([trainId, trainData]) => (
+                                                        <React.Fragment key={trainId}>
+                                                            {Object.entries(trainData)
+                                                                .filter(([key]) => key !== 'trainId')
+                                                                .map(([key, value]) => (
+                                                                    <tr key={key}>
+                                                                        <td
+                                                                            style={{
+                                                                                width: '114px',
+                                                                                paddingLeft: '19px'
+                                                                            }}
+                                                                        >
+                                                                            {key}
+                                                                        </td>
+
+                                                                        <td
+                                                                            style={{
+                                                                                width: '91px'
+                                                                            }}
+                                                                        >
+                                                                            {value}
+                                                                        </td>
+                                                                    </tr>
+                                                                ))}
+                                                        </React.Fragment>
+                                                    )
+                                                )
                                             ) : (
-                                                // <tr>
-                                                //     <td colSpan="4">No items found</td>
-                                                // </tr>
-                                                ''
+                                                <tr>
+                                                    <td colSpan="2" style={{textAlign:'center'}}>
+                                                        No data available
+                                                    </td>
+                                                </tr>
                                             )}
                                         </tbody>
                                     </table>
@@ -543,6 +680,7 @@ useEffect(() => {
                              <article style={{padding:"0px 12px 12px"}}>
                                 <label className="settinglabelsub">Select Duration</label>
                                   <article className="labelaligncl">
+                                     <div style={{ position: "relative", display: "inline-block" }}>
                             <DatePicker
                             autoComplete="off"
                             selected={selectedStartDate}
@@ -552,8 +690,21 @@ useEffect(() => {
                             onChange={handleStartDateChange}
                             className="myDatepickercl" 
                             />
+                                {selectedStartDate && (
+                                <button
+                                    type="button"
+                                    className="clear-btn"
+                                    onClick={() =>{ setSelectedStartDate(null);
+                                            setTimestampStart(null);
+                                    }}
+                                >
+                                    ✖
+                                </button>
+                                )}
+                            </div>
                             </article>
                             <article className="labelaligncl">
+                                 <div style={{ position: "relative", display: "inline-block" }}>
                            <DatePicker
                             autoComplete="off"
                             selected={selectedEndDate}
@@ -563,6 +714,18 @@ useEffect(() => {
                             onChange={handleEndDateChange}
                             className="myDatepickercl" 
                             />
+                                 {selectedEndDate && (
+                                <button
+                                    type="button"
+                                    className="clear-btn"
+                                    onClick={() => {setSelectedEndDate(null);
+                                            setTimestampEnd(null); 
+                                    }}
+                                >
+                                    ✖
+                                </button>
+                                )}
+                            </div>
                         </article>
                             <article>
                                 <label htmlFor="name" className="vlanlabel">Select Line</label>

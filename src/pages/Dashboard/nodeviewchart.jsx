@@ -18,6 +18,7 @@ const NetworkMonitoringDashboard = () => {
   const [graphOptionValue, setGraphOptionValue] = useState('1l');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [latencyChartStatus,setLatencyChartStatus] = useState(true);
   const [opacity, setOpacity] = React.useState({
     uv: 1,
     pv: 1,
@@ -53,7 +54,9 @@ const data = [
   { date: new Date('2024-01-04'), value: 80 }
 ]
 
-
+const handleLatencychart=()=>{
+  setLatencyChartStatus(prevStatus => !prevStatus)
+}
 
   return (
     <>
@@ -137,17 +140,29 @@ const data = [
         </article>
         <article className="container-fluid" style={{ marginTop: '10px' }}>
           <article className="row">
-            <article className="col-md-12 graphbord1" style={{marginTop:'25px'}}>
+
+            {stationDataCode === 'SN'&& ( <article className="col-md-12">
+                 <article className="latency-togglebtn cpuart-highlight" style={{textAlign:'center',marginTop:"10px"}}>
+                   <span className={`${latencyChartStatus === true ? 'cpu-higlight': ''}`}>Latency </span><i class={`fa-solid fa-toggle-on ${latencyChartStatus === true ? 'fa-rotate-180' : ''} `} onClick={handleLatencychart}></i> <span className={`${latencyChartStatus === true ? '': 'cpu-higlight'}`}>Send Failures</span>
+                  </article> 
+                <article className="col-md-12 graphbord1" style={{marginTop:'12px'}}>
+              <article className="latencyfullwidthcl-monitortab">
+              {latencyChartStatus ? (
+               <LatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue} /> ) :(
+            <RetriesChart graphOption={graphOption} graphOptionValue={graphOptionValue} />)}
+              </article>
+            </article>
+
+                  </article>
+            )}
+
+
+          {stationDataCode === 'TR'&& (  <article className="col-md-12 graphbord1" style={{marginTop:'25px'}}>
               <article className="latencyfullwidthcl-monitortab">
               
                <LatencyChart graphOption={graphOption} graphOptionValue={graphOptionValue} />
               </article>
-            </article>
-           {stationDataCode === 'SN' ? (  <article className="col-md-12 graphbord2" style={{marginTop:'25px'}}>
-              <article className="latencyfullwidthcl-monitortab">
-            <RetriesChart graphOption={graphOption} graphOptionValue={graphOptionValue} />
-              </article>
-            </article>) :""}
+            </article>)}
           </article>
         </article>
       </article>
