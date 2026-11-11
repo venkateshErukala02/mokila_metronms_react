@@ -143,7 +143,7 @@ const handleLatencychart=()=>{
 
             {stationDataCode === 'SN'&& ( <article className="col-md-12">
                  <article className="latency-togglebtn cpuart-highlight" style={{textAlign:'center',marginTop:"10px"}}>
-                   <span className={`${latencyChartStatus === true ? 'cpu-higlight': ''}`}>Latency </span><i class={`fa-solid fa-toggle-on ${latencyChartStatus === true ? 'fa-rotate-180' : ''} `} onClick={handleLatencychart}></i> <span className={`${latencyChartStatus === true ? '': 'cpu-higlight'}`}>Send Failures</span>
+                   <span className={`${latencyChartStatus === true ? 'cpu-higlight': ''}`}>Latency </span><i class={`fa-solid fa-toggle-on ${latencyChartStatus === true ? 'fa-rotate-180' : ''} `} onClick={handleLatencychart}></i> <span className={`${latencyChartStatus === true ? '': 'cpu-higlight'}`}>Errors</span>
                   </article> 
                 <article className="col-md-12 graphbord1" style={{marginTop:'12px'}}>
               <article className="latencyfullwidthcl-monitortab">

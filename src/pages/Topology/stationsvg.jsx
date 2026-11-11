@@ -732,7 +732,7 @@ const handleTrainClick = (event) => {
   );
 
   const titleElements = svgRoot.querySelectorAll(
-    '[id^="ts-SB-R"], [id^="ts-NB-R"]'
+    '[id^="ts-SB-R"], [id^="ts-NB-R"], [id^="ts-TC"] ,[id^="ts-C"]'
   );
 
   const elementsTc = svgRoot.querySelectorAll(
@@ -818,10 +818,18 @@ const handleTrainClick = (event) => {
     titleElement.textContent = rdDataTitle;
   }
 
-  if (
-    rdData &&
-    rdData.length > 0 &&
-    rdData[0]?.length > 0
+  try { 
+    if (
+    // rdData &&
+    // rdData.length > 0 &&  initial code three lines 
+    // rdData[0]?.length > 0
+  //     Array.isArray(rdData) &&
+  // (
+  //   rdData[0] === undefined || second code 4 lines
+  //   rdData[0] === null ||
+  //   rdData[0]?.length > 0
+  // )
+  Array.isArray(rdData) && ( rdData[0] == null || (Array.isArray(rdData[0]) && rdData[0].length > 0) )  
   ) {
 
     yardfacilitieDataRef?.current?.forEach((item) => {
@@ -909,6 +917,9 @@ const handleTrainClick = (event) => {
       }
     });
   }
+  } catch (error) {
+  console.error('Error while updating SVG:', error);
+}
 
 
   
