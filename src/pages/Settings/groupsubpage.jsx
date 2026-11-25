@@ -20,8 +20,8 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
     const [groupSubData,setGroupSubData] = useState([]);
 
 
-    const handleProfileContclose=(e)=>{
-          e.preventDefault(); 
+    const handleProfileContclose=()=>{
+        //   e.preventDefault(); 
         handleSubContainer()
     }
 
@@ -177,7 +177,7 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
                         </article>
                         <article className="border-allsd" style={{margin:'0 0 0 5px'}}>
                             <article >
-                                <form action="" style={{margin: '7px 10px 0 10px'}}>
+                                <form  onSubmit={handleAddGroup} style={{margin: '7px 10px 0 10px'}}>
                                 <label className="settinglabelsub">Group Name</label>
                                 <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" value={groupName}  onChange={(e)=> setGroupName(e.target.value)} disabled={isEditMode}/>
                                 <article>
@@ -232,8 +232,9 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
                                 </ul>
                                 <hr className="hrnote" />
                                 <center className="d-f">
-                                        <button className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
-                                        <button type="button" onClick={handleAddGroup}
+                                        <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
+                                        <button type="submit" 
+                                        // onClick={handleAddGroup}
                                         disabled={currentUser === "Read-only"}
                                         className={`creatsetingbtn ${
                                         currentUser === "Read-only" ? "btndisable" : ""
@@ -257,6 +258,7 @@ const GroupSubCont=({handleSubContainer,refreshGroupData,mode,group})=>{
                                     </article>
                                     <article style={{ textAlign: 'end' }}>
                                         <button
+                                        type="button"
                                         className="confirmdeletebtn confirmdeletebtnyes"
                                         onClick={() =>{ setShowAddedSuccessPopup(false);
                                             handleProfileContclose();

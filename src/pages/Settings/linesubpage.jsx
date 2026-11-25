@@ -16,8 +16,8 @@ const LineSubCont = ({ handleSubContainer,refreshLineData,mode,line }) => {
     const [showSuccessMessage,setShowScuccessMessage] = useState('');
 
 
-    const handleProfileContclose = (e) => {
-          e.preventDefault(); 
+    const handleProfileContclose = () => {
+        //   e.preventDefault(); 
         handleSubContainer(lineName);
         setLineName('');
     }
@@ -92,7 +92,13 @@ const LineSubCont = ({ handleSubContainer,refreshLineData,mode,line }) => {
                 </article>
                 <article className="border-allsd" style={{ margin: '0 0 0 5px' }}>
                     <article >
-                        <form action="" style={{ margin: '7px 10px 0 10px' }}>
+                        <form 
+                        onSubmit={
+                                currentUser !== "Read-only"
+                                    ? handleAddLine
+                                    : (e) => e.preventDefault()
+                            }
+                        style={{ margin: '7px 10px 0 10px' }}>
                             <label className="settinglabelsub">Line Name</label>
                             <input type="text"
                                 value={lineName}
@@ -110,9 +116,10 @@ const LineSubCont = ({ handleSubContainer,refreshLineData,mode,line }) => {
                                 <hr className="hrnote" />
                                 <center className="d-f">
                                     <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
-                                    <button type="button"   className={`creatsetingbtn ${
+                                    <button type="submit"   className={`creatsetingbtn ${
                                         currentUser === "Read-only" ? "btndisable" : ""
-                                    }`} onClick={currentUser !== "Read-only" ? handleAddLine :undefined}
+                                    }`} 
+                                    // onClick={currentUser !== "Read-only" ? handleAddLine :undefined}
                                     disabled={currentUser === "Read-only"}
                                     title={currentUser === "Read-only" ? "Permission required" : ""}
                                     >
@@ -134,6 +141,7 @@ const LineSubCont = ({ handleSubContainer,refreshLineData,mode,line }) => {
                                     </article>
                                     <article style={{ textAlign: 'end' }}>
                                         <button
+                                         type="button"
                                         className="confirmdeletebtn confirmdeletebtnyes"
                                         onClick={() =>{ setShowAddedSuccessPopup(false);
                                             handleProfileContclose();

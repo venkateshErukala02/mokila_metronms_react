@@ -4,7 +4,7 @@ import './../Settings/settings.css';
 import { useSelector } from "react-redux";
  
 
-const NotificationCreateSubCont=({handleSubContainer,notification,mode,notificationEventDt,notificationPathDt})=>{
+const NotificationCreateSubCont=({handleSubContainer,notification,mode,notificationEventDt,notificationPathDt,refreshNotifyData})=>{
     
     const isEditMode =  mode === 'edit';
     const currentUser = useSelector((state) => state?.loginuser?.node?.role);
@@ -23,8 +23,8 @@ const NotificationCreateSubCont=({handleSubContainer,notification,mode,notificat
  const [isLoading, setIsLoading] = useState(false);
  const [isError, setIsError] = useState({ status: false, msg: "" });
                                  
-    const handleProfileContclose=(e)=>{
-          e.preventDefault(); 
+    const handleProfileContclose=()=>{
+        //   e.preventDefault(); 
         handleSubContainer()
     }
 const handleEventNotiSel=(e)=>{
@@ -87,7 +87,7 @@ const validateEmail = (email) => {
                   setShowAddedSuccessPopup(true);
             // setSuccess('Discovery started successfully');
             // handleProfileContclose();
-            // if(refreshSectionData) refreshSectionData();
+            if(refreshNotifyData) refreshNotifyData();
             // setSectionName('')
         } else {
             setIsError('Error starting discovery');
@@ -138,7 +138,9 @@ useEffect(()=>{
                         </article>
                         <article className="border-allsd" style={{margin:'0 0 0 5px'}}>
                             <article >
-                                <form action="" style={{margin: '7px 10px 0 10px'}}>
+                                <form 
+                                onSubmit={handleAddNotification}
+                                style={{margin: '7px 10px 0 10px'}}>
                                 <label className="settinglabelsub">Name</label>
                                 <input type="text" name="" placeholder="" id="" className="settinglabelsubinp"
                                 value={nameNotifi}
@@ -211,7 +213,8 @@ useEffect(()=>{
                                 <hr className="hrnote" />
                                 <center className="d-f">
                                         <button className="cancelbtn" type="button" onClick={handleProfileContclose}>Cancel</button>
-                                        <button onClick={handleAddNotification} 
+                                        <button  type="submit"
+                                        // onClick={handleAddNotification} 
                                         className={`creatsetingbtn ${
                                         currentUser === "Read-only" ? "btndisable" : ""
                                     }`} title={currentUser === "Read-only" ? "Permission required" : ""}

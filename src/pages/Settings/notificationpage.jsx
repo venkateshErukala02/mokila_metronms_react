@@ -303,6 +303,9 @@ const NotificationContainer=()=>{
                     notificationEventDt={notificationEventDt}
                     notificationPathDt={notificationPathDt}
                     mode={mode}
+                    refreshNotifyData={()=>
+                            getNotificatioData('api/v2/eventnotice/list?limit=10&offset=0&sort=asc')
+                        }
                     />
                 break;
             case 'createNotificationpath':

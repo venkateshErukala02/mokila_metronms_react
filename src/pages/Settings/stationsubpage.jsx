@@ -22,8 +22,8 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
             const [stationCode,setStationCode] = useState('');
             const [showAddedSuccessPopup, setShowAddedSuccessPopup] = useState(false);
             const [showSuccessMessage,setShowScuccessMessage] = useState('');
-    const handleProfileContclose=(e)=>{
-          e.preventDefault(); 
+    const handleProfileContclose=()=>{
+        //   e.preventDefault(); 
         handleSubContainer();
         setStationName('');
         setLinenameSel('');
@@ -47,8 +47,8 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
 
   
 
-    const handleUpload = async (e) => {
-        e.preventDefault();
+    const handleUpload = async () => {
+        // e.preventDefault();
         if (!selectedFile) return;
     
         setLoading(true);
@@ -285,7 +285,13 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
                         </article>
                         <article className="border-allsd" style={{margin:'0 0 0 5px'}}>
                             <article >
-                                <form action="" style={{margin: '7px 10px 0 10px'}}>
+                                <form 
+                                    onSubmit={
+                                        currentUser !== "Read-only"
+                                            ? handleAddStation
+                                            : (e) => e.preventDefault()
+                                    }
+                                style={{margin: '7px 10px 0 10px'}}>
                                 <label className="settinglabelsub">Station Name</label>
                                 <input type="text" name="" placeholder="" id="" className="settinglabelsubinp" 
                                 value={stationName}
@@ -330,7 +336,8 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
                                 <hr className="hrnote" />
                                 <center className="d-f">
                                         <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
-                                        <button type="button" onClick={currentUser !== "Read-only" ? handleAddStation : undefined}
+                                        <button type="submit" 
+                                        // onClick={currentUser !== "Read-only" ? handleAddStation : undefined}
                                         className={`creatsetingbtn ${
                                         currentUser === "Read-only" ? "btndisable" : ""
                                     }`} title={currentUser === "Read-only" ? "Permission required" : ""}
@@ -377,6 +384,7 @@ const StationSubCont=({handleSubContainer,refreshStationData,station,mode})=>{
                                     </article>
                                     <article style={{ textAlign: 'end' }}>
                                         <button
+                                        type="button"
                                         className="confirmdeletebtn confirmdeletebtnyes"
                                         onClick={() =>{ setShowAddedSuccessPopup(false);
                                             handleProfileContclose();

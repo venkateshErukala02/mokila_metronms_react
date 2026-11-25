@@ -37,8 +37,8 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
       
 
 
-    const handleProfileContclose = (e) => {
-          e.preventDefault(); 
+    const handleProfileContclose = () => {
+        //   e.preventDefault(); 
         handleSubContainer()
     }
 
@@ -231,7 +231,13 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
                 </article>
                 <article className="border-allsd" style={{ margin: '0 0 0 5px' }}>
                     <article >
-                        <form action="" style={{ margin: '7px 10px 0 10px' }}>
+                        <form 
+                            onSubmit={
+                                currentUser !== "Read-only"
+                                    ? handleAddUser
+                                    : (e) => e.preventDefault()
+                            }
+                        style={{ margin: '7px 10px 0 10px' }}>
                             <label className="settinglabelsub">Username</label>
                             <input type="text" name="" placeholder=""  className="settinglabelsubinp"
                                 value={userName}
@@ -271,6 +277,7 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
                                 <input type={eyePwdimgStatus ? 'text' : 'password'} name="" placeholder=""  className="settinglabelsubinp"
                                     value={password}
                                     required
+                                    autoComplete="off"
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
                                 <img src={eyePwdimgStatus ? Eye : EyeSlash} alt="" className="eyeslashcl" onClick={() => handlePasswordEyeimg()} />
@@ -281,6 +288,7 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
                                 <input type={eyecfPwdimgStatus ? 'text' : 'password'} name="" placeholder=""  className="settinglabelsubinp"
                                     value={confirmPassword}
                                     required
+                                    autoComplete="off"
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                 />
                                 <img src={eyecfPwdimgStatus ? Eye : EyeSlash} alt="" className="eyeslashcl" onClick={() => handlecfPasswordEyeimg()} />
@@ -364,8 +372,9 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
                                 </ul>
                                 <hr className="hrnote" />
                                 <center className="d-f">
-                                    <button className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
-                                    <button type="button"  disabled={!!emailError || currentUser === "Read-only" } onClick={handleAddUser}
+                                    <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
+                                    <button type="submit"  disabled={!!emailError || currentUser === "Read-only" } 
+                                    // onClick={handleAddUser}
                                     className={`creatsetingbtn ${
                                         currentUser === "Read-only" ? "btndisable" : ""
                                     }`} title={currentUser === "Read-only" ? "Permission required" : ""}
@@ -389,6 +398,7 @@ const UserSubCont = ({ handleSubContainer, refreshUserData,mode,user }) => {
                                     </article>
                                     <article style={{ textAlign: 'end' }}>
                                         <button
+                                        type="button"
                                         className="confirmdeletebtn confirmdeletebtnyes"
                                         onClick={() =>{ setShowAddedSuccessPopup(false);
                                             handleProfileContclose();

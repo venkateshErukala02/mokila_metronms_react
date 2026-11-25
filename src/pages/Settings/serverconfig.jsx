@@ -205,7 +205,10 @@ const ServerConfigContainer = () => {
 
      const handleAddEmailConfig = async (user) => {
         //   e.preventDefault(); 
-        if(!hostName?.trim() || !fromAddress?.trim() || !smptPort?.trim() || !authUser?.trim() || !authUserPswd?.trim()) return;
+        if(!hostName?.trim() || !fromAddress?.trim() 
+            // || !smptPort?.trim() 
+            // || !authUser?.trim() || !authUserPswd?.trim()
+        ) return;
        
         const method = 'POST';
         const requestBody ={
@@ -219,18 +222,42 @@ const ServerConfigContainer = () => {
         }
 
         try {
-            const response = await fetch(`api/v2/systemprops/update`, {
-                method,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                const headers = {
+                'Content-Type': 'application/json',
+                };
+
+                const [response1, response2] = await Promise.all([
+            fetch('api/v2/systemprops/update', {
+                method: 'POST',
+                headers,
                 body: JSON.stringify(requestBody),
-            });
+            }),
 
-            const text = await response.text();
+            fetch('api/v2/eventnotice/mail/update', {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(requestBody),
+            }),
+                ]);
 
-            if (response.ok) {
-                 setShowSaveSuccessPopup(true);
+                if (response1.ok && response2.ok) {
+                    setShowSaveSuccessPopup(true);
+                } else {
+                    setIsError('Error updating email configuration');
+                }
+
+            // const response = await fetch(`api/v2/systemprops/update`, {
+            //     method,
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify(requestBody),
+            // });
+
+            // const text = await response.text();
+
+            // if (response.ok) {
+            //      setShowSaveSuccessPopup(true);
                 // alert('Server Configuration Added successfully')
 
                 // if(refreshUserData) refreshUserData();
@@ -241,9 +268,9 @@ const ServerConfigContainer = () => {
             //    setConfirmPassword('');
             //    setLineNameSele(-1);
             //    setRole('ROLE_READONLY');
-            } else {
-                setIsError('Error starting discovery');
-            }
+            // } else {
+            //     setIsError('Error starting discovery');
+            // }
         } catch (error) {
             setIsError('An error occurred while contacting the server.');
         } finally {
@@ -318,7 +345,7 @@ const ServerConfigContainer = () => {
                                                             </label>
                                                             <article className="col-sm-4 col-md-4 col-lg-5">
                                                                 <input type={eyeTrapHostimgStatus ? 'text' : "password"} name="" 
-                                                                autocomplete="current-password"  className="trapinpt" value={hostCommunity} onChange={(e)=> setHostCommunity(e.target.value)}/>
+                                                                autoComplete="off"  className="trapinpt" value={hostCommunity} onChange={(e)=> setHostCommunity(e.target.value)}/>
                                                                 <img src={eyeTrapHostimgStatus ? Eye : EyeSlash} alt="" className="eyeslashcl" onClick={() => setEyeTrapHostimgStatus(!eyeTrapHostimgStatus)} />
                                                             </article>
                                                         </article>
@@ -363,6 +390,7 @@ const ServerConfigContainer = () => {
                                                                 </label>
                                                                 <article className="col-sm-4 col-md-4 col-lg-5">
                                                                     <input type="text" name="" id="userFtp" className="trapinpt" value={username}
+                                                                    autoComplete="username"
                                                                     onChange={(e)=> setUsername(e.target.value)}
                                                                     />
                                                                 </article>
@@ -373,7 +401,7 @@ const ServerConfigContainer = () => {
                                                                 </label>
                                                                 <article className="col-sm-4 col-md-4 col-lg-5">
                                                                     <input type={eyePasswordimgStatus ? 'text' : 'password'} name=""  className="trapinpt" value={password}
-                                                                    autocomplete="new-password"
+                                                                    autoComplete="new-password"
                                                                     onChange={(e)=> setPassword(e.target.value)} />
                                                                     <img src={eyePasswordimgStatus ? Eye : EyeSlash} alt="" className="eyeslashcl" onClick={() => setEyePasswordimgStatus(!eyePasswordimgStatus)} />
                                                                 </article>
@@ -509,6 +537,7 @@ const ServerConfigContainer = () => {
                                                                 <article className="col-sm-4 col-md-4 col-lg-5">
                                                                     <input type={eyeAuthPswdimgStatus ? 'text' :'password'} name=""  className="trapinpt" 
                                                                     value={authUserPswd}
+                                                                    autoComplete="off"
                                                                     onChange={(e)=> setAuthUserPswd(e.target.value)}
                                                                     />
                                                                     <img src={eyeAuthPswdimgStatus ? Eye : EyeSlash} alt="" className="eyeslashcl" onClick={() => setEyeAuthPswdimgStatus(!eyeAuthPswdimgStatus)} />

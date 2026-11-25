@@ -12,7 +12,7 @@ const SectionSubCont=({handleSubContainer,refreshSectionData,mode,section})=>{
 
             const [selectedFile, setSelectedFile] = useState(null);
             const [lineData, setLineData] = useState([]);
-            const [sectionName,setSectionName] =useState([]);
+            const [sectionName,setSectionName] =useState('');
             const [lineNameSele,setLineNameSele] =useState('')
  const [isLoading, setIsLoading] = useState(false);
         const [isError, setIsError] = useState({ status: false, msg: "" });
@@ -21,8 +21,8 @@ const SectionSubCont=({handleSubContainer,refreshSectionData,mode,section})=>{
 const [showSuccessMessage,setShowScuccessMessage] = useState('');
 
 
-    const handleProfileContclose=(e)=>{
-          e.preventDefault(); 
+    const handleProfileContclose=()=>{
+        //   e.preventDefault(); 
         handleSubContainer();
         setSectionName('');
         setLineNameSele('');
@@ -158,7 +158,15 @@ useEffect(()=>{
                         </article>
                         <article className="border-allsd" style={{margin:'0 0 0 5px'}}>
                             <article >
-                                <form action="" style={{margin: '7px 15px 0 10px'}}>
+                                <form 
+                                onSubmit={(e) => {
+                                        e.preventDefault();
+
+                                        if (currentUser !== "Read-only") {
+                                            handleAddSection(e);
+                                        }
+                                    }}
+                                     style={{margin: '7px 15px 0 10px'}}>
                                 <label className="settinglabelsub">Section Name</label>
                                 <input type="text" 
                                   value={sectionName}
@@ -188,7 +196,8 @@ useEffect(()=>{
                                 <hr className="hrnote" />
                                 <center className="d-f">
                                         <button type="button" className="cancelbtn" onClick={handleProfileContclose}>Cancel</button>
-                                        <button type="button" onClick={currentUser !== "Read-only" ? handleAddSection : undefined}
+                                        <button type="submit" 
+                                        // onClick={currentUser !== "Read-only" ? handleAddSection : undefined}
                                         className={`creatsetingbtn ${
                                         currentUser === "Read-only" ? "btndisable" : ""
                                     }`}
@@ -215,6 +224,7 @@ useEffect(()=>{
                                     </article>
                                     <article style={{ textAlign: 'end' }}>
                                         <button
+                                        type="button"
                                         className="confirmdeletebtn confirmdeletebtnyes"
                                         onClick={() =>{ setShowAddedSuccessPopup(false);
                                             handleProfileContclose();
